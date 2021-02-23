@@ -8,9 +8,9 @@ var TempCalib = -1;
 var HumCalib = -10;
 var Temp;
 var Humidity;
-var ExhaustFan = false;
-var Co2 = false;
-var WaterWalls = false;
+var ExhaustFan = true;
+var Co2 = true;
+var WaterWalls = true;
 var Heater = true;
 
 ////////////////////////
