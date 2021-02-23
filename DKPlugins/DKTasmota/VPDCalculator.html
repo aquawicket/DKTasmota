@@ -1,0 +1,163 @@
+<div id="vpdCalculator" class="mb-5">
+<h3 id="calc" class="mb-5">VPD Calculator 📱</h3>
+<div>
+<div class="calc-form">
+<div class="radio-buttons">
+<div>
+<p><strong>Solve For:</strong></p>
+</div>
+<div>
+<input type="radio" name="solve" id="tempRadio" value="temp"> Temp</div>
+<div>
+<input type="radio" name="solve" id="rhRadio" value="rh"> RH</div>
+<div>
+<input type="radio" name="solve" id="vpdRadio" value="vpd" checked=""> VPD</div>
+</div>
+<div class="form-fields">
+<div class="form-item">
+<span>Temp (F)</span> <input id="tempFInput" type="number" value="77.0">
+</div>
+<div class="form-item">
+<span>Temp (C)</span> <input id="tempCInput" type="number" value="25.0"> 
+</div>
+<div class="form-item">
+<span>RH (%)</span> <input id="rhInput" type="number" value="50.0">
+</div>
+<div class="form-item">
+<span>VPD Air (kPa)</span> <input id="vpdAirInput" type="number" disabled="">
+</div>
+<div class="form-item">
+<span>Leaf Offset (F)</span> <input id="leafTempFInput" type="number" value="-2.0">
+</div>
+<div class="form-item">
+<span>Leaf Offset (C)</span> <input id="leafTempCInput" type="number" value="-1.1">
+</div>
+<div class="form-item">
+<span>VPD Leaf (kPa)</span> <input id="vpdLeafInput" type="number" disabled="">
+</div>
+</div>
+</div>
+<script>
+function calcVpd(airTemp, leafTempOffsetF, humidity, tempsInF) {
+      let tempF;
+      if (tempsInF) {
+        tempF = airTemp;
+      } else {
+        tempF = (airTemp * 9) / 5 + 32;
+      }
+      const leafTemp = tempF + leafTempOffsetF;
+      const vpd = 3.386 * (Math.exp(17.863 - 9621 / (leafTemp + 460)) - (humidity / 100) * Math.exp(17.863 - 9621 / (tempF + 460)));
+      return vpd;
+    }
+  
+  
+    // returns temp in F
+    function calcTemp(vpdAir, rh){
+      let t = 9621 / ( 17.863 - Math.log(vpdAir / ((1-rh/100) * 3.386))) - 460;
+      return t;
+    }
+  
+    // assumes temp in F
+    function calcRh(vpdAir, tempF){
+      let rh = 100 * (1 - vpdAir /(3.386 * Math.exp(17.863 - 9621 / (tempF + 460))));
+      return rh;
+    }
+  
+    function convertAirTemp(temp, fToC){
+      if (fToC){
+        return (temp - 32) * 5 / 9;
+      }
+      else {
+        return temp * 9 / 5 + 32;
+      }
+    }
+    function convertLeafTemp(temp, fToC){
+      if (fToC){
+        return temp * 5 / 9;
+      }
+      else {
+        return temp * 9 / 5;
+      }
+    }
+  
+    function calculate(){
+      let tempCVal = Number(document.getElementById('tempCInput').value);
+      let tempFVal = Number(document.getElementById('tempFInput').value);
+      let rhVal = Number(document.getElementById('rhInput').value);
+      let leafTempFVal = Number(document.getElementById('leafTempFInput').value);
+      let vpdAirVal = Number(document.getElementById('vpdAirInput').value);
+      
+      // console.log("calcstart");
+      var solveFor = document.querySelector('input[name = "solve"]:checked').value;
+      if (solveFor == "vpd"){
+        // console.log("vpd");  
+        let inputs = document.getElementsByTagName('input');
+        Array.from(inputs).forEach(function(input) {
+          input.disabled = false;  
+        });
+        document.getElementById('vpdAirInput').disabled = true;
+        document.getElementById('vpdLeafInput').disabled = true;
+  
+        vpdAir = calcVpd(tempCVal, 0, rhVal, false).toFixed(2);
+        vpdLeaf = calcVpd(tempCVal, leafTempFVal, rhVal, false).toFixed(2);
+        document.getElementById('vpdAirInput').value = vpdAir;
+        document.getElementById('vpdLeafInput').value = vpdLeaf;
+      } 
+      if (solveFor == "temp"){
+        // console.log("temp");
+        let inputs = document.getElementsByTagName('input');
+        Array.from(inputs).forEach(function(input) {
+          input.disabled = false;  
+        });
+        document.getElementById('tempCInput').disabled = true;
+        document.getElementById('tempFInput').disabled = true;
+  
+        let tempF = calcTemp(vpdAirVal, rhVal).toFixed(1);
+        let tempC = convertAirTemp(tempF, true).toFixed(1);
+  
+        document.getElementById('tempCInput').value = tempC;
+        document.getElementById('tempFInput').value = tempF;
+      }
+      if (solveFor == "rh"){
+        // console.log("rh");
+        let inputs = document.getElementsByTagName('input');
+        Array.from(inputs).forEach(function(input) {
+          input.disabled = false;  
+        });
+        document.getElementById('rhInput').disabled = true;
+  
+        let rh = calcRh(vpdAirVal, tempFVal).toFixed(1);
+        document.getElementById('rhInput').value = rh;
+      }
+  
+  
+      // console.log("calculate- tempC: "  + tempCVal + ", tempF: " + tempFVal + ", rhVal: " + rhVal + ", leafTempFVal: " + leafTempFVal + ", vpdAir: " + vpdAir + ", vpdLeaf: " + vpdLeaf );
+    }
+    
+    window.onload = calculate();
+  
+    document.getElementById('tempFInput').addEventListener('input', function(){
+      document.getElementById('tempCInput').value = convertAirTemp(document.getElementById('tempFInput').value, true).toFixed(1);
+    });
+    document.getElementById('tempCInput').addEventListener('input', function(){
+      document.getElementById('tempFInput').value = convertAirTemp(document.getElementById('tempCInput').value, false).toFixed(1);
+    });
+    document.getElementById('leafTempFInput').addEventListener('input', function(){
+      document.getElementById('leafTempCInput').value = convertLeafTemp(document.getElementById('leafTempFInput').value, true).toFixed(1);
+    });
+    document.getElementById('leafTempCInput').addEventListener('input', function(){
+      document.getElementById('leafTempFInput').value = convertLeafTemp(document.getElementById('leafTempCInput').value, false).toFixed(1);
+    });
+  
+    let inputs = document.getElementsByTagName('input');
+    Array.from(inputs).forEach(function(input) {
+      input.addEventListener('input', calculate);  
+      // input.addEventListener('blur', (e) => {
+      //   input.value = Number(event.target.value).toFixed(1);
+      // })
+    });
+
+    
+</script>
+</div>
+</div>
