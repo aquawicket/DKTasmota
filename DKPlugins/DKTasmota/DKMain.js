@@ -19,6 +19,7 @@ function DKLoadFiles() {
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("DKDebug.js");
+	DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKSound.js");
     DKLoadJSFile("DKTasmota.js");
     DKLoadJSFile("DKTable.js");
@@ -137,6 +138,7 @@ function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
         //if(url.includes("192.168.1.98"))
+		notifyMe();
         CreateSound("PowerDown.mp3");
         sound.play();
         return;
