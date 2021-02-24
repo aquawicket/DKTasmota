@@ -18,6 +18,8 @@ var bypassRules = [];
 function DKLoadFiles() {
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKConsole.js");
+    DKLoadJSFile("DKDebug.js");
+    DKLoadJSFile("DKSound.js");
     DKLoadJSFile("DKTasmota.js");
     DKLoadJSFile("DKTable.js");
     DKLoadJSFile("DKClock.js");
@@ -27,7 +29,6 @@ function DKLoadFiles() {
 
 ///////////////////////
 function DKLoadPage() {
-
     body = document.getElementsByTagName('body')[0];
     body.style.backgroundColor = "rgb(100,100,100)";
 
@@ -47,15 +48,16 @@ function DKLoadPage() {
     CreateChart(body);
 
     //CreateVPDCalculator(body);
+    //CreateDebugBox(body);
 
     window.setInterval(TimerLoop, 60000);
 }
 
-/////////////////////////
+///////////////////////////
 function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
-    UpdateChart([Humidity,Temp]);
+    UpdateChart([Humidity, Temp]);
 }
 
 ////////////////////////////////////
@@ -133,8 +135,13 @@ function AddDevice(ip) {
 ///////////////////////////////////////////
 function UpdateScreen(success, url, data) {
     if (!success) {
+        //Test for power outage
+        //if(url.includes("192.168.1.98"))
+        CreateSound("PowerDown.mp3");
+        sound.play();
         return;
     }
+
     var row;
     var table = document.getElementById("deviceTable");
     for (var n = 1; n < table.rows.length; n++) {
@@ -162,7 +169,7 @@ function UpdateScreen(success, url, data) {
 
     var deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
     if (deviceSI7021) {
-        Temp = (deviceSI7021.Temperature + TempCalib).toFixed(2);
+        Temp = (deviceSI7021.Temperature + TempCalib).toFixed(1);
         var tempDirection = " ";
         if (Temp > TargetTemp) {
             tempDirection = "&#8593;"
@@ -176,7 +183,7 @@ function UpdateScreen(success, url, data) {
         var temp = "<a id='Temp'>" + Temp + " &#176;F" + tempDirection + "</a>";
         var targTemp = "<a id='targTemp'> (" + TargetTemp + "&#176;F)</a>";
 
-        Humidity = (deviceSI7021.Humidity + HumCalib).toFixed(2);
+        Humidity = (deviceSI7021.Humidity + HumCalib).toFixed(1);
         var humDirection = " ";
         if (Humidity > TargetHum) {
             humDirection = "&#8593;"
@@ -192,8 +199,8 @@ function UpdateScreen(success, url, data) {
         var dewPoint = "<a id='DewP'>Dew point " + deviceSI7021.DewPoint + "&#176;F</a>";
 
         var scaleTemp = 510;
-        var tempDiff = (Math.abs(TargetTemp - Temp) * 5).toFixed(2);
-        var tempNum = (tempDiff * scaleTemp / 100).toFixed(2);
+        var tempDiff = (Math.abs(TargetTemp - Temp) * 5).toFixed(1);
+        var tempNum = (tempDiff * scaleTemp / 100).toFixed(1);
         var redTemp = tempNum
         var greenTemp = 510 - tempNum;
         if (redTemp > 255) {
@@ -212,8 +219,8 @@ function UpdateScreen(success, url, data) {
         document.getElementById("Temp").style.color = "rgb(" + redTemp + "," + greenTemp + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
         var scaleHum = 510;
-        var humDiff = (Math.abs(TargetHum - Humidity) * 5).toFixed(2);
-        var humNum = (humDiff * scaleHum / 100).toFixed(2);
+        var humDiff = (Math.abs(TargetHum - Humidity) * 5).toFixed(1);
+        var humNum = (humDiff * scaleHum / 100).toFixed(1);
         var redHum = humNum;
         var greenHum = 510 - humNum;
         if (redHum > 255) {
@@ -239,7 +246,7 @@ function UpdateScreen(success, url, data) {
         var device = JSON.parse(data);
         var signal = deviceWifi.RSSI;
         var scale = 510;
-        var num = (signal * scale / 100).toFixed(2);
+        var num = (signal * scale / 100).toFixed(1);
         var green = num;
         var red = 510 - num;
         row.cells[3].innerHTML = signal + "%";
