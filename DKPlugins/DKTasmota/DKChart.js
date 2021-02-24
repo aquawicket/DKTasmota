@@ -7,9 +7,9 @@ function CreateChart(parent, top, bottom, left, right) {
         myChart.id = "myChart";
         myChart.style.position = "absolute";
         myChart.style.width = "90%";
-        myChart.style.top = "300px";
+        myChart.style.top = "400px";
         myChart.style.left = "5%";
-        myChart.style.height = "500px";
+        myChart.style.height = "400px";
         parent.appendChild(myChart);
         var d = new Date();
         var millisec = d.getTime();

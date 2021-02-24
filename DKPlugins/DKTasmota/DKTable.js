@@ -25,7 +25,7 @@ DKTableInsertCell = function(table, row)
 {
     var cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65+(cell.cellIndex))+(row.rowIndex+1);
-    cell.innerHTML = cell.id; //For debugging
+    //cell.innerHTML = cell.id; //For debugging
     return cell;
 }
 

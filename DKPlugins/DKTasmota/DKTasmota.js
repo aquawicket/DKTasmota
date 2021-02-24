@@ -16,7 +16,7 @@ GetTasmotaDevices = function(ipPrefix, callback)
 		corsWrite = 0;
 	}
 	*/
-	let corsWrite = 0;
+	let corsWrite = 1;
     for(let n = 1; n < 255; n++){
 	    let ip = ipPrefix+n;
         let cmnd = "CORS";
@@ -29,7 +29,7 @@ GetTasmotaDevices = function(ipPrefix, callback)
         //let url = "http://"+ip+"/cm?cmnd="+cmnd; //Un-encodeURIComponent
         let url = "http://"+ip+"/cm?cmnd="+encodeURIComponent(cmnd).replace(";", "%3B");   
 	    DKSendSuperRequest(url, function(success, data){ //send request using superAgent
-	        //dkConsole.log("DKSendSuperRequest("+url+") -> ("+ip+",bool)");
+	        dkConsole.log("DKSendSuperRequest("+url+") -> ("+ip+",bool)");
 	        if(success){
 	        	devicesScanned += 1;
 	        	tasmotaDeviceCount += 1;

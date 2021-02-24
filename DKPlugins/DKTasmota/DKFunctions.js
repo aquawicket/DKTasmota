@@ -1,4 +1,5 @@
 //DKDEBUG = 1;
+/*
 function DKDEBUG() {
     //dkConsole.log(console.trace());
     
@@ -16,6 +17,7 @@ function DKDEBUG() {
     dkConsole.log(DKDEBUG.caller.name + "(" + args + ")", "orange");
     dkConsole.log(DKDEBUG.caller.arguments.callee, "orange");
 }
+*/
 
 //////////////////////////////
 DKLoadCSSFile = function(file) {

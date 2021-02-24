@@ -4,14 +4,15 @@ var MaxTemp = TargetTemp + 10;
 var TargetHum = 50;
 var MinHum = TargetHum - 10;
 var MaxHum = TargetHum + 10;
-var TempCalib = -1;
-var HumCalib = -10;
+var TempCalib = -5;
+var HumCalib = -13;
 var Temp;
 var Humidity;
 var ExhaustFan = true;
-var Co2 = true;
+var Co2 = false;
 var WaterWalls = true;
 var Heater = true;
+var bypassRules = [];
 
 ////////////////////////
 function DKLoadFiles() {
@@ -41,7 +42,7 @@ function DKLoadPage() {
         var ip = cookies[n];
         AddDevice(ip);
     }
-    
+
     CreateButtons(body);
     CreateChart(body);
 
@@ -54,7 +55,7 @@ function DKLoadPage() {
 function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
-    UpdateChart([Temp, Humidity]);
+    UpdateChart([Humidity,Temp]);
 }
 
 ////////////////////////////////////
@@ -66,7 +67,7 @@ function CreateDeviceTable(parent) {
     DKTableAddRow(table);
     table.rows[0].style.fontWeight = "bold";
     table.rows[0].cells[0].innerHTML = "Devices";
-    table.rows[0].cells[0].style.width = "200px";
+    table.rows[0].cells[0].style.width = "250px";
     DKTableAddColumn(table);
     table.rows[0].cells[1].innerHTML = "power";
     table.rows[0].cells[1].style.width = "80px";
@@ -118,6 +119,9 @@ function AddDevice(ip) {
     row.cells[1].style.textAlign = "center";
     row.cells[1].style.cursor = "pointer";
     row.cells[1].onclick = function() {
+        bypassRules += ip;
+        bypassRules += ",";
+        dkConsole.log("Temporarily added " + ip + " to bypassRules, refresh page to reset", "Yellow");
         DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
     row.cells[2].style.textAlign = "center";
@@ -158,7 +162,7 @@ function UpdateScreen(success, url, data) {
 
     var deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
     if (deviceSI7021) {
-        Temp = deviceSI7021.Temperature + TempCalib;
+        Temp = (deviceSI7021.Temperature + TempCalib).toFixed(2);
         var tempDirection = " ";
         if (Temp > TargetTemp) {
             tempDirection = "&#8593;"
@@ -172,7 +176,7 @@ function UpdateScreen(success, url, data) {
         var temp = "<a id='Temp'>" + Temp + " &#176;F" + tempDirection + "</a>";
         var targTemp = "<a id='targTemp'> (" + TargetTemp + "&#176;F)</a>";
 
-        Humidity = deviceSI7021.Humidity + HumCalib;
+        Humidity = (deviceSI7021.Humidity + HumCalib).toFixed(2);
         var humDirection = " ";
         if (Humidity > TargetHum) {
             humDirection = "&#8593;"
@@ -188,8 +192,8 @@ function UpdateScreen(success, url, data) {
         var dewPoint = "<a id='DewP'>Dew point " + deviceSI7021.DewPoint + "&#176;F</a>";
 
         var scaleTemp = 510;
-        var tempDiff = Math.abs(TargetTemp - Temp) * 5;
-        var tempNum = tempDiff * scaleTemp / 100;
+        var tempDiff = (Math.abs(TargetTemp - Temp) * 5).toFixed(2);
+        var tempNum = (tempDiff * scaleTemp / 100).toFixed(2);
         var redTemp = tempNum
         var greenTemp = 510 - tempNum;
         if (redTemp > 255) {
@@ -208,8 +212,8 @@ function UpdateScreen(success, url, data) {
         document.getElementById("Temp").style.color = "rgb(" + redTemp + "," + greenTemp + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
         var scaleHum = 510;
-        var humDiff = Math.abs(TargetHum - Humidity) * 5;
-        var humNum = humDiff * scaleHum / 100;
+        var humDiff = (Math.abs(TargetHum - Humidity) * 5).toFixed(2);
+        var humNum = (humDiff * scaleHum / 100).toFixed(2);
         var redHum = humNum;
         var greenHum = 510 - humNum;
         if (redHum > 255) {
@@ -235,7 +239,7 @@ function UpdateScreen(success, url, data) {
         var device = JSON.parse(data);
         var signal = deviceWifi.RSSI;
         var scale = 510;
-        var num = signal * scale / 100;
+        var num = (signal * scale / 100).toFixed(2);
         var green = num;
         var red = 510 - num;
         row.cells[3].innerHTML = signal + "%";
@@ -259,7 +263,7 @@ function UpdateScreen(success, url, data) {
 function ScanDevices() {
     var cookieString = "";
     var table = document.getElementById("deviceTable");
-    
+
     table.parentNode.remove(table);
     CreateDeviceTable(body);
 
@@ -280,9 +284,7 @@ function ScanDevices() {
         }
     });
 }
-;
-
-///////////////////////////
+;///////////////////////////
 function ProcessDevices() {
     var table = document.getElementById("deviceTable");
     for (var n = 1; n < table.rows.length; n++) {
@@ -293,71 +295,79 @@ function ProcessDevices() {
 
 /////////////////////////
 function ProcessRules() {
-    dkConsole.log("Temp: " + Temp);
-    dkConsole.log("Humidity " + Humidity);
-    dkConsole.log("TargetTemp: " + TargetTemp);
-    dkConsole.log("TargetHum " + TargetHum);
-    dkConsole.log("MinTemp " + MinTemp);
-    dkConsole.log("MinHum " + MinHum);
-    dkConsole.log("MaxTemp " + MaxTemp);
-    dkConsole.log("MaxHum " + MaxHum);
 
-    if (Temp && Humidity && TargetTemp && TargetHum && MinTemp && MinHum && MaxTemp && MaxHum) {
+    DumpVariables();
 
-        //Alarms
-        if (Temp < MinTemp) {
-            dkConsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + MinTemp + "&#176;F !!!", "red");
-        }
-        if (Temp > MaxTemp) {
-            dkConsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + MaxTemp + "&#176;F !!!", "red");
-        }
-        if (Humidity < MinHum) {
-            dkConsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + MinHum + "% !!!", "red");
-        }
-        if (Humidity > MaxHum) {
-            dkConsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + MaxHum + "% !!!", "red");
-        }
-
-        if (ExhaustFan) {
-            if (Humidity > TargetHum) {
-                DKSendRequest("http://192.168.1.63/cm?cmnd=POWER%20ON", UpdateScreen);
-                //exhaust fan ON
-            } else {
-                DKSendRequest("http://192.168.1.63/cm?cmnd=POWER%20OFF", UpdateScreen);
-                //exhaust fan OFF
-            }
-        }
-
-        if (WaterWalls) {
-            if (Temp > TargetTemp && Humidity < MaxHum || Humidity < TargetHum && Temp > MinTemp) {
-                DKSendRequest("http://192.168.1.114/cm?cmnd=POWER%20ON", UpdateScreen);
-                //water walls ON
-            } else {
-                DKSendRequest("http://192.168.1.114/cm?cmnd=POWER%20OFF", UpdateScreen);
-                //water walls OFF
-            }
-        }
-
-        if (Co2) {
-            if (Temp < TargetTemp && Humidity < TargetHum) {
-                DKSendRequest("http://192.168.1.75/cm?cmnd=POWER%20ON", UpdateScreen);
-                //Co2 ON
-            } else {
-                DKSendRequest("http://192.168.1.75/cm?cmnd=POWER%20OFF", UpdateScreen);
-                //Co2 OFF
-            }
-        }
-
-        if (Heater) {
-            if (Temp < TargetTemp) {
-                DKSendRequest("http://192.168.1.162/cm?cmnd=POWER%20ON", UpdateScreen);
-                //heater ON
-            } else {
-                DKSendRequest("http://192.168.1.162/cm?cmnd=POWER%20OFF", UpdateScreen);
-                //heater OFF
-            }
-        }
-    } else {
-        dkConsole.log("!!! ProcessRules are NOT running. variables invalid !!!", "red");
+    //Alarms
+    if (Temp < MinTemp) {
+        dkConsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + MinTemp + "&#176;F !!!", "red");
     }
+    if (Temp > MaxTemp) {
+        dkConsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + MaxTemp + "&#176;F !!!", "red");
+    }
+    if (Humidity < MinHum) {
+        dkConsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + MinHum + "% !!!", "red");
+    }
+    if (Humidity > MaxHum) {
+        dkConsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + MaxHum + "% !!!", "red");
+    }
+
+    if (!bypassRules.includes("192.168.1.63") && ExhaustFan) {
+        if ((Temp > TargetTemp) || (Humidity > TargetHum)) {
+            DKSendRequest("http://192.168.1.63/cm?cmnd=POWER%20ON", UpdateScreen);
+            //exhaust fan ON
+        } else {
+            DKSendRequest("http://192.168.1.63/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //exhaust fan OFF
+        }
+    }
+
+    if (!bypassRules.includes("192.168.1.114") && WaterWalls) {
+        if (((Temp > TargetTemp) && (Humidity < MaxHum)) || ((Humidity < TargetHum) && (Temp > MinTemp))) {
+            DKSendRequest("http://192.168.1.114/cm?cmnd=POWER%20ON", UpdateScreen);
+            //water walls ON
+        } else {
+            DKSendRequest("http://192.168.1.114/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //water walls OFF
+        }
+    }
+
+    if (!bypassRules.includes("192.168.1.75") && Co2) {
+        if ((Temp < TargetTemp) && (Humidity < TargetHum)) {
+            DKSendRequest("http://192.168.1.75/cm?cmnd=POWER%20ON", UpdateScreen);
+            //Co2 ON
+        } else {
+            DKSendRequest("http://192.168.1.75/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //Co2 OFF
+        }
+    }
+
+    if (!bypassRules.includes("192.168.1.162") && Heater) {
+        if (Temp < TargetTemp) {
+            DKSendRequest("http://192.168.1.162/cm?cmnd=POWER%20ON", UpdateScreen);
+            //heater ON
+        } else {
+            DKSendRequest("http://192.168.1.162/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //heater OFF
+        }
+    }
+    //} else {
+    //    dkConsole.log("!!! ProcessRules are NOT running. variables invalid !!!", "red");
+    //}
+}
+
+function DumpVariables() {
+    dkConsole.log("Temp: " + Temp, "orange");
+    dkConsole.log("TargetTemp: " + TargetTemp, "orange");
+    dkConsole.log("MinTemp: " + MinTemp, "orange");
+    dkConsole.log("MaxTemp: " + MaxTemp, "orange");
+    dkConsole.log("Humidity: " + Humidity, "orange");
+    dkConsole.log("TargetHum: " + TargetHum, "orange");
+    dkConsole.log("MinHum: " + MinHum, "orange");
+    dkConsole.log("MaxHum: " + MaxHum, "orange");
+    dkConsole.log("ExhaustFan: " + ExhaustFan, "orange");
+    dkConsole.log("Co2: " + Co2, "orange");
+    dkConsole.log("WaterWalls: " + WaterWalls, "orange");
+    dkConsole.log("Heater: " + Heater, "orange");
+    dkConsole.log("bypassRules: " + bypassRules, "orange");
 }
