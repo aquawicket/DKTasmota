@@ -14,12 +14,12 @@ var WaterWalls = true;
 var Heater = true;
 var bypassRules = [];
 
-////////////////////////
+//////////////////////
 function DKLoadFiles() {
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("DKDebug.js");
-	DKLoadJSFile("DKNotifications.js");
+    DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKSound.js");
     DKLoadJSFile("DKTasmota.js");
     DKLoadJSFile("DKTable.js");
@@ -28,14 +28,15 @@ function DKLoadFiles() {
     DKLoadJSFile("VPDCalculator.js");
 }
 
-///////////////////////
+/////////////////////
 function DKLoadPage() {
     body = document.getElementsByTagName('body')[0];
     body.style.backgroundColor = "rgb(100,100,100)";
 
     CreateDKConsole(body, "700px", "0px", "0px", "0px");
     dkConsole.log("**** Tasmota device manager 0.1b ****<br>");
-    CreateClock(body, "2px", "", "5px", "", "", "");
+
+    CreateClock(body, "2px", "", "", "5px");
     CreateDeviceTable(body);
 
     var cookies = getCookie().split("^");
@@ -45,26 +46,26 @@ function DKLoadPage() {
     }
 
     CreateButtons(body);
-    CreateChart(body, "", "698px", "0px", "0px", "", "500px");
+    CreateChart(body, "", "75px", "2px", "2px", "", "400px");
 
-    //CreateVPDCalculator(body);
-    //CreateDebugBox(body);
+    //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
+   // CreateDebugBox(body, "", "", "", "", "", "");
 
     window.setInterval(TimerLoop, 60000);
 }
 
-///////////////////////////
+/////////////////////////
 function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
     UpdateChart([Humidity, Temp]);
 }
 
-////////////////////////////////////
+//////////////////////////////////
 function CreateDeviceTable(parent) {
     var devices = document.createElement("div");
     parent.appendChild(devices);
-    var table = DKCreateTable(devices, "30px", "20px", "", "");
+    var table = DKCreateTable(devices, "30px", "", "20px");
     table.id = "deviceTable";
     DKTableAddRow(table);
     table.rows[0].style.fontWeight = "bold";
@@ -102,8 +103,6 @@ function CreateButtons(parent) {
     updateDevices.top = "5px";
     updateDevices.left = "30px";
     updateDevices.onclick = function() {
-		notifyMe();
-
         TimerLoop(false);
     }
     parent.appendChild(updateDevices);
@@ -138,8 +137,7 @@ function AddDevice(ip) {
 function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
-        dkConsole.log("UpdateScreen("+success+","+url+","+data+")", "orange");
-        DKDEBUG();
+        dkConsole.log("UpdateScreen(" + success + "," + url + "," + data + ")", "orange");
         CreateSound("PowerDown.mp3");
         sound.play();
         return;

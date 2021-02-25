@@ -1,5 +1,5 @@
-//////////////////////////////////////
-function CreateVPDCalculator(parent) {
+/////////////////////////////////////////////////////////////////////////////
+function CreateVPDCalculator(parent, top, bottom, left, right, width, height) {
     DKLoadHtmlFile("VPDCalculator.html", function(success, url, data) {
         if (!success) {
             return;
@@ -8,10 +8,12 @@ function CreateVPDCalculator(parent) {
         vpdDiv.innerHTML = data;
         vpdDiv.position = "absolute";
         vpdDiv.style.backgroundColor = "grey";
-        vpdDiv.style.top = "30px";
-        vpdDiv.style.left = "100px";
-        vpdDiv.style.width = "400px";
-        vpdDiv.style.height = "600px";
+        vpdDiv.style.top = top;
+        vpdDiv.style.bottom = bottom;
+        vpdDiv.style.left = left;
+        vpdDiv.style.right = right;
+        vpdDiv.style.width = width;
+        vpdDiv.style.height = height;
         vpdDiv.style.margin = "auto";
         parent.appendChild(vpdDiv);
     });

@@ -2,23 +2,31 @@
 /////////////////////////////////////////////////////////////////////////
 function CreateDKConsole(parent, top, bottom, left, right, width, height) {
     DKLoadCSSFile("DKConsole.css");
+    var dkConsoleFrame = document.createElement("div");
+    dkConsoleFrame.style.position = "absolute";
+    dkConsoleFrame.style.top = top;
+    dkConsoleFrame.style.bottom = bottom;
+    dkConsoleFrame.style.left = left;
+    dkConsoleFrame.style.right = right;
+    dkConsoleFrame.style.width = width;
+    dkConsoleFrame.style.height = height;
+    parent.appendChild(dkConsoleFrame);
+
     dkConsole = document.createElement("div");
     dkConsole.className = "DKConsole";
     dkConsole.style.position = "absolute";
     dkConsole.style.backgroundColor = "black";
     dkConsole.style.color = "white";
     dkConsole.style.fontColor = "white";
-    dkConsole.style.top = top;
+    dkConsole.style.top = "0px";
     dkConsole.style.bottom = "20px";
-    dkConsole.style.left = left;
-    dkConsole.style.right = right;
-    //dkConsole.style.x = x;
-    //dkConsole.style.y = y;
-    //dkConsole.style.width = width;
-    //dkConsole.style.height = height;
+    dkConsole.style.left = "0px";
+    dkConsole.style.right = "0px";
+    //dkConsole.style.width = "";
+    //dkConsole.style.height = "";
     dkConsole.style.visibility = "visible";
     dkConsole.style.overflow = "auto";
-    parent.appendChild(dkConsole);
+    dkConsoleFrame.appendChild(dkConsole);
 
     //command box
     var cmdbox = document.createElement("input");
@@ -31,7 +39,8 @@ function CreateDKConsole(parent, top, bottom, left, right, width, height) {
     cmdbox.style.width = "100%";
     cmdbox.onkeydown = function(event) {
         var key = event.charCode || event.keyCode;
-        if (key === 13) { //enter
+        if (key === 13) {
+            //enter
             if (cmdbox.value === "clear" || cmdbox.value === "cls") {
                 dkConsole.innerHTML = "";
                 cmdbox.value = "";
@@ -42,7 +51,7 @@ function CreateDKConsole(parent, top, bottom, left, right, width, height) {
             cmdbox.value = "";
         }
     }
-    parent.appendChild(cmdbox);
+    dkConsoleFrame.appendChild(cmdbox);
 
     /////////////////////////////////////
     dkConsole.log = function(text, color) {
