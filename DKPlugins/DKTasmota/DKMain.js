@@ -35,8 +35,7 @@ function DKLoadPage() {
 
     CreateDKConsole(body, "700px", "0px", "0px", "0px");
     dkConsole.log("**** Tasmota device manager 0.1b ****<br>");
-
-    CreateClock(body);
+    CreateClock(body, "2px", "", "5px", "", "", "");
     CreateDeviceTable(body);
 
     var cookies = getCookie().split("^");
@@ -46,7 +45,7 @@ function DKLoadPage() {
     }
 
     CreateButtons(body);
-    CreateChart(body);
+    CreateChart(body, "", "698px", "0px", "0px", "", "500px");
 
     //CreateVPDCalculator(body);
     //CreateDebugBox(body);
@@ -103,6 +102,8 @@ function CreateButtons(parent) {
     updateDevices.top = "5px";
     updateDevices.left = "30px";
     updateDevices.onclick = function() {
+		notifyMe();
+
         TimerLoop(false);
     }
     parent.appendChild(updateDevices);
@@ -137,8 +138,8 @@ function AddDevice(ip) {
 function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
-        //if(url.includes("192.168.1.98"))
-		notifyMe();
+        dkConsole.log("UpdateScreen("+success+","+url+","+data+")", "orange");
+        DKDEBUG();
         CreateSound("PowerDown.mp3");
         sound.play();
         return;

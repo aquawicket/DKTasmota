@@ -2,7 +2,6 @@
 /*
 function DKDEBUG() {
     //dkConsole.log(console.trace());
-    
     var args = "";
     var count = 0;
     for (let val of DKDEBUG.caller.arguments) {
@@ -13,9 +12,9 @@ function DKDEBUG() {
         count++;
     }
 
-    dkConsole.log(":DEBUG:", "orange");
+    //dkConsole.log(":DEBUG:", "orange");
     dkConsole.log(DKDEBUG.caller.name + "(" + args + ")", "orange");
-    dkConsole.log(DKDEBUG.caller.arguments.callee, "orange");
+    //dkConsole.log(DKDEBUG.caller.arguments.callee, "orange");
 }
 */
 
@@ -44,9 +43,8 @@ DKLoadJSFile = function(file, callback) {
 /////////////////////////////////////////
 DKLoadHtmlFile = function(file, callback) {
     DKSendRequest(file, function(success, url, data) {
-        if (success) {
-            callback && callback(data);
-        }
+        success && callback && callback(data);
+        //TESTME
     });
 }
 
@@ -110,7 +108,7 @@ DKSendRequest = function(url, callback) {
     xhr.send();
 }
 
-//////////////////////////////////////////
+////////////////////////////////////////
 function setCookie(cookieString, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));

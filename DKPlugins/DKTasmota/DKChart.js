@@ -1,15 +1,17 @@
 var myConfig;
 
-////////////////////////////////////////////////////////
-function CreateChart(parent, top, bottom, left, right) {
+/////////////////////////////////////////////////////////////////////
+function CreateChart(parent, top, bottom, left, right, width, height) {
     DKLoadJSFile("https://cdn.zingchart.com/zingchart.min.js", function() {
         var myChart = document.createElement("div");
         myChart.id = "myChart";
         myChart.style.position = "absolute";
-        myChart.style.width = "90%";
-        myChart.style.top = "400px";
-        myChart.style.left = "5%";
-        myChart.style.height = "400px";
+        myChart.style.top = top;
+        myChart.style.bottom = bottom;
+        myChart.style.left = left;
+        myChart.style.right = right;
+        myChart.style.width = width;
+        myChart.style.height = height;
         parent.appendChild(myChart);
         var d = new Date();
         var millisec = d.getTime();
