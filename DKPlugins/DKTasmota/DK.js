@@ -80,10 +80,10 @@ DKSendRequest = function(url, callback) {
     xhr.open("GET", url, true);
     xhr.timeout = 20000;
     xhr.addEventListener('timeout', function(event) {
-        callback(false, "DKSendRequest(" + url + ") -> Timed out");
+        callback(false, url, "DKSendRequest(" + url + ") -> Timed out");
     });
     xhr.addEventListener('error', function(event) {
-        callback(false, "DKSendRequest(" + url + ")-> ERROR");
+        callback(false, url, "DKSendRequest(" + url + ")-> ERROR");
     });
     xhr.send();
 }
@@ -93,8 +93,9 @@ function setCookie(cookieString, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
-    document.cookie = cookieString;// + expires + ";path=/";
-    
+    document.cookie = cookieString;
+    // + expires + ";path=/";
+
 }
 
 ////////////////////

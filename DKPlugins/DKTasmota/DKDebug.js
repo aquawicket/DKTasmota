@@ -1,11 +1,8 @@
+//function DKDEBUG() {// DKDEBUG should be a function you can put anywhere.
+// It should give you options of a stack trace, last function and variable values
 
-function DKDEBUG() {
-	// DKDEBUG should be a function you can put anywhere.
-	// It should give you options of a stack trace, last function and variable values
-	
-	
-    //dkConsole.log(console.trace());
-    /*
+//dkConsole.log(console.trace());
+/*
 	var args = "";
     var count = 0;
     for (let val of DKDEBUG.caller.arguments) {
@@ -16,11 +13,11 @@ function DKDEBUG() {
         count++;
     }
 	*/
-	
-    //dkConsole.log(":DEBUG:", "orange");
-    //dkConsole.log(DKDEBUG.caller.name + "(" + args + ")", "orange");
-    //dkConsole.log(DKDEBUG.caller.arguments.callee, "orange");
-}
+
+//dkConsole.log(":DEBUG:", "orange");
+//dkConsole.log(DKDEBUG.caller.name + "(" + args + ")", "orange");
+//dkConsole.log(DKDEBUG.caller.arguments.callee, "orange");
+//}
 
 ////////////////////////////////////////////////////////////////////////
 function CreateDebugBox(parent, top, bottom, left, right, width, height) {

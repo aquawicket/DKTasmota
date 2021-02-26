@@ -10,7 +10,7 @@ var Temp;
 var Humidity;
 var ExhaustFan = true;
 var Co2 = false;
-var WaterWalls = true;
+var WaterWalls = false;
 var Heater = true;
 var bypassRules = [];
 
@@ -38,9 +38,10 @@ function DKLoadPage() {
     CreateDeviceTable(body);
     CreateChart(body, "", "75px", "2px", "2px", "", "400px");
     CreateDKConsole(body, "700px", "0px", "0px", "0px", "", "");
+    CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(body, "30px", "", "", "2px", "200px", "400px");
-    
+
     dkConsole.log("**** Tasmota device manager 0.1b ****<br>");
     var cookies = getCookie().split("^");
     for (n = 0; n < cookies.length - 1; n++) {
@@ -105,29 +106,69 @@ function CreateButtons(parent) {
 }
 
 ////////////////////////
-function AddDevice(ip) {
+function ScanDevices() {
+    var cookieString = "";
     var table = document.getElementById("deviceTable");
-    DKTableAddRow(table);
-    var row = table.rows[table.rows.length - 1];
-    row.id = ip;
-    row.cells[0].innerHTML = "<a>" + ip + "</a>";
-    row.cells[0].style.cursor = "pointer";
-    row.cells[0].onclick = function() {
-        var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
-    }
-    row.cells[1].style.textAlign = "center";
-    row.cells[1].style.cursor = "pointer";
-    row.cells[1].onclick = function() {
-        bypassRules += ip;
-        bypassRules += ",";
-        dkConsole.log("Temporarily added " + ip + " to bypassRules, refresh page to reset", "Yellow");
-        DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
-    }
-    row.cells[2].style.textAlign = "center";
-    row.cells[3].style.textAlign = "center";
-    table.rows[0].cells[0].innerHTML = "Devices ("+(table.rows.length-1)+")";
 
-    DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+    table.parentNode.remove(table);
+    CreateDeviceTable(body);
+
+    GetTasmotaDevices("192.168.1.", function(ip, done) {
+        if (ip) {
+            AddDevice(ip);
+            if (!cookieString.includes(ip)) {
+                cookieString = cookieString + ip + "^";
+                setCookie(cookieString, 30);
+            }
+        }
+        if (done) {
+            dkConsole.log("\n");
+            dkConsole.log("Scan Complete");
+            dkConsole.log("(" + tasmotaDeviceCount + ") Tasmota Devices found");
+            setCookie(cookieString, 30);
+        }
+    });
+}
+
+//////////////////////
+function AddDevice(ip) {
+    DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
+        if (!success || !url.includes(ip)) {
+            return;
+        }
+        var device = JSON.parse(data);
+        if (!device.Hostname) {
+            return;
+        }
+        var hostname = device.Hostname;
+
+        var table = document.getElementById("deviceTable");
+        DKTableAddRow(table);
+        var row = table.rows[table.rows.length - 1];
+        row.setAttribute("ip", ip);
+        row.setAttribute("hostname", hostname);
+        row.cells[0].innerHTML = "<a>" + ip + "</a>";
+        row.cells[0].style.cursor = "pointer";
+        row.cells[0].onclick = function() {
+            var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+        }
+        row.cells[1].style.textAlign = "center";
+        row.cells[1].style.cursor = "pointer";
+        row.cells[1].onclick = function() {
+            var hostname = row.getAttribute("hostname");
+            if (!bypassRules.includes(hostname)) {
+                bypassRules += hostname;
+                bypassRules += ",";
+                dkConsole.log("Temporarily added " + hostname + " to bypassRules, refresh page to reset", "Yellow");
+            }
+            DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        }
+        row.cells[2].style.textAlign = "center";
+        row.cells[3].style.textAlign = "center";
+        table.rows[0].cells[0].innerHTML = "Devices (" + (table.rows.length - 1) + ")";
+
+        DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+    });
 }
 
 /////////////////////////////////////////
@@ -135,20 +176,30 @@ function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
         dkConsole.log("UpdateScreen(" + success + ", " + url + ", " + data + ")", "orange");
-        CreateSound("PowerDown.mp3");
-        sound.play();
+        //sound.play();
+        PlaySound("PowerDown.mp3");
         return;
     }
 
     var row;
     var table = document.getElementById("deviceTable");
     for (var n = 1; n < table.rows.length; n++) {
-        if (url.includes(table.rows[n].id)) {
+        if (url.includes(table.rows[n].getAttribute("ip"))) {
             row = table.rows[n];
+            continue;
         }
     }
+    if (!row) {
+        return;
+    }
+
     var device = JSON.parse(data);
-    var ip = row.id;
+    var ip = row.getAttribute("ip");
+
+    var deviceHostname = device.StatusNet ? device.StatusNet.Hostname : device.Hostname;
+    if (deviceHostname) {
+        row.setAttribute("Hostname", deviceHostname);
+    }
 
     var deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (deviceName) {
@@ -264,36 +315,11 @@ function UpdateScreen(success, url, data) {
     }
 }
 
-////////////////////////
-function ScanDevices() {
-    var cookieString = "";
-    var table = document.getElementById("deviceTable");
-
-    table.parentNode.remove(table);
-    CreateDeviceTable(body);
-
-    GetTasmotaDevices("192.168.1.", function(ip, done) {
-        if (ip) {
-            AddDevice(ip);
-            if (!cookieString.includes(ip)) {
-                cookieString = cookieString + ip + "^";
-                setCookie(cookieString, 30);
-            }
-
-        }
-        if (done) {
-            dkConsole.log("\n");
-            dkConsole.log("Scan Complete");
-            dkConsole.log("(" + tasmotaDeviceCount + ") Tasmota Devices found");
-            setCookie(cookieString, 30);
-        }
-    });
-}
-;///////////////////////////
+///////////////////////////
 function ProcessDevices() {
     var table = document.getElementById("deviceTable");
     for (var n = 1; n < table.rows.length; n++) {
-        var ip = table.rows[n].id;
+        var ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
 }
@@ -317,48 +343,45 @@ function ProcessRules() {
         dkConsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + MaxHum + "% !!!", "red");
     }
 
-    if (!bypassRules.includes("192.168.1.63") && ExhaustFan) {
+    if (!bypassRules.includes("Device005") && ExhaustFan) {
         if ((Temp > TargetTemp) || (Humidity > TargetHum)) {
-            DKSendRequest("http://192.168.1.63/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
             //exhaust fan ON
         } else {
-            DKSendRequest("http://192.168.1.63/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
             //exhaust fan OFF
         }
     }
 
-    if (!bypassRules.includes("192.168.1.114") && WaterWalls) {
+    if (!bypassRules.includes("Device007") && WaterWalls) {
         if (((Temp > TargetTemp) && (Humidity < MaxHum)) || ((Humidity < TargetHum) && (Temp > MinTemp))) {
-            DKSendRequest("http://192.168.1.114/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
             //water walls ON
         } else {
-            DKSendRequest("http://192.168.1.114/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
             //water walls OFF
         }
     }
 
-    if (!bypassRules.includes("192.168.1.75") && Co2) {
+    if (!bypassRules.includes("Device008") && Co2) {
         if ((Temp < TargetTemp) && (Humidity < TargetHum)) {
-            DKSendRequest("http://192.168.1.75/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
             //Co2 ON
         } else {
-            DKSendRequest("http://192.168.1.75/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
             //Co2 OFF
         }
     }
 
-    if (!bypassRules.includes("192.168.1.162") && Heater) {
+    if (!bypassRules.includes("Device006") && Heater) {
         if (Temp < TargetTemp) {
-            DKSendRequest("http://192.168.1.162/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
             //heater ON
         } else {
-            DKSendRequest("http://192.168.1.162/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
             //heater OFF
         }
     }
-    //} else {
-    //    dkConsole.log("!!! ProcessRules are NOT running. variables invalid !!!", "red");
-    //}
 }
 
 function DumpVariables() {
