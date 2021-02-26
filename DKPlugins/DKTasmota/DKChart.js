@@ -46,7 +46,7 @@ function CreateChart(parent, top, bottom, left, right, width, height) {
     });
 }
 
-//////////////////////////////
+////////////////////////////
 function UpdateChart(values) {
     myConfig.series[0].values.push(values[0]);
     myConfig.series[1].values.push(values[1]);

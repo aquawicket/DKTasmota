@@ -3,9 +3,9 @@ DKCreateTable = function(parent, top, bottom, left, right, width, height) {
     var table = document.createElement('table');
     table.style.position = "absolute";
     table.style.top = top;
+    table.style.bottom = bottom;
     table.style.left = left;
-    //table.style.bottom = bottom;
-    //table.style.right = right;
+    table.style.right = right;
     table.style.width = width;
     table.style.height = height;
     //table.setAttribute('border', '1');
@@ -39,7 +39,7 @@ DKTableAddRow = function(table) {
         var cell = DKTableInsertCell(table, row);
     }
     return table.rows.length;
-    //return the created row number
+    //return the created row number  
 }
 
 //////////////////////////////////
