@@ -207,7 +207,7 @@ function TimerLoop(force) {
     //DEBUG /////////////////////
 
     var currentdate = new Date();
-    Time = currentdate.getHours() + (currentdate.getMinutes() * .01);
+    time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
     if (tempurature && humidity) {
@@ -386,7 +386,7 @@ function UpdateScreen(success, url, data) {
 
         var humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         var humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
-        var dewPointText = "<a id='DewP'>Dew point " + dewPoint + "&#176;F</a>";
+        var dewPointText = "<a id='DewP'>"+ dewPoint +" DP &#176;F</a>";
 
         var tempScale = 510;
         var tempDiff = (Math.abs(tempTarget - temperature) * 5).toFixed(1);
@@ -460,7 +460,7 @@ function UpdateScreen(success, url, data) {
 ////////////////////////
 function DumpVariables() {
     dkconsole.debug("time: " + time);
-    dkconsole.log("temperature: " + temp, "orange");
+    dkconsole.log("temperature: " + temperature, "orange");
     dkconsole.log("humidity: " + humidity, "orange");
     dkconsole.log("dewPoint: " + dewPoint, "orange");
     dkconsole.log("bypassRules: " + bypassRules, "orange");
