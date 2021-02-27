@@ -164,9 +164,9 @@ function AddDevice(ip) {
         cell.style.cursor = "pointer";
         cell.onclick = function() {
             var hostname = row.getAttribute("hostname");
-            if (!BypassRules.includes(hostname)) {
-                BypassRules += hostname;
-                BypassRules += ",";
+            if (!bypassRules.includes(hostname)) {
+                bypassRules += hostname;
+                bypassRules += ",";
                 dkconsole.log("Temporarily added " + hostname + " to bypass automation, refresh page to reset", "Yellow");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
@@ -459,24 +459,24 @@ function UpdateScreen(success, url, data) {
 
 ////////////////////////
 function DumpVariables() {
-    dkconsole.debug("Time: " + Time);
-    dkconsole.log("Temp: " + Temp, "orange");
-    dkconsole.log("Humidity: " + Humidity, "orange");
-    dkconsole.log("DewPoint: " + DewPoint, "orange");
-    dkconsole.log("BypassRules: " + BypassRules, "orange");
+    dkconsole.debug("time: " + time);
+    dkconsole.log("temperature: " + temp, "orange");
+    dkconsole.log("humidity: " + humidity, "orange");
+    dkconsole.log("dewPoint: " + dewPoint, "orange");
+    dkconsole.log("bypassRules: " + bypassRules, "orange");
 
     dkconsole.log("tempTarget: " + tempTarget, "orange");
-    dkconsole.log("TempCalib: " + TempCalib, "orange");
-    dkconsole.log("TempMin: " + TempMin, "orange");
-    dkconsole.log("TempMax: " + TempMax, "orange");
+    dkconsole.log("tempCalib: " + tempCalib, "orange");
+    dkconsole.log("tempMin: " + tempMin, "orange");
+    dkconsole.log("tempMax: " + tempMax, "orange");
 
     dkconsole.log("humTarget: " + humTarget, "orange");
-    dkconsole.log("HumCalib: " + HumCalib, "orange");
-    dkconsole.log("HumMin: " + HumMin, "orange");
-    dkconsole.log("HumMax: " + HumMax, "orange");
+    dkconsole.log("humCalib: " + humCalib, "orange");
+    dkconsole.log("humMin: " + humMin, "orange");
+    dkconsole.log("humMax: " + humMax, "orange");
 
-    dkconsole.log("ExhaustFan: " + ExhaustFan, "orange");
-    dkconsole.log("Co2: " + Co2, "orange");
-    dkconsole.log("WaterWalls: " + WaterWalls, "orange");
-    dkconsole.log("Heater: " + Heater, "orange");
+    dkconsole.log("exhaustFan: " + exhaustFan, "orange");
+    dkconsole.log("co2: " + co2, "orange");
+    dkconsole.log("waterWalls: " + waterWalls, "orange");
+    dkconsole.log("heater: " + heater, "orange");
 }
