@@ -52,14 +52,15 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
     });
 }
 
-//////////////////////////////////////////////
-function UpdateChart(Temp, Humidity, DewPoint) {
-    dkconsole.log("Temp = " + parseFloat(Temp));
-    dkconsole.log("Humidity = " + parseFloat(Humidity));
-    dkconsole.log("DewPoint = "+parseFloat(DewPoint));
-    myConfig.series[1].values.push(parseFloat(Temp));
-    myConfig.series[0].values.push(parseFloat(Humidity));
-    //myConfig.series[0].values.push(parseFloat(DewPoint)); //DewPoint.toFixed(1)?
+/////////////////////////////////////////////////////
+function UpdateChart(temperature, humidity, dewPoint) {
+    //dkconsole.log("Temp = " + parseFloat(Temp));
+    //dkconsole.log("Humidity = " + parseFloat(Humidity));
+    //dkconsole.log("DewPoint = "+parseFloat(DewPoint));
+    //Temp = green(low), DewPoint = blue(mid), Humidity = red(high)
+    myConfig.series[2].values.push(parseFloat(temperature));
+    myConfig.series[1].values.push(parseFloat(humidity));
+    myConfig.series[0].values.push(parseFloat(dewPoint));
     zingchart.render({
         id: 'myChart',
         data: myConfig,

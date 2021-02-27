@@ -1,23 +1,23 @@
-var Time;
-var Temp;
-var Humidity;
-var DewPoint;
+var time;
+var temperature;
+var humidity;
+var dewPoint;
 var bypassRules = [];
 
-var TempTarget = 77;
-var TempCalib = -5;
-var TempMin = TempTarget - 10;
-var TempMax = TempTarget + 10;
+var tempTarget = 77;
+var tempCalib = -5;
+var tempMin = tempTarget - 10;
+var tempMax = tempTarget + 10;
 
-var HumTarget = 50;
-var HumCalib = -13;
-var HumMin = HumTarget - 10;
-var HumMax = HumTarget + 10;
+var humTarget = 50;
+var humCalib = -13;
+var humMin = humTarget - 10;
+var humMax = humTarget + 10;
 
-var ExhaustFan = true;
-var Co2 = false;
-var WaterWalls = false;
-var Heater = true;
+var exhaustFan = true;
+var co2 = false;
+var waterWalls = false;
+var heater = true;
 
 //////////////////////
 function DKLoadFiles() {
@@ -25,6 +25,7 @@ function DKLoadFiles() {
     //This function can only load files, Not initiate variables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
     DKLoadJSFile("DKConsole.js");
+    //, function(){
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKCookies.js");
     DKLoadJSFile("DKNotifications.js");
@@ -35,6 +36,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKChart.js");
     DKLoadJSFile("VPDCalculator.js");
     DKLoadJSFile("DKDebug.js");
+    //});
 }
 
 /////////////////////
@@ -45,7 +47,11 @@ function DKLoadPage() {
     CreateButtons(body);
     CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
-    CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px");
+    CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px", function() {
+        UpdateChart(99.0, 50.0, 0.1);
+        //temperature, humidity, dewPoint  
+    });
+
     CreateDKConsole(body, "dkconsole", "700px", "0px", "0px", "0px", "", "");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
@@ -57,8 +63,10 @@ function DKLoadPage() {
         var ip = cookies[n];
         AddDevice(ip);
     }
+
     //Run TimerLoop every minute
     window.setInterval(TimerLoop, 60000);
+
 }
 
 //////////////////////////////
@@ -156,9 +164,9 @@ function AddDevice(ip) {
         cell.style.cursor = "pointer";
         cell.onclick = function() {
             var hostname = row.getAttribute("hostname");
-            if (!bypassRules.includes(hostname)) {
-                bypassRules += hostname;
-                bypassRules += ",";
+            if (!BypassRules.includes(hostname)) {
+                BypassRules += hostname;
+                BypassRules += ",";
                 dkconsole.log("Temporarily added " + hostname + " to bypass automation, refresh page to reset", "Yellow");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
@@ -202,8 +210,8 @@ function TimerLoop(force) {
     Time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
-    if (Temp && Humidity) {
-        UpdateChart(Temp, Humidity, DewPoint);
+    if (tempurature && humidity) {
+        UpdateChart(temperature, humidity, dewPoint);
     }
 }
 
@@ -220,14 +228,14 @@ function ScanDevices() {
             AddDevice(ip);
             if (!cookieString.includes(ip)) {
                 cookieString = cookieString + ip + "^";
-                setCookie(cookieString, 30);
+                SetCookie(cookieString, 30);
             }
         }
         if (done) {
             dkconsole.log("\n");
             dkconsole.log("Scan Complete");
             dkconsole.log("(" + tasmotaDeviceCount + ") Tasmota Devices found");
-            setCookie(cookieString, 30);
+            SetCookie(cookieString, 30);
         }
     });
 }
@@ -247,21 +255,21 @@ function ProcessRules() {
     DumpVariables();
 
     //Alarms
-    if (Temp < TempMin) {
+    if (temperature < tempMin) {
         dkconsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + TempMin + "&#176;F !!!", "red");
     }
-    if (Temp > TempMax) {
+    if (temperature > TempMax) {
         dkconsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + TempMax + "&#176;F !!!", "red");
     }
-    if (Humidity < HumMin) {
-        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + HumMin + "% !!!", "red");
+    if (humidity < humMin) {
+        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + HumMin + "% !!!", "red");
     }
-    if (Humidity > HumMax) {
-        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + HumMax + "% !!!", "red");
+    if (humidity > humMax) {
+        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + HumMax + "% !!!", "red");
     }
 
-    if (!bypassRules.includes("Device005") && ExhaustFan) {
-        if ((Temp > TempTarget) || (Humidity > HumTarget && Temp > TempMin)) {
+    if (!BypassRules.includes("Device005") && exhaustFan) {
+        if ((temperature > tempTarget) || (humidity > humTarget && temperature > temperatureMin)) {
             //exhaust fan ON
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
 
@@ -271,8 +279,8 @@ function ProcessRules() {
         }
     }
 
-    if (!bypassRules.includes("Device007") && WaterWalls) {
-        if (Time > 17 && (((Temp > TempTarget) && (Humidity < HumMax)) || ((Humidity < HumTarget) && (Temp > TempMin)))) {
+    if (!bypassRules.includes("Device007") && waterWalls) {
+        if ((time > 17) && (((tempurature > tempTarget) && (humidity < humMax)) || ((humidity < humTarget) && (temperature > tempMin)))) {
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
             //water walls ON
         } else {
@@ -282,7 +290,7 @@ function ProcessRules() {
     }
 
     if (!bypassRules.includes("Device008") && Co2) {
-        if ((Temp < TempTarget) && (Humidity < HumTarget)) {
+        if ((temperature < tempTarget) && (humidity < humTarget)) {
             DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
             //Co2 ON
         } else {
@@ -291,8 +299,8 @@ function ProcessRules() {
         }
     }
 
-    if (!bypassRules.includes("Device006") && Heater) {
-        if (Temp < TempTarget) {
+    if (!bypassRules.includes("Device006") && heater) {
+        if (temperature < tempTarget) {
             DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
             //heater ON
         } else {
@@ -348,76 +356,77 @@ function UpdateScreen(success, url, data) {
 
     var deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
     if (deviceSI7021) {
-        Temp = (deviceSI7021.Temperature + TempCalib).toFixed(1);
+        temperature = (deviceSI7021.Temperature + tempCalib);
         var tempDirection = " ";
-        if (Temp > TempTarget) {
+        if (temperature > tempTarget) {
             tempDirection = "&#8593;"
         }
-        if (Temp < TempTarget) {
+        if (temperature < tempTarget) {
             tempDirection = "&#8595;"
         }
-        if (temp === TempTarget) {
+        if (tempText === tempTarget) {
             tempDirection = " ";
         }
-        var temp = "<a id='Temp'>" + Temp + " &#176;F" + tempDirection + "</a>";
-        var targTemp = "<a id='targTemp'> (" + TempTarget + "&#176;F)</a>";
+        var tempText = "<a id='Temp'>" + temperature + " &#176;F" + tempDirection + "</a>";
+        var tempTargetText = "<a id='TempTarg'> (" + tempTarget + "&#176;F)</a>";
 
-        Humidity = (deviceSI7021.Humidity + HumCalib).toFixed(1);
+        humidity = (deviceSI7021.Humidity + humCalib).toFixed(1);
         var humDirection = " ";
-        if (Humidity > HumTarget) {
+        if (humidity > humTarget) {
             humDirection = "&#8593;"
         }
-        if (Humidity < HumTarget) {
+        if (humidity < humTarget) {
             humDirection = "&#8595;"
         }
-        if (Humidity === HumTarget) {
+        if (humidity === humTarget) {
             humDirection = " ";
         }
 
-        DewPoint = (deviceSI7021.DewPoint).toFixed(1);
+        dewPoint = (deviceSI7021.DewPoint).toFixed(1);
 
-        var humidity = "<a id='RH'>" + Humidity + " RH%" + humDirection + "</a>";
-        var targHum = "<a id='targHum'> (" + HumTarget + "%)</a>";
-        var dewPoint = "<a id='DewP'>Dew point " + DewPoint + "&#176;F</a>";
+        var humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
+        var humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
+        var dewPointText = "<a id='DewP'>Dew point " + dewPoint + "&#176;F</a>";
 
-        var scaleTemp = 510;
-        var tempDiff = (Math.abs(TempTarget - Temp) * 5).toFixed(1);
-        var tempNum = (tempDiff * scaleTemp / 100).toFixed(1);
-        var redTemp = tempNum
-        var greenTemp = 510 - tempNum;
-        if (redTemp > 255) {
-            redTemp = 255;
+        var tempScale = 510;
+        var tempDiff = (Math.abs(tempTarget - temperature) * 5).toFixed(1);
+        var tempNum = (tempDiff * tempScale / 100).toFixed(1);
+        var tempRed = tempNum
+        var tempGreen = 510 - tempNum;
+        if (tempRed > 255) {
+            tempRed = 255;
         }
-        if (redTemp < 0) {
-            redTemp = 0;
+        if (tempRed < 0) {
+            tempRed = 0;
         }
-        if (greenTemp > 255) {
-            greenTemp = 255;
+        if (tempGreen > 255) {
+            tempGreen = 255;
         }
-        if (greenTemp < 0) {
-            greenTemp = 0;
+        if (tempGreen < 0) {
+            tempGreen = 0;
         }
-        row.cells[2].innerHTML = targTemp + " " + temp + "<br>" + targHum + " " + humidity + "<br>" + dewPoint;
-        document.getElementById("Temp").style.color = "rgb(" + redTemp + "," + greenTemp + ",0)";
+        
+        row.cells[2].innerHTML = tempTargetText + " " + tempText + "<br>" + humTargetText + " " + humText + "<br>" + dewPointText;
+        document.getElementById("Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
-        var scaleHum = 510;
-        var humDiff = (Math.abs(HumTarget - Humidity) * 5).toFixed(1);
-        var humNum = (humDiff * scaleHum / 100).toFixed(1);
-        var redHum = humNum;
-        var greenHum = 510 - humNum;
-        if (redHum > 255) {
-            redHum = 255;
+        var humScale = 510;
+        var humDiff = (Math.abs(humTarget - humidity) * 5).toFixed(1);
+        var humNum = (humDiff * humScale / 100).toFixed(1);
+        var humRed = humNum;
+        var humGreen = 510 - humNum;
+        if (humRed > 255) {
+            humRed = 255;
         }
-        if (redHum < 0) {
-            redHum = 0;
+        if (humRed < 0) {
+            humRed = 0;
         }
-        if (greenHum > 255) {
-            greenHum = 255;
+        if (humGreen > 255) {
+            humGreen = 255;
         }
-        if (greenHum < 0) {
-            greenHum = 0;
+        if (humGreen < 0) {
+            humGreen = 0;
         }
-        document.getElementById("RH").style.color = "rgb(" + redHum + "," + greenHum + ",0)";
+        document.getElementById("RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         document.getElementById("RH").style.textAlilgn = "center";
         document.getElementById("DewP").style.color = "rgb(50,50,50)";
         document.getElementById("DewP").style.textAlign = "center";
@@ -454,14 +463,14 @@ function DumpVariables() {
     dkconsole.log("Temp: " + Temp, "orange");
     dkconsole.log("Humidity: " + Humidity, "orange");
     dkconsole.log("DewPoint: " + DewPoint, "orange");
-    dkconsole.log("bypassRules: " + bypassRules, "orange");
+    dkconsole.log("BypassRules: " + BypassRules, "orange");
 
-    dkconsole.log("TempTarget: " + TempTarget, "orange");
+    dkconsole.log("tempTarget: " + tempTarget, "orange");
     dkconsole.log("TempCalib: " + TempCalib, "orange");
     dkconsole.log("TempMin: " + TempMin, "orange");
     dkconsole.log("TempMax: " + TempMax, "orange");
 
-    dkconsole.log("HumTarget: " + HumTarget, "orange");
+    dkconsole.log("humTarget: " + humTarget, "orange");
     dkconsole.log("HumCalib: " + HumCalib, "orange");
     dkconsole.log("HumMin: " + HumMin, "orange");
     dkconsole.log("HumMax: " + HumMax, "orange");
