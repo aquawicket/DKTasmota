@@ -54,9 +54,9 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
 
 //////////////////////////////////////////////
 function UpdateChart(Temp, Humidity, DewPoint) {
-    dkConsole.log("Temp = " + parseFloat(Temp));
-    dkConsole.log("Humidity = " + parseFloat(Humidity));
-    dkConsole.log("DewPoint = "+parseFloat(DewPoint));
+    dkconsole.log("Temp = " + parseFloat(Temp));
+    dkconsole.log("Humidity = " + parseFloat(Humidity));
+    dkconsole.log("DewPoint = "+parseFloat(DewPoint));
     myConfig.series[1].values.push(parseFloat(Temp));
     myConfig.series[0].values.push(parseFloat(Humidity));
     //myConfig.series[0].values.push(parseFloat(DewPoint)); //DewPoint.toFixed(1)?

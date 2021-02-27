@@ -1,36 +1,36 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/console
 
-var dkConsole;
+var dkconsole;
 
 /////////////////////////////////////////////////////////////////////////////
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
-    DKLoadCSSFile("DKConsole.css");
-    var dkConsoleFrame = document.createElement("div");
-    dkConsoleFrame.id = id;
-    dkConsoleFrame.style.position = "absolute";
-    dkConsoleFrame.style.top = top;
-    dkConsoleFrame.style.bottom = bottom;
-    dkConsoleFrame.style.left = left;
-    dkConsoleFrame.style.right = right;
-    dkConsoleFrame.style.width = width;
-    dkConsoleFrame.style.height = height;
-    parent.appendChild(dkConsoleFrame);
+    DKLoadCSSFile("dkconsole.css");
+    var dkconsoleFrame = document.createElement("div");
+    dkconsoleFrame.id = id;
+    dkconsoleFrame.style.position = "absolute";
+    dkconsoleFrame.style.top = top;
+    dkconsoleFrame.style.bottom = bottom;
+    dkconsoleFrame.style.left = left;
+    dkconsoleFrame.style.right = right;
+    dkconsoleFrame.style.width = width;
+    dkconsoleFrame.style.height = height;
+    parent.appendChild(dkconsoleFrame);
 
-    dkConsole = document.createElement("div");
-    dkConsole.className = "DKConsole";
-    dkConsole.style.position = "absolute";
-    dkConsole.style.backgroundColor = "black";
-    dkConsole.style.color = "white";
-    dkConsole.style.fontColor = "white";
-    dkConsole.style.top = "0px";
-    dkConsole.style.bottom = "20px";
-    dkConsole.style.left = "0px";
-    dkConsole.style.right = "0px";
-    //dkConsole.style.width = "";
-    //dkConsole.style.height = "";
-    dkConsole.style.visibility = "visible";
-    dkConsole.style.overflow = "auto";
-    dkConsoleFrame.appendChild(dkConsole);
+    dkconsole = document.createElement("div");
+    dkconsole.className = "dkconsole";
+    dkconsole.style.position = "absolute";
+    dkconsole.style.backgroundColor = "black";
+    dkconsole.style.color = "white";
+    dkconsole.style.fontColor = "white";
+    dkconsole.style.top = "0px";
+    dkconsole.style.bottom = "20px";
+    dkconsole.style.left = "0px";
+    dkconsole.style.right = "0px";
+    //dkconsole.style.width = "";
+    //dkconsole.style.height = "";
+    dkconsole.style.visibility = "visible";
+    dkconsole.style.overflow = "auto";
+    dkconsoleFrame.appendChild(dkconsole);
 
     //command box
     var cmdbox = document.createElement("input");
@@ -46,59 +46,59 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         if (key === 13) {
             //enter
             if (cmdbox.value === "clear" || cmdbox.value === "cls") {
-                dkConsole.innerHTML = "";
+                dkconsole.innerHTML = "";
                 cmdbox.value = "";
                 return;
             }
-            dkConsole.log("RUN Javascript -> " + cmdbox.value);
+            dkconsole.log("RUN Javascript -> " + cmdbox.value);
             eval(cmdbox.value);
             cmdbox.value = "";
         }
     }
-    dkConsoleFrame.appendChild(cmdbox);
+    dkconsoleFrame.appendChild(cmdbox);
 
     /////////////////////////////////////
-    dkConsole.log = function(text, color) {
+    dkconsole.log = function(text, color) {
         var newText = document.createElement("a");
-        newText.className = "DKConsole";
+        newText.className = "dkconsole";
         newText.innerHTML = text + "<br>";
         if (color !== undefined) {
             newText.style.color = color;
         } else {//newText.style.color = "white"; //default anyway?
         }
-        dkConsole.appendChild(newText);
-        dkConsole.scrollTop = dkConsole.scrollHeight;
+        dkconsole.appendChild(newText);
+        dkconsole.scrollTop = dkconsole.scrollHeight;
         //console.log(text); //mirror message to the console as well.
     }
 
     ////////////////////////////////
-    dkConsole.debug = function(text) {
-        dkConsole.log(text, "orange");
+    dkconsole.debug = function(text) {
+        dkconsole.log(text, "orange");
     }
 
     ////////////////////////////////
-    dkConsole.error = function(text) {
-        dkConsole.log(text, "red");
+    dkconsole.error = function(text) {
+        dkconsole.log(text, "red");
     }
 
     ///////////////////////////////
-    dkConsole.warn = function(text) {
-        dkConsole.log(text, "yelow");
+    dkconsole.warn = function(text) {
+        dkconsole.log(text, "yelow");
     }
 
     /////////////////////////////////////
-    dkConsole.add = function(text, color) {
+    dkconsole.add = function(text, color) {
         var newText = document.createElement("a");
-        var lastText = dkConsole.lastElementChild;
-        newText.className = "DKConsole";
+        var lastText = dkconsole.lastElementChild;
+        newText.className = "dkconsole";
         lastText.innerHTML = lastText.innerHTML.slice(0, -4);
         newText.innerHTML = text + "<br>";
         if (color !== undefined) {
             newText.style.color = color;
         } else {//newText.style.color = "white";
         }
-        dkConsole.appendChild(newText);
+        dkconsole.appendChild(newText);
     }
 
-    return dkConsole;
+    return dkconsole;
 }

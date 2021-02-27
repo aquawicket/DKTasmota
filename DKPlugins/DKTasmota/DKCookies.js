@@ -9,7 +9,7 @@ function DKGetCookies() {
         //AddDevice(ip);
     }
     // return an array of the cookies
-    dkConsole.debug("DKGetCookies() -> "+cookies);
+    dkconsole.debug("DKGetCookies() -> "+cookies);
     return cookies;
 }
 

@@ -46,12 +46,12 @@ function DKLoadPage() {
     CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
     CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px");
-    CreateDKConsole(body, "dkConsole", "700px", "0px", "0px", "0px", "", "");
+    CreateDKConsole(body, "dkconsole", "700px", "0px", "0px", "0px", "", "");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(body, "30px", "", "", "2px", "200px", "400px");
 
-    dkConsole.log("**** Tasmota device manager 0.1b ****<br>");
+    dkconsole.log("**** Tasmota device manager 0.1b ****<br>");
     var cookies = getCookie().split("^");
     for (n = 0; n < cookies.length - 1; n++) {
         var ip = cookies[n];
@@ -159,7 +159,7 @@ function AddDevice(ip) {
             if (!bypassRules.includes(hostname)) {
                 bypassRules += hostname;
                 bypassRules += ",";
-                dkConsole.log("Temporarily added " + hostname + " to bypass automation, refresh page to reset", "Yellow");
+                dkconsole.log("Temporarily added " + hostname + " to bypass automation, refresh page to reset", "Yellow");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
@@ -193,8 +193,8 @@ function TimerLoop(force) {
     //DUBUG ///////////////////////
     /*
     var table = document.getElementById("deviceTable");
-    dkConsole.log("table.rows[3].rowIndex = " + table.rows[3].rowIndex);
-    dkConsole.log("table.rows[3].cells[3].cellIndex = " + table.rows[3].cells[3].cellIndex);
+    dkconsole.log("table.rows[3].rowIndex = " + table.rows[3].rowIndex);
+    dkconsole.log("table.rows[3].cells[3].cellIndex = " + table.rows[3].cells[3].cellIndex);
     */
     //DEBUG /////////////////////
 
@@ -224,9 +224,9 @@ function ScanDevices() {
             }
         }
         if (done) {
-            dkConsole.log("\n");
-            dkConsole.log("Scan Complete");
-            dkConsole.log("(" + tasmotaDeviceCount + ") Tasmota Devices found");
+            dkconsole.log("\n");
+            dkconsole.log("Scan Complete");
+            dkconsole.log("(" + tasmotaDeviceCount + ") Tasmota Devices found");
             setCookie(cookieString, 30);
         }
     });
@@ -248,16 +248,16 @@ function ProcessRules() {
 
     //Alarms
     if (Temp < TempMin) {
-        dkConsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + TempMin + "&#176;F !!!", "red");
+        dkconsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + TempMin + "&#176;F !!!", "red");
     }
     if (Temp > TempMax) {
-        dkConsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + TempMax + "&#176;F !!!", "red");
+        dkconsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + TempMax + "&#176;F !!!", "red");
     }
     if (Humidity < HumMin) {
-        dkConsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + HumMin + "% !!!", "red");
+        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + HumMin + "% !!!", "red");
     }
     if (Humidity > HumMax) {
-        dkConsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + HumMax + "% !!!", "red");
+        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + HumMax + "% !!!", "red");
     }
 
     if (!bypassRules.includes("Device005") && ExhaustFan) {
@@ -306,7 +306,7 @@ function ProcessRules() {
 function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
-        dkConsole.log("UpdateScreen(" + success + ", " + url + ", " + data + ")", "orange");
+        dkconsole.log("UpdateScreen(" + success + ", " + url + ", " + data + ")", "orange");
         PlaySound("PowerDown.mp3");
         return;
     }
@@ -450,24 +450,24 @@ function UpdateScreen(success, url, data) {
 
 ////////////////////////
 function DumpVariables() {
-    dkConsole.debug("Time: " + Time);
-    dkConsole.log("Temp: " + Temp, "orange");
-    dkConsole.log("Humidity: " + Humidity, "orange");
-    dkConsole.log("DewPoint: " + DewPoint, "orange");
-    dkConsole.log("bypassRules: " + bypassRules, "orange");
+    dkconsole.debug("Time: " + Time);
+    dkconsole.log("Temp: " + Temp, "orange");
+    dkconsole.log("Humidity: " + Humidity, "orange");
+    dkconsole.log("DewPoint: " + DewPoint, "orange");
+    dkconsole.log("bypassRules: " + bypassRules, "orange");
 
-    dkConsole.log("TempTarget: " + TempTarget, "orange");
-    dkConsole.log("TempCalib: " + TempCalib, "orange");
-    dkConsole.log("TempMin: " + TempMin, "orange");
-    dkConsole.log("TempMax: " + TempMax, "orange");
+    dkconsole.log("TempTarget: " + TempTarget, "orange");
+    dkconsole.log("TempCalib: " + TempCalib, "orange");
+    dkconsole.log("TempMin: " + TempMin, "orange");
+    dkconsole.log("TempMax: " + TempMax, "orange");
 
-    dkConsole.log("HumTarget: " + HumTarget, "orange");
-    dkConsole.log("HumCalib: " + HumCalib, "orange");
-    dkConsole.log("HumMin: " + HumMin, "orange");
-    dkConsole.log("HumMax: " + HumMax, "orange");
+    dkconsole.log("HumTarget: " + HumTarget, "orange");
+    dkconsole.log("HumCalib: " + HumCalib, "orange");
+    dkconsole.log("HumMin: " + HumMin, "orange");
+    dkconsole.log("HumMax: " + HumMax, "orange");
 
-    dkConsole.log("ExhaustFan: " + ExhaustFan, "orange");
-    dkConsole.log("Co2: " + Co2, "orange");
-    dkConsole.log("WaterWalls: " + WaterWalls, "orange");
-    dkConsole.log("Heater: " + Heater, "orange");
+    dkconsole.log("ExhaustFan: " + ExhaustFan, "orange");
+    dkconsole.log("Co2: " + Co2, "orange");
+    dkconsole.log("WaterWalls: " + WaterWalls, "orange");
+    dkconsole.log("Heater: " + Heater, "orange");
 }

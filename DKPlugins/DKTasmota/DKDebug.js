@@ -1,7 +1,7 @@
 //function DKDEBUG() {// DKDEBUG should be a function you can put anywhere.
 // It should give you options of a stack trace, last function and variable values
 
-//dkConsole.log(console.trace());
+//dkconsole.log(console.trace());
 /*
 	var args = "";
     var count = 0;
@@ -14,9 +14,9 @@
     }
 	*/
 
-//dkConsole.log(":DEBUG:", "orange");
-//dkConsole.log(DKDEBUG.caller.name + "(" + args + ")", "orange");
-//dkConsole.log(DKDEBUG.caller.arguments.callee, "orange");
+//dkconsole.log(":DEBUG:", "orange");
+//dkconsole.log(DKDEBUG.caller.name + "(" + args + ")", "orange");
+//dkconsole.log(DKDEBUG.caller.arguments.callee, "orange");
 //}
 
 ////////////////////////////////////////////////////////////////////////

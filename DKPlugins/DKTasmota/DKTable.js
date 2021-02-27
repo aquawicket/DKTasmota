@@ -65,10 +65,11 @@ DKTableInsertCell = function(table, row, name) {
 	if(!name){
     	//FIXME: why is dkConsole unavailable?
 	    if(dkConsole){
-	        dkConsole.error("DKTableInsertRow(): name parameter invalid");
+	        dkConsole.error("DKTableInsertCell(): name parameter invalid");
 	    }
     	else{
-	        console.error("DKTableInsertRow(): name parameter invalid");
+    		console.trace();
+	        console.error("DKTableInsertCell(): name parameter invalid");
         }
     }
     var cell = row.insertCell(-1);
@@ -81,6 +82,7 @@ DKTableInsertCell = function(table, row, name) {
 DKTableAddRow = function(table, name) {
     var row = DKTableInsertRow(table, name);
     row.id = "row" + table.rows.length;
+    //dkconsole.debug("DKTableAddRow() -> row.id = "+row.id);
     row_count = table.rows.length;
 
     var cell_count = table.rows[0].cells.length;
@@ -89,7 +91,17 @@ DKTableAddRow = function(table, name) {
     }
     for (var n = 0; n < cell_count; n++) {
     	//Grab the name of the cell from the root column cell if it exists
-        var cell = DKTableInsertCell(table, row);
+    	//if(!table.rows[0]){
+    	//	console.error("DKTableAddRow(): table.rows[0] is invalid");
+    	//	return;
+    	//}
+
+    	//Try to get the column name
+    	var name = "NullByDKTableAddRow";
+    	if(table.rows[0].cells[0]){
+    		name = table.rows[0].cells[0].getAttribute("name");
+    	}
+        var cell = DKTableInsertCell(table, row, name);
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
     }
     return table.rows.length;
@@ -100,8 +112,8 @@ DKTableAddRow = function(table, name) {
 DKTableAddColumn = function(table, name) {
     var row_count = table.rows.length;
     if (!row_count) {
-        //FIXME: no name attribute added for the row
-        var row = DKTableInsertRow(table);
+        //FIXME: no name attribute for the row
+        var row = DKTableInsertRow(table/*, name*/);
         row_count = 1;
     }
     var cell_count = table.rows[0].cells.length;
@@ -235,9 +247,9 @@ DKLoadJSFile("DKTable.js", function(){
 	dkConsole.log(+row_count+" rows");
 	var column_count = DKTableAddColumns(table, 9);
 	dkConsole.log(+column_count+" columns");
-	var row = DKTableInsertRow(table);
+	var row = DKTableInsertRow(table, name);
 	var cell = DKTableInsertCell(table, row);
-	var row12 = DKTableInsertRow(table);
+	var row12 = DKTableInsertRow(table, name);
 	var cellA12 = DKTableInsertCell(table, row12);
 	var cellB12 = DKTableInsertCell(table, row12);
 	var rows = DKTableAddRows(table, 5);

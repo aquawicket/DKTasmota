@@ -65,7 +65,7 @@ DKSendRequest = function(url, callback) {
     } catch (e) {}
 
     if (!xhr) {
-        dkConsole.error("DKSendRequest(" + url + "): Error creating xhr object");
+        dkconsole.error("DKSendRequest(" + url + "): Error creating xhr object");
         return false;
     }
 
@@ -118,7 +118,7 @@ function CenterWindow(element) {
 
 /*
 //////////////////////////////////////////
-dkConsole.log("loading external page");
+dkconsole.log("loading external page");
 body = document.getElementsByTagName("body")[0];
 var frame = document.createElement("div");
 frame.style.position = "fixed";
