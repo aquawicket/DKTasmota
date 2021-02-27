@@ -1,3 +1,5 @@
+// https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement
+
 /////////////////////////////////////////////////////////////////////////
 function CreateClock(parent, id, top, bottom, left, right, width, weight) {
     var clock = document.createElement("a");

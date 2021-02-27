@@ -1,3 +1,5 @@
+// https://developer.mozilla.org/en-US/docs/Web/API/console
+
 //var dkConsole = new Object;
 /////////////////////////////////////////////////////////////////////////////
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
