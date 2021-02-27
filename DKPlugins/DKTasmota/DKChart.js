@@ -50,13 +50,13 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
             utc: true,
             timezone: -8,
             series: [{
-                values: [],
                 text: 'Temperature',
+                values: [],
             }, {
                 values: []
-            }/*, {
+            }, {
                 values: []
-            }*/]
+            }]
         };
 
         zingchart.render({
@@ -71,14 +71,13 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
 }
 
 /////////////////////////////////////////////////////
-function UpdateChart(temperature, humidity, dewPoint) {
+function UpdateChart(humidity, temperature, dewPoint) {
     dkconsole.debug("temperature = " + parseFloat(temperature));
     dkconsole.debug("humidity = " + parseFloat(humidity));
     dkconsole.debug("dewPoint = " + parseFloat(dewPoint));
-    //temperature = green(low), DewPoint = blue(mid), Humidity = red(high)
-    myConfig.series[1].values.push(parseFloat(temperature));
     myConfig.series[0].values.push(parseFloat(humidity));
-    //myConfig.series[0].values.push(parseFloat(dewPoint));
+    myConfig.series[1].values.push(parseFloat(temperature));
+    myConfig.series[2].values.push(parseFloat(dewPoint));
     zingchart.render({
         id: 'myChart',
         data: myConfig,

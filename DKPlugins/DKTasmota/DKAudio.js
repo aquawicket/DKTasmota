@@ -7,6 +7,7 @@ function CreateSound(src) {
     audio.src = src;
     audio.setAttribute("preload", "auto");
     audio.setAttribute("controls", "none");
+    audio.setAttribute("muted", "muted"); //Attemp to fix PlaySound error
     audio.style.display = "none";
     document.body.appendChild(audio);
 }
@@ -20,6 +21,8 @@ function PauseSound(src) {
 ///////////////////////
 function PlaySound(src) {
     var ele = document.getElementById(src);
+    //FIXME: This causes errors
+    // VM24608 DKAudio.js:23 Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
     ele.play();
 }
 

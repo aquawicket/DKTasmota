@@ -1,7 +1,7 @@
 var time;
-var temperature;
-var humidity;
-var dewPoint;
+var temperature = 77.0;;
+var humidity = 50.0;
+var dewPoint = 56.9; //@ 77F 50%rh
 var bypassRules = [];
 
 var tempTarget = 77;
@@ -49,8 +49,7 @@ function DKLoadPage() {
     var winH = window.innerHeight;
     //var chartTop = (winH-500)+"px";
     CreateChart(body, "id", "", "195px", "2px", "2px", "", "400px", function() {
-        UpdateChart(99.0, 50.0/*, 0.1*/);
-        //temperature, humidity, dewPoint  
+        UpdateChart(humidity, temperature, dewPoint);
     });
 
     CreateDKConsole(body, "dkconsole", "700px", "0px", "0px", "0px", "", "");
@@ -212,7 +211,7 @@ function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
     if (temperature && humidity) {
-        UpdateChart(temperature, humidity/*, dewPoint*/);
+        UpdateChart(humidity, temperature, dewPoint);
     }
 }
 
@@ -247,67 +246,6 @@ function ProcessDevices() {
     for (var n = 1; n < table.rows.length; n++) {
         var ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    }
-}
-
-///////////////////////
-function ProcessRules() {
-
-    DumpVariables();
-
-    //Alarms
-    if (temperature < tempMin) {
-        dkconsole.log("!!! TEMPERATURE BELOW MINIMUM " + temperature + "&#176;F < " + tempMin + "&#176;F !!!", "red");
-    }
-    if (temperature > tempMax) {
-        dkconsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + temperature + "&#176;F > " + tempMax + "&#176;F !!!", "red");
-    }
-    if (humidity < humMin) {
-        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + humMin + "% !!!", "red");
-    }
-    if (humidity > humMax) {
-        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!", "red");
-    }
-
-    if (!bypassRules.includes("Device005") && exhaustFan) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
-            //exhaust fan ON
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
-
-        } else {
-            //exhaust fan OFF
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-
-    if (!bypassRules.includes("Device007") && waterWalls) {
-        if ((time > 17) && (((tempurature > tempTarget) && (humidity < humMax)) || ((humidity < humTarget) && (temperature > tempMin)))) {
-            DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
-            //water walls ON
-        } else {
-            DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
-            //water walls OFF
-        }
-    }
-
-    if (!bypassRules.includes("Device008") && co2) {
-        if ((temperature < tempTarget) && (humidity < humTarget)) {
-            DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
-            //Co2 ON
-        } else {
-            DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
-            //Co2 OFF
-        }
-    }
-
-    if (!bypassRules.includes("Device006") && heater) {
-        if (temperature < tempTarget) {
-            DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
-            //heater ON
-        } else {
-            DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
-            //heater OFF
-        }
     }
 }
 
@@ -357,7 +295,7 @@ function UpdateScreen(success, url, data) {
 
     var deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
     if (deviceSI7021) {
-        temperature = (deviceSI7021.Temperature + tempCalib);
+        temperature = (deviceSI7021.Temperature + tempCalib).toFixed(1);
         var tempDirection = " ";
         if (temperature > tempTarget) {
             tempDirection = "&#8593;"
@@ -391,8 +329,8 @@ function UpdateScreen(success, url, data) {
         var dewPointText = "<a id='DewP'>"+ dewPoint +" DP &#176;F</a>";
 
         var tempScale = 510;
-        var tempDiff = (Math.abs(tempTarget - temperature) * 5).toFixed(1);
-        var tempNum = (tempDiff * tempScale / 100).toFixed(1);
+        var tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/;
+        var tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/;
         var tempRed = tempNum
         var tempGreen = 510 - tempNum;
         if (tempRed > 255) {
@@ -412,8 +350,8 @@ function UpdateScreen(success, url, data) {
         document.getElementById("Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
         var humScale = 510;
-        var humDiff = (Math.abs(humTarget - humidity) * 5).toFixed(1);
-        var humNum = (humDiff * humScale / 100).toFixed(1);
+        var humDiff = (Math.abs(humTarget - humidity) * 5)/*.toFixed(1)*/;
+        var humNum = (humDiff * humScale / 100)/*.toFixed(1)*/;
         var humRed = humNum;
         var humGreen = 510 - humNum;
         if (humRed > 255) {
@@ -439,7 +377,7 @@ function UpdateScreen(success, url, data) {
         var device = JSON.parse(data);
         var signal = deviceWifi.RSSI;
         var scale = 510;
-        var num = (signal * scale / 100).toFixed(1);
+        var num = (signal * scale / 100)/*.toFixed(1)*/;
         var green = num;
         var red = 510 - num;
         row.cells[3].innerHTML = signal + "%";
@@ -456,6 +394,75 @@ function UpdateScreen(success, url, data) {
             green = 0;
         }
         row.cells[3].style.color = "rgb(" + red + "," + green + ",0)";
+    }
+}
+
+///////////////////////
+function ProcessRules() {
+
+    DumpVariables();
+
+    //Alarms
+    if (temperature < tempMin) {
+        dkconsole.log("!!! TEMPERATURE BELOW MINIMUM " + temperature + "&#176;F < " + tempMin + "&#176;F !!!", "red");
+    }
+    if (temperature > tempMax) {
+        dkconsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + temperature + "&#176;F > " + tempMax + "&#176;F !!!", "red");
+    }
+    if (humidity < humMin) {
+        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + humMin + "% !!!", "red");
+    }
+    if (humidity > humMax) {
+        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!", "red");
+    }
+
+    if (!bypassRules.includes("Device005") && exhaustFan) {
+        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
+            //exhaust fan ON
+            dkconsole.log("Exhaust Fan ON", "green");
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
+
+        } else {
+            //exhaust fan OFF
+            dkconsole.log("Exhaust Fan OFF", "red");
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
+        }
+    }
+
+    if (!bypassRules.includes("Device007") && waterWalls) {
+        if ((time > 17) && (((tempurature > tempTarget) && (humidity < humMax)) || ((humidity < humTarget) && (temperature > tempMin)))) {
+            //water walls ON
+            dkconsole.log("Water walls ON", "green");
+            DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
+        } else {
+            //water walls OFF
+            dkconsole.log("Water walls OFF", "red");
+            DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
+        }
+    }
+
+    if (!bypassRules.includes("Device008") && co2) {
+        if ((temperature < tempTarget) && (humidity < humTarget)) {
+            //Co2 ON
+            dkconsole.log("Co2 ON", "green");
+            DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
+        } else {
+            //Co2 OFF
+            dkconsole.log("Co2 OFF", "red");
+            DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
+        }
+    }
+
+    if (!bypassRules.includes("Device006") && heater) {
+        if (temperature < tempTarget) {
+            //heater ON
+            dkconsole.log("Heater ON", "green");
+            DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
+        } else {
+            //heater OFF
+            dkconsole.log("Heater OFF", "red");
+            DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
+        }
     }
 }
 
