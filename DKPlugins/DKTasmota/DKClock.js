@@ -1,7 +1,7 @@
-/////////////////////////////////////////////////////////////////////
-function CreateClock(parent, top, bottom, left, right, width, weight) {
+/////////////////////////////////////////////////////////////////////////
+function CreateClock(parent, id, top, bottom, left, right, width, weight) {
     var clock = document.createElement("a");
-    clock.id = "clock";
+    clock.id = id;
     clock.style.position = "absolute";
     clock.style.top = top;
     clock.style.right = right;

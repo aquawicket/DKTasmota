@@ -1,8 +1,9 @@
 //var dkConsole = new Object;
-/////////////////////////////////////////////////////////////////////////
-function CreateDKConsole(parent, top, bottom, left, right, width, height) {
+/////////////////////////////////////////////////////////////////////////////
+function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     DKLoadCSSFile("DKConsole.css");
     var dkConsoleFrame = document.createElement("div");
+    dkConsoleFrame.id = id;
     dkConsoleFrame.style.position = "absolute";
     dkConsoleFrame.style.top = top;
     dkConsoleFrame.style.bottom = bottom;

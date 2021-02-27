@@ -35,10 +35,10 @@ function DKLoadPage() {
     body.style.backgroundColor = "rgb(100,100,100)";
 
     CreateButtons(body);
-    CreateClock(body, "2px", "", "", "10px");
+    CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
     CreateChart(body, "", "75px", "2px", "2px", "", "400px");
-    CreateDKConsole(body, "700px", "0px", "0px", "0px", "", "");
+    CreateDKConsole(body, "dkConsole", "700px", "0px", "0px", "0px", "", "");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(body, "30px", "", "", "2px", "200px", "400px");
