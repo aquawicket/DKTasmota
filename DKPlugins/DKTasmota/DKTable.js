@@ -64,8 +64,8 @@ DKTableInsertRow = function(table, name) {
 DKTableInsertCell = function(table, row, name) {
 	if(!name){
     	//FIXME: why is dkConsole unavailable?
-	    if(dkConsole){
-	        dkConsole.error("DKTableInsertCell(): name parameter invalid");
+	    if(dkconsole){
+	        dkconsole.error("DKTableInsertCell(): name parameter invalid");
 	    }
     	else{
     		console.trace();
@@ -78,9 +78,9 @@ DKTableInsertCell = function(table, row, name) {
     return cell;
 }
 
-/////////////////////////////////////
-DKTableAddRow = function(table, name) {
-    var row = DKTableInsertRow(table, name);
+//////////////////////////////////////////////////
+DKTableAddRow = function(table, rowName, cellName) {
+    var row = DKTableInsertRow(table, rowName);
     row.id = "row" + table.rows.length;
     //dkconsole.debug("DKTableAddRow() -> row.id = "+row.id);
     row_count = table.rows.length;
@@ -95,13 +95,10 @@ DKTableAddRow = function(table, name) {
     	//	console.error("DKTableAddRow(): table.rows[0] is invalid");
     	//	return;
     	//}
-
-    	//Try to get the column name
-    	var name = "NullByDKTableAddRow";
-    	if(table.rows[0].cells[0]){
-    		name = table.rows[0].cells[0].getAttribute("name");
+    	if(!cellName){
+    		cellName = table.rows[0].cells[n].getAttribute("name");
     	}
-        var cell = DKTableInsertCell(table, row, name);
+        var cell = DKTableInsertCell(table, row, cellName);
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
     }
     return table.rows.length;
@@ -196,6 +193,19 @@ function DKTableGetIndex(cell) {
     return cell.cellIndex;
 }
 
+////////////////////////////////////////////
+function DKTableGetRowByName(table, rowName){
+    for (var r = 0; r < table.rows.length; r++) {
+        if (!table.rows[r].getAttribute("name")) {
+            dkConsole.log("WARNING: row" + r + " has no name attribute");
+            return;
+        }
+        if (table.rows[r].getAttribute("name") == rowName) {
+            var row = table.rows[r];
+            return row;
+        }
+    }
+}
 //////////////////////////////////////////////////////////
 function DKTableGetCellByNames(table, rowName, columnName) {
     //TODO: We would like to retrieve a cell by names
@@ -224,7 +234,9 @@ function DKTableGetCellByNames(table, rowName, columnName) {
         }
         if (table.rows[r].getAttribute("name") == rowName) {
             var row = table.rows[r];
-            //we found the row
+            //if the column name wasn't requested, return the row 
+            //if(!columnName){ return row; }
+
             for (var c = 0; c < row.cells.length; c++) {
                 if (!row.cells[c].getAttribute("name")) {
                     dkConsole.log("WARNING: row" + r + ", cell" + c + " has no name attribute");

@@ -16,7 +16,7 @@ var humMax = humTarget + 10;
 
 var exhaustFan = true;
 var co2 = false;
-var waterWalls = false;
+var waterWalls = true;
 var heater = true;
 
 //////////////////////
@@ -99,34 +99,49 @@ function CreateDeviceTable(parent) {
     var table = DKCreateTable(devices, "deviceTable", "30px", "", "20px");
 
     //Create Header Row as a normal <tr>
-    DKTableAddRow(table, "HEADER");
-    table.rows[0].style.backgroundColor = "rgb(50,50,50)";
-    table.rows[0].style.fontWeight = "bold";
-    table.rows[0].cells[0].setAttribute("name", "device");
-    table.rows[0].cells[0].innerHTML = "Devices (0)";
-    table.rows[0].cells[0].style.width = "220px";
+    DKTableAddRow(table, "HEADER", "device");
+    //table.rows[0].style.backgroundColor = "rgb(50,50,50)";
+    DKTableGetRowByName(table, "HEADER").style.backgroundColor = "rgb(50,50,50)";
+    //table.rows[0].style.fontWeight = "bold";
+    DKTableGetRowByName(table, "HEADER").style.fontWeight = "bold";
+    //table.rows[0].cells[0].setAttribute("name", "device");
+    //table.rows[0].cells[0].innerHTML = "Devices (0)";
+    DKTableGetCellByNames(table, "HEADER", "device").innerHTML = "Devices (0)";
+    //table.rows[0].cells[0].style.width = "220px";
+    DKTableGetCellByNames(table, "HEADER", "device").style.width = "220px";
     DKTableAddColumn(table, "power");
-    table.rows[0].cells[1].innerHTML = "power";
-    table.rows[0].cells[1].style.width = "50px";
-    table.rows[0].cells[1].style.textAlign = "center";
+    //table.rows[0].cells[1].innerHTML = "power";
+    DKTableGetCellByNames(table, "HEADER", "power").innerHTML = "power";
+    //table.rows[0].cells[1].style.width = "50px";
+    DKTableGetCellByNames(table, "HEADER", "power").style.width = "50px";
+    //table.rows[0].cells[1].style.textAlign = "center";
+    DKTableGetCellByNames(table, "HEADER", "power").style.textAlign = "center";
     DKTableAddColumn(table, "data");
-    table.rows[0].cells[2].innerHTML = "data";
-    table.rows[0].cells[2].style.width = "140px";
-    table.rows[0].cells[2].style.textAlign = "center";
+    //table.rows[0].cells[2].innerHTML = "data";
+    DKTableGetCellByNames(table, "HEADER", "data").innerHTML = "data";
+    //table.rows[0].cells[2].style.width = "140px";
+    DKTableGetCellByNames(table, "HEADER", "data").style.width = "140px";
+    //table.rows[0].cells[2].style.textAlign = "center";
+    DKTableGetCellByNames(table, "HEADER", "data").style.textAlign = "center";
     DKTableAddColumn(table, "wifi");
-    table.rows[0].cells[3].innerHTML = "wifi signal";
-    table.rows[0].cells[3].style.width = "70px";
-    table.rows[0].cells[3].style.textAlign = "center";
+    //table.rows[0].cells[3].innerHTML = "wifi signal";
+    DKTableGetCellByNames(table, "HEADER", "wifi").innerHTML = "wifi signal";
+    //table.rows[0].cells[3].style.width = "70px";
+    DKTableGetCellByNames(table, "HEADER", "wifi").style.width = "70px";
+    //table.rows[0].cells[3].style.textAlign = "center";
+    DKTableGetCellByNames(table, "HEADER", "wifi").style.textAlign = "center";
 }
 
 //////////////////////
 function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
         if (!success || !url.includes(ip)) {
+            dkconsole.error("AddDevice("+ip+"): Failed");
             return;
         }
         var device = JSON.parse(data);
         if (!device.Hostname) {
+            dkconsole.error("AddDevice("+ip+"): Failed");
             return;
         }
         var hostname = device.Hostname;
@@ -289,7 +304,7 @@ function UpdateScreen(success, url, data) {
         if (devicePower === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
         } else {
-            row.cells[1].style.color = "rgb(50,50,50)";
+            row.cells[1].style.color = "rgb(40,40,40)";
         }
     }
 
@@ -430,7 +445,8 @@ function ProcessRules() {
     }
 
     if (!bypassRules.includes("Device007") && waterWalls) {
-        if ((time > 17) && (((tempurature > tempTarget) && (humidity < humMax)) || ((humidity < humTarget) && (temperature > tempMin)))) {
+        if ( (time < 17) && (temperature > tempTarget) && (humidity < humMax) || 
+           (humidity < humTarget) && (temperature > tempMin) ){
             //water walls ON
             dkconsole.log("Water walls ON", "green");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
