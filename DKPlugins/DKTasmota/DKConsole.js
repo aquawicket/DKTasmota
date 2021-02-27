@@ -68,6 +68,21 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         //console.log(text); //mirror message to the console as well.
     }
 
+    ////////////////////////////////
+    dkConsole.debug = function(text) {
+        dkConsole.log(text, "orange");
+    }
+
+    ////////////////////////////////
+    dkConsole.error = function(text) {
+        dkConsole.log(text, "red");
+    }
+
+    ///////////////////////////////
+    dkConsole.warn = function(text) {
+        dkConsole.log(text, "yelow");
+    }
+
     /////////////////////////////////////
     dkConsole.add = function(text, color) {
         var newText = document.createElement("a");
