@@ -133,20 +133,20 @@ function AddDevice(ip) {
         row.setAttribute("ip", ip);
         row.setAttribute("hostname", hostname);
 
-        //Fill the name of the cell with the root cell name
-        //FIXME: this should be done automatically
-        //row.cells[0].setAttribute("name", table.rows[0].cells[0].getAttribute("name"));
-        //We can now locate the cell by names,  DKTableGetCellByNames(table, ip, "device");
-        
+        // cell = row.cells[n]; will return the cell by index numbers.
+        // cell = DKTableGetCellByNames(table, "rowName", "columbName"); will return the cell by names
+        // If the table is changed, by index will be become wrong. 
+        // cell By names should stay consistant upon changes to the table. 
+
         var cell;
         //cell = row.cells[0];
         cell = DKTableGetCellByNames(table, ip, "device");
         cell.innerHTML = "<a>" + ip + "</a>";
         cell.style.cursor = "pointer";
-        cell.onclick = function(){ 
-          var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+        cell.onclick = function() {
+            var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
         }
-        
+
         //cell = row.cells[1];
         cell = DKTableGetCellByNames(table, ip, "power");
         cell.style.textAlign = "center";
@@ -161,11 +161,17 @@ function AddDevice(ip) {
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
 
+        // DEBUG /////
+        //Add a coulum to test retrieving cells by index vs cells by name
+        //DKTableAddColumn(table, "debug");
+        //Event though many Columns were added on this itteration, cell by name still works
+        //////////////
+
         //cell = row.cells[2];
         cell = DKTableGetCellByNames(table, ip, "data");
         cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
         cell.style.textAlign = "center";
-        
+
         //cell = row.cells[3];
         cell = DKTableGetCellByNames(table, ip, "wifi");
         cell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
