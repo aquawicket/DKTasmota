@@ -50,10 +50,10 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
 
 ////////////////////////////////////
 function UpdateChart(Temp, Humidity) {
-    dkConsole.log("Temp = "+Temp);
-    dkConsole.log("Humidity = "+Humidity);
-    myConfig.series[0].values.push(Temp);
-    myConfig.series[1].values.push(Humidity);
+    dkConsole.log("Temp = "+parseFloat(Temp));
+    dkConsole.log("Humidity = "+parseFloat(Humidity));
+    myConfig.series[1].values.push(parseFloat(Temp));
+    myConfig.series[0].values.push(parseFloat(Humidity));
     zingchart.render({
         id: 'myChart',
         data: myConfig,
