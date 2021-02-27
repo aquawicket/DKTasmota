@@ -139,6 +139,13 @@ function AddDevice(ip) {
         row.cells[0].onclick = function() {
             var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
         }
+
+        ////DEBUG/////
+        var cell0 = DKTableGetCellByNames(table, ip, "device");
+        dkConsole.debug(cell0.id);
+        /////////////
+
+
         row.cells[1].setAttribute("name", table.rows[0].cells[1].getAttribute("name"));
         row.cells[1].style.textAlign = "center";
         row.cells[1].style.cursor = "pointer";

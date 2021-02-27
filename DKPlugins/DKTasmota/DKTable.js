@@ -27,7 +27,6 @@
 // The rowName is set to Peter on the <tr> element
 // The columnName is set to address on the <td> element
 
-
 /////////////////////////////////////////////////////////////////////////////
 DKCreateTable = function(parent, id, top, bottom, left, right, width, height) {
     var table = document.createElement('table');
@@ -145,14 +144,14 @@ DKTableUpdateIds = function(table) {
     }
 }
 
-///////////////////////////////////////////////////
-DKTableGetCell = function(table, rowNum, columnNum) {
+//////////////////////////////////////////////////////////
+DKTableGetCellByIndex = function(table, rowNum, columnNum) {
     var row = table.rows[rowNum];
     var cell = row.cells[columnNum];
     return cell;
 }
 
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 DKTableDeleteCell = function(table, rowNum, columnNum) {
     dkConsole.log("DKTableDeleteCell(table," + rowNum + "," + columnNum + ")")
     //FIXME: This doesn't seem to be working properly.
@@ -169,8 +168,8 @@ function DKTableGetIndex(cell) {
     return cell.cellIndex;
 }
 
-///////////////////////////////////////
-function DKGetCell(rowName, columnName) {
+//////////////////////////////////////////////////////////
+function DKTableGetCellByNames(table, rowName, columnName) {
     //TODO: We would like to retrieve a cell by names
     // Example:  DKGetCell("Peter", "Address");
     // This should return the cell that is on the Peter Row and the Address Column
@@ -191,11 +190,11 @@ function DKGetCell(rowName, columnName) {
     // The columnName is set to address on the <td> element
 
     for (var r = 0; r < table.rows.length; r++) {
-        if (!table.rows[r].getAttribute("rowName")) {
+        if (!table.rows[r].getAttribute("name")) {
             dkConsole.log("WARNING: row" + r + " has no name attribute");
             return;
         }
-        if (table.rows[r].getAttribute("rowName") == rowName) {
+        if (table.rows[r].getAttribute("name") == rowName) {
             var row = table.rows[r];
             //we found the row
             for (var c = 0; c < row.cells.length; c++) {
@@ -203,7 +202,7 @@ function DKGetCell(rowName, columnName) {
                     dkConsole.log("WARNING: row" + r + ", cell" + c + " has no name attribute");
                     return;
                 }
-                if (row.cells[c].getAttribute("name") == cellName) {
+                if (row.cells[c].getAttribute("name") == columnName) {
                     return row.cells[c];
                     //we found the cell, return it's element
                 }
