@@ -28,7 +28,7 @@
 // The columnName is set to address on the <td> element
 
 /////////////////////////////////////////////////////////////////////////////
-DKCreateTable = function(parent, id, top, bottom, left, right, width, height) {
+function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
     var table = document.createElement('table');
     table.id = id;
     table.style.position = "absolute";
@@ -47,8 +47,12 @@ DKCreateTable = function(parent, id, top, bottom, left, right, width, height) {
 DKTableInsertRow = function(table, name) {
     if(!name){
     	//FIXME: why is dkConsole unavailable?
-	    //dkConsole.error("DKTableInsertRow(): name parameter invalid");
-	    console.error("DKTableInsertRow(): name parameter invalid");
+	    if(dkConsole){
+	        dkConsole.error("DKTableInsertRow(): name parameter invalid");
+	    }
+    	else{
+	        console.error("DKTableInsertRow(): name parameter invalid");
+        }
     }
     var row = table.insertRow(-1);
     row.id = "row" + table.rows.length;
@@ -59,9 +63,13 @@ DKTableInsertRow = function(table, name) {
 //////////////////////////////////////////////
 DKTableInsertCell = function(table, row, name) {
 	if(!name){
-		//FIXME: why is dkConsole unavailable?
-    	//dkConsole.error("DKTableInsertCell(): name parameter invalid");
-    	console.error("DKTableInsertCell(): name parameter invalid");
+    	//FIXME: why is dkConsole unavailable?
+	    if(dkConsole){
+	        dkConsole.error("DKTableInsertRow(): name parameter invalid");
+	    }
+    	else{
+	        console.error("DKTableInsertRow(): name parameter invalid");
+        }
     }
     var cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
