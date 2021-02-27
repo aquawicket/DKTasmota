@@ -1,23 +1,28 @@
-var Time = 0.0;
-var TargetTemp = 77;
-var MinTemp = TargetTemp - 10;
-var MaxTemp = TargetTemp + 10;
-var TargetHum = 50;
-var MinHum = TargetHum - 10;
-var MaxHum = TargetHum + 10;
-var TempCalib = -5;
-var HumCalib = -13;
+var Time;
 var Temp;
 var Humidity;
+var bypassRules = [];
+
+var TargetTemp = 77;
+var TempCalib = -5;
+var MinTemp = TargetTemp - 10;
+var MaxTemp = TargetTemp + 10;
+
+var TargetHum = 50;
+var HumCalib = -13;
+var MinHum = TargetHum - 10;
+var MaxHum = TargetHum + 10;
+
 var ExhaustFan = true;
 var Co2 = false;
 var WaterWalls = false;
 var Heater = true;
-var bypassRules = [];
+
 
 //////////////////////
 function DKLoadFiles() {
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
+    DKLoadJSFile("DKCookies.js");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKNotifications.js");
@@ -37,10 +42,7 @@ function DKLoadPage() {
     CreateButtons(body);
     CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
-    CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px", function(){
-        //UpdateChart(77, 50);  //Temp, Humidity
-    });
-
+    CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px");
     CreateDKConsole(body, "dkConsole", "700px", "0px", "0px", "0px", "", "");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
@@ -160,11 +162,13 @@ function AddDevice(ip) {
 
 /////////////////////////
 function TimerLoop(force) {
+    
     //DUBUG ///////////////////////
+    /*
     var table = document.getElementById("deviceTable");
     dkConsole.log("table.rows[3].rowIndex = " + table.rows[3].rowIndex);
     dkConsole.log("table.rows[3].cells[3].cellIndex = " + table.rows[3].cells[3].cellIndex);
-
+    */
     //DEBUG /////////////////////
 
     var currentdate = new Date();
@@ -172,7 +176,7 @@ function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
     if(Temp && Humidity){
-        UpdateChart(Temp, Humidity);
+        UpdateChart(Temp, Humidity);//, DewPoint);
     }
 }
 
