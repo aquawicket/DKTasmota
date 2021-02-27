@@ -1,3 +1,4 @@
+var Time = 0.0;
 var TargetTemp = 77;
 var MinTemp = TargetTemp - 10;
 var MaxTemp = TargetTemp + 10;
@@ -20,7 +21,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKNotifications.js");
-    DKLoadJSFile("DKSound.js");
+    DKLoadJSFile("DKAudio.js");
     DKLoadJSFile("DKTasmota.js");
     DKLoadJSFile("DKTable.js");
     DKLoadJSFile("DKClock.js");
@@ -53,6 +54,8 @@ function DKLoadPage() {
 
 /////////////////////////
 function TimerLoop(force) {
+    var currentdate = new Date();
+    Time = currentdate.getHours() + (currentdate.getMinutes()*.01);
     ProcessRules();
     ProcessDevices();
     UpdateChart([Humidity, Temp]);
@@ -176,7 +179,6 @@ function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
         dkConsole.log("UpdateScreen(" + success + ", " + url + ", " + data + ")", "orange");
-        //sound.play();
         PlaySound("PowerDown.mp3");
         return;
     }
@@ -345,16 +347,19 @@ function ProcessRules() {
 
     if (!bypassRules.includes("Device005") && ExhaustFan) {
         if ((Temp > TargetTemp) || (Humidity > TargetHum)) {
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
             //exhaust fan ON
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
+            
         } else {
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
             //exhaust fan OFF
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     if (!bypassRules.includes("Device007") && WaterWalls) {
-        if (((Temp > TargetTemp) && (Humidity < MaxHum)) || ((Humidity < TargetHum) && (Temp > MinTemp))) {
+        if ( Time > 17 &&
+            (((Temp > TargetTemp) && (Humidity < MaxHum)) || 
+            ((Humidity < TargetHum) && (Temp > MinTemp)))) {
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
             //water walls ON
         } else {
@@ -385,6 +390,7 @@ function ProcessRules() {
 }
 
 function DumpVariables() {
+    dkConsole.log("Time: " + Time, "orange");
     dkConsole.log("Temp: " + Temp, "orange");
     dkConsole.log("TargetTemp: " + TargetTemp, "orange");
     dkConsole.log("MinTemp: " + MinTemp, "orange");
