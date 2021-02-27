@@ -19,7 +19,6 @@ var Co2 = false;
 var WaterWalls = false;
 var Heater = true;
 
-
 //////////////////////
 function DKLoadFiles() {
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
@@ -147,7 +146,7 @@ function AddDevice(ip) {
             if (!bypassRules.includes(hostname)) {
                 bypassRules += hostname;
                 bypassRules += ",";
-                dkConsole.log("Temporarily added " + hostname + " to bypassRules, refresh page to reset", "Yellow");
+                dkConsole.log("Temporarily added " + hostname + " to bypass automation, refresh page to reset", "Yellow");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
@@ -163,7 +162,7 @@ function AddDevice(ip) {
 
 /////////////////////////
 function TimerLoop(force) {
-    
+
     //DUBUG ///////////////////////
     /*
     var table = document.getElementById("deviceTable");
@@ -176,8 +175,8 @@ function TimerLoop(force) {
     Time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
-    if(Temp && Humidity){
-        UpdateChart(Temp, Humidity/*, DewPoint*/);
+    if (Temp && Humidity) {
+        UpdateChart(Temp, Humidity, DewPoint);
     }
 }
 
@@ -347,9 +346,12 @@ function UpdateScreen(success, url, data) {
         if (Humidity === HumTarget) {
             humDirection = " ";
         }
+
+        DewPoint = (deviceSI7021.DewPoint).toFixed(1);
+
         var humidity = "<a id='RH'>" + Humidity + " RH%" + humDirection + "</a>";
         var targHum = "<a id='targHum'> (" + HumTarget + "%)</a>";
-        var dewPoint = "<a id='DewP'>Dew point " + deviceSI7021.DewPoint + "&#176;F</a>";
+        var dewPoint = "<a id='DewP'>Dew point " + DewPoint + "&#176;F</a>";
 
         var scaleTemp = 510;
         var tempDiff = (Math.abs(TempTarget - Temp) * 5).toFixed(1);
