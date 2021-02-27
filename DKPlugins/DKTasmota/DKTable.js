@@ -1,6 +1,16 @@
-/////////////////////////////////////////////////////////////////////////
-DKCreateTable = function(parent, top, bottom, left, right, width, height) {
+//The idea is to create a name for every row and every column.
+//Currently, we cannot create a column name as eazy as we create row names
+//We can name a row, but we have to name each cell in a column.
+//This idea: pull a cell, row or column, just from names.
+//If by chance a row or column moves, the naming scheme will still work.
+// GetIndex(row, column) works until cells are moved and point to different cells.
+// GetCellByName(rowName, CellName) should always return the correct cell 
+// no matter where it is in the index chart. 
+
+/////////////////////////////////////////////////////////////////////////////
+DKCreateTable = function(parent, id, top, bottom, left, right, width, height) {
     var table = document.createElement('table');
+    table.id = id;
     table.style.position = "absolute";
     table.style.top = top;
     table.style.bottom = bottom;
@@ -13,24 +23,32 @@ DKCreateTable = function(parent, top, bottom, left, right, width, height) {
     return table;
 }
 
-//////////////////////////////////
-DKTableInsertRow = function(table) {
-    return table.insertRow(-1);
+////////////////////////////////////////
+DKTableInsertRow = function(table, name) {
+    row = table.insertRow(-1);
+    row.id = "row" + table.rows.length;
+    if (name) {
+        row.setAttribute("name", name);
+    }
+    return row;
 }
 
-////////////////////////////////////////
-DKTableInsertCell = function(table, row) {
+//////////////////////////////////////////////
+DKTableInsertCell = function(table, row, name) {
     var cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
-    //cell.innerHTML = cell.id; //For debugging
+    if (name) {
+        cell.setAttribute("name", name);
+    }
     return cell;
 }
 
-///////////////////////////////
-DKTableAddRow = function(table) {
-    var row = DKTableInsertRow(table);
+/////////////////////////////////////
+DKTableAddRow = function(table, name) {
+    var row = DKTableInsertRow(table, name);
+    row.id = "row" + table.rows.length;
     row_count = table.rows.length;
-    row.id = "row" + row_count;
+
     var cell_count = table.rows[0].cells.length;
     if (!cell_count) {
         cell_count = 1;
@@ -42,23 +60,25 @@ DKTableAddRow = function(table) {
     //return the created row number  
 }
 
-//////////////////////////////////
-DKTableAddColumn = function(table) {
+////////////////////////////////////////
+DKTableAddColumn = function(table, name) {
     var row_count = table.rows.length;
     if (!row_count) {
+        //FIXME: no name attribute added for the row
         var row = DKTableInsertRow(table);
         row_count = 1;
     }
     var cell_count = table.rows[0].cells.length;
     for (n = 0; n < row_count; n++) {
-        var cell = DKTableInsertCell(table, table.rows[n]);
+        var cell = DKTableInsertCell(table, table.rows[n], name);
     }
-    return table.rows[0].cells.length;
     //return the created column number
+    return table.rows[0].cells.length;
 }
 
 ///////////////////////////////////////
 DKTableAddRows = function(table, count) {
+    //The rows added will have no name
     for (var r = 0; r < count; r++) {
         DKTableAddRow(table);
     }
@@ -67,6 +87,7 @@ DKTableAddRows = function(table, count) {
 
 //////////////////////////////////////////
 DKTableAddColumns = function(table, count) {
+    //The columns added will have no name
     for (var c = 0; c < count; c++) {
         DKTableAddColumn(table);
     }
@@ -120,6 +141,54 @@ DKTableDeleteCell = function(table, rowNum, columnNum) {
     var row = table.rows[rowNum];
     //row.deleteCell(columnNum);
     document.removeElement(row.cells[columnNum]);
+}
+
+//////////////////////////////
+function DKTableGetIndex(cell) {
+    return cell.cellIndex;
+}
+
+///////////////////////////////////////
+function DKGetCell(rowName, columnName) {
+    //TODO: We would like to retrieve a cell by names
+    // Example:  DKGetCell("Peter", "Address");
+    // This should return the cell that is on the Peter Row and the Address Column
+    // If we add and remove rows or colums, this method should stay functional
+    // We can do this without altering id's and indexs using rowName and ColumnNama attributes
+
+    // (fName) | (age) | (address)   |  (email)
+    //------------------------------------------------------
+    //  David  |  28   | 123 Fun St  |  Dave@silly.com
+    //------------------------------------------------------
+    //  Mary   |  31   |  P.O. 567   |  Mar02@grape.com
+    //------------------------------------------------------
+    //  Peter  |  25   |  464 Go ln. |  PeterDotson@abc.com
+    //------------------------------------------------------
+    //  John   |  47   | 09 till pk. |  Johnboy1@mail.com
+
+    // The rowName is set to Peter on the <tr> element
+    // The columnName is set to address on the <td> element
+
+    for (var r = 0; r < table.rows.length; r++) {
+        if (!table.rows[r].getAttribute("rowName")) {
+            dkConsole.log("WARNING: row" + r + " has no name attribute");
+            return;
+        }
+        if (table.rows[r].getAttribute("rowName") == rowName) {
+            var row = table.rows[r];
+            //we found the row
+            for (var c = 0; c < row.cells.length; c++) {
+                if (!row.cells[c].getAttribute("name")) {
+                    dkConsole.log("WARNING: row" + r + ", cell" + c + " has no name attribute");
+                    return;
+                }
+                if (row.cells[c].getAttribute("name") == cellName) {
+                    return row.cells[c];
+                    //we found the cell, return it's element
+                }
+            }
+        }
+    }
 }
 
 /* Some Debugging tests

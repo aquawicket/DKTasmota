@@ -1,21 +1,13 @@
-///////////////////////////////////////////////////////////////////
-//return all local network device IPs that respond to /cm?cmnd=CORS
-//callback(ip, done);
+// https://tasmota.github.io/docs/Commands/
+
 let tasmotaDeviceCount = 0;
 let devicesScanned = 0;
-    
+
+//return all local network device IPs that respond to /cm?cmnd=CORS 
 GetTasmotaDevices = function(ipPrefix, callback)
 {
 	//scan 192.168.1.1 thru 192.168.1.254
-	/*
-	if(!window.location.hostname.includes("192.168.1.")){
-		dkConsole.log("Please use ");
-		dkConsole.add("<a href='http://192.168.1.78'>192.168.1.78</a>");
-		dkConsole.add(" to access local devices");
-		corsWrite = 0;
-	}
-	*/
-	
+	if(!ipPrefix){ ipPrefix = "192.168.1."; }
 	let corsWrite = 1;
 	let cmnd;
     for(let n = 1; n < 255; n++){

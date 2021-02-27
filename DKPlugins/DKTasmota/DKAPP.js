@@ -49,43 +49,11 @@ function DKLoadPage() {
         var ip = cookies[n];
         AddDevice(ip);
     }
+    //Run TimerLoop every minute
     window.setInterval(TimerLoop, 60000);
 }
 
-/////////////////////////
-function TimerLoop(force) {
-    var currentdate = new Date();
-    Time = currentdate.getHours() + (currentdate.getMinutes()*.01);
-    ProcessRules();
-    ProcessDevices();
-    UpdateChart([Humidity, Temp]);
-}
-
-//////////////////////////////////
-function CreateDeviceTable(parent) {
-    var devices = document.createElement("div");
-    parent.appendChild(devices);
-    var table = DKCreateTable(devices, "30px", "", "20px");
-    table.id = "deviceTable";
-    DKTableAddRow(table);
-    table.rows[0].style.fontWeight = "bold";
-    table.rows[0].cells[0].innerHTML = "Devices (0)";
-    table.rows[0].cells[0].style.width = "250px";
-    DKTableAddColumn(table);
-    table.rows[0].cells[1].innerHTML = "power";
-    table.rows[0].cells[1].style.width = "80px";
-    table.rows[0].cells[1].style.textAlign = "center";
-    DKTableAddColumn(table);
-    table.rows[0].cells[2].innerHTML = "data";
-    table.rows[0].cells[2].style.width = "140px";
-    table.rows[0].cells[2].style.textAlign = "center";
-    DKTableAddColumn(table);
-    table.rows[0].cells[3].innerHTML = "wifi signal";
-    table.rows[0].cells[3].style.width = "80px";
-    table.rows[0].cells[3].style.textAlign = "center";
-}
-
-////////////////////////////////
+//////////////////////////////
 function CreateButtons(parent) {
     var scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
@@ -106,6 +74,101 @@ function CreateButtons(parent) {
         TimerLoop(false);
     }
     parent.appendChild(updateDevices);
+}
+
+//////////////////////////////////
+function CreateDeviceTable(parent) {
+    var devices = document.createElement("div");
+    parent.appendChild(devices);
+    var table = DKCreateTable(devices, "deviceTable", "30px", "", "20px");
+
+    //Create Header Row as a normal <tr>
+    DKTableAddRow(table, "header");
+    table.rows[0].style.backgroundColor = "rgb(50,50,50)";
+    table.rows[0].style.fontWeight = "bold";
+    table.rows[0].cells[0].innerHTML = "Devices (0)";
+    table.rows[0].cells[0].style.width = "220px";
+    DKTableAddColumn(table, "power");
+    table.rows[0].cells[1].innerHTML = "power";
+    table.rows[0].cells[1].style.width = "50px";
+    table.rows[0].cells[1].style.textAlign = "center";
+    DKTableAddColumn(table, "data");
+    table.rows[0].cells[2].innerHTML = "data";
+    table.rows[0].cells[2].style.width = "140px";
+    table.rows[0].cells[2].style.textAlign = "center";
+    DKTableAddColumn(table, "wifi");
+    table.rows[0].cells[3].innerHTML = "wifi signal";
+    table.rows[0].cells[3].style.width = "70px";
+    table.rows[0].cells[3].style.textAlign = "center";
+}
+
+//////////////////////
+function AddDevice(ip) {
+    DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
+        if (!success || !url.includes(ip)) {
+            return;
+        }
+        var device = JSON.parse(data);
+        if (!device.Hostname) {
+            return;
+        }
+        var hostname = device.Hostname;
+        var table = document.getElementById("deviceTable");
+        DKTableAddRow(table, ip);
+        var row = table.rows[table.rows.length - 1];
+        if (row.rowIndex % 2 == 0) {
+            //even
+            row.style.backgroundColor = "rgb(100,100,100)";
+        } else {
+            //odd
+            row.style.backgroundColor = "rgb(70,70,70)";
+        }
+
+        row.setAttribute("ip", ip);
+        row.setAttribute("hostname", hostname);
+
+        //row.cells[0].setAttribute("name", "ip");
+        row.cells[0].innerHTML = "<a>" + ip + "</a>";
+        row.cells[0].style.cursor = "pointer";
+        row.cells[0].onclick = function() {
+            var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+        }
+        //row.cells[1].setAttribute("name", "power");
+        row.cells[1].style.textAlign = "center";
+        row.cells[1].style.cursor = "pointer";
+        row.cells[1].onclick = function() {
+            var hostname = row.getAttribute("hostname");
+            if (!bypassRules.includes(hostname)) {
+                bypassRules += hostname;
+                bypassRules += ",";
+                dkConsole.log("Temporarily added " + hostname + " to bypassRules, refresh page to reset", "Yellow");
+            }
+            DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        }
+        //row.cells[2].setAttribute("name", "data");
+        row.cells[2].style.textAlign = "center";
+        //row.cells[3].setAttribute("name", "wifi");
+        row.cells[3].style.textAlign = "center";
+        table.rows[0].cells[0].innerHTML = "Devices (" + (table.rows.length - 1) + ")";
+
+        DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+    });
+}
+
+/////////////////////////
+function TimerLoop(force) {
+    //DUBUG ///////////////////////
+    var table = document.getElementById("deviceTable");
+    dkConsole.log("table.rows[3].rowIndex = " + table.rows[3].rowIndex);
+    dkConsole.log("table.rows[3].cells[3].cellIndex = " + table.rows[3].cells[3].cellIndex);
+
+    //DEBUG /////////////////////
+
+    var currentdate = new Date();
+    Time = currentdate.getHours() + (currentdate.getMinutes() * .01);
+    ProcessRules();
+    ProcessDevices();
+    UpdateChart([Humidity, Temp]);
 }
 
 ////////////////////////
@@ -133,45 +196,74 @@ function ScanDevices() {
     });
 }
 
-//////////////////////
-function AddDevice(ip) {
-    DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
-        if (!success || !url.includes(ip)) {
-            return;
-        }
-        var device = JSON.parse(data);
-        if (!device.Hostname) {
-            return;
-        }
-        var hostname = device.Hostname;
-
-        var table = document.getElementById("deviceTable");
-        DKTableAddRow(table);
-        var row = table.rows[table.rows.length - 1];
-        row.setAttribute("ip", ip);
-        row.setAttribute("hostname", hostname);
-        row.cells[0].innerHTML = "<a>" + ip + "</a>";
-        row.cells[0].style.cursor = "pointer";
-        row.cells[0].onclick = function() {
-            var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
-        }
-        row.cells[1].style.textAlign = "center";
-        row.cells[1].style.cursor = "pointer";
-        row.cells[1].onclick = function() {
-            var hostname = row.getAttribute("hostname");
-            if (!bypassRules.includes(hostname)) {
-                bypassRules += hostname;
-                bypassRules += ",";
-                dkConsole.log("Temporarily added " + hostname + " to bypassRules, refresh page to reset", "Yellow");
-            }
-            DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
-        }
-        row.cells[2].style.textAlign = "center";
-        row.cells[3].style.textAlign = "center";
-        table.rows[0].cells[0].innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-
+/////////////////////////
+function ProcessDevices() {
+    var table = document.getElementById("deviceTable");
+    for (var n = 1; n < table.rows.length; n++) {
+        var ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    });
+    }
+}
+
+///////////////////////
+function ProcessRules() {
+
+    DumpVariables();
+
+    //Alarms
+    if (Temp < MinTemp) {
+        dkConsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + MinTemp + "&#176;F !!!", "red");
+    }
+    if (Temp > MaxTemp) {
+        dkConsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + MaxTemp + "&#176;F !!!", "red");
+    }
+    if (Humidity < MinHum) {
+        dkConsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + MinHum + "% !!!", "red");
+    }
+    if (Humidity > MaxHum) {
+        dkConsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + MaxHum + "% !!!", "red");
+    }
+
+    if (!bypassRules.includes("Device005") && ExhaustFan) {
+        if ((Temp > TargetTemp) || (Humidity > TargetHum && Temp > MinTemp)) {
+            //exhaust fan ON
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
+
+        } else {
+            //exhaust fan OFF
+            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
+        }
+    }
+
+    if (!bypassRules.includes("Device007") && WaterWalls) {
+        if (Time > 17 && (((Temp > TargetTemp) && (Humidity < MaxHum)) || ((Humidity < TargetHum) && (Temp > MinTemp)))) {
+            DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
+            //water walls ON
+        } else {
+            DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //water walls OFF
+        }
+    }
+
+    if (!bypassRules.includes("Device008") && Co2) {
+        if ((Temp < TargetTemp) && (Humidity < TargetHum)) {
+            DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
+            //Co2 ON
+        } else {
+            DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //Co2 OFF
+        }
+    }
+
+    if (!bypassRules.includes("Device006") && Heater) {
+        if (Temp < TargetTemp) {
+            DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
+            //heater ON
+        } else {
+            DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //heater OFF
+        }
+    }
 }
 
 /////////////////////////////////////////
@@ -317,78 +409,7 @@ function UpdateScreen(success, url, data) {
     }
 }
 
-///////////////////////////
-function ProcessDevices() {
-    var table = document.getElementById("deviceTable");
-    for (var n = 1; n < table.rows.length; n++) {
-        var ip = table.rows[n].getAttribute("ip");
-        DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    }
-}
-
-/////////////////////////
-function ProcessRules() {
-
-    DumpVariables();
-
-    //Alarms
-    if (Temp < MinTemp) {
-        dkConsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + MinTemp + "&#176;F !!!", "red");
-    }
-    if (Temp > MaxTemp) {
-        dkConsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + MaxTemp + "&#176;F !!!", "red");
-    }
-    if (Humidity < MinHum) {
-        dkConsole.log("!!! HUMUDITY BELOW MINIMUM " + Humidity + "% < " + MinHum + "% !!!", "red");
-    }
-    if (Humidity > MaxHum) {
-        dkConsole.log("!!! HUMUDITY ABOVE MAXIMUM " + Humidity + "% > " + MaxHum + "% !!!", "red");
-    }
-
-    if (!bypassRules.includes("Device005") && ExhaustFan) {
-        if ((Temp > TargetTemp) || (Humidity > TargetHum)) {
-            //exhaust fan ON
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
-            
-        } else {
-            //exhaust fan OFF
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-
-    if (!bypassRules.includes("Device007") && WaterWalls) {
-        if ( Time > 17 &&
-            (((Temp > TargetTemp) && (Humidity < MaxHum)) || 
-            ((Humidity < TargetHum) && (Temp > MinTemp)))) {
-            DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
-            //water walls ON
-        } else {
-            DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
-            //water walls OFF
-        }
-    }
-
-    if (!bypassRules.includes("Device008") && Co2) {
-        if ((Temp < TargetTemp) && (Humidity < TargetHum)) {
-            DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
-            //Co2 ON
-        } else {
-            DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
-            //Co2 OFF
-        }
-    }
-
-    if (!bypassRules.includes("Device006") && Heater) {
-        if (Temp < TargetTemp) {
-            DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
-            //heater ON
-        } else {
-            DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
-            //heater OFF
-        }
-    }
-}
-
+////////////////////////
 function DumpVariables() {
     dkConsole.log("Time: " + Time, "orange");
     dkConsole.log("Temp: " + Temp, "orange");
