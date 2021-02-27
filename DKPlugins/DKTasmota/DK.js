@@ -89,7 +89,7 @@ DKSendRequest = function(url, callback) {
 }
 
 ////////////////////////////////////////
-function setCookie(cookieString, exdays) {
+function SetCookie(cookieString, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
@@ -99,7 +99,7 @@ function setCookie(cookieString, exdays) {
 }
 
 ////////////////////
-function getCookie() {
+function GetCookie() {
     return document.cookie;
 }
 

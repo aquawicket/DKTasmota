@@ -58,7 +58,7 @@ function DKLoadPage() {
     //CreateDebugBox(body, "30px", "", "", "2px", "200px", "400px");
 
     dkconsole.log("**** Tasmota device manager 0.1b ****<br>");
-    var cookies = getCookie().split("^");
+    var cookies = GetCookie().split("^");
     for (n = 0; n < cookies.length - 1; n++) {
         var ip = cookies[n];
         AddDevice(ip);
