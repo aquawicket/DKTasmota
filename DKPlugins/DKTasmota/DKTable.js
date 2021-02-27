@@ -74,7 +74,9 @@ DKTableAddRow = function(table, name) {
         cell_count = 1;
     }
     for (var n = 0; n < cell_count; n++) {
+    	//Grab the name of the cell from the root column cell if it exists
         var cell = DKTableInsertCell(table, row);
+        cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
     }
     return table.rows.length;
     //return the created row number  

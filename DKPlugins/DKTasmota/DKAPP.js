@@ -133,23 +133,25 @@ function AddDevice(ip) {
         row.setAttribute("ip", ip);
         row.setAttribute("hostname", hostname);
 
-        row.cells[0].setAttribute("name", table.rows[0].cells[0].getAttribute("name"));
-        row.cells[0].innerHTML = "<a>" + ip + "</a>";
-        row.cells[0].style.cursor = "pointer";
-        row.cells[0].onclick = function() {
-            var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+        //Fill the name of the cell with the root cell name
+        //FIXME: this should be done automatically
+        //row.cells[0].setAttribute("name", table.rows[0].cells[0].getAttribute("name"));
+        //We can now locate the cell by names,  DKTableGetCellByNames(table, ip, "device");
+        
+        var cell;
+        //cell = row.cells[0];
+        cell = DKTableGetCellByNames(table, ip, "device");
+        cell.innerHTML = "<a>" + ip + "</a>";
+        cell.style.cursor = "pointer";
+        cell.onclick = function(){ 
+          var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
         }
-
-        ////DEBUG/////
-        var cell0 = DKTableGetCellByNames(table, ip, "device");
-        dkConsole.debug(cell0.id);
-        /////////////
-
-
-        row.cells[1].setAttribute("name", table.rows[0].cells[1].getAttribute("name"));
-        row.cells[1].style.textAlign = "center";
-        row.cells[1].style.cursor = "pointer";
-        row.cells[1].onclick = function() {
+        
+        //cell = row.cells[1];
+        cell = DKTableGetCellByNames(table, ip, "power");
+        cell.style.textAlign = "center";
+        cell.style.cursor = "pointer";
+        cell.onclick = function() {
             var hostname = row.getAttribute("hostname");
             if (!bypassRules.includes(hostname)) {
                 bypassRules += hostname;
@@ -158,12 +160,20 @@ function AddDevice(ip) {
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
-        row.cells[2].setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
-        row.cells[2].style.textAlign = "center";
-        row.cells[3].setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
-        row.cells[3].style.textAlign = "center";
-        table.rows[0].cells[0].innerHTML = "Devices (" + (table.rows.length - 1) + ")";
 
+        //cell = row.cells[2];
+        cell = DKTableGetCellByNames(table, ip, "data");
+        cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
+        cell.style.textAlign = "center";
+        
+        //cell = row.cells[3];
+        cell = DKTableGetCellByNames(table, ip, "wifi");
+        cell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
+        cell.style.textAlign = "center";
+
+        //cell = table.rows[0].cells[0];
+        cell = DKTableGetCellByNames(table, "HEADER", "device");
+        cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     });
 }
