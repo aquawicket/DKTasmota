@@ -88,9 +88,10 @@ function CreateDeviceTable(parent) {
     var table = DKCreateTable(devices, "deviceTable", "30px", "", "20px");
 
     //Create Header Row as a normal <tr>
-    DKTableAddRow(table, "header");
+    DKTableAddRow(table, "HEADER");
     table.rows[0].style.backgroundColor = "rgb(50,50,50)";
     table.rows[0].style.fontWeight = "bold";
+    table.rows[0].cells[0].setAttribute("name", "device");
     table.rows[0].cells[0].innerHTML = "Devices (0)";
     table.rows[0].cells[0].style.width = "220px";
     DKTableAddColumn(table, "power");
@@ -132,13 +133,13 @@ function AddDevice(ip) {
         row.setAttribute("ip", ip);
         row.setAttribute("hostname", hostname);
 
-        //row.cells[0].setAttribute("name", "ip");
+        row.cells[0].setAttribute("name", table.rows[0].cells[0].getAttribute("name"));
         row.cells[0].innerHTML = "<a>" + ip + "</a>";
         row.cells[0].style.cursor = "pointer";
         row.cells[0].onclick = function() {
             var theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
         }
-        //row.cells[1].setAttribute("name", "power");
+        row.cells[1].setAttribute("name", table.rows[0].cells[1].getAttribute("name"));
         row.cells[1].style.textAlign = "center";
         row.cells[1].style.cursor = "pointer";
         row.cells[1].onclick = function() {
@@ -150,9 +151,9 @@ function AddDevice(ip) {
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
-        //row.cells[2].setAttribute("name", "data");
+        row.cells[2].setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
         row.cells[2].style.textAlign = "center";
-        //row.cells[3].setAttribute("name", "wifi");
+        row.cells[3].setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
         row.cells[3].style.textAlign = "center";
         table.rows[0].cells[0].innerHTML = "Devices (" + (table.rows.length - 1) + ")";
 
