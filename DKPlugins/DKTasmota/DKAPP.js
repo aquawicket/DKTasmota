@@ -135,13 +135,17 @@ function CreateDeviceTable(parent) {
 //////////////////////
 function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
-        if (!success || !url.includes(ip)) {
-            dkconsole.error("AddDevice("+ip+"): Failed");
+        if (!success){
+            dkconsole.error("AddDevice("+ip+"): Failed (!success)");
+            return;
+        }
+        if(!url.includes(ip)){
+            dkconsole.error("AddDevice("+ip+"): Failed (!url.includes(ip))");
             return;
         }
         var device = JSON.parse(data);
         if (!device.Hostname) {
-            dkconsole.error("AddDevice("+ip+"): Failed");
+            dkconsole.error("AddDevice("+ip+"): Failed (!device.Hostname)");
             return;
         }
         var hostname = device.Hostname;

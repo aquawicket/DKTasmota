@@ -99,6 +99,8 @@ DKTableAddRow = function(table, rowName, cellName) {
     		cellName = table.rows[0].cells[n].getAttribute("name");
     	}
         var cell = DKTableInsertCell(table, row, cellName);
+        //FIXME: The function above is NOT setting the cellName properly.
+        //This line is a temporary fix for now. 
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
     }
     return table.rows.length;
