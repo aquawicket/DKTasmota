@@ -25,7 +25,6 @@ function DKLoadFiles() {
     //This function can only load files, Not initiate variables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
     DKLoadJSFile("DKConsole.js");
-    //, function(){
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKCookies.js");
     DKLoadJSFile("DKNotifications.js");
@@ -36,7 +35,6 @@ function DKLoadFiles() {
     DKLoadJSFile("DKChart.js");
     DKLoadJSFile("VPDCalculator.js");
     DKLoadJSFile("DKDebug.js");
-    //});
 }
 
 /////////////////////
@@ -47,8 +45,11 @@ function DKLoadPage() {
     CreateButtons(body);
     CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
-    CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px", function() {
-        UpdateChart(99.0, 50.0, 0.1);
+
+    var winH = window.innerHeight;
+    //var chartTop = (winH-500)+"px";
+    CreateChart(body, "id", "", "195px", "2px", "2px", "", "400px", function() {
+        UpdateChart(99.0, 50.0/*, 0.1*/);
         //temperature, humidity, dewPoint  
     });
 
@@ -211,7 +212,7 @@ function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
     if (tempurature && humidity) {
-        UpdateChart(temperature, humidity, dewPoint);
+        UpdateChart(temperature, humidity/*, dewPoint*/);
     }
 }
 
@@ -386,6 +387,7 @@ function UpdateScreen(success, url, data) {
 
         var humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         var humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
+        // At 77F and 50% RH,  Dew Point should be 56.9°F
         var dewPointText = "<a id='DewP'>"+ dewPoint +" DP &#176;F</a>";
 
         var tempScale = 510;
@@ -405,7 +407,7 @@ function UpdateScreen(success, url, data) {
         if (tempGreen < 0) {
             tempGreen = 0;
         }
-        
+
         row.cells[2].innerHTML = tempTargetText + " " + tempText + "<br>" + humTargetText + " " + humText + "<br>" + dewPointText;
         document.getElementById("Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
@@ -460,23 +462,23 @@ function UpdateScreen(success, url, data) {
 ////////////////////////
 function DumpVariables() {
     dkconsole.debug("time: " + time);
-    dkconsole.log("temperature: " + temperature, "orange");
-    dkconsole.log("humidity: " + humidity, "orange");
-    dkconsole.log("dewPoint: " + dewPoint, "orange");
-    dkconsole.log("bypassRules: " + bypassRules, "orange");
+    dkconsole.debug("temperature: " + temperature);
+    dkconsole.debug("humidity: " + humidity);
+    dkconsole.debug("dewPoint: " + dewPoint);
+    dkconsole.debug("bypassRules: " + bypassRules);
 
-    dkconsole.log("tempTarget: " + tempTarget, "orange");
-    dkconsole.log("tempCalib: " + tempCalib, "orange");
-    dkconsole.log("tempMin: " + tempMin, "orange");
-    dkconsole.log("tempMax: " + tempMax, "orange");
+    dkconsole.debug("tempTarget: " + tempTarget);
+    dkconsole.debug("tempCalib: " + tempCalib);
+    dkconsole.debug("tempMin: " + tempMin);
+    dkconsole.debug("tempMax: " + tempMax);
 
-    dkconsole.log("humTarget: " + humTarget, "orange");
-    dkconsole.log("humCalib: " + humCalib, "orange");
-    dkconsole.log("humMin: " + humMin, "orange");
-    dkconsole.log("humMax: " + humMax, "orange");
+    dkconsole.debug("humTarget: " + humTarget);
+    dkconsole.debug("humCalib: " + humCalib);
+    dkconsole.debug("humMin: " + humMin);
+    dkconsole.debug("humMax: " + humMax);
 
-    dkconsole.log("exhaustFan: " + exhaustFan, "orange");
-    dkconsole.log("co2: " + co2, "orange");
-    dkconsole.log("waterWalls: " + waterWalls, "orange");
-    dkconsole.log("heater: " + heater, "orange");
+    dkconsole.debug("exhaustFan: " + exhaustFan);
+    dkconsole.debug("co2: " + co2);
+    dkconsole.debug("waterWalls: " + waterWalls);
+    dkconsole.debug("heater: " + heater);
 }
