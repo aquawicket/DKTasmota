@@ -9,6 +9,25 @@
 // GetCellByName(rowName, CellName) should always return the correct cell 
 // no matter where it is in the index chart. 
 
+// Example:  DKGetCell("Peter", "Address");
+// This should return the cell that is on the Peter Row and the Address Column
+// If we add and remove rows or colums, this method should stay functional
+// We can do this without altering id's and indexs using rowName and ColumnNama attributes
+
+// (fName) | (age) | (address)   |  (email)
+//------------------------------------------------------
+//  David  |  28   | 123 Fun St  |  Dave@silly.com
+//------------------------------------------------------
+//  Mary   |  31   |  P.O. 567   |  Mar02@grape.com
+//------------------------------------------------------
+//  Peter  |  25   |  464 Go ln. |  PeterDotson@abc.com
+//------------------------------------------------------
+//  John   |  47   | 09 till pk. |  Johnboy1@mail.com
+
+// The rowName is set to Peter on the <tr> element
+// The columnName is set to address on the <td> element
+
+
 /////////////////////////////////////////////////////////////////////////////
 DKCreateTable = function(parent, id, top, bottom, left, right, width, height) {
     var table = document.createElement('table');
