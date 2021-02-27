@@ -1,7 +1,7 @@
 var myConfig;
 
-/////////////////////////////////////////////////////////////////////
-function CreateChart(parent, top, bottom, left, right, width, height) {
+/////////////////////////////////////////////////////////////////////////
+function CreateChart(parent, id, top, bottom, left, right, width, height, callback) {
     DKLoadJSFile("https://cdn.zingchart.com/zingchart.min.js", function() {
         var myChart = document.createElement("div");
         myChart.id = "myChart";
@@ -43,13 +43,17 @@ function CreateChart(parent, top, bottom, left, right, width, height) {
             height: '70%',
             width: '100%'
         });
+
+        callback();
     });
 }
 
-////////////////////////////
-function UpdateChart(values) {
-    myConfig.series[0].values.push(values[0]);
-    myConfig.series[1].values.push(values[1]);
+////////////////////////////////////
+function UpdateChart(Temp, Humidity) {
+    dkConsole.log("Temp = "+Temp);
+    dkConsole.log("Humidity = "+Humidity);
+    myConfig.series[0].values.push(Temp);
+    myConfig.series[1].values.push(Humidity);
     zingchart.render({
         id: 'myChart',
         data: myConfig,

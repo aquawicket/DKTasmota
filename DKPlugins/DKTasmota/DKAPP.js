@@ -37,7 +37,10 @@ function DKLoadPage() {
     CreateButtons(body);
     CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
-    CreateChart(body, "", "75px", "2px", "2px", "", "400px");
+    CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px", function(){
+        UpdateChart(77.0, 50.0);  //Humidity,Temp
+    });
+
     CreateDKConsole(body, "dkConsole", "700px", "0px", "0px", "0px", "", "");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(body, "30px", "", "", "2px", "400px", "600px");
@@ -168,7 +171,9 @@ function TimerLoop(force) {
     Time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
-    UpdateChart([Humidity, Temp]);
+    if(Temp && Humidity){
+        UpdateChart(Temp, Humidity);
+    }
 }
 
 ////////////////////////
