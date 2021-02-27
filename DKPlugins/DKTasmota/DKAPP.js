@@ -211,7 +211,7 @@ function TimerLoop(force) {
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
-    if (tempurature && humidity) {
+    if (temperature && humidity) {
         UpdateChart(temperature, humidity/*, dewPoint*/);
     }
 }
@@ -257,20 +257,20 @@ function ProcessRules() {
 
     //Alarms
     if (temperature < tempMin) {
-        dkconsole.log("!!! TEMPERATURE BELOW MINIMUM " + Temp + "&#176;F < " + TempMin + "&#176;F !!!", "red");
+        dkconsole.log("!!! TEMPERATURE BELOW MINIMUM " + temperature + "&#176;F < " + tempMin + "&#176;F !!!", "red");
     }
-    if (temperature > TempMax) {
-        dkconsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + Temp + "&#176;F > " + TempMax + "&#176;F !!!", "red");
+    if (temperature > tempMax) {
+        dkconsole.log("!!! TEMPERATURE ABOVE MAXIMUM " + temperature + "&#176;F > " + tempMax + "&#176;F !!!", "red");
     }
     if (humidity < humMin) {
-        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + HumMin + "% !!!", "red");
+        dkconsole.log("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + humMin + "% !!!", "red");
     }
     if (humidity > humMax) {
-        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + HumMax + "% !!!", "red");
+        dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!", "red");
     }
 
-    if (!BypassRules.includes("Device005") && exhaustFan) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > temperatureMin)) {
+    if (!bypassRules.includes("Device005") && exhaustFan) {
+        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
             //exhaust fan ON
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
 
@@ -290,7 +290,7 @@ function ProcessRules() {
         }
     }
 
-    if (!bypassRules.includes("Device008") && Co2) {
+    if (!bypassRules.includes("Device008") && co2) {
         if ((temperature < tempTarget) && (humidity < humTarget)) {
             DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
             //Co2 ON
