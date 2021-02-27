@@ -38,7 +38,7 @@ function DKLoadPage() {
     CreateClock(body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(body);
     CreateChart(body, "id", "", "75px", "2px", "2px", "", "400px", function(){
-        UpdateChart(77, 50);  //Temp, Humidity
+        //UpdateChart(77, 50);  //Temp, Humidity
     });
 
     CreateDKConsole(body, "dkConsole", "700px", "0px", "0px", "0px", "", "");
