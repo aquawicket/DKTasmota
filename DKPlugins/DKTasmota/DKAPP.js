@@ -21,10 +21,9 @@ var Heater = true;
 
 //////////////////////
 function DKLoadFiles() {
+    DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKCookies.js");
-    DKLoadJSFile("DKConsole.js");
-    DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKAudio.js");
     DKLoadJSFile("DKTasmota.js");
@@ -32,6 +31,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKClock.js");
     DKLoadJSFile("DKChart.js");
     DKLoadJSFile("VPDCalculator.js");
+    DKLoadJSFile("DKDebug.js");
 }
 
 /////////////////////

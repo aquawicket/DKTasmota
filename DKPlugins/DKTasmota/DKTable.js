@@ -45,21 +45,23 @@ DKCreateTable = function(parent, id, top, bottom, left, right, width, height) {
 
 ////////////////////////////////////////
 DKTableInsertRow = function(table, name) {
-    row = table.insertRow(-1);
-    row.id = "row" + table.rows.length;
-    if (name) {
-        row.setAttribute("name", name);
+    if(!name){
+	    dkConsole && dkConsole.error("DKTableInsertRow(): name parameter invalid");
     }
+    var row = table.insertRow(-1);
+    row.id = "row" + table.rows.length;
+    row.setAttribute("name", name);
     return row;
 }
 
 //////////////////////////////////////////////
 DKTableInsertCell = function(table, row, name) {
+	if(!name){
+    	dkConsole && dkConsole.error("DKTableInsertCell(): name parameter invalid");
+    }
     var cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
-    if (name) {
-        cell.setAttribute("name", name);
-    }
+    cell.setAttribute("name", name);
     return cell;
 }
 
