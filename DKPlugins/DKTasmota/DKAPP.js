@@ -59,9 +59,20 @@ function DKLoadPage() {
     //CreateDebugBox(body, "30px", "", "", "2px", "200px", "400px");
 
     dkconsole.log("**** Tasmota device manager 0.1b ****<br>");
+  
+    /*
+    //Load Devices from Cookies
     var cookies = GetCookie().split("^");
     for (n = 0; n < cookies.length - 1; n++) {
         var ip = cookies[n];
+        AddDevice(ip);
+    }
+    */
+
+    //Load devices from local storage
+    var deviceIPs = LoadFromLocalStorage("deviceIPs").split("^");
+    for (n = 0; n < deviceIPs.length - 1; n++) {
+        var ip = deviceIPs[n];
         AddDevice(ip);
     }
 
@@ -238,6 +249,7 @@ function TimerLoop(force) {
 ////////////////////////
 function ScanDevices() {
     var cookieString = "";
+    var localStorageString = "";
     var table = document.getElementById("deviceTable");
 
     table.parentNode.remove(table);
@@ -246,16 +258,27 @@ function ScanDevices() {
     GetTasmotaDevices("192.168.1.", function(ip, done) {
         if (ip) {
             AddDevice(ip);
+
+            /*
+            //Save to cookies
             if (!cookieString.includes(ip)) {
                 cookieString = cookieString + ip + "^";
                 SetCookie(cookieString, 30);
+            }
+            */
+
+            //Save to local storage
+            if(!localStorageString.includes(ip)){
+                localStorageString = localStorageString + ip + "^";
+                SaveToLocalStorage("deviceIPs", localStorageString);
             }
         }
         if (done) {
             dkconsole.log("\n");
             dkconsole.log("Scan Complete");
             dkconsole.log("(" + tasmotaDeviceCount + ") Tasmota Devices found");
-            SetCookie(cookieString, 30);
+            //SetCookie(cookieString, 30);
+            SaveToLocalStorage("deviceIPs", localStorageString);
         }
     });
 }
@@ -446,7 +469,8 @@ function ProcessRules() {
     }
 
     if (!bypassRules.includes("Device005") && exhaustFan) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
+        if ((temperature > tempTarget) || 
+            (humidity > humTarget && temperature > 50)) {
             //exhaust fan ON
             dkconsole.log("Exhaust Fan ON", "green");
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
