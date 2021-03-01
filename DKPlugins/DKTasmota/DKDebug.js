@@ -1,5 +1,5 @@
 //"use strict";
-var DEBUG = 1;
+//var DEBUG = 1;
 //function DKDEBUG() {// DKDEBUG should be a function you can put anywhere.
 // It should give you options of a stack trace, last function and variable values
 
@@ -20,30 +20,38 @@ function CreateDebugBox(parent, top, bottom, left, right, width, height) {
 
 ///////////////////
 function isStrict() {
-    var x = true;
-    eval("var x=false");
-    return x;
+    if(eval("var __temp = null"), (typeof __temp === "undefined")){
+        return true;
+    }
+    return false;
 }
 
-////////////////////////////////
-function GetArguments(func)
-{
-     var argsString = "";
-     var count = 0;;
-     var fn = window[func]
-     if(!fn){
-        dkconsole.error("GetArguments("+func+"): fn invalid");
-        return ""; 
-     }
-     argsString += new RegExp('(?:'+fn.name+'\\s*|^)\\s*\\((.*?)\\)').exec(fn.toString().replace(/\n/g, ''))[1].replace(/\/\*.*?\*\//g, '').replace(/ /g, '');
-     if(isStrict()){ return argsString; }
-     if(!fn.arguments){ return argsString; }
-     var args = argsString.split(",");
-     for (let val of fn.arguments) {
+/////////////////////////////////////////
+function GetArguments(func, getArgValues) {
+    var argsString = "";
+    var count = 0;
+    var fn = window[func];
+    if (!fn) {
+        dkconsole.log(`ERROR: DKDebug.js:35 GetArguments(${func}): fn invalid`, "red");
+        return "";
+    }
+    argsString += new RegExp('(?:' + fn.name + '\\s*|^)\\s*\\((.*?)\\)').exec(fn.toString().replace(/\n/g, ''))[1].replace(/\/\*.*?\*\//g, '').replace(/ /g, '');
+    if (isStrict()) {
+        return argsString;
+    }
+
+    if(!getArgValues){
+        return argsString;
+    }
+    if (!fn.arguments) {
+        return argsString;
+    }
+    var args = argsString.split(",");
+    for (let val of fn.arguments) {
         if (count > 0) {
-            args[count] = " "+args[count];
+            args[count] = " " + args[count];
         }
-        args[count] += " = "+val;
+        args[count] += " = " + val;
         count++;
     }
     argsString = args.toString();
@@ -72,48 +80,70 @@ function GetStack() {
 function StackTrace() {
     dkconsole.log("***** STACK TRACE *****", "orange");
     var stack = GetStack();
-    stack.shift();
-    var files = [];
-
-    for (var s = 0; s < stack.length; s++) {
-       
+    for (var s = 3; s < stack.length; s++) {
         var stackString = stack[s].trim();
-        stackString = stackString.replace("at ","");
-        stackString = stackString.replace("(","");
-        stackString = stackString.replace(")","");
-       
+        stackString = stackString.replace("at ", "");
+        stackString = stackString.replace("(", "");
+        stackString = stackString.replace(")", "");
+
         var func = stackString.split(" ").shift();
-        stackString = stackString.replace(func,"");
+        stackString = stackString.replace(func, "");
 
         var charNum = stackString.split(":").pop();
-        stackString = stackString.replace(":"+charNum,"");
+        stackString = stackString.replace(":" + charNum, "");
 
         var lineNum = stackString.split(":").pop();
-        stackString = stackString.replace(":"+lineNum,"");
-    
+        stackString = stackString.replace(":" + lineNum, "");
+
         var file = stackString.split("/").pop();
-        
+
         var args = GetArguments(func);
-        dkconsole.log(file+" "+lineNum+" "+func+"("+args+")", "orange");
+        dkconsole.log(file + ":" + lineNum + " " + func + "(" + args + ")", "orange");
     }
 }
 
-function TestStackTrace(a, b, c)
-{
-    StackTrace();
+////////////////////////////
+function LastCall(stackLine) {
+    var stack = GetStack();
+    stack.shift();
 
-    /*
-    var func = TestStackTrace;
-    while(func){
-        dkconsole.log(func.name);
-        for (let val of func.arguments) {
-            dkconsole.log(val);
-            if(typeof val === 'object' && val !== null){
-                dkconsole.log(val.type)
-            }
+    for (var i = 0; i < stack.length; i++) {
+        var stackString = stack[stackLine].trim();
+        stackString = stackString.replace("at ", "");
+        stackString = stackString.replace("(", "");
+        stackString = stackString.replace(")", "");
+        var func = stackString.split(" ").shift();
+        if (func == "LastCall") {
+            stackline = i + 1;
         }
-    
-        func = func.caller;
     }
-    */
+
+    if (!stackLine) {
+        stackLine = 2;
+    }
+    var stackString = stack[stackLine].trim();
+    stackString = stackString.replace("at ", "");
+    stackString = stackString.replace("(", "");
+    stackString = stackString.replace(")", "");
+
+    var func = stackString.split(" ").shift();
+    stackString = stackString.replace(func, "");
+
+    var charNum = stackString.split(":").pop();
+    stackString = stackString.replace(":" + charNum, "");
+
+    var lineNum = stackString.split(":").pop();
+    stackString = stackString.replace(":" + lineNum, "");
+
+    var file = stackString.split("/").pop();
+
+    var args = GetArguments(func);
+    var line = file + ":" + lineNum + " " + func + "(" + args + ")";
+    return line;
+}
+
+////////////////////////////////
+function TestStackTrace(a, b, c) {
+    StackTrace();
+    dkconsole.error("test");
 }

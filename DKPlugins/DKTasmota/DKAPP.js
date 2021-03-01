@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 
 var time;
 var temperature = 77.0;
@@ -26,6 +26,7 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function can only load files, Not initiate variables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
+    DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKCookies.js");
@@ -36,7 +37,6 @@ function DKLoadFiles() {
     DKLoadJSFile("DKClock.js");
     DKLoadJSFile("DKChart.js");
     DKLoadJSFile("VPDCalculator.js");
-    DKLoadJSFile("DKDebug.js");
 }
 
 /////////////////////

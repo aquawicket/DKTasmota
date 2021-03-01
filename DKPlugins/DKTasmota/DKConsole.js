@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 // https://developer.mozilla.org/en-US/docs/Web/API/console
 
 var dkconsole;
@@ -80,12 +80,16 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
 
     ////////////////////////////////
     dkconsole.debug = function(text) {
-        dkconsole.log(text, "orange");
+        //dkconsole.log("DEBUG: "+LastCall(3)+":  "+text, "orange");
+        dkconsole.log("DEBUG: " + text, "orange");
     }
 
     ////////////////////////////////
     dkconsole.error = function(text) {
-        dkconsole.log(text, "red");
+        if (!text) {
+            text = "";
+        }
+        dkconsole.log("ERROR: " + LastCall(3) + ":  " + text, "red");
     }
 
     ///////////////////////////////
