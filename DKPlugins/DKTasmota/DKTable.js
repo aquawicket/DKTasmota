@@ -103,8 +103,7 @@ DKTableAddRow = function(table, rowName, cellName) {
         //This line is a temporary fix for now. 
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
     }
-    return table.rows.length;
-    //return the created row number  
+    return row;
 }
 
 ////////////////////////////////////////
@@ -197,6 +196,8 @@ function DKTableGetIndex(cell) {
 
 ////////////////////////////////////////////
 function DKTableGetRowByName(table, rowName){
+	return DKTableGetCellByNames(table, rowName);
+	/*
     for (var r = 0; r < table.rows.length; r++) {
         if (!table.rows[r].getAttribute("name")) {
             dkConsole.log("WARNING: row" + r + " has no name attribute");
@@ -207,6 +208,7 @@ function DKTableGetRowByName(table, rowName){
             return row;
         }
     }
+    */
 }
 //////////////////////////////////////////////////////////
 function DKTableGetCellByNames(table, rowName, columnName) {
@@ -237,7 +239,7 @@ function DKTableGetCellByNames(table, rowName, columnName) {
         if (table.rows[r].getAttribute("name") == rowName) {
             var row = table.rows[r];
             //if the column name wasn't requested, return the row 
-            //if(!columnName){ return row; }
+            if(!columnName){ return row; }
 
             for (var c = 0; c < row.cells.length; c++) {
                 if (!row.cells[c].getAttribute("name")) {

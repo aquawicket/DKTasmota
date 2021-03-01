@@ -1,7 +1,8 @@
 var time;
-var temperature = 77.0;;
-var humidity = 50.0;
-var dewPoint = 56.9; //@ 77F 50%rh
+var temperature = 77.0;
+;var humidity = 50.0;
+var dewPoint = 56.9;
+//@ 77F 50%rh
 var bypassRules = [];
 
 var tempTarget = 77;
@@ -135,23 +136,23 @@ function CreateDeviceTable(parent) {
 //////////////////////
 function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
-        if (!success){
-            dkconsole.error("AddDevice("+ip+"): Failed (!success)");
+        if (!success) {
+            dkconsole.error("AddDevice(" + ip + "): Failed (!success)");
             return;
         }
-        if(!url.includes(ip)){
-            dkconsole.error("AddDevice("+ip+"): Failed (!url.includes(ip))");
+        if (!url.includes(ip)) {
+            dkconsole.error("AddDevice(" + ip + "): Failed (!url.includes(ip))");
             return;
         }
         var device = JSON.parse(data);
         if (!device.Hostname) {
-            dkconsole.error("AddDevice("+ip+"): Failed (!device.Hostname)");
+            dkconsole.error("AddDevice(" + ip + "): Failed (!device.Hostname)");
             return;
         }
         var hostname = device.Hostname;
         var table = document.getElementById("deviceTable");
-        DKTableAddRow(table, ip);
-        var row = table.rows[table.rows.length - 1];
+        var row = DKTableAddRow(table, ip);
+        //var row = table.rows[table.rows.length - 1];
         if (row.rowIndex % 2 == 0) {
             //even
             row.style.backgroundColor = "rgb(100,100,100)";
@@ -199,12 +200,12 @@ function AddDevice(ip) {
 
         //cell = row.cells[2];
         cell = DKTableGetCellByNames(table, ip, "data");
-        cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
+        //cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
         cell.style.textAlign = "center";
 
         //cell = row.cells[3];
         cell = DKTableGetCellByNames(table, ip, "wifi");
-        cell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
+        //cell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
         cell.style.textAlign = "center";
 
         //cell = table.rows[0].cells[0];
@@ -280,12 +281,15 @@ function UpdateScreen(success, url, data) {
     var row;
     var table = document.getElementById("deviceTable");
     for (var n = 1; n < table.rows.length; n++) {
-        if (url.includes(table.rows[n].getAttribute("ip"))) {
+        if (url.includes(table.rows[n].getAttribute("ip")) ||
+            url.includes(table.rows[n].getAttribute("hostname"))) {
             row = table.rows[n];
             continue;
         }
     }
+    //var row = DKTableGetRowByName(table, ip);
     if (!row) {
+        dkconsole.error("UpdateScreen("+success+", "+url+", "+data+"): ERROR (!row)");
         return;
     }
 
@@ -294,6 +298,7 @@ function UpdateScreen(success, url, data) {
 
     var deviceHostname = device.StatusNet ? device.StatusNet.Hostname : device.Hostname;
     if (deviceHostname) {
+        //DKTableGetCellByNames(table, ip, "device");
         row.setAttribute("Hostname", deviceHostname);
     }
 
@@ -345,11 +350,13 @@ function UpdateScreen(success, url, data) {
         var humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         var humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
         // At 77F and 50% RH,  Dew Point should be 56.9°F
-        var dewPointText = "<a id='DewP'>"+ dewPoint +" DP &#176;F</a>";
+        var dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
 
         var tempScale = 510;
-        var tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/;
-        var tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/;
+        var tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/
+        ;
+        var tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/
+        ;
         var tempRed = tempNum
         var tempGreen = 510 - tempNum;
         if (tempRed > 255) {
@@ -369,8 +376,10 @@ function UpdateScreen(success, url, data) {
         document.getElementById("Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
         var humScale = 510;
-        var humDiff = (Math.abs(humTarget - humidity) * 5)/*.toFixed(1)*/;
-        var humNum = (humDiff * humScale / 100)/*.toFixed(1)*/;
+        var humDiff = (Math.abs(humTarget - humidity) * 5)/*.toFixed(1)*/
+        ;
+        var humNum = (humDiff * humScale / 100)/*.toFixed(1)*/
+        ;
         var humRed = humNum;
         var humGreen = 510 - humNum;
         if (humRed > 255) {
@@ -396,7 +405,8 @@ function UpdateScreen(success, url, data) {
         var device = JSON.parse(data);
         var signal = deviceWifi.RSSI;
         var scale = 510;
-        var num = (signal * scale / 100)/*.toFixed(1)*/;
+        var num = (signal * scale / 100)/*.toFixed(1)*/
+        ;
         var green = num;
         var red = 510 - num;
         row.cells[3].innerHTML = signal + "%";
@@ -449,8 +459,7 @@ function ProcessRules() {
     }
 
     if (!bypassRules.includes("Device007") && waterWalls) {
-        if ( (time < 17) && (temperature > tempTarget) && (humidity < humMax) || 
-           (humidity < humTarget) && (temperature > tempMin) ){
+        if ((time < 17) && (temperature > tempTarget) && (humidity < humMax) || (humidity < humTarget) && (temperature > tempMin)) {
             //water walls ON
             dkconsole.log("Water walls ON", "green");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);

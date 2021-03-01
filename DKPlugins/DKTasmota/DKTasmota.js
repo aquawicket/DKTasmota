@@ -6,8 +6,8 @@ let devicesScanned;
 //return all local network device IPs that respond to /cm?cmnd=CORS 
 GetTasmotaDevices = function(ipPrefix, callback)
 {
-	let tasmotaDeviceCount = 0;
-    let devicesScanned = 0;
+	tasmotaDeviceCount = 0;
+    devicesScanned = 0;
 	//scan 192.168.1.1 thru 192.168.1.254
 	if(!ipPrefix){ ipPrefix = "192.168.1."; }
 	let corsWrite = 1;
