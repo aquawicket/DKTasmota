@@ -1,10 +1,11 @@
+"use strict";
 // https://tasmota.github.io/docs/Commands/
 
 let tasmotaDeviceCount;
 let devicesScanned;
 
 //return all local network device IPs that respond to /cm?cmnd=CORS 
-GetTasmotaDevices = function(ipPrefix, callback)
+var GetTasmotaDevices = function(ipPrefix, callback)
 {
 	tasmotaDeviceCount = 0;
     devicesScanned = 0;
@@ -22,7 +23,8 @@ GetTasmotaDevices = function(ipPrefix, callback)
             }
         }
         //let url = "http://"+ip+"/cm?cmnd="+cmnd; //Un-encodeURIComponent
-        let url = "http://"+ip+"/cm?cmnd="+encodeURIComponent(cmnd).replace(";", "%3B");   
+        let url = "http://"+ip+"/cm?cmnd="+encodeURIComponent(cmnd).replace(";", "%3B"); 
+        dkconsole.log(url);  
 	    DKSendSuperRequest(url, function(success, data){ //send request using superAgent
 	        dkconsole.log("pinged "+ip);
 	        if(success){

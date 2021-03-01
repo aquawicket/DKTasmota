@@ -1,4 +1,4 @@
-//DKCookies.js
+"use strict";
 
 ///////////////////////
 function DKGetCookies() {

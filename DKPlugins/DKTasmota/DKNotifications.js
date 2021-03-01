@@ -1,3 +1,4 @@
+"use strict";
 // https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API
 
 function notifyMe() {

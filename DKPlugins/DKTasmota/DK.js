@@ -1,5 +1,7 @@
-//////////////////////////////
-DKLoadCSSFile = function(file) {
+"use strict";
+
+//////////////////////////////////
+var DKLoadCSSFile = function(file) {
     var head = document.getElementsByTagName('head')[0];
     var link = document.createElement('link');
     link.id = file;
@@ -10,8 +12,8 @@ DKLoadCSSFile = function(file) {
     head.appendChild(link);
 }
 
-///////////////////////////////////////
-DKLoadJSFile = function(file, callback) {
+///////////////////////////////////////////
+var DKLoadJSFile = function(file, callback) {
     var head = document.getElementsByTagName('head')[0];
     var script = document.createElement('script');
     script.id = file;
@@ -20,16 +22,16 @@ DKLoadJSFile = function(file, callback) {
     script.onload = callback;
 }
 
-/////////////////////////////////////////
-DKLoadHtmlFile = function(file, callback) {
+///////////////////////////////////////
+function DKLoadHtmlFile(file, callback) {
     DKSendRequest(file, function(success, url, data) {
         success && callback && callback(data);
         //TESTME
     });
 }
 
-////////////////////////////////////////////
-DKSendSuperRequest = function(url, callback) {
+//////////////////////////////////////////
+function DKSendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,
         // Wait 18 seconds for the server to start sending,
@@ -42,8 +44,8 @@ DKSendSuperRequest = function(url, callback) {
     });
 }
 
-///////////////////////////////////////
-DKSendRequest = function(url, callback) {
+///////////////////////////////////////////
+var DKSendRequest = function(url, callback) {
     var xhr = "";
     try {
         xhr = new XMLHttpRequest();
@@ -83,6 +85,7 @@ DKSendRequest = function(url, callback) {
         callback(false, url, "DKSendRequest(" + url + ") -> Timed out");
     });
     xhr.addEventListener('error', function(event) {
+        dkconsole.log(JSON.stringify(event));
         callback(false, url, "DKSendRequest(" + url + ")-> ERROR");
     });
     xhr.send();

@@ -1,3 +1,4 @@
+"use strict";
 // https://www.zingchart.com/
 
 var myConfig;

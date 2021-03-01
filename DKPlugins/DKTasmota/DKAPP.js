@@ -1,8 +1,9 @@
+//"use strict";
+
 var time;
 var temperature = 77.0;
-;var humidity = 50.0;
+var humidity = 50.0;
 var dewPoint = 56.9;
-//@ 77F 50%rh
 var bypassRules = [];
 
 var tempTarget = 77;
@@ -40,7 +41,7 @@ function DKLoadFiles() {
 
 /////////////////////
 function DKLoadPage() {
-    body = document.getElementsByTagName('body')[0];
+    var body = document.getElementsByTagName('body')[0];
     body.style.backgroundColor = "rgb(100,100,100)";
 
     CreateButtons(body);
@@ -71,7 +72,7 @@ function DKLoadPage() {
 
     //Load devices from local storage
     var deviceIPs = LoadFromLocalStorage("deviceIPs").split("^");
-    for (n = 0; n < deviceIPs.length - 1; n++) {
+    for (var n = 0; n < deviceIPs.length - 1; n++) {
         var ip = deviceIPs[n];
         AddDevice(ip);
     }
@@ -88,6 +89,7 @@ function CreateButtons(parent) {
     scanDevices.position = "absolute";
     scanDevices.top = "5px";
     scanDevices.left = "5px";
+    scanDevices.style.cursor = "pointer";
     scanDevices.onclick = function() {
         ScanDevices();
     }
@@ -98,6 +100,7 @@ function CreateButtons(parent) {
     updateDevices.position = "absolute";
     updateDevices.top = "5px";
     updateDevices.left = "30px";
+    updateDevices.style.cursor = "pointer";
     updateDevices.onclick = function() {
         TimerLoop(false);
     }
@@ -148,7 +151,7 @@ function CreateDeviceTable(parent) {
 function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
         if (!success) {
-            dkconsole.error("AddDevice(" + ip + "): Failed (!success)");
+            dkconsole.error("DKSendRequest(http://" + ip + "/cm?cmnd=Hostname, function("+success+", "+url+", "+data+"): Failed (!success)");
             return;
         }
         if (!url.includes(ip)) {
@@ -230,11 +233,7 @@ function AddDevice(ip) {
 function TimerLoop(force) {
 
     //DUBUG ///////////////////////
-    /*
-    var table = document.getElementById("deviceTable");
-    dkconsole.log("table.rows[3].rowIndex = " + table.rows[3].rowIndex);
-    dkconsole.log("table.rows[3].cells[3].cellIndex = " + table.rows[3].cells[3].cellIndex);
-    */
+    TestStackTrace("moe","larry","curly");
     //DEBUG /////////////////////
 
     var currentdate = new Date();
@@ -468,51 +467,49 @@ function ProcessRules() {
         dkconsole.log("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!", "red");
     }
 
+    //Exhaust fan
     if (!bypassRules.includes("Device005") && exhaustFan) {
         if ((temperature > tempTarget) || 
-            (humidity > humTarget && temperature > 50)) {
-            //exhaust fan ON
+            (humidity > humTarget && temperature > tempTarget) ||
+            (temperature - dewPoint) < 2) {
             dkconsole.log("Exhaust Fan ON", "green");
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
 
         } else {
-            //exhaust fan OFF
             dkconsole.log("Exhaust Fan OFF", "red");
             DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
+    //Water walls
     if (!bypassRules.includes("Device007") && waterWalls) {
-        if ((time < 17) && (temperature > tempTarget) && (humidity < humMax) || (humidity < humTarget) && (temperature > tempMin)) {
-            //water walls ON
+        if ((time < 17) && (temperature > tempTarget) && (humidity < humMax) || 
+            (humidity < humTarget) && (temperature > tempMin)) {
             dkconsole.log("Water walls ON", "green");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
-            //water walls OFF
             dkconsole.log("Water walls OFF", "red");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
+    //Co2
     if (!bypassRules.includes("Device008") && co2) {
         if ((temperature < tempTarget) && (humidity < humTarget)) {
-            //Co2 ON
             dkconsole.log("Co2 ON", "green");
             DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
-            //Co2 OFF
             dkconsole.log("Co2 OFF", "red");
             DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
+    //Heater
     if (!bypassRules.includes("Device006") && heater) {
         if (temperature < tempTarget) {
-            //heater ON
             dkconsole.log("Heater ON", "green");
             DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
-            //heater OFF
             dkconsole.log("Heater OFF", "red");
             DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
         }

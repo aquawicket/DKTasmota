@@ -1,3 +1,4 @@
+"use strict";
 // https://developer.mozilla.org/en-US/docs/Web/API/console
 
 var dkconsole;
@@ -51,7 +52,13 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
                 return;
             }
             dkconsole.log("RUN Javascript -> " + cmdbox.value);
-            eval(cmdbox.value);
+
+            try {
+                eval(cmdbox.value);
+            } catch (x) {
+                dkconsole.log(x.stack);
+            }
+
             cmdbox.value = "";
         }
     }
