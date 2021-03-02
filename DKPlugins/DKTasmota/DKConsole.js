@@ -52,6 +52,7 @@
     }
 }());
 
+//https://stackoverflow.com/a/49560222/688352
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     dkconsole.error(msg + "," + url + "," + lineNo + "," + columnNo + "," + error);
     return false;
