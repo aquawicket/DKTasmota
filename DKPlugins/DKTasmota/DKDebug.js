@@ -1,7 +1,5 @@
-//"use strict";
-//var DEBUG = 1;
-//function DKDEBUG() {// DKDEBUG should be a function you can put anywhere.
-// It should give you options of a stack trace, last function and variable values
+"use strict";
+var DEBUG = 0;
 
 ////////////////////////////////////////////////////////////////////////
 function CreateDebugBox(parent, top, bottom, left, right, width, height) {
@@ -20,7 +18,8 @@ function CreateDebugBox(parent, top, bottom, left, right, width, height) {
 
 ///////////////////
 function isStrict() {
-    if(eval("var __temp = null"), (typeof __temp === "undefined")){
+    if (eval("var __temp = null"),
+    (typeof __temp === "undefined")) {
         return true;
     }
     return false;
@@ -32,7 +31,8 @@ function GetArguments(func, getArgValues) {
     var count = 0;
     var fn = window[func];
     if (!fn) {
-        dkconsole.log(`ERROR: DKDebug.js:35 GetArguments(${func}): fn invalid`, "red");
+        //don't call dkconsole.error from here, infinate loop
+        dkconsole.error(`ERROR: DKDebug.js:35 GetArguments(${func}): fn invalid`);
         return "";
     }
     argsString += new RegExp('(?:' + fn.name + '\\s*|^)\\s*\\((.*?)\\)').exec(fn.toString().replace(/\n/g, ''))[1].replace(/\/\*.*?\*\//g, '').replace(/ /g, '');
@@ -40,7 +40,7 @@ function GetArguments(func, getArgValues) {
         return argsString;
     }
 
-    if(!getArgValues){
+    if (!getArgValues) {
         return argsString;
     }
     if (!fn.arguments) {
@@ -78,7 +78,7 @@ function GetStack() {
 
 /////////////////////
 function StackTrace() {
-    dkconsole.log("***** STACK TRACE *****", "orange");
+    dkconsole.warn("***** STACK TRACE *****");
     var stack = GetStack();
     for (var s = 3; s < stack.length; s++) {
         var stackString = stack[s].trim();
@@ -98,7 +98,7 @@ function StackTrace() {
         var file = stackString.split("/").pop();
 
         var args = GetArguments(func);
-        dkconsole.log(file + ":" + lineNum + " " + func + "(" + args + ")", "orange");
+        dkconsole.warn(file + ":" + lineNum + " " + func + "(" + args + ")");
     }
 }
 
@@ -144,6 +144,18 @@ function LastCall(stackLine) {
 
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
-    StackTrace();
-    dkconsole.error("test");
+
+    if (DEBUG) {
+        StackTrace();
+        console.log("█console.log");
+        console.info("█console.info");
+        console.debug("█console.debug");
+        console.warn("█console.warn");
+        console.error("█console.error");
+        //console.trace("█console.trace");
+        //console.group("█console.group");
+
+        var e = new Error();
+        throw e;
+    }
 }

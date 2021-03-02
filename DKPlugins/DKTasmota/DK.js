@@ -25,8 +25,10 @@ var DKLoadJSFile = function(file, callback) {
 ///////////////////////////////////////
 function DKLoadHtmlFile(file, callback) {
     DKSendRequest(file, function(success, url, data) {
-        success && callback && callback(data);
-        //TESTME
+        if(!success){
+            dkconsole.error("!success");
+        }
+        callback && callback(data);
     });
 }
 
@@ -85,7 +87,7 @@ var DKSendRequest = function(url, callback) {
         callback(false, url, "DKSendRequest(" + url + ") -> Timed out");
     });
     xhr.addEventListener('error', function(event) {
-        dkconsole.log(JSON.stringify(event));
+        dkconsole.error(JSON.stringify(event));
         callback(false, url, "DKSendRequest(" + url + ")-> ERROR");
     });
     xhr.send();

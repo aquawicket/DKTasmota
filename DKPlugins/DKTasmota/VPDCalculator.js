@@ -4,6 +4,7 @@
 function CreateVPDCalculator(parent, top, bottom, left, right, width, height) {
     DKLoadHtmlFile("VPDCalculator.html", function(success, url, data) {
         if (!success) {
+            dkconsole.error("!success");
             return;
         }
         var vpdDiv = document.createElement("div");
