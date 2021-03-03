@@ -142,16 +142,16 @@ function CreateDeviceTable(parent) {
 function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
         if (!success) {
-            dkconsole.error(LastCall()+": Failed @(!success)");
+            dkconsole.error(LastStackCall() + "<br>  at if(!success)");
             return;
         }
         if (!url.includes(ip)) {
-            dkconsole.error(LastCall()+": Failed @(!url.includes(ip))");
+            dkconsole.error(LastStackCall() + "<br>  at if(!url.includes(ip))");
             return;
         }
         var device = JSON.parse(data);
         if (!device.Hostname) {
-            dkconsole.error(LastCall()+": Failed@(!device.Hostname)");
+            dkconsole.error(LastStackCall() + "<br>  at if(!device.Hostname)");
             return;
         }
         var hostname = device.Hostname;
@@ -271,7 +271,7 @@ function ProcessDevices() {
 function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
-        dkconsole.error(LastStackCall()+": at if(!success)");
+        dkconsole.error(LastStackCall() + "<br> at if(!success)");
         PlaySound("PowerDown.mp3");
         return;
     }
@@ -286,7 +286,7 @@ function UpdateScreen(success, url, data) {
     }
     //var row = DKTableGetRowByName(table, ip);
     if (!row) {
-        dkconsole.error(LastCall()+": failed@ if(!row)");
+        dkconsole.error(LastCall() + ": failed@ if(!row)");
         return;
     }
 

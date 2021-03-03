@@ -1,78 +1,76 @@
 //Requires DKError.js
-
 "use strict";
-// https://developer.mozilla.org/en-US/docs/Web/API/console
 
-var log = console.log;
-var info = console.info;
-var debug = console.debug;
-var warn = console.warn;
-var error = console.error;
-var trace = console.trace;
-var assert = console.assert;
-var group = console.group;
+// https://developer.mozilla.org/en-US/docs/Web/API/console
+var dkconsole;
+
+//intercept console with dkconsole
+var console_log = console.log;
+var console_info = console.info;
+var console_debug = console.debug;
+var console_warn = console.warn;
+var console_error = console.error;
+var console_trace = console.trace;
+var console_assert = console.assert;
+var console_group = console.group;
 (function() {
     console.log = function() {
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
-        log.apply(this, Array.prototype.slice.call(arguments));
+        console_log.apply(this, Array.prototype.slice.call(arguments));
     }
     console.info = function() {
         dkconsole.info.apply(this, Array.prototype.slice.call(arguments));
-        info.apply(this, Array.prototype.slice.call(arguments));
+        console_info.apply(this, Array.prototype.slice.call(arguments));
     }
     console.debug = function() {
         dkconsole.debug.apply(this, Array.prototype.slice.call(arguments));
-        debug.apply(this, Array.prototype.slice.call(arguments));
+        console_debug.apply(this, Array.prototype.slice.call(arguments));
     }
     console.warn = function() {
         dkconsole.warn.apply(this, Array.prototype.slice.call(arguments));
-        warn.apply(this, Array.prototype.slice.call(arguments));
+        console_warn.apply(this, Array.prototype.slice.call(arguments));
     }
     console.error = function() {
         dkconsole.error.apply(this, Array.prototype.slice.call(arguments));
-        error.apply(this, Array.prototype.slice.call(arguments));
+        console_error.apply(this, Array.prototype.slice.call(arguments));
     }
     console.trace = function() {
         dkconsole.trace.apply(this, Array.prototype.slice.call(arguments));
-        trace.apply(this, Array.prototype.slice.call(arguments));
+        console_trace.apply(this, Array.prototype.slice.call(arguments));
     }
     console.assert = function() {
         dkconsole.assert.apply(this, Array.prototype.slice.call(arguments));
-        assert.apply(this, Array.prototype.slice.call(arguments));
+        console_assert.apply(this, Array.prototype.slice.call(arguments));
     }
     console.group = function() {
         dkconsole.group.apply(this, Array.prototype.slice.call(arguments));
-        group.apply(this, Array.prototype.slice.call(arguments));
+        console_group.apply(this, Array.prototype.slice.call(arguments));
     }
 }());
 
-////////////////////////////////////////////////////////////
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     dkconsole.error(CreateConsoleStack(error.stack));
     return false;
 }
+
 //https://stackoverflow.com/a/49560222/688352
+//https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
 window.onunhandledrejection = function(e) {
     dkconsole.error("Error: onunhandledrejection ->" + e.reason.message);
     return false;
 }
 
-//////////////////////////////////
 function CreateConsoleStack(stack) {
     var stack = StackToJSON(error.stack);
     var str = msg + "<br>";
     for (var s = 1; s < stack.length; s++) {
         str += "  at " + stack[s].func + " ";
-        str += "(<a href='" + stack[s].filePath + ":" + stack[s].lineNum + "' style='color:rgb(213,213,213)'>" + stack[s].file + ":" + stack[s].lineNum + "</a>)<br>";
+        str += "(<a href='" + stack[s].filePath + /* ":" + stack[s].lineNum + */
+        "' style='color:rgb(213,213,213)'>" + stack[s].file + ":" + stack[s].lineNum + "</a>)<br>";
     }
     return str;
 }
 
-
-
-var dkconsole;
-
-/////////////////////////////////////////////////////////////////////////////
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     DKLoadCSSFile("dkconsole.css");
     var dkconsoleFrame = document.createElement("div");
@@ -136,7 +134,6 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
     dkconsoleFrame.appendChild(cmdbox);
 
-    /////////////////////////////////////////
     dkconsole.message = function(msg, style) {
         var msgDiv = document.createElement("div");
         msgDiv.style.width = "100%";
@@ -186,58 +183,33 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         }
     }
 
-    /////////////////////////////
     dkconsole.log = function(str) {
         dkconsole.message(str, "log");
     }
 
-    //////////////////////////////
     dkconsole.info = function(str) {
         dkconsole.message(str, "info");
     }
 
-    ///////////////////////////////
     dkconsole.debug = function(str) {
         dkconsole.message(str, "debug");
     }
 
-    //////////////////////////////
     dkconsole.warn = function(str) {
         dkconsole.message(str, "warn");
     }
 
-    ////////////////////////////////////////////////////
     dkconsole.error = function(str) {
         dkconsole.message(str, "error");
     }
 
-    ///////////////////////////////
     dkconsole.group = function(str) {
         dkconsole.message(str);
     }
 
-    ///////////////////////////////
     dkconsole.trace = function(str) {
         dkconsole.message(str, "warn");
     }
-
-    //TODO: merge this into doconsole.massage
-    ////////////////////////////////////
-    /*
-    dkconsole.add = function(str, style) {
-        var newText = document.createElement("a");
-        var lastText = dkconsole.lastElementChild;
-        newText.className = "dkconsole";
-        lastText.innerHTML = lastText.innerHTML.slice(0, -4);
-        newText.innerHTML = str;
-        if (color !== undefined) {
-            newText.style.color = color;
-        } else {
-            newText.style.color = "rgb(213,213,213)";
-        }
-        dkconsole.appendChild(newText);
-    }
-    */
 
     return dkconsole;
 }

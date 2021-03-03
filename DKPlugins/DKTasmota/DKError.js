@@ -66,18 +66,19 @@ function LastStackCall() {
     var stack = StackToJSON(GetStack());
     var n;
     for (var s = 1; s < stack.length; s++) {
-        if (stack[s].func === "LastCall") {
+        if (stack[s].func === "LastStackCall") {
             n = s + 1;
             break;
         }
     }
     if (!n) {
-        dkconsole.error("LastCall(): could not find 'LastCall' in the stack");
+        console.error("LastStackCall(): could not find 'LastStackCall' in the stack");
         return;
     }
 
-    var str = "  at " + stack[n].func + " ";
-    str += "(<a href='" + stack[n].filePath + ":" + stack[n].lineNum + "' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)<br>";
+    var str = "Error in " + stack[n].func + " ";
+    str += "(<a href='" + stack[n].filePath + /*":" + stack[n].lineNum + */
+    "' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)";
     return str;
 }
 
@@ -87,7 +88,7 @@ function GetArguments(func, getArgValues) {
     var count = 0;
     var fn = window[func];
     if (!fn) {
-        dkconsole.error(`ERROR: DKDebug.js:35 GetArguments(${func}): fn invalid`);
+        console.error(LastStackCall()+"<br>"+ "  at if(!fn)");
         return "";
     }
     argsString += new RegExp('(?:' + fn.name + '\\s*|^)\\s*\\((.*?)\\)').exec(fn.toString().replace(/\n/g, ''))[1].replace(/\/\*.*?\*\//g, '').replace(/ /g, '');
