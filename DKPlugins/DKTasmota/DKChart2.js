@@ -1,6 +1,10 @@
 "use strict";
 //https://www.chartjs.org/
-DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
+    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+});
+//
+var lineChart;
 
 function CreateChart2(parent, id, top, bottom, left, right, width, height) {
     const chartDiv = document.createElement("div");
@@ -14,29 +18,36 @@ function CreateChart2(parent, id, top, bottom, left, right, width, height) {
     chartDiv.style.width = width;
     chartDiv.style.height = height;
     parent.appendChild(chartDiv);
+    const chartCanvas = document.createElement("canvas");
+    chartCanvas.width = "100%";
+    chartCanvas.height = "100%";
+    var ctx = chartCanvas.getContext('2d');
+    chartDiv.appendChild(chartCanvas);
 
-    const dataChart = document.createElement("canvas");
-    dataChart.width = "100%";
-    dataChart.height = "100%";
-    chartDiv.appendChild(dataChart);
-    var ctx = dataChart.getContext('2d');
-    var myChart = new Chart(ctx,{
-        type: 'bar',
+    lineChart = new Chart(ctx,{
+        type: "line",
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            //labels: ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00"],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
-                borderWidth: 1
+                label: "Temperature",
+                data: [],
+                fill: false,
+                borderColor: "rgb(200, 0, 0)",
+                lineTension: 0.1,
+            }, {
+                label: "Humidity",
+                data: [],
+                fill: false,
+                borderColor: "rgb(0, 0, 200)",
+                lineTension: 0.1
             }]
         },
         options: {
             scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'minute'
                     }
                 }]
             }
@@ -44,7 +55,14 @@ function CreateChart2(parent, id, top, bottom, left, right, width, height) {
     });
 }
 
-function UpdateChart2(humidity, temperature, dewPoint)
-{
-    //TODO
+function UpdateChart2(humidity, temperature, dewPoint) {
+    lineChart.data.datasets[0].data.push({
+        t: new Date(),
+        y: parseFloat(temperature)
+    });
+    lineChart.data.datasets[1].data.push({
+        t: new Date(),
+        y: parseFloat(humidity)
+    });
+    lineChart.update();
 }

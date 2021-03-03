@@ -225,7 +225,6 @@ function TimerLoop(force) {
         //UpdateChart(humidity, temperature, dewPoint);
         UpdateChart2(humidity, temperature, dewPoint);
     }
-    console.log("test");
 }
 
 ////////////////////////
