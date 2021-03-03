@@ -62,14 +62,20 @@ window.onunhandledrejection = function(e) {
 
 function StackToConsoleString(stack) {
     var stk;
-    if(!stack){ 
+    if (!stack) {
         stk = StackToJSON(GetStack());
-    }
-    else{
+    } else {
         stk = StackToJSON(stack);
     }
-    
-    var str;
+
+    //Remove the call to this function from the stack
+    for (var s = 1; s < stk.length; s++) {
+        if (stk[s].func === "StackToConsoleString") {
+            stk.splice(s, 1);
+        }
+    }
+
+    var str = stk[0].msg+"<br>";
     for (var s = 1; s < stk.length; s++) {
         str += "  at " + stk[s].func + " ";
         str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
@@ -157,15 +163,15 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgText.className = "dkconsole";
         msgText.innerHTML = msg;
 
-        if (style === "error") {
+        if (style === "red") {
             msgText.style.color = "rgb(255,128,128)";
             msgDiv.style.backgroundColor = "rgb(41,0,0)";
             msgDiv.style.borderColor = "rgb(92,0,0)";
-        } else if (style === "warn") {
+        } else if (style === "yellow") {
             msgText.style.color = "rgb(255,221,158)";
             msgDiv.style.backgroundColor = "rgb(51,43,0)";
             msgDiv.style.borderColor = "rgb(102,85,0)";
-        } else if (style === "debug") {
+        } else if (style === "blue") {
             msgText.style.color = "rgb(77,136,255)";
             msgDiv.style.backgroundColor = "rgb(36,36,36)";
             msgDiv.style.borderColor = "rgb(58,58,58)";
@@ -190,32 +196,32 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.log = function(str) {
-        dkconsole.message(str, "log");
+        dkconsole.message(str);
     }
 
     dkconsole.info = function(str) {
-        dkconsole.message(str, "info");
+        dkconsole.message(str);
     }
 
     dkconsole.debug = function(str) {
-        dkconsole.message(str, "debug");
+        dkconsole.message(str, "blue");
     }
 
     dkconsole.warn = function(str) {
-        dkconsole.message(str, "warn");
+        dkconsole.message(str, "yellow");
     }
 
     dkconsole.error = function(str) {
-        dkconsole.message(str, "error");
+        dkconsole.message(str, "red");
+    }
+
+    dkconsole.trace = function(inStr) {
+        var outStr = StackToConsoleString();
+        dkconsole.message(outStr, "yellow");
     }
 
     dkconsole.group = function(str) {
         dkconsole.message(str);
-    }
-
-    dkconsole.trace = function(str) {
-        var str = StackToConsoleString();
-        dkconsole.message(str, "warn");
     }
 
     return dkconsole;

@@ -22,7 +22,12 @@ function GetStack() {
                 // browser too old
             }
         }
-    return e.stack;
+    //Remove the call to this function from the stack
+    var lines = e.stack.split('\n');
+    lines.splice(1,1);
+    var stack = lines.join('\n');
+
+    return stack;
 }
 
 ///////////////////////////

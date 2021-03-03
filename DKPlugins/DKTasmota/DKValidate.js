@@ -1,3 +1,5 @@
+"use strict";
+
 function IsValidVarName(name) {
     try {
         // Update, previoulsy it was
