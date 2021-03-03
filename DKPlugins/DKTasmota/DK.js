@@ -73,7 +73,7 @@ function DKSendRequest(url, callback) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
             } else {
-                dkconsole.trace();
+                //dkconsole.trace();
             }
         }
     }

@@ -1,87 +1,69 @@
 "use strict";
-// https://www.zingchart.com/
-DKLoadJSFile("https://cdn.zingchart.com/zingchart.min.js");
-let myConfig;
+//https://www.chartjs.org/
+//https://www.chartjs.org/docs/latest/axes/cartesian/time.html
+DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
+    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+});
+//
+var lineChart;
 
-function CreateChart(parent, id, top, bottom, left, right, width, height, callback) {
-    const myChart = document.createElement("div");
-    myChart.id = "myChart";
-    myChart.style.position = "absolute";
-    myChart.style.top = top;
-    myChart.style.bottom = bottom;
-    myChart.style.left = left;
-    myChart.style.right = right;
-    myChart.style.width = width;
-    myChart.style.height = height;
-    parent.appendChild(myChart);
-    const d = new Date();
-    const millisec = d.getTime();
-    myConfig = {
+function CreateChart(parent, id, top, bottom, left, right, width, height) {
+    const chartDiv = document.createElement("div");
+    chartDiv.id = id;
+    chartDiv.style.position = "absolute";
+    chartDiv.style.backgroundColor = "black";
+    chartDiv.style.top = top;
+    chartDiv.style.bottom = bottom;
+    chartDiv.style.left = left;
+    chartDiv.style.right = right;
+    chartDiv.style.width = width;
+    chartDiv.style.height = height;
+    parent.appendChild(chartDiv);
+    const chartCanvas = document.createElement("canvas");
+    chartCanvas.width = "100%";
+    chartCanvas.height = "100%";
+    var ctx = chartCanvas.getContext('2d');
+    chartDiv.appendChild(chartCanvas);
+
+    lineChart = new Chart(ctx,{
         type: "line",
-        bottom: "10px",
-        x: "1%",
-        y: "25%",
-        height: "100%",
-        'scale-x': {
-            'min-value': millisec,
-            step: "1minute",
-            transform: {
-                type: "date",
-                all: "%m/%d/%Y<br>%h:%i:%s %A"
-            },
-            item: {
-                'font-size': 9
-            }
+        data: {
+            //labels: ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00"],
+            datasets: [{
+                label: "Temperature",
+                data: [],
+                fill: false,
+                borderColor: "rgb(200, 0, 0)",
+                lineTension: 0.1,
+            }, {
+                label: "Humidity",
+                data: [],
+                fill: false,
+                borderColor: "rgb(0, 0, 200)",
+                lineTension: 0.1
+            }]
         },
-        /*
-            legend: {
-                draggable: true,
-            },
-            */
-        /*
-            scaleY: {
-                // Scale label with unicode character
-                label: {
-                    text: 'Temperature (°F)'
-                }
-            },
-            */
-        utc: true,
-        timezone: -8,
-        series: [{
-            text: 'Temperature',
-            values: [],
-        }, {
-            values: []
-        }, {
-            values: []
-        }]
-    };
-
-    zingchart.render({
-        id: 'myChart',
-        data: myConfig,
-        height: '100%',
-        width: '100%'
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'minute'
+                    }
+                }]
+            }
+        }
     });
 }
 
-/////////////////////////////////////////////////////
-function UpdateChart(humidity, temperature, dewPoint) {
-    if (!humidity || !temperature || !dewPoint) {
-        dkconsole.error("Variables uninitialized <br>" + StackToConsoleString());
-        return;
-    }
-    //dkconsole.log("temperature = " + parseFloat(temperature));
-    //dkconsole.log("humidity = " + parseFloat(humidity));
-    //dkconsole.log("dewPoint = " + parseFloat(dewPoint));
-    myConfig.series[0].values.push(parseFloat(humidity));
-    myConfig.series[1].values.push(parseFloat(temperature));
-    myConfig.series[2].values.push(parseFloat(dewPoint));
-    zingchart.render({
-        id: 'myChart',
-        data: myConfig,
-        height: '100%',
-        width: '100%'
+function UpdateChart2(humidity, temperature, dewPoint) {
+    lineChart.data.datasets[0].data.push({
+        t: new Date(),
+        y: parseFloat(temperature)
     });
+    lineChart.data.datasets[1].data.push({
+        t: new Date(),
+        y: parseFloat(humidity)
+    });
+    lineChart.update();
 }

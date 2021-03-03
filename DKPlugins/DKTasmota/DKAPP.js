@@ -36,8 +36,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKTasmota.js");
     DKLoadJSFile("DKTable.js");
     DKLoadJSFile("DKClock.js");
-    //DKLoadJSFile("DKChart.js");
-    DKLoadJSFile("DKChart2.js");
+    DKLoadJSFile("DKChart.js");
     DKLoadJSFile("VPDCalculator.js");
 }
 
@@ -48,8 +47,7 @@ function DKLoadPage() {
     CreateButtons(document.body);
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
-    //CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px");
-    CreateChart2(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
+    CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
@@ -222,8 +220,7 @@ function TimerLoop(force) {
     ProcessRules();
     ProcessDevices();
     if (temperature && humidity && dewPoint) {
-        //UpdateChart(humidity, temperature, dewPoint);
-        UpdateChart2(humidity, temperature, dewPoint);
+        UpdateChart(humidity, temperature, dewPoint);
     }
 }
 
