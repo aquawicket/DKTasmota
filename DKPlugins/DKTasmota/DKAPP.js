@@ -26,7 +26,7 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function can only load files, Not initiate variables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
-    //DKLoadJSFile("console-listener.js");
+    DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
@@ -60,15 +60,6 @@ function DKLoadPage() {
     //CreateDebugBox(body, "30px", "", "", "2px", "200px", "400px");
 
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
-
-    /*
-    //Load Devices from Cookies
-    var cookies = GetCookie().split("^");
-    for (n = 0; n < cookies.length - 1; n++) {
-        var ip = cookies[n];
-        AddDevice(ip);
-    }
-    */
 
     //Load devices from local storage
     var deviceIPs = LoadFromLocalStorage("deviceIPs").split("^");
@@ -231,11 +222,6 @@ function AddDevice(ip) {
 
 /////////////////////////
 function TimerLoop(force) {
-
-    //DUBUG ///////////////////////
-    TestStackTrace("moe", "larry", "curly");
-    //DEBUG /////////////////////
-
     var currentdate = new Date();
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
@@ -247,7 +233,6 @@ function TimerLoop(force) {
 
 ////////////////////////
 function ScanDevices() {
-    var cookieString = "";
     var localStorageString = "";
     var table = document.getElementById("deviceTable");
     var body = document.body;
@@ -257,14 +242,6 @@ function ScanDevices() {
     GetTasmotaDevices("192.168.1.", function(ip, done) {
         if (ip) {
             AddDevice(ip);
-
-            /*
-            //Save to cookies
-            if (!cookieString.includes(ip)) {
-                cookieString = cookieString + ip + "^";
-                SetCookie(cookieString, 30);
-            }
-            */
 
             //Save to local storage
             if (!localStorageString.includes(ip)) {
@@ -276,7 +253,6 @@ function ScanDevices() {
             dkconsole.log("\n");
             dkconsole.message("Scan Complete", "green");
             dkconsole.message("(" + tasmotaDeviceCount + ") Tasmota Devices found", "green");
-            //SetCookie(cookieString, 30);
             SaveToLocalStorage("deviceIPs", localStorageString);
         }
     });
@@ -295,7 +271,7 @@ function ProcessDevices() {
 function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
-        dkconsole.error(LastCall()+": failed@ if(!success)");
+        dkconsole.error(LastStackCall()+": at if(!success)");
         PlaySound("PowerDown.mp3");
         return;
     }

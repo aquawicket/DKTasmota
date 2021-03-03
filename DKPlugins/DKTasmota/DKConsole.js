@@ -1,3 +1,5 @@
+//Requires DKError.js
+
 "use strict";
 // https://developer.mozilla.org/en-US/docs/Web/API/console
 
@@ -11,67 +13,62 @@ var assert = console.assert;
 var group = console.group;
 (function() {
     console.log = function() {
-        //dkconsole.log(JSON.stringify(arguments));
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
         log.apply(this, Array.prototype.slice.call(arguments));
     }
     console.info = function() {
-        //dkconsole.info(JSON.stringify(arguments));
         dkconsole.info.apply(this, Array.prototype.slice.call(arguments));
         info.apply(this, Array.prototype.slice.call(arguments));
-        //call origial
     }
     console.debug = function() {
-        //dkconsole.debug(JSON.stringify(arguments));
         dkconsole.debug.apply(this, Array.prototype.slice.call(arguments));
         debug.apply(this, Array.prototype.slice.call(arguments));
-        //call origial
     }
     console.warn = function() {
-        //dkconsole.warn(JSON.stringify(arguments));
         dkconsole.warn.apply(this, Array.prototype.slice.call(arguments));
         warn.apply(this, Array.prototype.slice.call(arguments));
-        //call origial
     }
     console.error = function() {
-        //dkconsole.error(JSON.stringify(arguments));
         dkconsole.error.apply(this, Array.prototype.slice.call(arguments));
         error.apply(this, Array.prototype.slice.call(arguments));
-        //call origial
     }
     console.trace = function() {
-        //dkconsole.trace(JSON.stringify(arguments));
         dkconsole.trace.apply(this, Array.prototype.slice.call(arguments));
-        //trace.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        trace.apply(this, Array.prototype.slice.call(arguments));
     }
     console.assert = function() {
-        //dkconsole.assert(JSON.stringify(arguments));
         dkconsole.assert.apply(this, Array.prototype.slice.call(arguments));
-        //assert.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        assert.apply(this, Array.prototype.slice.call(arguments));
     }
     console.group = function() {
-        //dkconsole.group(JSON.stringify(arguments));
         dkconsole.group.apply(this, Array.prototype.slice.call(arguments));
-        //group.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        group.apply(this, Array.prototype.slice.call(arguments));
     }
 }());
 
+////////////////////////////////////////////////////////////
 window.onerror = function(msg, url, lineNo, columnNo, error) {
-    var stack = StackToJSON(error.stack);
-    var str = msg+"<br>";
-    for(var s=1; s<stack.length; s++){
-        str += "  at "+stack[s].func+" ";
-        str += "(<a href='"+stack[s].filePath+":"+stack[s].lineNum+"' style='color:rgb(213,213,213)'>"+stack[s].file+":"+stack[s].lineNum+"</a>)<br>";
-    }
-   
-    dkconsole.error(str);
+    dkconsole.error(CreateConsoleStack(error.stack));
     return false;
 }
 //https://stackoverflow.com/a/49560222/688352
-window.addEventListener('unhandledrejection', function(e) {
-    dkconsole.error("Error occurred: " + e.reason.message);
+window.onunhandledrejection = function(e) {
+    dkconsole.error("Error: onunhandledrejection ->" + e.reason.message);
     return false;
-})
+}
+
+//////////////////////////////////
+function CreateConsoleStack(stack) {
+    var stack = StackToJSON(error.stack);
+    var str = msg + "<br>";
+    for (var s = 1; s < stack.length; s++) {
+        str += "  at " + stack[s].func + " ";
+        str += "(<a href='" + stack[s].filePath + ":" + stack[s].lineNum + "' style='color:rgb(213,213,213)'>" + stack[s].file + ":" + stack[s].lineNum + "</a>)<br>";
+    }
+    return str;
+}
+
+
 
 var dkconsole;
 
@@ -147,7 +144,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
         msgDiv.style.whiteSpace = "pre-wrap";
         msgDiv.style.boxSizing = "border-box";
-        msgDiv.style.padding = "3px";
+        msgDiv.style.padding = "2px";
         msgDiv.style.paddingLeft = "20px";
         msgDiv.style.borderStyle = "solid";
         msgDiv.style.borderWidth = "1px";
