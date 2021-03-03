@@ -29,9 +29,7 @@ function GetStack() {
 function StackToJSON(stack) {
     var stackLines = stack.toString().split(/\r\n|\n/);
     var msg = stackLines[0];
-    var json = [{
-        msg
-    }];
+    var json = [{msg}];
     for (var s = 1; s < stackLines.length; s++) {
         var line = stackLines[s].trim();
         line = line.replace("at ", "");
@@ -40,6 +38,9 @@ function StackToJSON(stack) {
 
         //https://stackoverflow.com/a/9337047/688352
         var func = line.split(" ").shift();
+        //if(!IsValidVarName(func)){
+        //    console.error("StackToJSON(): func("+func+") is not a valid name");
+        //}
         line = line.replace(func, "");
 
         var charNum = line.split(":").pop();
@@ -78,8 +79,7 @@ function LastStackCall() {
     }
 
     var str = "Error in " + stack[n].func + " ";
-    str += "(<a href='" + stack[n].filePath + /*":" + stack[n].lineNum + */
-    "' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)";
+    str += "(<a href='" + stack[n].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)";
     return str;
 }
 
@@ -89,7 +89,7 @@ function GetArguments(func, getArgValues) {
     var count = 0;
     var fn = window[func];
     if (!fn) {
-        console.error(LastStackCall()+"<br>"+ "  at if(!fn)");
+        console.error(LastStackCall() + "<br>" + "  at if(!fn)");
         return "";
     }
     argsString += new RegExp('(?:' + fn.name + '\\s*|^)\\s*\\((.*?)\\)').exec(fn.toString().replace(/\n/g, ''))[1].replace(/\/\*.*?\*\//g, '').replace(/ /g, '');

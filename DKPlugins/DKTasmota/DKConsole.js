@@ -49,24 +49,30 @@ var console_group = console.group;
 }());
 
 window.onerror = function(msg, url, lineNo, columnNo, error) {
-    dkconsole.error(CreateConsoleStack(error.stack));
+    dkconsole.error(StackToConsoleString(error.stack));
     return false;
 }
 
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
 window.onunhandledrejection = function(e) {
-    dkconsole.error("Error: onunhandledrejection ->" + e.reason.message);
+    dkconsole.error("Error: window.onunhandledrejection<br>  " + e.reason.message);
     return false;
 }
 
-function CreateConsoleStack(stack) {
-    var stack = StackToJSON(error.stack);
-    var str = msg + "<br>";
-    for (var s = 1; s < stack.length; s++) {
-        str += "  at " + stack[s].func + " ";
-        str += "(<a href='" + stack[s].filePath + /* ":" + stack[s].lineNum + */
-        "' style='color:rgb(213,213,213)'>" + stack[s].file + ":" + stack[s].lineNum + "</a>)<br>";
+function StackToConsoleString(stack) {
+    var stk;
+    if(!stack){ 
+        stk = StackToJSON(GetStack());
+    }
+    else{
+        stk = StackToJSON(stack);
+    }
+    
+    var str;
+    for (var s = 1; s < stk.length; s++) {
+        str += "  at " + stk[s].func + " ";
+        str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
     }
     return str;
 }
@@ -208,6 +214,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.trace = function(str) {
+        var str = StackToConsoleString();
         dkconsole.message(str, "warn");
     }
 

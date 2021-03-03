@@ -78,6 +78,9 @@ var DKSendRequest = function(url, callback) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
             }
+            else{
+                dkconsole.trace();
+            }
         }
     }
 
@@ -87,7 +90,6 @@ var DKSendRequest = function(url, callback) {
         callback(false, url, "DKSendRequest(" + url + ") -> Timed out");
     });
     xhr.addEventListener('error', function(event) {
-        dkconsole.error(JSON.stringify(event));
         callback(false, url, "DKSendRequest(" + url + ")-> ERROR");
     });
     xhr.send();

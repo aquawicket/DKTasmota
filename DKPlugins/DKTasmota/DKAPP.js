@@ -1,9 +1,9 @@
 "use strict";
 
 var time;
-var temperature = 77.0;
-var humidity = 50.0;
-var dewPoint = 56.9;
+var temperature;// = 77.0;
+var humidity;// = 50.0;
+var dewPoint;// = 56.9;
 var bypassRules = [];
 
 var tempTarget = 77;
@@ -141,7 +141,7 @@ function CreateDeviceTable(parent) {
 
 //////////////////////
 function AddDevice(ip) {
-    DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function(success, url, data) {
+    DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function DKSendRequestCallback(success, url, data) {
         if (!success) {
             dkconsole.error(LastStackCall() + "<br>  at if(!success)");
             return;
@@ -198,7 +198,7 @@ function AddDevice(ip) {
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
 
-        // DEBUG /////
+        // TEST /////
         //Add a coulum to test retrieving cells by index vs cells by name
         //DKTableAddColumn(table, "debug");
         //Event though many Columns were added on this itteration, cell by name still works
@@ -272,7 +272,7 @@ function ProcessDevices() {
 function UpdateScreen(success, url, data) {
     if (!success) {
         //Test for power outage
-        dkconsole.error(LastStackCall() + "<br> at if(!success)");
+        dkconsole.error(LastStackCall() + "<br>  at if(!success)");
         PlaySound("PowerDown.mp3");
         return;
     }
@@ -287,7 +287,7 @@ function UpdateScreen(success, url, data) {
     }
     //var row = DKTableGetRowByName(table, ip);
     if (!row) {
-        dkconsole.error(LastCall() + ": failed@ if(!row)");
+        dkconsole.error(LastCall() + "<br>  at if(!row)");
         return;
     }
 
@@ -488,27 +488,21 @@ function ProcessRules() {
 
 ////////////////////////
 function DumpVariables() {
-
-    if (DEBUG) {
-        dkconsole.debug("time: " + time);
-        dkconsole.debug("temperature: " + temperature);
-        dkconsole.debug("humidity: " + humidity);
-        dkconsole.debug("dewPoint: " + dewPoint);
-        dkconsole.debug("bypassRules: " + bypassRules);
-
-        dkconsole.debug("tempTarget: " + tempTarget);
-        dkconsole.debug("tempCalib: " + tempCalib);
-        dkconsole.debug("tempMin: " + tempMin);
-        dkconsole.debug("tempMax: " + tempMax);
-
-        dkconsole.debug("humTarget: " + humTarget);
-        dkconsole.debug("humCalib: " + humCalib);
-        dkconsole.debug("humMin: " + humMin);
-        dkconsole.debug("humMax: " + humMax);
-
-        dkconsole.debug("exhaustFan: " + exhaustFan);
-        dkconsole.debug("co2: " + co2);
-        dkconsole.debug("waterWalls: " + waterWalls);
-        dkconsole.debug("heater: " + heater);
-    }
+    dkconsole.debug("time: " + time);
+    dkconsole.debug("temperature: " + temperature);
+    dkconsole.debug("humidity: " + humidity);
+    dkconsole.debug("dewPoint: " + dewPoint);
+    dkconsole.debug("bypassRules: " + bypassRules);
+    dkconsole.debug("tempTarget: " + tempTarget);
+    dkconsole.debug("tempCalib: " + tempCalib);
+    dkconsole.debug("tempMin: " + tempMin);
+    dkconsole.debug("tempMax: " + tempMax);
+    dkconsole.debug("humTarget: " + humTarget);
+    dkconsole.debug("humCalib: " + humCalib);
+    dkconsole.debug("humMin: " + humMin);
+    dkconsole.debug("humMax: " + humMax);
+    dkconsole.debug("exhaustFan: " + exhaustFan);
+    dkconsole.debug("co2: " + co2);
+    dkconsole.debug("waterWalls: " + waterWalls);
+    dkconsole.debug("heater: " + heater);
 }
