@@ -2,6 +2,7 @@
 "use strict";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/console
+const consoleLimit = 100;
 let dkconsole;
 
 //intercept console with dkconsole
@@ -189,8 +190,8 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.appendChild(msgText);
         dkconsole.scrollTop = dkconsole.scrollHeight;
 
-        //Limit the dkconsole log window to 50 items max.
-        if (dkconsole.childElementCount > 50) {
+        //Limit the number of lines to the dkconsole
+        if (dkconsole.childElementCount > consoleLimit) {
             dkconsole.removeChild(dkconsole.firstChild);
         }
     }

@@ -48,9 +48,7 @@ function DKLoadPage() {
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
 
-    CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px", function CreateChartCallback() {
-        UpdateChart(humidity, temperature, dewPoint);
-    });
+    CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px");
 
     CreateDKConsole(document.body, "dkconsole", "75%", "0px", "0px", "0px", "", "");
     CreateSound("PowerDown.mp3");
