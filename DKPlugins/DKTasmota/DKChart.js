@@ -22,8 +22,8 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
             type: "line",
             bottom: "10px",
             x: "1%",
-         y : "25%",
-         height: "100%",
+            y: "25%",
+            height: "100%",
             'scale-x': {
                 'min-value': millisec,
                 step: "1minute",
@@ -73,8 +73,8 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
 
 /////////////////////////////////////////////////////
 function UpdateChart(humidity, temperature, dewPoint) {
-    if(!humidity || !temperature || !dewPoint){
-        dkconsole.error("variables not ready<br>"+StackToConsoleString());
+    if (!humidity || !temperature || !dewPoint) {
+        dkconsole.error("Variables undefined <br>" + StackToConsoleString());
         return;
     }
     //dkconsole.log("temperature = " + parseFloat(temperature));

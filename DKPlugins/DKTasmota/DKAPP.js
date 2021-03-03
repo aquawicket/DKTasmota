@@ -1,9 +1,12 @@
 "use strict";
 
 var time;
-var temperature;// = 77.0;
-var humidity;// = 50.0;
-var dewPoint;// = 56.9;
+var temperature;
+// = 77.0;
+var humidity;
+// = 50.0;
+var dewPoint;
+// = 56.9;
 var bypassRules = [];
 
 var tempTarget = 77;

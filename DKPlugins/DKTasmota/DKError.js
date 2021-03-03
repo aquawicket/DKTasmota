@@ -23,8 +23,10 @@ function GetStack() {
             }
         }
     //Remove the call to this function from the stack
+    //The first line is the message followed by the call stack.
+    //So we will remove the second line
     var lines = e.stack.split('\n');
-    lines.splice(1,1);
+    lines.splice(1, 1);
     var stack = lines.join('\n');
 
     return stack;
@@ -34,18 +36,23 @@ function GetStack() {
 function StackToJSON(stack) {
     var stackLines = stack.toString().split(/\r\n|\n/);
     var msg = stackLines[0];
-    var json = [{msg}];
+    var json = [{
+        msg
+    }];
     for (var s = 1; s < stackLines.length; s++) {
         var line = stackLines[s].trim();
         line = line.replace("at ", "");
         line = line.replace("(", "");
         line = line.replace(")", "");
 
-        //https://stackoverflow.com/a/9337047/688352
         var func = line.split(" ").shift();
-        //if(!IsValidVarName(func)){
-        //    console.error("StackToJSON(): func("+func+") is not a valid name");
-        //}
+        
+
+        // some stack lines don't have a function name
+        //https://stackoverflow.com/a/9337047/688352
+        if (!IsValidVarName(func)) {
+            func = "<i>function</i>";
+        }
         line = line.replace(func, "");
 
         var charNum = line.split(":").pop();
