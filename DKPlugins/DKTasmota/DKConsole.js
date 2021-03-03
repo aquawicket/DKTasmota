@@ -1,15 +1,15 @@
 "use strict";
 // https://developer.mozilla.org/en-US/docs/Web/API/console
 
+var log = console.log;
+var info = console.info;
+var debug = console.debug;
+var warn = console.warn;
+var error = console.error;
+var trace = console.trace;
+var assert = console.assert;
+var group = console.group;
 (function() {
-    var log = console.log;
-    var info = console.info;
-    var debug = console.debug;
-    var warn = console.warn;
-    var error = console.error;
-    var trace = console.trace;
-    var assert = console.assert;
-    var group = console.group;
     console.log = function() {
         //dkconsole.log(JSON.stringify(arguments));
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
@@ -18,22 +18,26 @@
     console.info = function() {
         //dkconsole.info(JSON.stringify(arguments));
         dkconsole.info.apply(this, Array.prototype.slice.call(arguments));
-        info.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        info.apply(this, Array.prototype.slice.call(arguments));
+        //call origial
     }
     console.debug = function() {
         //dkconsole.debug(JSON.stringify(arguments));
         dkconsole.debug.apply(this, Array.prototype.slice.call(arguments));
-        debug.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        debug.apply(this, Array.prototype.slice.call(arguments));
+        //call origial
     }
     console.warn = function() {
         //dkconsole.warn(JSON.stringify(arguments));
         dkconsole.warn.apply(this, Array.prototype.slice.call(arguments));
-        warn.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        warn.apply(this, Array.prototype.slice.call(arguments));
+        //call origial
     }
     console.error = function() {
         //dkconsole.error(JSON.stringify(arguments));
         dkconsole.error.apply(this, Array.prototype.slice.call(arguments));
-        error.apply(this, Array.prototype.slice.call(arguments)); //call origial
+        error.apply(this, Array.prototype.slice.call(arguments));
+        //call origial
     }
     console.trace = function() {
         //dkconsole.trace(JSON.stringify(arguments));
@@ -52,11 +56,22 @@
     }
 }());
 
-//https://stackoverflow.com/a/49560222/688352
 window.onerror = function(msg, url, lineNo, columnNo, error) {
-    dkconsole.error(msg + "," + url + "," + lineNo + "," + columnNo + "," + error);
+    var stack = StackToJSON(error.stack);
+    var str = msg+"<br>";
+    for(var s=1; s<stack.length; s++){
+        str += "  at "+stack[s].func+" ";
+        str += "(<a href='"+stack[s].filePath+":"+stack[s].lineNum+"' style='color:rgb(213,213,213)'>"+stack[s].file+":"+stack[s].lineNum+"</a>)<br>";
+    }
+   
+    dkconsole.error(str);
     return false;
 }
+//https://stackoverflow.com/a/49560222/688352
+window.addEventListener('unhandledrejection', function(e) {
+    dkconsole.error("Error occurred: " + e.reason.message);
+    return false;
+})
 
 var dkconsole;
 
@@ -137,32 +152,28 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.style.borderStyle = "solid";
         msgDiv.style.borderWidth = "1px";
         msgDiv.style.borderTopWidth = "0px";
-        
+
         var msgText = document.createElement("span");
         msgText.className = "dkconsole";
         msgText.innerHTML = msg;
 
-        if(style === "error"){
+        if (style === "error") {
             msgText.style.color = "rgb(255,128,128)";
             msgDiv.style.backgroundColor = "rgb(41,0,0)";
             msgDiv.style.borderColor = "rgb(92,0,0)";
-        }
-        else if(style === "warn"){
+        } else if (style === "warn") {
             msgText.style.color = "rgb(255,221,158)";
             msgDiv.style.backgroundColor = "rgb(51,43,0)";
             msgDiv.style.borderColor = "rgb(102,85,0)";
-        }
-        else if(style === "debug"){
+        } else if (style === "debug") {
             msgText.style.color = "rgb(77,136,255)";
             msgDiv.style.backgroundColor = "rgb(36,36,36)";
             msgDiv.style.borderColor = "rgb(58,58,58)";
-        }
-        else if(style === "green"){
+        } else if (style === "green") {
             msgText.style.color = "rgb(128,255,128)";
             msgDiv.style.backgroundColor = "rgb(0,41,0)";
             msgDiv.style.borderColor = "rgb(0,92,0)";
-        }
-        else{
+        } else {
             msgText.style.color = "rgb(213,213,213)";
             msgDiv.style.backgroundColor = "rgb(36,36,36)";
             msgDiv.style.borderColor = "rgb(58,58,58)";
@@ -171,8 +182,13 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         dkconsole.appendChild(msgDiv);
         msgDiv.appendChild(msgText);
         dkconsole.scrollTop = dkconsole.scrollHeight;
+
+        //Limit the dkconsole log window to 50 items max.
+        if (dkconsole.childElementCount > 50) {
+            dkconsole.removeChild(dkconsole.firstChild);
+        }
     }
-    
+
     /////////////////////////////
     dkconsole.log = function(str) {
         dkconsole.message(str, "log");

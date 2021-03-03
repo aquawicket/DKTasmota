@@ -76,10 +76,38 @@ function GetStack() {
     return stack;
 }
 
-/////////////////////
-function StackTrace() {
-    dkconsole.warn("***** STACK TRACE *****");
+///////////////////////////
+function StackToJSON(stack) {
+    var stackLines = stack.toString().split(/\r\n|\n/);
+    var msg = stackLines[0];
+    var json = [{msg}];
+    for (var s = 1; s < stackLines.length; s++) {
+        var line = stackLines[s].trim();
+        line = line.replace("at ", "");
+        line = line.replace("(", "");
+        line = line.replace(")", "");
+
+        var func = line.split(" ").shift();
+        line = line.replace(func, "");
+
+        var charNum = line.split(":").pop();
+        line = line.replace(":" + charNum, "");
+
+        var lineNum = line.split(":").pop();
+        line = line.replace(":" + lineNum, "");
+
+        var file = line.split("/").pop();
+        
+        var filePath = line.trim();
+        json.push({func, file, lineNum, charNum, filePath});
+    }
+    return json;
+}
+
+////////////////////////
+function GetStackTrace() {
     var stack = GetStack();
+    var stackLines = [];
     for (var s = 3; s < stack.length; s++) {
         var stackString = stack[s].trim();
         stackString = stackString.replace("at ", "");
@@ -98,30 +126,38 @@ function StackTrace() {
         var file = stackString.split("/").pop();
 
         var args = GetArguments(func);
-        dkconsole.warn(file + ":" + lineNum + " " + func + "(" + args + ")");
+        //dkconsole.warn(file + ":" + lineNum + " " + func + "(" + args + ")");
+        stackLines.push({
+            func,
+            charNum,
+            lineNum,
+            file,
+            args
+        });
     }
+    return stackLines;
 }
 
-////////////////////////////
-function LastCall(stackLine) {
+///////////////////
+function LastCall() {
     var stack = GetStack();
     stack.shift();
 
+    var stackline;
     for (var i = 0; i < stack.length; i++) {
-        var stackString = stack[stackLine].trim();
+        //look for this function in the stack and get the one before
+        var stackString = stack[i].trim();
         stackString = stackString.replace("at ", "");
         stackString = stackString.replace("(", "");
         stackString = stackString.replace(")", "");
         var func = stackString.split(" ").shift();
-        if (func == "LastCall") {
+        if (func === "LastCall") {
             stackline = i + 1;
+            break;
         }
     }
 
-    if (!stackLine) {
-        stackLine = 2;
-    }
-    var stackString = stack[stackLine].trim();
+    var stackString = stack[stackline].trim();
     stackString = stackString.replace("at ", "");
     stackString = stackString.replace("(", "");
     stackString = stackString.replace(")", "");
@@ -145,17 +181,18 @@ function LastCall(stackLine) {
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
 
-    if (DEBUG) {
-        StackTrace();
-        console.log("█console.log");
-        console.info("█console.info");
-        console.debug("█console.debug");
-        console.warn("█console.warn");
-        console.error("█console.error");
+    //if (DEBUG) {
+    GetStackTrace();
+    /*
+        console.log("console.log");
+        console.info("console.info");
+        console.debug("console.debug");
+        console.warn("console.warn");
+        console.error("console.error");
         //console.trace("█console.trace");
         //console.group("█console.group");
-
-        var e = new Error();
-        throw e;
-    }
+        */
+    var e = new Error();
+    throw e;
+    //}
 }
