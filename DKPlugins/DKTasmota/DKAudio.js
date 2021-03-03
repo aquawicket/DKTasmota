@@ -3,7 +3,7 @@
 
 /////////////////////////
 function CreateSound(src) {
-    var audio = document.createElement("audio");
+    const audio = document.createElement("audio");
     audio.id = src;
     audio.src = src;
     audio.setAttribute("preload", "auto");
@@ -16,13 +16,13 @@ function CreateSound(src) {
 
 ////////////////////////
 function PauseSound(src) {
-    var ele = document.getElementById(src);
+    const ele = document.getElementById(src);
     ele.pause();
 }
 
 ///////////////////////
 function PlaySound(src) {
-    var ele = document.getElementById(src);
+    const ele = document.getElementById(src);
     // FIXME: This causes errors
     // DKAudio.js:23 Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
     ele.play();
@@ -30,6 +30,6 @@ function PlaySound(src) {
 
 ///////////////////////
 function StopSound(src) {
-    var ele = document.getElementById(src);
+    const ele = document.getElementById(src);
     ele.stop();
 }

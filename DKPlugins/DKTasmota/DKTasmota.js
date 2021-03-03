@@ -5,7 +5,7 @@ let tasmotaDeviceCount;
 let devicesScanned;
 
 //return all local network device IPs that respond to /cm?cmnd=CORS 
-var GetTasmotaDevices = function(ipPrefix, callback)
+function GetTasmotaDevices(ipPrefix, callback)
 {
 	tasmotaDeviceCount = 0;
     devicesScanned = 0;

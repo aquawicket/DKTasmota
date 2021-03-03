@@ -4,7 +4,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 function CreateClock(parent, id, top, bottom, left, right, width, weight) {
-    var clock = document.createElement("a");
+    const clock = document.createElement("a");
     clock.id = id;
     clock.style.position = "absolute";
     clock.style.top = top;
@@ -15,8 +15,8 @@ function CreateClock(parent, id, top, bottom, left, right, width, weight) {
 
 //////////////////////
 function UpdateClock() {
-    var currentdate = new Date();
-    var datetime = (currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+    const currentdate = new Date();
+    const datetime = (currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
     if (document.getElementById("clock")) {
         document.getElementById("clock").innerHTML = datetime;
     }

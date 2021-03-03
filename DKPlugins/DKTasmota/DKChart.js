@@ -1,12 +1,12 @@
 "use strict";
 // https://www.zingchart.com/
 
-var myConfig;
+let myConfig;
 
 /////////////////////////////////////////////////////////////////////////
 function CreateChart(parent, id, top, bottom, left, right, width, height, callback) {
     DKLoadJSFile("https://cdn.zingchart.com/zingchart.min.js", function() {
-        var myChart = document.createElement("div");
+        const myChart = document.createElement("div");
         myChart.id = "myChart";
         myChart.style.position = "absolute";
         myChart.style.top = top;
@@ -16,8 +16,8 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
         myChart.style.width = width;
         myChart.style.height = height;
         parent.appendChild(myChart);
-        var d = new Date();
-        var millisec = d.getTime();
+        const d = new Date();
+        const millisec = d.getTime();
         myConfig = {
             type: "line",
             bottom: "10px",

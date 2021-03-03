@@ -2,17 +2,17 @@
 "use strict";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/console
-var dkconsole;
+let dkconsole;
 
 //intercept console with dkconsole
-var console_log = console.log;
-var console_info = console.info;
-var console_debug = console.debug;
-var console_warn = console.warn;
-var console_error = console.error;
-var console_trace = console.trace;
-var console_assert = console.assert;
-var console_group = console.group;
+const console_log = console.log;
+const console_info = console.info;
+const console_debug = console.debug;
+const console_warn = console.warn;
+const console_error = console.error;
+const console_trace = console.trace;
+const console_assert = console.assert;
+const console_group = console.group;
 (function() {
     console.log = function() {
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
@@ -61,7 +61,7 @@ window.onunhandledrejection = function(e) {
 }
 
 function StackToConsoleString(stack) {
-    var stk;
+    let stk;
     if (!stack) {
         stk = StackToJSON(GetStack());
     } else {
@@ -69,14 +69,14 @@ function StackToConsoleString(stack) {
     }
 
     //Remove the call to this function from the stack
-    for (var s = 1; s < stk.length; s++) {
+    for (let s = 1; s < stk.length; s++) {
         if (stk[s].func === "StackToConsoleString") {
             stk.splice(s, 1);
         }
     }
 
-    var str = stk[0].msg+"<br>";
-    for (var s = 1; s < stk.length; s++) {
+    let str = stk[0].msg+"<br>";
+    for (let s = 1; s < stk.length; s++) {
         str += "  at " + stk[s].func + " ";
         str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
     }
@@ -85,7 +85,7 @@ function StackToConsoleString(stack) {
 
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     DKLoadCSSFile("dkconsole.css");
-    var dkconsoleFrame = document.createElement("div");
+    const dkconsoleFrame = document.createElement("div");
     dkconsoleFrame.style.padding = "0px";
     dkconsoleFrame.style.margin = "0px";
     dkconsoleFrame.id = id;
@@ -116,7 +116,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.appendChild(dkconsole);
 
     //command box
-    var cmdbox = document.createElement("input");
+    const cmdbox = document.createElement("input");
     cmdbox.type = "text";
     cmdbox.style.position = "absolute";
     cmdbox.style.left = "0px";
@@ -125,7 +125,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     cmdbox.style.height = "20px";
     cmdbox.style.width = "100%";
     cmdbox.onkeydown = function(event) {
-        var key = event.charCode || event.keyCode;
+        const key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter
             if (cmdbox.value === "clear" || cmdbox.value === "cls") {
@@ -147,7 +147,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.appendChild(cmdbox);
 
     dkconsole.message = function(msg, style) {
-        var msgDiv = document.createElement("div");
+        const msgDiv = document.createElement("div");
         msgDiv.style.width = "100%";
         msgDiv.style.fontSize = "12px";
         msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
@@ -159,7 +159,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.style.borderWidth = "1px";
         msgDiv.style.borderTopWidth = "0px";
 
-        var msgText = document.createElement("span");
+        const msgText = document.createElement("span");
         msgText.className = "dkconsole";
         msgText.innerHTML = msg;
 
@@ -216,7 +216,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.trace = function(inStr) {
-        var outStr = StackToConsoleString();
+        const outStr = StackToConsoleString();
         dkconsole.message(outStr, "yellow");
     }
 
