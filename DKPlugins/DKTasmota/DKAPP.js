@@ -26,17 +26,18 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function can only load files, Not initiate constiables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
+    DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKConsole.js");
-    DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKAudio.js");
     DKLoadJSFile("DKTasmota.js");
     DKLoadJSFile("DKTable.js");
     DKLoadJSFile("DKClock.js");
-    DKLoadJSFile("DKChart.js");
+    //DKLoadJSFile("DKChart.js");
+    DKLoadJSFile("DKChart2.js");
     DKLoadJSFile("VPDCalculator.js");
 }
 
@@ -47,10 +48,9 @@ function DKLoadPage() {
     CreateButtons(document.body);
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
-
-    CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px");
-
-    CreateDKConsole(document.body, "dkconsole", "75%", "0px", "0px", "0px", "", "");
+    //CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px");
+    CreateChart2(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
+    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
@@ -221,9 +221,11 @@ function TimerLoop(force) {
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
-    if (temperature && humidity) {
-        UpdateChart(humidity, temperature, dewPoint);
+    if (temperature && humidity && dewPoint) {
+        //UpdateChart(humidity, temperature, dewPoint);
+        UpdateChart2(humidity, temperature, dewPoint);
     }
+    console.log("test");
 }
 
 ////////////////////////
