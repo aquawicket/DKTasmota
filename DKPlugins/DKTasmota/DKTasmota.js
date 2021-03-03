@@ -25,7 +25,7 @@ function GetTasmotaDevices(ipPrefix, callback)
         //let url = "http://"+ip+"/cm?cmnd="+cmnd; //Un-encodeURIComponent
         let url = "http://"+ip+"/cm?cmnd="+encodeURIComponent(cmnd).replace(";", "%3B"); 
         dkconsole.debug(url);  
-	    DKSendSuperRequest(url, function(success, data){ //send request using superAgent
+	    DKSendSuperRequest(url, function DKSendSuperRequestCallback(success, data){ //send request using superAgent
 	        dkconsole.log("pinged "+ip);
 	        if(success){
 	        	devicesScanned += 1;

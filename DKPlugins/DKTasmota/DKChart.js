@@ -5,7 +5,7 @@ let myConfig;
 
 /////////////////////////////////////////////////////////////////////////
 function CreateChart(parent, id, top, bottom, left, right, width, height, callback) {
-    DKLoadJSFile("https://cdn.zingchart.com/zingchart.min.js", function() {
+    DKLoadJSFile("https://cdn.zingchart.com/zingchart.min.js", function DKLoadJSFileCallback() {
         const myChart = document.createElement("div");
         myChart.id = "myChart";
         myChart.style.position = "absolute";
@@ -74,7 +74,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height, callba
 /////////////////////////////////////////////////////
 function UpdateChart(humidity, temperature, dewPoint) {
     if (!humidity || !temperature || !dewPoint) {
-        dkconsole.error("Variables undefined <br>" + StackToConsoleString());
+        dkconsole.error("Variables uninitialized <br>" + StackToConsoleString());
         return;
     }
     //dkconsole.log("temperature = " + parseFloat(temperature));

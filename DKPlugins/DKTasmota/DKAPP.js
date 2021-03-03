@@ -48,7 +48,7 @@ function DKLoadPage() {
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
 
-    CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px", function() {
+    CreateChart(document.body, "id", "30%", "", "1px", "1px", "", "400px", function CreateChartCallback() {
         UpdateChart(humidity, temperature, dewPoint);
     });
 
@@ -78,7 +78,7 @@ function CreateButtons(parent) {
     scanDevices.top = "5px";
     scanDevices.left = "5px";
     scanDevices.style.cursor = "pointer";
-    scanDevices.onclick = function() {
+    scanDevices.onclick = function ScanDevicesOnclickCallback() {
         ScanDevices();
     }
     parent.appendChild(scanDevices);
@@ -89,7 +89,7 @@ function CreateButtons(parent) {
     updateDevices.top = "5px";
     updateDevices.left = "30px";
     updateDevices.style.cursor = "pointer";
-    updateDevices.onclick = function() {
+    updateDevices.onclick = function UpdateDevicesOnClickCallback() {
         TimerLoop(false);
     }
     parent.appendChild(updateDevices);
@@ -176,7 +176,7 @@ function AddDevice(ip) {
         cell = DKTableGetCellByNames(table, ip, "device");
         cell.innerHTML = "<a>" + ip + "</a>";
         cell.style.cursor = "pointer";
-        cell.onclick = function() {
+        cell.onclick = function CellOnClickCallback() {
             const theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
         }
 
@@ -184,7 +184,7 @@ function AddDevice(ip) {
         cell = DKTableGetCellByNames(table, ip, "power");
         cell.style.textAlign = "center";
         cell.style.cursor = "pointer";
-        cell.onclick = function() {
+        cell.onclick = function CellOnClickCallback() {
             const hostname = row.getAttribute("hostname");
             if (!bypassRules.includes(hostname)) {
                 bypassRules += hostname;
@@ -235,7 +235,7 @@ function ScanDevices() {
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
 
-    GetTasmotaDevices("192.168.1.", function(ip, done) {
+    GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip) {
             AddDevice(ip);
 
@@ -282,7 +282,7 @@ function UpdateScreen(success, url, data) {
     }
     //const row = DKTableGetRowByName(table, ip);
     if (!row) {
-        dkconsole.error(LastCall() + "<br>  at if(!row)");
+        dkconsole.error(LastStackCall() + "<br>  at if(!row)");
         return;
     }
 

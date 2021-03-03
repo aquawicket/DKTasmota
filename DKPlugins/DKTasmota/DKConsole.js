@@ -124,7 +124,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     cmdbox.style.right = "0px";
     cmdbox.style.height = "20px";
     cmdbox.style.width = "100%";
-    cmdbox.onkeydown = function(event) {
+    cmdbox.onkeydown = function cmdboxOnKeydownCallback(event) {
         const key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter

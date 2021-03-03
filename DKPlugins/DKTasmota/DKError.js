@@ -51,6 +51,9 @@ function StackToJSON(stack) {
         msg
     }];
     for (let s = 1; s < lines.length; s++) {
+        //FIXME: the original line should not be altered,
+        //altering the line could mess up the extraction
+        //if something is missing or out of place.
         let line = lines[s].trim();
         line = line.replace("at ", "");
         line = line.replace("(", "");
@@ -59,14 +62,15 @@ function StackToJSON(stack) {
         let func = line.split(" ").shift();
         
         // some stack lines don't have a function name
-        if (!IsValidVarName(func)) {
-            func = "<i>anonymous</i>";
+        if (IsValidVarName(func)) {
+            //func = "<i>anonymous</i>";
+        }
+        else{
+            line = line.replace(func, "");
         }
 
-        //FIXME: the original line should not be altered,
-        //altering the line could mess up the extraction
-        //if something is missing or out of place.
-        line = line.replace(func, "");
+        
+        
 
         const charNum = line.split(":").pop();
         line = line.replace(":" + charNum, "");

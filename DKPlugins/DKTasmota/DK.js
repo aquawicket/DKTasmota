@@ -21,7 +21,7 @@ function DKLoadJSFile(file, callback) {
 }
 
 function DKLoadHtmlFile(file, callback) {
-    DKSendRequest(file, function(success, url, data) {
+    DKSendRequest(file, function DKSendRequestCallback(success, url, data) {
         if (!success) {
             dkconsole.error("!success");
         }
@@ -35,9 +35,9 @@ function DKSendSuperRequest(url, callback) {
         // Wait 18 seconds for the server to start sending,
         deadline: 20000,
         // but allow 20 seconds for the file to finish loading.
-    }).then(function(res) {
+    }).then(function DKSendSuperRequestSuccessCallback(res) {
         callback(true, res);
-    }, function(res) {
+    }, function DKSendSuperRequestFailCallback(res) {
         callback(false, res);
     });
 }
@@ -68,7 +68,7 @@ function DKSendRequest(url, callback) {
         return false;
     }
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function XMLHttpRequestReadystatechangeCallback() {
         if (xhr.readyState === 4) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
@@ -80,10 +80,10 @@ function DKSendRequest(url, callback) {
 
     xhr.open("GET", url, true);
     xhr.timeout = 20000;
-    xhr.addEventListener('timeout', function(event) {
+    xhr.addEventListener('timeout', function XMLHttpRequestTimeoutCallback(event) {
         callback(false, url, "DKSendRequest(" + url + ") -> Timed out");
     });
-    xhr.addEventListener('error', function(event) {
+    xhr.addEventListener('error', function XMLHttpRequestErrorCallback(event) {
         callback(false, url, "DKSendRequest(" + url + ")-> ERROR");
     });
     xhr.send();
