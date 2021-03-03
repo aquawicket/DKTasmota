@@ -56,7 +56,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     });
 }
 
-function UpdateChart2(humidity, temperature, dewPoint) {
+function UpdateChart(humidity, temperature, dewPoint) {
     lineChart.data.datasets[0].data.push({
         t: new Date(),
         y: parseFloat(temperature)
