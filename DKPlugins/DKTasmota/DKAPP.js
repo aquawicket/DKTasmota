@@ -26,6 +26,7 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function can only load files, Not initiate variables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
+    DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKConsole.js");

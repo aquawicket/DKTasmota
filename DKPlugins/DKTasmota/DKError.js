@@ -38,6 +38,7 @@ function StackToJSON(stack) {
         line = line.replace("(", "");
         line = line.replace(")", "");
 
+        //https://stackoverflow.com/a/9337047/688352
         var func = line.split(" ").shift();
         line = line.replace(func, "");
 
