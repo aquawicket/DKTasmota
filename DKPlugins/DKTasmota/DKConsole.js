@@ -77,7 +77,7 @@ function StackToConsoleString(stack) {
         }
     }
 
-    let str = stk[0].msg+"<br>";
+    let str = stk[0].msg + "<br>";
     for (let s = 1; s < stk.length; s++) {
         str += "  at " + stk[s].func + " ";
         str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
@@ -227,8 +227,12 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.trace = function(inStr) {
-        let outStr = StackToConsoleString();
-        dkconsole.message(outStr, "yellow");
+        let stackStr = StackToConsoleString();
+        //Remove the call to this function from the stack
+        let lines = stackStr.split('<br>');
+        lines.splice(1, 1);
+        let outStr = lines.join('\n');
+        dkconsole.message(outStr);
     }
 
     dkconsole.group = function(str) {

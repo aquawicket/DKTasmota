@@ -35,8 +35,7 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
 // Call TestStackTrace("moe", "larry", "curly"); to test
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
-    let stack = StackToJSON(GetStack());
-    dkconsole.log(JSON.stringify(stack));
+    dkconsole.trace();
 
     //Try to catch an error
     let e = new Error();
