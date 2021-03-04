@@ -414,6 +414,7 @@ function UpdateScreen(success, url, data) {
         document.getElementById("RH").style.textAlilgn = "center";
         document.getElementById("DewP").style.color = "rgb(50,50,50)";
         document.getElementById("DewP").style.textAlign = "center";
+        
         if(temperature && humidity && dewPoint){
             var data = {temperature: temperature, humidity: humidity, dewPoint: dewPoint};
             UpdateChartDevice(row.getAttribute("hostname"), JSON.stringify(data));
