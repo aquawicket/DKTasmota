@@ -15,7 +15,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     let chartDiv = document.createElement("div");
     chartDiv.id = id;
     chartDiv.style.position = "absolute";
-    chartDiv.style.backgroundColor = "rgb(150,150,150)";
+    chartDiv.style.backgroundColor = "rgb(70,70,70)";
     chartDiv.style.top = top;
     chartDiv.style.bottom = bottom;
     chartDiv.style.left = left;
@@ -55,6 +55,9 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("Humidity", "rgb(0, 0, 200)");
     AddDataset("DewPoint", "rgb(0,150,150)");
     AddDataset("ExhaustFan", "rgb(150,0,150)");
+    AddDataset("WaterWalls", "rgb(90,0,150)");
+    AddDataset("Heater", "rgb(150,0,50)");
+    LoadDatasets();
 
     //Save Button
     let saveButton = document.createElement("button");
@@ -86,6 +89,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     }
     chartDiv.appendChild(loadButton);
 }
+
 function UpdateChart(humidity, temperature, dewPoint) {
     if (!humidity || !temperature || !dewPoint) {
         return;
@@ -103,17 +107,60 @@ function UpdateChart(humidity, temperature, dewPoint) {
         y: parseFloat(dewPoint)
     });
     lineChart.update();
-    SaveDatasets(); 
+    SaveDatasets();
 }
 
-function UpdateChartSwitch(hostname, state) {
-    //console.debug(LastStackCall()+": hostname:"+hostname+" state:"+state);
-    if(hostname === "Device005"){
+function UpdateChartDevice(hostname, data) {
+    //console.debug(LastStackCall() + ": hostname:" + hostname + " data:" + data);
+    if (!hostname) {
+        return;
+    }
+    if (hostname === "Device013") {
+        //Temperature/Humidity sensor
+        if(!data){ return; }
+        var json = JSON.parse(data);
+        if(json.temperature){
+            lineChart.data.datasets[0].data.push({
+                t: new Date(),
+                y: parseFloat(json.temperature)
+            });
+        }
+        if(json.humidity){
+            lineChart.data.datasets[1].data.push({
+                t: new Date(),
+                y: parseFloat(json.humidity)
+            });
+        }
+        if(json.dewPoint){
+            lineChart.data.datasets[2].data.push({
+                t: new Date(),
+                y: parseFloat(json.dewPoint)
+            });
+        }
+    }
+    if (hostname === "Device005") {
+        //ExhaustFan
         lineChart.data.datasets[3].data.push({
             t: new Date(),
-            y: state
+            y: data
         });
     }
+    if (hostname === "Device007") {
+        //WaterWalls
+        lineChart.data.datasets[4].data.push({
+            t: new Date(),
+            y: data
+        });
+    }
+    if (hostname === "Device006") {
+        //Heater
+        lineChart.data.datasets[5].data.push({
+            t: new Date(),
+            y: data
+        });
+    }
+    lineChart.update();
+    SaveDatasets();
 }
 
 function AddDataset(name, color) {
@@ -141,42 +188,3 @@ function LoadDatasets() {
     }
     lineChart.update();
 }
-
-/*
-function CreateCanvasButton() {
-
-    let canvas = document.getElementById("chartCanvas");
-    //Function to get the mouse position
-    function getMousePos(canvas, event) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top
-        };
-    }
-    //Function to check whether a point is inside a rectangle
-    function isInside(pos, rect) {
-        return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y
-    }
-
-    var context = canvas.getContext('2d');
-    //The rectangle should have x,y,width,height properties
-    var rect = {
-        x: 250,
-        y: 350,
-        width: 200,
-        height: 100
-    };
-    
-    //Binding the click event on the canvas
-    canvas.addEventListener('click', function(evt) {
-        var mousePos = getMousePos(canvas, evt);
-
-        if (isInside(mousePos, rect)) {
-            alert('clicked inside rect');
-        } else {
-            alert('clicked outside rect');
-        }
-    }, false);
-}
-*/

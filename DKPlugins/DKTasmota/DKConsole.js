@@ -172,6 +172,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
 
         let msgText = document.createElement("span");
         msgText.className = "dkconsole";
+        //TODO: If the message is the same as the last, just have a count next to the original. 
         msgText.innerHTML = msg;
 
         if (style === "red") {

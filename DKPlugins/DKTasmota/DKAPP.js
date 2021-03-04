@@ -328,10 +328,10 @@ function UpdateScreen(success, url, data) {
         row.cells[1].innerHTML = "<a>" + devicePower + "</a>";
         if (devicePower === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            UpdateChartSwitch(row.getAttribute("hostname"), 100);
+            UpdateChartDevice(row.getAttribute("hostname"), 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            UpdateChartSwitch(row.getAttribute("hostname"), 0);
+            UpdateChartDevice(row.getAttribute("hostname"), 0);
         }
     }
 
@@ -414,7 +414,10 @@ function UpdateScreen(success, url, data) {
         document.getElementById("RH").style.textAlilgn = "center";
         document.getElementById("DewP").style.color = "rgb(50,50,50)";
         document.getElementById("DewP").style.textAlign = "center";
-        UpdateChart(humidity, temperature, dewPoint);
+        if(temperature && humidity && dewPoint){
+            var data = {temperature: temperature, humidity: humidity, dewPoint: dewPoint};
+            UpdateChartDevice(row.getAttribute("hostname"), JSON.stringify(data));
+        }
     }
 
     let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
