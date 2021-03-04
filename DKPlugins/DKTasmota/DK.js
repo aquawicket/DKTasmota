@@ -1,8 +1,8 @@
 "use strict";
 
 function DKLoadCSSFile(file) {
-    const head = document.getElementsByTagName('head')[0];
-    const link = document.createElement('link');
+    let head = document.getElementsByTagName('head')[0];
+    let link = document.createElement('link');
     link.id = file;
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -12,8 +12,8 @@ function DKLoadCSSFile(file) {
 }
 
 function DKLoadJSFile(file, callback) {
-    const head = document.getElementsByTagName('head')[0];
-    const script = document.createElement('script');
+    let head = document.getElementsByTagName('head')[0];
+    let script = document.createElement('script');
     script.id = file;
     script.src = file;
     head.appendChild(script);
@@ -91,22 +91,26 @@ function DKSendRequest(url, callback) {
 
 /////////////////////////////////////////
 function SaveToLocalStorage(name, string) {
+    if(!name || !string){
+        return;
+    }
     localStorage.setItem(name, string);
 }
 
 ///////////////////////////////////
 function LoadFromLocalStorage(name) {
+    if(!name){ return; }
     return localStorage.getItem(name);
 }
 
 //////////////////////////////
 function CenterWindow(element) {
-    const winW = window.innerWidth;
-    const winH = window.innerHeight;
-    const eleW = element.width;
-    const eleH = element.height;
-    const eleX = (winW / 2) - (eleW / 2);
-    const eleY = (winH / 2) - (eleH / 2);
+    let winW = window.innerWidth;
+    let winH = window.innerHeight;
+    let eleW = element.width;
+    let eleH = element.height;
+    let eleX = (winW / 2) - (eleW / 2);
+    let eleY = (winH / 2) - (eleH / 2);
     element.style.left = eleX + "px";
     element.style.top = eleY + "px";
     return debugDiv;

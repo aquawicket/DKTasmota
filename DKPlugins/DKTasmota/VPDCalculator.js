@@ -7,7 +7,7 @@ function CreateVPDCalculator(parent, top, bottom, left, right, width, height) {
             dkconsole.error("!success");
             return;
         }
-        const vpdDiv = document.createElement("div");
+        let vpdDiv = document.createElement("div");
         vpdDiv.innerHTML = data;
         vpdDiv.position = "absolute";
         vpdDiv.style.backgroundColor = "grey";

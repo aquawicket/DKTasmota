@@ -1,9 +1,9 @@
 "use strict";
-const DEBUG = 0;
+let DEBUG = 0;
 
 ////////////////////////////////////////////////////////////////////////
 function CreateDebugBox(parent, top, bottom, left, right, width, height) {
-    const debugDiv = document.createElement("div");
+    let debugDiv = document.createElement("div");
     debugDiv.style.position = "absolute";
     debugDiv.style.backgroundColor = "Grey";
     debugDiv.style.top = top;
@@ -19,10 +19,10 @@ function CreateDebugBox(parent, top, bottom, left, right, width, height) {
 // Call TestStackTrace("moe", "larry", "curly"); to test
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
-    const stack = StackToJSON(GetStack());
+    let stack = StackToJSON(GetStack());
     dkconsole.log(JSON.stringify(stack));
 
     //Try to catch an error
-    const e = new Error();
+    let e = new Error();
     throw e;
 }

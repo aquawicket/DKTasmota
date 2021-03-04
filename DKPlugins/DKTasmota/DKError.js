@@ -11,7 +11,7 @@ function isStrict() {
 
 ///////////////////
 function GetStack() {
-    const e = new Error();
+    let e = new Error();
     if (!e.stack)
         try {
             // old browsers need the Error thrown to fill the stack
@@ -25,9 +25,9 @@ function GetStack() {
     //Remove the call to this function from the stack
     //The first line is the message followed by the call stack.
     //So we will remove the second line
-    const lines = e.stack.split('\n');
+    let lines = e.stack.split('\n');
     lines.splice(1, 1);
-    const stack = lines.join('\n');
+    let stack = lines.join('\n');
 
     return stack;
 }
@@ -43,11 +43,11 @@ function StackToJSON(stack) {
     // it could potentially be anything. 
 
     //split the call stack lines into an array
-    const lines = stack.toString().split(/\r\n|\n/);
+    let lines = stack.toString().split(/\r\n|\n/);
 
     //The first line should be the call stack message
-    const msg = lines[0];
-    const json = [{
+    let msg = lines[0];
+    let json = [{
         msg
     }];
     for (let s = 1; s < lines.length; s++) {
@@ -72,15 +72,15 @@ function StackToJSON(stack) {
         
         
 
-        const charNum = line.split(":").pop();
+        let charNum = line.split(":").pop();
         line = line.replace(":" + charNum, "");
 
-        const lineNum = line.split(":").pop();
+        let lineNum = line.split(":").pop();
         line = line.replace(":" + lineNum, "");
 
-        const file = line.split("/").pop();
+        let file = line.split("/").pop();
 
-        const filePath = line.trim();
+        let filePath = line.trim();
         json.push({
             func,
             file,
@@ -94,7 +94,7 @@ function StackToJSON(stack) {
 
 ////////////////////////
 function LastStackCall() {
-    const stack = StackToJSON(GetStack());
+    let stack = StackToJSON(GetStack());
     let n;
     for (let s = 1; s < stack.length; s++) {
         if (stack[s].func === "LastStackCall") {
@@ -116,7 +116,7 @@ function LastStackCall() {
 function GetArguments(func, getArgValues) {
     let argsString = "";
     let count = 0;
-    const fn = window[func];
+    let fn = window[func];
     if (!fn) {
         console.error(LastStackCall() + "<br>" + "  at if(!fn)");
         return "";
@@ -132,7 +132,7 @@ function GetArguments(func, getArgValues) {
     if (!fn.arguments) {
         return argsString;
     }
-    const args = argsString.split(",");
+    let args = argsString.split(",");
     for (let val of fn.arguments) {
         if (count > 0) {
             args[count] = " " + args[count];

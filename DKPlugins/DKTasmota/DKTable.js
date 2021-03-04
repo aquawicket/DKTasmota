@@ -31,7 +31,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
-    const table = document.createElement('table');
+    let table = document.createElement('table');
     table.id = id;
     table.style.position = "absolute";
     table.style.top = top;
@@ -56,7 +56,7 @@ function DKTableInsertRow(table, name) {
 	        console.error("DKTableInsertRow(): name parameter invalid");
         }
     }
-    const row = table.insertRow(-1);
+    let row = table.insertRow(-1);
     row.id = "row" + table.rows.length;
     row.setAttribute("name", name);
     return row;
@@ -74,7 +74,7 @@ function DKTableInsertCell(table, row, name) {
 	        console.error("DKTableInsertCell(): name parameter invalid");
         }
     }
-    const cell = row.insertCell(-1);
+    let cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
     cell.setAttribute("name", name);
     return cell;
@@ -82,10 +82,10 @@ function DKTableInsertCell(table, row, name) {
 
 ////////////////////////////////////////////////
 function DKTableAddRow(table, rowName, cellName) {
-    const row = DKTableInsertRow(table, rowName);
+    let row = DKTableInsertRow(table, rowName);
     row.id = "row" + table.rows.length;
     //dkconsole.debug("DKTableAddRow() -> row.id = "+row.id);
-    const row_count = table.rows.length;
+    let row_count = table.rows.length;
 
     let cell_count = table.rows[0].cells.length;
     if (!cell_count) {
@@ -100,7 +100,7 @@ function DKTableAddRow(table, rowName, cellName) {
     	if(!cellName){
     		cellName = table.rows[0].cells[n].getAttribute("name");
     	}
-        const cell = DKTableInsertCell(table, row, cellName);
+        let cell = DKTableInsertCell(table, row, cellName);
         //FIXME: The function above is NOT setting the cellName properly.
         //This line is a temporary fix for now. 
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
@@ -110,15 +110,15 @@ function DKTableAddRow(table, rowName, cellName) {
 
 //////////////////////////////////////
 function DKTableAddColumn(table, name) {
-    const row_count = table.rows.length;
+    let row_count = table.rows.length;
     if (!row_count) {
         //FIXME: no name attribute for the row
-        const row = DKTableInsertRow(table/*, name*/);
+        let row = DKTableInsertRow(table/*, name*/);
         row_count = 1;
     }
-    const cell_count = table.rows[0].cells.length;
+    let cell_count = table.rows[0].cells.length;
     for (let n = 0; n < row_count; n++) {
-        const cell = DKTableInsertCell(table, table.rows[n], name);
+        let cell = DKTableInsertCell(table, table.rows[n], name);
     }
     //return the created column number
     return table.rows[0].cells.length;
@@ -151,7 +151,7 @@ function DKTableDeleteRow(table, number) {
 ///////////////////////////////////////////
 function DKTableDeleteColumn(table, number) {
     for (let r = 0; r < table.rows.length; r++) {
-        const row = table.rows[r];
+        let row = table.rows[r];
         if (row.cells[number]) {
             row.deleteCell(number - 1);
         }
@@ -162,10 +162,10 @@ function DKTableDeleteColumn(table, number) {
 ////////////////////////////////
 function DKTableUpdateIds(table) {
     for (let r = 0; r < table.rows.length; r++) {
-        const row = table.rows[r]
+        let row = table.rows[r]
         row.id = "row" + (r + 1);
         for (let c = 0; c < row.cells.length; c++) {
-            const cell = row.cells[c];
+            let cell = row.cells[c];
             cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
             //cell.innerHTML = cell.id; //For debug
         }
@@ -173,8 +173,8 @@ function DKTableUpdateIds(table) {
 }
 
 function DKTableGetCellByIndex(table, rowNum, columnNum) {
-    const row = table.rows[rowNum];
-    const cell = row.cells[columnNum];
+    let row = table.rows[rowNum];
+    let cell = row.cells[columnNum];
     return cell;
 }
 
@@ -185,7 +185,7 @@ function DKTableDeleteCell(table, rowNum, columnNum) {
     //I'm using Brave browser which is a fork of chromium.
     //Bug? or user error? 
     dkConsole.log("DKTableDeleteCell(" + rowNum + "," + columnNum + ")");
-    const row = table.rows[rowNum];
+    let row = table.rows[rowNum];
     //row.deleteCell(columnNum);
     document.removeElement(row.cells[columnNum]);
 }
@@ -205,7 +205,7 @@ function DKTableGetRowByName(table, rowName){
             return;
         }
         if (table.rows[r].getAttribute("name") == rowName) {
-            const row = table.rows[r];
+            let row = table.rows[r];
             return row;
         }
     }
@@ -238,7 +238,7 @@ function DKTableGetCellByNames(table, rowName, columnName) {
             return;
         }
         if (table.rows[r].getAttribute("name") == rowName) {
-            const row = table.rows[r];
+            let row = table.rows[r];
             //if the column name wasn't requested, return the row 
             if(!columnName){ return row; }
 

@@ -2,18 +2,18 @@
 "use strict";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/console
-const consoleLimit = 100;
+let consoleLimit = 100;
 let dkconsole;
 
 //intercept console with dkconsole
-const console_log = console.log;
-const console_info = console.info;
-const console_debug = console.debug;
-const console_warn = console.warn;
-const console_error = console.error;
-const console_trace = console.trace;
-const console_assert = console.assert;
-const console_group = console.group;
+let console_log = console.log;
+let console_info = console.info;
+let console_debug = console.debug;
+let console_warn = console.warn;
+let console_error = console.error;
+let console_trace = console.trace;
+let console_assert = console.assert;
+let console_group = console.group;
 (function() {
     console.log = function() {
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
@@ -57,7 +57,8 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
 window.onunhandledrejection = function(e) {
-    dkconsole.error("Error: window.onunhandledrejection<br>  " + e.reason.message);
+    dkconsole.error("Error: window.onunhandledrejection<br>  " + JSON.stringify(e));
+    dkconsole.error(StackToConsoleString());
     return false;
 }
 
@@ -86,7 +87,7 @@ function StackToConsoleString(stack) {
 
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     DKLoadCSSFile("dkconsole.css");
-    const dkconsoleFrame = document.createElement("div");
+    let dkconsoleFrame = document.createElement("div");
     dkconsoleFrame.style.padding = "0px";
     dkconsoleFrame.style.margin = "0px";
     dkconsoleFrame.id = id;
@@ -122,7 +123,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.appendChild(dkconsole);
 
     //command box
-    const cmdbox = document.createElement("input");
+    let cmdbox = document.createElement("input");
     cmdbox.type = "text";
     cmdbox.style.position = "absolute";
     cmdbox.style.left = "0px";
@@ -133,7 +134,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     cmdbox.style.backgroundColor = "rgb(150,150,150)";
     dkconsoleFrame.style.borderColor = "rgb(40,40,40)";
     cmdbox.onkeydown = function cmdboxOnKeydownCallback(event) {
-        const key = event.charCode || event.keyCode;
+        let key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter
             if (cmdbox.value === "clear" || cmdbox.value === "cls") {
@@ -155,7 +156,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.appendChild(cmdbox);
 
     dkconsole.message = function(msg, style) {
-        const msgDiv = document.createElement("div");
+        let msgDiv = document.createElement("div");
         msgDiv.style.width = "100%";
         msgDiv.style.fontSize = "12px";
         msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
@@ -169,7 +170,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.style.borderLeftWidth = "0px";
         msgDiv.style.borderRightWidth = "0px";
 
-        const msgText = document.createElement("span");
+        let msgText = document.createElement("span");
         msgText.className = "dkconsole";
         msgText.innerHTML = msg;
 
@@ -226,7 +227,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.trace = function(inStr) {
-        const outStr = StackToConsoleString();
+        let outStr = StackToConsoleString();
         dkconsole.message(outStr, "yellow");
     }
 

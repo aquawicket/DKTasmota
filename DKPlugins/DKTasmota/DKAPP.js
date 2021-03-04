@@ -6,34 +6,32 @@ let humidity;
 let dewPoint;
 let bypassRules = [];
 
-const tempTarget = 77;
-const tempCalib = -5;
-const tempMin = tempTarget - 10;
-const tempMax = tempTarget + 10;
+let tempTarget = 77;
+let tempCalib = -5;
+let tempMin = tempTarget - 10;
+let tempMax = tempTarget + 10;
 
-const humTarget = 50;
-const humCalib = -13;
-const humMin = humTarget - 10;
-const humMax = humTarget + 10;
+let humTarget = 50;
+let humCalib = -13;
+let humMin = humTarget - 10;
+let humMax = humTarget + 10;
 
-const exhaustFan = true;
-const waterWalls = true;
-const heater = true;
-const co2 = false;
+let exhaustFan = true;
+let waterWalls = true;
+let heater = true;
+let co2 = false;
 
 //////////////////////
 function DKLoadFiles() {
     //If you initiate anything here, it may fail.
-    //This function can only load files, Not initiate constiables. 
+    //This function can only load files, Not initiate letiables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
-    DKLoadJSFile("superagent.js");
+    //DKLoadJSFile("superagent.js");
+    DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("DKDebug.js");
-    //DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
-    //    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
-    //});
     DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKAudio.js");
     DKLoadJSFile("DKTasmota.js");
@@ -47,10 +45,11 @@ function DKLoadFiles() {
 function DKLoadPage() {
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
-    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
+   
     CreateButtons(document.body);
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
+    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
@@ -62,8 +61,9 @@ function DKLoadPage() {
     let deviceIPs;
     if (deviceIPs = LoadFromLocalStorage("deviceIPs")) {
         deviceIPs = deviceIPs.split("^");
+        dkconsole.log("attempting to restore "+deviceIPs.length+" devices");
         for (let n = 0; n < deviceIPs.length - 1; n++) {
-            const ip = deviceIPs[n];
+            let ip = deviceIPs[n];
             AddDevice(ip);
         }
     }
@@ -74,7 +74,7 @@ function DKLoadPage() {
 
 //////////////////////////////
 function CreateButtons(parent) {
-    const scanDevices = document.createElement("button");
+    let scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
     scanDevices.position = "absolute";
     scanDevices.top = "5px";
@@ -85,7 +85,7 @@ function CreateButtons(parent) {
     }
     parent.appendChild(scanDevices);
 
-    const updateDevices = document.createElement("button");
+    let updateDevices = document.createElement("button");
     updateDevices.innerHTML = "Update Devices";
     updateDevices.position = "absolute";
     updateDevices.top = "5px";
@@ -95,13 +95,24 @@ function CreateButtons(parent) {
         TimerLoop(false);
     }
     parent.appendChild(updateDevices);
+
+    let clearDevices = document.createElement("button");
+    clearDevices.innerHTML = "Clear Devices";
+    clearDevices.position = "absolute";
+    clearDevices.top = "5px";
+    clearDevices.left = "55px";
+    clearDevices.style.cursor = "pointer";
+    clearDevices.onclick = function ClearDevicesOnclickCallback() {
+        ClearDevices();
+    }
+    parent.appendChild(clearDevices);
 }
 
 //////////////////////////////////
 function CreateDeviceTable(parent) {
-    const devices = document.createElement("div");
+    let devices = document.createElement("div");
     parent.appendChild(devices);
-    const table = DKCreateTable(devices, "deviceTable", "30px", "", "20px");
+    let table = DKCreateTable(devices, "deviceTable", "30px", "", "20px");
 
     //Create Header Row as a normal <tr>
     DKTableAddRow(table, "HEADER", "device");
@@ -148,15 +159,15 @@ function AddDevice(ip) {
             dkconsole.error(LastStackCall() + "<br>  at if(!url.includes(ip))");
             return;
         }
-        const device = JSON.parse(data);
+        let device = JSON.parse(data);
         if (!device.Hostname) {
             dkconsole.error(LastStackCall() + "<br>  at if(!device.Hostname)");
             return;
         }
-        const hostname = device.Hostname;
-        const table = document.getElementById("deviceTable");
-        const row = DKTableAddRow(table, ip);
-        //const row = table.rows[table.rows.length - 1];
+        let hostname = device.Hostname;
+        let table = document.getElementById("deviceTable");
+        let row = DKTableAddRow(table, ip);
+        //let row = table.rows[table.rows.length - 1];
         if (row.rowIndex % 2 == 0) {
             //even
             row.style.backgroundColor = "rgb(100,100,100)";
@@ -179,7 +190,7 @@ function AddDevice(ip) {
         cell.innerHTML = "<a>" + ip + "</a>";
         cell.style.cursor = "pointer";
         cell.onclick = function CellOnClickCallback() {
-            const theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+            let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
         }
 
         //cell = row.cells[1];
@@ -187,7 +198,7 @@ function AddDevice(ip) {
         cell.style.textAlign = "center";
         cell.style.cursor = "pointer";
         cell.onclick = function CellOnClickCallback() {
-            const hostname = row.getAttribute("hostname");
+            let hostname = row.getAttribute("hostname");
             if (!bypassRules.includes(hostname)) {
                 bypassRules += hostname;
                 bypassRules += ",";
@@ -221,7 +232,7 @@ function AddDevice(ip) {
 
 /////////////////////////
 function TimerLoop(force) {
-    const currentdate = new Date();
+    let currentdate = new Date();
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     ProcessRules();
     ProcessDevices();
@@ -232,35 +243,48 @@ function TimerLoop(force) {
 
 ////////////////////////
 function ScanDevices() {
-    let localStorageString = "";
-    const table = document.getElementById("deviceTable");
+    let table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
 
+    let deviceIPs =  "";// = LoadFromLocalStorage("deviceIPs");
     GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip) {
+            //for(let d=0; d<table.rows.length; d++){
+            //    if(table.rows[d].getAttribute("ip") === ip){
+                    //return;
+            //}
+            //}
             AddDevice(ip);
 
             //Save to local storage
-            if (!localStorageString.includes(ip)) {
-                localStorageString = localStorageString + ip + "^";
-                SaveToLocalStorage("deviceIPs", localStorageString);
+            if(!deviceIPs.includes(ip)) {
+                deviceIPs = deviceIPs + ip + "^";
+                SaveToLocalStorage("deviceIPs", deviceIPs);
             }
         }
         if (done) {
             dkconsole.log("\n");
             dkconsole.message("Scan Complete", "green");
             dkconsole.message("(" + tasmotaDeviceCount + ") Tasmota Devices found", "green");
-            SaveToLocalStorage("deviceIPs", localStorageString);
+            SaveToLocalStorage("deviceIPs", deviceIPs);
         }
     });
 }
 
 /////////////////////////
+function ClearDevices() {
+    let table = document.getElementById("deviceTable");
+    table.parentNode.remove(table);
+    CreateDeviceTable(document.body);
+    SaveToLocalStorage("deviceIPs", "");
+}
+
+/////////////////////////
 function ProcessDevices() {
-    const table = document.getElementById("deviceTable");
+    let table = document.getElementById("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
-        const ip = table.rows[n].getAttribute("ip");
+        let ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
 }
@@ -275,34 +299,34 @@ function UpdateScreen(success, url, data) {
     }
 
     let row;
-    const table = document.getElementById("deviceTable");
+    let table = document.getElementById("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         if (url.includes(table.rows[n].getAttribute("ip")) || url.includes(table.rows[n].getAttribute("hostname"))) {
             row = table.rows[n];
             continue;
         }
     }
-    //const row = DKTableGetRowByName(table, ip);
+    //let row = DKTableGetRowByName(table, ip);
     if (!row) {
         dkconsole.error(LastStackCall() + "<br>  at if(!row)");
         return;
     }
 
-    const device = JSON.parse(data);
-    const ip = row.getAttribute("ip");
+    let device = JSON.parse(data);
+    let ip = row.getAttribute("ip");
 
-    const deviceHostname = device.StatusNet ? device.StatusNet.Hostname : device.Hostname;
+    let deviceHostname = device.StatusNet ? device.StatusNet.Hostname : device.Hostname;
     if (deviceHostname) {
         //DKTableGetCellByNames(table, ip, "device");
         row.setAttribute("Hostname", deviceHostname);
     }
 
-    const deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
+    let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (deviceName) {
         row.cells[0].innerHTML = "<a>" + deviceName + "</a>";
     }
 
-    const devicePower = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
+    let devicePower = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
     if (devicePower) {
         row.cells[1].innerHTML = "<a>" + devicePower + "</a>";
         if (devicePower === "ON") {
@@ -312,7 +336,7 @@ function UpdateScreen(success, url, data) {
         }
     }
 
-    const deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
+    let deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
     if (deviceSI7021) {
         temperature = (deviceSI7021.Temperature + tempCalib).toFixed(1);
         let tempDirection = " ";
@@ -325,8 +349,8 @@ function UpdateScreen(success, url, data) {
         if (temperature === tempTarget) {
             tempDirection = " ";
         }
-        const tempText = "<a id='Temp'>" + temperature + " &#176;F" + tempDirection + "</a>";
-        const tempTargetText = "<a id='TempTarg'> (" + tempTarget + "&#176;F)</a>";
+        let tempText = "<a id='Temp'>" + temperature + " &#176;F" + tempDirection + "</a>";
+        let tempTargetText = "<a id='TempTarg'> (" + tempTarget + "&#176;F)</a>";
 
         humidity = (deviceSI7021.Humidity + humCalib).toFixed(1);
         let humDirection = " ";
@@ -342,15 +366,15 @@ function UpdateScreen(success, url, data) {
 
         dewPoint = (deviceSI7021.DewPoint).toFixed(1);
 
-        const humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
-        const humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
+        let humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
+        let humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
         // At 77F and 50% RH,  Dew Point should be 56.9°F
-        const dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
+        let dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
 
-        const tempScale = 510;
-        const tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/
+        let tempScale = 510;
+        let tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/
         ;
-        const tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/
+        let tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/
         ;
         let tempRed = tempNum;
         let tempGreen = 510 - tempNum;
@@ -370,9 +394,9 @@ function UpdateScreen(success, url, data) {
         row.cells[2].innerHTML = tempTargetText + " " + tempText + "<br>" + humTargetText + " " + humText + "<br>" + dewPointText;
         document.getElementById("Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById("Temp").style.textAlign = "center";
-        const humScale = 510;
-        const humDiff = (Math.abs(humTarget - humidity) * 5);
-        const humNum = (humDiff * humScale / 100);
+        let humScale = 510;
+        let humDiff = (Math.abs(humTarget - humidity) * 5);
+        let humNum = (humDiff * humScale / 100);
         let humRed = humNum;
         let humGreen = 510 - humNum;
         if (humRed > 255) {
@@ -393,11 +417,11 @@ function UpdateScreen(success, url, data) {
         document.getElementById("DewP").style.textAlign = "center";
     }
 
-    const deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
+    let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
     if (deviceWifi) {
-        const signal = deviceWifi.RSSI;
-        const scale = 510;
-        const num = (signal * scale / 100);
+        let signal = deviceWifi.RSSI;
+        let scale = 510;
+        let num = (signal * scale / 100);
         let green = num;
         let red = 510 - num;
         row.cells[3].innerHTML = signal + "%";
@@ -422,6 +446,10 @@ function ProcessRules() {
 
     DumpVariables();
 
+    if (!temperature || !humidity || !dewPoint) {
+        return;
+    }
+
     //Alarms
     if (temperature < tempMin) {
         dkconsole.warn("!!! TEMPERATURE BELOW MINIMUM " + temperature + "&#176;F < " + tempMin + "&#176;F !!!");
@@ -438,7 +466,7 @@ function ProcessRules() {
 
     //Exhaust fan
     if (!bypassRules.includes("Device005") && exhaustFan) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempTarget) || (temperature - dewPoint) < 1.5) {
+        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempTarget) || (temperature - dewPoint) < 2) {
             dkconsole.message("Exhaust Fan ON", "green");
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
 
