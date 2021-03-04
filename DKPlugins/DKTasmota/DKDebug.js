@@ -34,9 +34,13 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
 
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
-    dkconsole.trace();
+    
+    DKSendRequest("DKFile.php", function(){
+       dkconsole.debug("finnished writing the file"); 
+    });
 
-    //Try to catch an error
-    let e = new Error();
-    throw e;
+    //dkconsole.trace();
+
+    //let e = new Error();
+    //throw e;
 }
