@@ -97,6 +97,11 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.style.right = right;
     dkconsoleFrame.style.width = width;
     dkconsoleFrame.style.height = height;
+    dkconsoleFrame.style.borderColor = "rgb(58,58,58)";
+    dkconsoleFrame.style.borderStyle = "solid";
+    dkconsoleFrame.style.borderWidth = "1px";
+    dkconsoleFrame.style.boxSizing = "border-box";
+    dkconsoleFrame.style.borderTopWidth = "5px";
     parent.appendChild(dkconsoleFrame);
 
     dkconsole = document.createElement("div");
@@ -125,6 +130,8 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     cmdbox.style.right = "0px";
     cmdbox.style.height = "20px";
     cmdbox.style.width = "100%";
+    cmdbox.style.backgroundColor = "rgb(150,150,150)";
+    dkconsoleFrame.style.borderColor = "rgb(40,40,40)";
     cmdbox.onkeydown = function cmdboxOnKeydownCallback(event) {
         const key = event.charCode || event.keyCode;
         if (key === 13) {
@@ -159,6 +166,8 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.style.borderStyle = "solid";
         msgDiv.style.borderWidth = "1px";
         msgDiv.style.borderTopWidth = "0px";
+        msgDiv.style.borderLeftWidth = "0px";
+        msgDiv.style.borderRightWidth = "0px";
 
         const msgText = document.createElement("span");
         msgText.className = "dkconsole";

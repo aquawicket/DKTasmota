@@ -31,6 +31,9 @@ function DKLoadFiles() {
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKConsole.js");
+    //DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
+    //    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+    //});
     DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKAudio.js");
     DKLoadJSFile("DKTasmota.js");
@@ -44,22 +47,25 @@ function DKLoadFiles() {
 function DKLoadPage() {
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
+    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateButtons(document.body);
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
     CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
-    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateSound("PowerDown.mp3");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
 
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
 
-    //Load devices from local storage
-    const deviceIPs = LoadFromLocalStorage("deviceIPs").split("^");
-    for (let n = 0; n < deviceIPs.length - 1; n++) {
-        const ip = deviceIPs[n];
-        AddDevice(ip);
+    //Load devices from local storage    ).split("^");
+    let deviceIPs;
+    if (deviceIPs = LoadFromLocalStorage("deviceIPs")) {
+        deviceIPs = deviceIPs.split("^");
+        for (let n = 0; n < deviceIPs.length - 1; n++) {
+            const ip = deviceIPs[n];
+            AddDevice(ip);
+        }
     }
 
     //Run TimerLoop every minute

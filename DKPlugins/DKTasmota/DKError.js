@@ -107,7 +107,7 @@ function LastStackCall() {
         return;
     }
 
-    let str = "Error in " + stack[n].func + " ";
+    let str = "LastStackCall: "+stack[n].func;
     str += "(<a href='" + stack[n].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)";
     return str;
 }
