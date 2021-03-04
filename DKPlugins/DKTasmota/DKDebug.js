@@ -32,7 +32,6 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     return debugButton;
 }
 
-// Call TestStackTrace("moe", "larry", "curly"); to test
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
     dkconsole.trace();

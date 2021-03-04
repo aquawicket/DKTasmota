@@ -49,14 +49,13 @@ function DKLoadPage() {
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
-    CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
+    dkconsole.debug("**** Tasmota device manager 0.1b ****");
     CreateSound("PowerDown.mp3");
+    CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
     CreateDebugButton(document.body, "debug_button", "23px","","","5px","63px","20px");
     
-    dkconsole.debug("**** Tasmota device manager 0.1b ****");
-
     //Load devices from local storage
     let deviceIPs;
     if (deviceIPs = LoadFromLocalStorage("deviceIPs")) {
@@ -152,11 +151,11 @@ function CreateDeviceTable(parent) {
 function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function DKSendRequestCallback(success, url, data) {
         if (!success) {
-            dkconsole.error(LastStackCall() + "<br>  at if(!success)");
+            dkconsole.trace();
             return;
         }
         if (!url.includes(ip)) {
-            dkconsole.error(LastStackCall() + "<br>  at if(!url.includes(ip))");
+            dkconsole.trace();
             return;
         }
         let device = JSON.parse(data);
@@ -230,18 +229,7 @@ function AddDevice(ip) {
     });
 }
 
-/////////////////////////
-function TimerLoop(force) {
-    let currentdate = new Date();
-    time = currentdate.getHours() + (currentdate.getMinutes() * .01);
-    ProcessRules();
-    ProcessDevices();
-    if (temperature && humidity && dewPoint) {
-        UpdateChart(humidity, temperature, dewPoint);
-    }
-}
-
-////////////////////////
+//////////////////////
 function ScanDevices() {
     let table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
@@ -272,12 +260,20 @@ function ScanDevices() {
     });
 }
 
-/////////////////////////
+///////////////////////
 function ClearDevices() {
     let table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
     SaveToLocalStorage("deviceIPs", "");
+}
+
+/////////////////////////
+function TimerLoop(force) {
+    let currentdate = new Date();
+    time = currentdate.getHours() + (currentdate.getMinutes() * .01);
+    ProcessRules();
+    ProcessDevices();
 }
 
 /////////////////////////
@@ -298,15 +294,16 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    let row;
     let table = document.getElementById("deviceTable");
+    let row;
     for (let n = 1; n < table.rows.length; n++) {
         if (url.includes(table.rows[n].getAttribute("ip")) || url.includes(table.rows[n].getAttribute("hostname"))) {
             row = table.rows[n];
             continue;
         }
     }
-    //let row = DKTableGetRowByName(table, ip);
+ 
+    //let row = DKTableGetRowByName(table, ip); //need ip for this
     if (!row) {
         dkconsole.error(LastStackCall() + "<br>  at if(!row)");
         return;
@@ -417,6 +414,7 @@ function UpdateScreen(success, url, data) {
         document.getElementById("RH").style.textAlilgn = "center";
         document.getElementById("DewP").style.color = "rgb(50,50,50)";
         document.getElementById("DewP").style.textAlign = "center";
+        UpdateChart(humidity, temperature, dewPoint);
     }
 
     let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;

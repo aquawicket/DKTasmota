@@ -23,8 +23,6 @@ function GetStack() {
             }
         }
     //Remove the call to this function from the stack
-    //The first line is the message followed by the call stack.
-    //So we will remove the second line
     let lines = e.stack.split('\n');
     lines.splice(1, 1);
     let stack = lines.join('\n');

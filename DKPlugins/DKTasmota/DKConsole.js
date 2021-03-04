@@ -57,7 +57,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
 window.onunhandledrejection = function(e) {
-    dkconsole.error("Error: window.onunhandledrejection<br>  " + JSON.stringify(e));
+    dkconsole.error("window.onunhandledrejection<br>  " + JSON.stringify(e));
     dkconsole.error(StackToConsoleString());
     return false;
 }
