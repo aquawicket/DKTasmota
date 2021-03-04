@@ -1,8 +1,7 @@
 "use strict";
 let DEBUG = 0;
 
-////////////////////////////////////////////////////////////////////////
-function CreateDebugBox(parent, top, bottom, left, right, width, height) {
+function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
     let debugDiv = document.createElement("div");
     debugDiv.style.position = "absolute";
     debugDiv.style.backgroundColor = "Grey";
@@ -14,6 +13,23 @@ function CreateDebugBox(parent, top, bottom, left, right, width, height) {
     debugDiv.style.height = height;
     parent.appendChild(debugDiv);
     return debugDiv;
+}
+
+function CreateDebugButton(parent, id, top, bottom, left, right, width, height) {
+    let debugButton = document.createElement("button");
+    debugButton.innerHTML = "DEBUG";
+    debugButton.style.position = "absolute";
+    debugButton.style.top = top;
+    debugButton.style.bottom = bottom;
+    debugButton.style.left = left;
+    debugButton.style.right = right;
+    debugButton.style.width = width;
+    debugButton.style.height = height;
+    debugButton.onclick = function(){
+        TestStackTrace("moe", "larry", "curly")
+    };
+    parent.appendChild(debugButton);
+    return debugButton;
 }
 
 // Call TestStackTrace("moe", "larry", "curly"); to test

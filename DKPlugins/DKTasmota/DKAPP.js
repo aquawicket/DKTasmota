@@ -24,10 +24,10 @@ let co2 = false;
 //////////////////////
 function DKLoadFiles() {
     //If you initiate anything here, it may fail.
-    //This function can only load files, Not initiate letiables. 
-    //Example: DKTable: line 50 will fail because it initiates before DKConsole.
-    //DKLoadJSFile("superagent.js");
-    DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
+    //This function should only load files, Not initiate variables
+    //DKLoadPage() will be call after this loads everything.
+    //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
+    DKLoadJSFile("superagent.js");
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKConsole.js");
@@ -45,13 +45,13 @@ function DKLoadFiles() {
 function DKLoadPage() {
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
-   
     CreateButtons(document.body);
     CreateClock(document.body, "clock", "2px", "", "", "10px");
     CreateDeviceTable(document.body);
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     CreateSound("PowerDown.mp3");
+    CreateDebugButton(document.body, "debug_button", "23px","","","5px","63px","20px");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
 

@@ -2,13 +2,11 @@
 
 //https://www.chartjs.org/
 //https://www.chartjs.org/docs/latest/axes/cartesian/time.html
-
-
-//DKLoadJSFile("moment.min.js", function() {
-//    DKLoadJSFile("Chart.min.js");
+//DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
+//    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
 //});
-DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
-    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+DKLoadJSFile("moment.min.js", function() {
+    DKLoadJSFile("Chart.min.js");
 });
 
 var lineChart;
@@ -91,7 +89,6 @@ function UpdateChart(humidity, temperature, dewPoint) {
     if (!humidity || !temperature || !dewPoint) {
         return;
     }
-    dkconsole.debug(LastStackCall());
     lineChart.data.datasets[0].data.push({
         t: new Date(),
         y: parseFloat(temperature)
@@ -105,10 +102,10 @@ function UpdateChart(humidity, temperature, dewPoint) {
         y: parseFloat(dewPoint)
     });
     lineChart.update();
+    SaveDatasets(); 
 }
 
 function AddDataset(name, color) {
-    dkconsole.log(LastStackCall());
     var dataset = {};
     dataset.label = name;
     dataset.data = [];
@@ -120,30 +117,21 @@ function AddDataset(name, color) {
 }
 
 function SaveDatasets() {
-    //To Local Storage? To big? Let's try it anyway :)
-    //Then maybe real time saveing and loaing with a set gistory length.
-    //Auto export weeks to files? months?
-    dkconsole.debug(LastStackCall());
-    let datasets
     for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        datasets = JSON.stringify(lineChart.data.datasets[d].data);
+        let data = JSON.stringify(lineChart.data.datasets[d].data);
+        SaveToLocalStorage(lineChart.data.datasets[d].label, data);
     }
-
-    //if (!datasets.includes(??)) {
-    //    datasets = datasets + ?? + "^";
-    SaveToLocalStorage("datasets", datasets);
-    //}
 }
 
 function LoadDatasets() {
-    dkconsole.debug(LastStackCall());
+    for (let d = 0; d < lineChart.data.datasets.length; d++) {
+        let data = LoadFromLocalStorage(lineChart.data.datasets[d].label);
+        lineChart.data.datasets[d].data = JSON.parse(data);
+    }
+    lineChart.update();
 }
 
-function AutoSave() {
-    dkconsole.debug(LastStackCall());
-    JSON.stringify(lineChart.data.datasets[2].data);
-}
-
+/*
 function CreateCanvasButton() {
 
     let canvas = document.getElementById("chartCanvas");
@@ -180,3 +168,4 @@ function CreateCanvasButton() {
         }
     }, false);
 }
+*/
