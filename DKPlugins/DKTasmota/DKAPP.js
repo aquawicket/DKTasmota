@@ -51,13 +51,13 @@ function DKLoadPage() {
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     CreateSound("PowerDown.mp3");
-    CreateDebugButton(document.body, "debug_button", "23px","","","5px","63px","20px");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
-
+    CreateDebugButton(document.body, "debug_button", "23px","","","5px","63px","20px");
+    
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
 
-    //Load devices from local storage    ).split("^");
+    //Load devices from local storage
     let deviceIPs;
     if (deviceIPs = LoadFromLocalStorage("deviceIPs")) {
         deviceIPs = deviceIPs.split("^");
@@ -291,9 +291,9 @@ function ProcessDevices() {
 
 /////////////////////////////////////////
 function UpdateScreen(success, url, data) {
-    if (!success) {
+    if (!success || !url || !data) {
         //Test for power outage
-        dkconsole.error(LastStackCall() + "<br>  at if(!success)");
+        //dkconsole.error(LastStackCall() + "<br>  at if(!success)");
         PlaySound("PowerDown.mp3");
         return;
     }
@@ -331,8 +331,10 @@ function UpdateScreen(success, url, data) {
         row.cells[1].innerHTML = "<a>" + devicePower + "</a>";
         if (devicePower === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
+            UpdateChartSwitch(row.getAttribute("hostname"), 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
+            UpdateChartSwitch(row.getAttribute("hostname"), 0);
         }
     }
 

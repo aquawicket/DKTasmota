@@ -54,6 +54,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("Temperature", "rgb(200, 0, 0)");
     AddDataset("Humidity", "rgb(0, 0, 200)");
     AddDataset("DewPoint", "rgb(0,150,150)");
+    AddDataset("ExhaustFan", "rgb(150,0,150)");
 
     //Save Button
     let saveButton = document.createElement("button");
@@ -105,13 +106,23 @@ function UpdateChart(humidity, temperature, dewPoint) {
     SaveDatasets(); 
 }
 
+function UpdateChartSwitch(hostname, state) {
+    //console.debug(LastStackCall()+": hostname:"+hostname+" state:"+state);
+    if(hostname === "Device005"){
+        lineChart.data.datasets[3].data.push({
+            t: new Date(),
+            y: state
+        });
+    }
+}
+
 function AddDataset(name, color) {
     var dataset = {};
     dataset.label = name;
     dataset.data = [];
     dataset.fill = false;
     dataset.borderColor = color;
-    dataset.lineTension = 0.1;
+    //dataset.lineTension = 0.1;
     lineChart.data.datasets.push(dataset);
     lineChart.update();
 }
