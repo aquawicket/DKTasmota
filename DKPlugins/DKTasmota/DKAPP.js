@@ -26,11 +26,11 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function can only load files, Not initiate constiables. 
     //Example: DKTable: line 50 will fail because it initiates before DKConsole.
-    DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
+    DKLoadJSFile("superagent.js");
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
-    DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKConsole.js");
+    DKLoadJSFile("DKDebug.js");
     //DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
     //    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
     //});

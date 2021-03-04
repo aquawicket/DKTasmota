@@ -2,8 +2,8 @@
 
 //https://www.chartjs.org/
 //https://www.chartjs.org/docs/latest/axes/cartesian/time.html
-DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
-    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+DKLoadJSFile("moment.min.js", function() {
+    DKLoadJSFile("Chart.min.js");
 });
 
 var lineChart;
@@ -30,6 +30,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartCanvas.style.width = "100%";
     chartCanvas.style.height = "100%";
     var ctx = chartCanvas.getContext('2d');
+    //ctx.style.position = "absolute";
     chartDiv.appendChild(chartCanvas);
 
     lineChart = new Chart(ctx,{
