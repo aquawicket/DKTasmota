@@ -47,7 +47,12 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
                         unit: 'minute'
                     }
                 }]
-            }
+            },
+            elements: {
+                    point:{
+                        radius: 0.5
+                    }
+                }
         }
     });
 
@@ -55,8 +60,11 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("Humidity", "rgb(0, 0, 200)");
     AddDataset("DewPoint", "rgb(0,150,150)");
     AddDataset("ExhaustFan", "rgb(150,0,150)");
+    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
     AddDataset("WaterWalls", "rgb(90,0,150)");
+    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
     AddDataset("Heater", "rgb(150,0,50)");
+    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
     LoadDatasets();
 
     //Save Button
@@ -67,7 +75,9 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     saveButton.style.position = "absolute";
     saveButton.style.top = "5px";
     saveButton.style.left = "5px";
-    saveButton.style.height = "20px";
+    saveButton.style.height = "18px";
+    saveButton.style.width = "40px";
+    saveButton.style.padding = "0px";
     saveButton.style.cursor = "pointer";
     saveButton.onclick = function saveButtonOnclickCallback() {
         SaveDatasets();
@@ -81,8 +91,10 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     loadButton.style.zIndex = "2";
     loadButton.style.position = "absolute";
     loadButton.style.top = "5px";
-    loadButton.style.left = "51px";
-    loadButton.style.height = "20px";
+    loadButton.style.left = "45px";
+    loadButton.style.height = "18px";
+    loadButton.style.width = "40px";
+    loadButton.style.padding = "0px";
     loadButton.style.cursor = "pointer";
     loadButton.onclick = function loadButtonOnclickCallback() {
         LoadDatasets();
@@ -90,6 +102,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(loadButton);
 }
 
+/*
 function UpdateChart(humidity, temperature, dewPoint) {
     if (!humidity || !temperature || !dewPoint) {
         return;
@@ -109,6 +122,7 @@ function UpdateChart(humidity, temperature, dewPoint) {
     lineChart.update();
     SaveDatasets();
 }
+*/
 
 function UpdateChartDevice(hostname, data) {
     //console.debug(LastStackCall() + ": hostname:" + hostname + " data:" + data);
@@ -169,7 +183,6 @@ function AddDataset(name, color) {
     dataset.data = [];
     dataset.fill = false;
     dataset.borderColor = color;
-    //dataset.lineTension = 0.1;
     lineChart.data.datasets.push(dataset);
     lineChart.update();
 }
