@@ -1,6 +1,68 @@
 "use strict";
 let DEBUG = 0;
 
+//A Convienient Debug Button Function
+/////////////////////////////
+const showDebugButton = 1;
+function DebugButtonOnClick() {
+    PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND");
+}
+
+/////////////////////////////////////////////////////
+function PHP_StringToFile(file, data, mode, callback) {
+    CallPhpFunc(arguments);
+}
+
+function CallPhpFunc(args) {
+    let funcName = GetCurrentFunctionName(1).replace("PHP_", "");
+    let jsonData = {
+        func: funcName,
+        args: []
+    };
+    for (let n = 0; n < args.length; n++) {
+        if (typeof (args[n]) === "function") {
+            continue;
+        }
+        let newArg = new Object;
+        newArg[typeof (args[n])] = args[n];
+        jsonData.args.push(newArg);
+    }
+    //console.log(JSON.stringify(jsonData));
+    let data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
+    let url = "http://192.168.1.78:8000/DK.php?" + data;
+    DKSendRequest(url, function(success, url, data) {
+        if (typeof (args[args.length - 1]) === "function") {
+            args[args.length - 1](data);
+        }
+    });
+}
+
+/*
+///////////////////////////////////////
+function CallPhpFunction(str, callback) {
+    let func = str.split("(").shift();
+    str = str.replace(func, "");
+    str = str.replace("(", "");
+    str = str.replace(")", "");
+    let arg = str.split(",");
+    let jsonData = {
+        func: func,
+        args: []
+    };
+    for (let n = 0; n < arg.length; n++) {
+        arg[n] = arg[n].trim();
+        let newArg = new Object;
+        newArg[typeof (arg[n])] = arg[n];
+        jsonData.args.push(newArg);
+    }
+    let data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
+    let url = "http://192.168.1.78:8000/DK.php?" + data;
+    DKSendRequest(url, function(success, url, data) {
+        callback(data);
+    });
+}
+*/
+
 function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
     let debugDiv = document.createElement("div");
     debugDiv.style.position = "absolute";
@@ -16,6 +78,9 @@ function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
 }
 
 function CreateDebugButton(parent, id, top, bottom, left, right, width, height) {
+    if (!showDebugButton) {
+        return;
+    }
     let debugButton = document.createElement("button");
     debugButton.innerHTML = "DEBUG";
     debugButton.style.position = "absolute";
@@ -25,18 +90,19 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     debugButton.style.right = right;
     debugButton.style.width = width;
     debugButton.style.height = height;
-    debugButton.onclick = function(){
-        TestStackTrace("moe", "larry", "curly")
-    };
+    debugButton.onclick = function() {
+        DebugButtonOnClick();
+    }
+    ;
     parent.appendChild(debugButton);
     return debugButton;
 }
 
 ////////////////////////////////
 function TestStackTrace(a, b, c) {
-    
-    DKSendRequest("DKFile.php", function(){
-       dkconsole.debug("finnished writing the file"); 
+
+    DKSendRequest("DKFile.php", function() {
+        dkconsole.debug("finnished writing the file");
     });
 
     //dkconsole.trace();

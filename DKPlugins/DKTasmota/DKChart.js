@@ -56,14 +56,14 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
-    AddDataset("Temperature", "rgb(200, 0, 0)");
-    AddDataset("Humidity", "rgb(0, 0, 200)");
-    AddDataset("DewPoint", "rgb(0,150,150)");
-    AddDataset("ExhaustFan", "rgb(150,0,150)");
+    AddDataset("Temperature", "rgb(200, 0, 0)", "Device013");
+    AddDataset("Humidity", "rgb(0, 0, 200)", "Device013");
+    AddDataset("DewPoint", "rgb(0,150,150)", "Device013");
+    AddDataset("ExhaustFan", "rgb(150,0,150)", "Device005");
     lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
-    AddDataset("WaterWalls", "rgb(90,0,150)");
+    AddDataset("WaterWalls", "rgb(90,0,150)", "Device007");
     lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
-    AddDataset("Heater", "rgb(150,0,50)");
+    AddDataset("Heater", "rgb(150,0,50)", "Device006");
     lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
     LoadDatasets();
 
@@ -101,28 +101,6 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     }
     chartDiv.appendChild(loadButton);
 }
-
-/*
-function UpdateChart(humidity, temperature, dewPoint) {
-    if (!humidity || !temperature || !dewPoint) {
-        return;
-    }
-    lineChart.data.datasets[0].data.push({
-        t: new Date(),
-        y: parseFloat(temperature)
-    });
-    lineChart.data.datasets[1].data.push({
-        t: new Date(),
-        y: parseFloat(humidity)
-    });
-    lineChart.data.datasets[2].data.push({
-        t: new Date(),
-        y: parseFloat(dewPoint)
-    });
-    lineChart.update();
-    SaveDatasets();
-}
-*/
 
 function UpdateChartDevice(hostname, data) {
     //console.debug(LastStackCall() + ": hostname:" + hostname + " data:" + data);
@@ -174,11 +152,17 @@ function UpdateChartDevice(hostname, data) {
         });
     }
     lineChart.update();
-    SaveDatasets();
+    SaveDatasets(hostname);
+
+    let currentdate = new Date();
+    let stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear() + "_" + currentdate.getHours();
+    const entry = JSON.stringify({t:currentdate,y:data});
+    PHP_StringToFile(stamp+hostname+".txt", entry, "FILE_APPEND");
 }
 
-function AddDataset(name, color) {
+function AddDataset(name, color, hostname) {
     var dataset = {};
+    dataset.hostname = hostname;
     dataset.label = name;
     dataset.data = [];
     dataset.fill = false;
@@ -187,10 +171,13 @@ function AddDataset(name, color) {
     lineChart.update();
 }
 
-function SaveDatasets() {
+function SaveDatasets(hostname) {
     for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        let data = JSON.stringify(lineChart.data.datasets[d].data);
-        SaveToLocalStorage(lineChart.data.datasets[d].label, data);
+        if(lineChart.data.datasets[d].hostname === hostname){
+            let data = JSON.stringify(lineChart.data.datasets[d].data);
+            SaveToLocalStorage(lineChart.data.datasets[d].label, data);
+            //PHP_StringToFile(stamp+hostname+".txt", data);
+        }
     }
 }
 

@@ -42,7 +42,9 @@ function DKSendSuperRequest(url, callback) {
     });
 }
 
-function DKSendRequest(url, callback) {
+function DKSendRequest(url, callback){
+    if(!url){ dkconsole.error(LastStackCall()+" url invalid"); }
+    if(callback.length<3){ dkconsole.error(LastStackCall()+" callback requires 3 arguments"); }
     let xhr = "";
     try {
         xhr = new XMLHttpRequest();

@@ -67,9 +67,6 @@ function StackToJSON(stack) {
             line = line.replace(func, "");
         }
 
-        
-        
-
         let charNum = line.split(":").pop();
         line = line.replace(":" + charNum, "");
 
@@ -140,4 +137,8 @@ function GetArguments(func, getArgValues) {
     }
     argsString = args.toString();
     return argsString;
+}
+
+function GetCurrentFunctionName(n){ 
+    return new Error().stack.split('\n')[2+n].trim().split(" ")[1]; 
 }
