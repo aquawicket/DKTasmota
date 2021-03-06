@@ -7,12 +7,12 @@ let dewPoint;
 let bypassRules = [];
 
 let tempTarget = 77;
-let tempCalib = -5;
+let tempCalib = -1;
 let tempMin = tempTarget - 10;
 let tempMax = tempTarget + 10;
 
 let humTarget = 50;
-let humCalib = -13;
+let humCalib = -10;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
 
