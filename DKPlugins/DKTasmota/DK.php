@@ -64,40 +64,14 @@ function StringToFile($file, $data, $mode)
     	echo file_put_contents($file, $data);
     }
 }
-/*
-if($_GET["StringToFile"])
-{
-	//var file;
-	//var string;
-	echo StringToFile($_GET["StringToFile"]);
-}
-*/
-/*
+
 function GetTime()
 {
-	var str;
-	str = "Today is " . date("Y/m/d") . "<br>";
-    str += "Today is " . date("Y.m.d") . "<br>";
-    str += "Today is " . date("Y-m-d") . "<br>";
-    str += "Today is " . date("l");
-    return "GetTime return string";
-    
+	$str = "Today is " . date("Y/m/d") . "<br>";
+    $str .= "Today is " . date("Y.m.d") . "<br>";
+    $str .= "Today is " . date("Y-m-d") . "<br>";
+    $str .= "Today is " . date("l");
+    echo $str;
 }
-if($_GET["GetTime"])
-{
-	if(!$_GET["GetTime"]){ echo "DKERROR: GetTime variable empty"; die(); }
-	echo GetTime();
-}
-*/
-/*
-if(isset($_GET['action'])){
-    if(function_exists($_GET['action'])) {    
-        $_GET['action']($_GET['param']);
-    }
-}
-*/
-/*
-$func = filter_var($_GET["func"]);
-call_user_func($func);
-*/
+
 ?>

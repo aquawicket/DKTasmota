@@ -5,7 +5,18 @@ let DEBUG = 0;
 /////////////////////////////
 const showDebugButton = 1;
 function DebugButtonOnClick() {
-    PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND");
+    PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", PHP_return);
+    PHP_GetTime(PHP_return);
+}
+
+function PHP_return(rVal)
+{
+    console.log(rVal);
+}
+
+function PHP_GetTime()
+{
+    CallPhpFunc();
 }
 
 /////////////////////////////////////////////////////
@@ -19,7 +30,7 @@ function CallPhpFunc(args) {
         func: funcName,
         args: []
     };
-    for (let n = 0; n < args.length; n++) {
+    for (let n = 0; args && n < args.length; n++) {
         if (typeof (args[n]) === "function") {
             continue;
         }
@@ -27,12 +38,15 @@ function CallPhpFunc(args) {
         newArg[typeof (args[n])] = args[n];
         jsonData.args.push(newArg);
     }
-    //console.log(JSON.stringify(jsonData));
+    console.log(JSON.stringify(jsonData));
     let data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
     let url = "http://192.168.1.78:8000/DK.php?" + data;
     DKSendRequest(url, function(success, url, data) {
-        if (typeof (args[args.length - 1]) === "function") {
+        if (args && typeof (args[args.length - 1]) === "function") {
             args[args.length - 1](data);
+        }
+        else{
+            PHP_return(data);
         }
     });
 }

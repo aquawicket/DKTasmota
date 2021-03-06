@@ -157,7 +157,7 @@ function UpdateChartDevice(hostname, data) {
     let currentdate = new Date();
     let stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear() + "_" + currentdate.getHours();
     const entry = JSON.stringify({t:currentdate,y:data});
-    PHP_StringToFile(stamp+hostname+".txt", entry, "FILE_APPEND");
+    PHP_StringToFile("data/"+stamp+hostname+".txt", entry, "FILE_APPEND");
 }
 
 function AddDataset(name, color, hostname) {
