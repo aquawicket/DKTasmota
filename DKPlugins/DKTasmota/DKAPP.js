@@ -483,7 +483,7 @@ function ProcessRules() {
 
     //Water walls
     if (!bypassRules.includes("Device007") && waterWalls) {
-        if ((time < 17) && (temperature > tempTarget) && (humidity < humMax) || (humidity < humTarget) && (temperature > tempMin)) {
+        if ( (time < 17) && (humidity < humTarget) && (temperature > tempTarget) ){
             dkconsole.message("Water walls ON", "green");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
