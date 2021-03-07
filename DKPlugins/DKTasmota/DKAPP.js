@@ -31,6 +31,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKConsole.js");
+    DKLoadJSFile("DKPhp.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKNotifications.js");
     DKLoadJSFile("DKAudio.js");

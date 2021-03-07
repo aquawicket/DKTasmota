@@ -59,6 +59,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("Temperature", "rgb(200, 0, 0)", "Device013");
     AddDataset("Humidity", "rgb(0, 0, 200)", "Device013");
     AddDataset("DewPoint", "rgb(0,150,150)", "Device013");
+    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
     AddDataset("ExhaustFan", "rgb(150,0,150)", "Device005");
     lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
     AddDataset("WaterWalls", "rgb(90,0,150)", "Device007");
@@ -157,7 +158,7 @@ function UpdateChartDevice(hostname, data) {
     let currentdate = new Date();
     let stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
     const entry = JSON.stringify({t:currentdate,y:data});
-    PHP_StringToFile("data/"+stamp+hostname+".txt", entry, "FILE_APPEND");
+    PHP_StringToFile("data/"+stamp+hostname+".txt", entry, "FILE_APPEND", noCB);
 }
 
 function AddDataset(name, color, hostname) {
