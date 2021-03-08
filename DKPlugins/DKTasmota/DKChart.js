@@ -105,44 +105,38 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
 
 function UpdateChartDevice(hostname, data) {
     //console.debug(LastStackCall() + ": hostname:" + hostname + " data:" + data);
-    if (!hostname || !data) {
+    if (!hostname) {
         return;
     }
     if (hostname === "Device013") {
         //Temperature/Humidity sensor
         var json = JSON.parse(data);
         if (json.temperature) {
-            const size = lineChart.data.datasets[0].data.length;
-            const lastValue = lineChart.data.datasets[0].data[size - 1].y;
-            if (parseFloat(json.temperature) === lastValue) {
-                lineChart.data.datasets[0].data.pop();
-                console.log("temperature the same");
+            const tData = lineChart.data.datasets[0].data;
+            if (tData.length && parseFloat(json.temperature) === tData[tData.length - 1].y) {
+                tData.pop();
             }
-            lineChart.data.datasets[0].data.push({
+            tData.push({
                 t: new Date(),
                 y: parseFloat(json.temperature)
             });
         }
         if (json.humidity) {
-            const size = lineChart.data.datasets[1].data.length;
-            const lastValue = lineChart.data.datasets[1].data[size - 1].y;
-            if (parseFloat(json.humidity) === lastValue) {
-                lineChart.data.datasets[1].data.pop();
-                console.log("humidity the same");
+            const hData = lineChart.data.datasets[1].data;
+            if (hData.length && parseFloat(json.humidity) === hData[hData.length - 1].y) {
+                hData.pop();
             }
-            lineChart.data.datasets[1].data.push({
+            hData.push({
                 t: new Date(),
                 y: parseFloat(json.humidity)
             });
         }
         if (json.dewPoint) {
-            const size = lineChart.data.datasets[2].data.length;
-            const lastValue = lineChart.data.datasets[2].data[size - 1].y;
-            if (parseFloat(json.dewPoint) == lastValue) {
-                lineChart.data.datasets[2].data.pop();
-                console.log("dewPoint the same");
+            const dData = lineChart.data.datasets[2].data;
+            if (dData.length && parseFloat(json.dewPoint) === dData[dData.length - 1].y) {
+                dData.pop();
             }
-            lineChart.data.datasets[2].data.push({
+            dData.push({
                 t: new Date(),
                 y: parseFloat(json.dewPoint)
             });
@@ -150,21 +144,48 @@ function UpdateChartDevice(hostname, data) {
     }
     if (hostname === "Device005") {
         //ExhaustFan
-        lineChart.data.datasets[3].data.push({
+        const ex = lineChart.data.datasets[3].data;
+        if (ex.length && data === ex[ex.length - 1].y) {
+            ex.pop();
+        } else {
+            ex.push({
+                t: new Date(),
+                y: data
+            });
+        }
+        ex.push({
             t: new Date(),
             y: data
         });
     }
     if (hostname === "Device007") {
         //WaterWalls
-        lineChart.data.datasets[4].data.push({
+        const ww = lineChart.data.datasets[4].data;
+        if (ww.length && data === ww[ww.length - 1].y) {
+            ww.pop();
+        } else {
+            ww.push({
+                t: new Date(),
+                y: data
+            });
+        }
+        ww.push({
             t: new Date(),
             y: data
         });
     }
     if (hostname === "Device006") {
         //Heater
-        lineChart.data.datasets[5].data.push({
+        const he = lineChart.data.datasets[5].data;
+        if (he.length && data === he[he.length - 1].y) {
+            he.pop();
+        } else {
+            he.push({
+                t: new Date(),
+                y: data
+            });
+        }
+        he.push({
             t: new Date(),
             y: data
         });
@@ -172,13 +193,14 @@ function UpdateChartDevice(hostname, data) {
     lineChart.update();
     SaveDatasets(hostname);
 
+    //agressive file saving. Saving every minute of every device
     let currentdate = new Date();
     let stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
     const entry = JSON.stringify({
         t: currentdate,
         y: data
     });
-    PHP_StringToFile("data/" + stamp + hostname + ".txt", entry, "FILE_APPEND", noCB);
+    PHP_StringToFile("data/" + stamp + hostname + ".txt", entry, "FILE_APPEND");
 }
 
 function AddDataset(name, color, hostname) {
@@ -186,6 +208,7 @@ function AddDataset(name, color, hostname) {
     dataset.hostname = hostname;
     dataset.label = name;
     dataset.data = [];
+    dataset.lineTension = 0;
     dataset.fill = false;
     dataset.borderColor = color;
     lineChart.data.datasets.push(dataset);
@@ -197,7 +220,6 @@ function SaveDatasets(hostname) {
         if (lineChart.data.datasets[d].hostname === hostname) {
             let data = JSON.stringify(lineChart.data.datasets[d].data);
             SaveToLocalStorage(lineChart.data.datasets[d].label, data);
-            //PHP_StringToFile(stamp+hostname+".txt", data);
         }
     }
 }
