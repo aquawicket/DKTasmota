@@ -49,23 +49,23 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
                 }]
             },
             elements: {
-                    point:{
-                        radius: 0.5
-                    }
+                point: {
+                    radius: 0.5
                 }
+            }
         }
     });
 
     AddDataset("Temperature", "rgb(200, 0, 0)", "Device013");
     AddDataset("Humidity", "rgb(0, 0, 200)", "Device013");
     AddDataset("DewPoint", "rgb(0,150,150)", "Device013");
-    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
+    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
     AddDataset("ExhaustFan", "rgb(150,0,150)", "Device005");
-    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
+    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
     AddDataset("WaterWalls", "rgb(90,0,150)", "Device007");
-    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
+    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
     AddDataset("Heater", "rgb(150,0,50)", "Device006");
-    lineChart.data.datasets[lineChart.data.datasets.length-1].hidden = true;
+    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
     LoadDatasets();
 
     //Save Button
@@ -105,26 +105,43 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
 
 function UpdateChartDevice(hostname, data) {
     //console.debug(LastStackCall() + ": hostname:" + hostname + " data:" + data);
-    if (!hostname) {
+    if (!hostname || !data) {
         return;
     }
     if (hostname === "Device013") {
         //Temperature/Humidity sensor
-        if(!data){ return; }
         var json = JSON.parse(data);
-        if(json.temperature){
+        if (json.temperature) {
+            const size = lineChart.data.datasets[0].data.length;
+            const lastValue = lineChart.data.datasets[0].data[size - 1].y;
+            if (parseFloat(json.temperature) === lastValue) {
+                lineChart.data.datasets[0].data.pop();
+                console.log("temperature the same");
+            }
             lineChart.data.datasets[0].data.push({
                 t: new Date(),
                 y: parseFloat(json.temperature)
             });
         }
-        if(json.humidity){
+        if (json.humidity) {
+            const size = lineChart.data.datasets[1].data.length;
+            const lastValue = lineChart.data.datasets[1].data[size - 1].y;
+            if (parseFloat(json.humidity) === lastValue) {
+                lineChart.data.datasets[1].data.pop();
+                console.log("humidity the same");
+            }
             lineChart.data.datasets[1].data.push({
                 t: new Date(),
                 y: parseFloat(json.humidity)
             });
         }
-        if(json.dewPoint){
+        if (json.dewPoint) {
+            const size = lineChart.data.datasets[2].data.length;
+            const lastValue = lineChart.data.datasets[2].data[size - 1].y;
+            if (parseFloat(json.dewPoint) == lastValue) {
+                lineChart.data.datasets[2].data.pop();
+                console.log("dewPoint the same");
+            }
             lineChart.data.datasets[2].data.push({
                 t: new Date(),
                 y: parseFloat(json.dewPoint)
@@ -157,8 +174,11 @@ function UpdateChartDevice(hostname, data) {
 
     let currentdate = new Date();
     let stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
-    const entry = JSON.stringify({t:currentdate,y:data});
-    PHP_StringToFile("data/"+stamp+hostname+".txt", entry, "FILE_APPEND", noCB);
+    const entry = JSON.stringify({
+        t: currentdate,
+        y: data
+    });
+    PHP_StringToFile("data/" + stamp + hostname + ".txt", entry, "FILE_APPEND", noCB);
 }
 
 function AddDataset(name, color, hostname) {
@@ -174,7 +194,7 @@ function AddDataset(name, color, hostname) {
 
 function SaveDatasets(hostname) {
     for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        if(lineChart.data.datasets[d].hostname === hostname){
+        if (lineChart.data.datasets[d].hostname === hostname) {
             let data = JSON.stringify(lineChart.data.datasets[d].data);
             SaveToLocalStorage(lineChart.data.datasets[d].label, data);
             //PHP_StringToFile(stamp+hostname+".txt", data);

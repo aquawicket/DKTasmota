@@ -282,6 +282,8 @@ function UpdateScreen(success, url, data) {
     //let row = DKTableGetRowByName(table, ip); //need ip for this
     if (!row) {
         dkconsole.error(LastStackCall() + "<br>  at if(!row)");
+        dkconsole.error("success:"+success+" url:"+url+" data:"+data);
+        dkconsole.trace();
         return;
     }
 
