@@ -55,14 +55,13 @@ function DKLoadPage() {
     CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
     //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
-    CreateDebugButton(document.body, "debug_button", "23px","","","5px","63px","20px");
-    
+    CreateDebugButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
+
     //Load devices from local storage
-    let deviceIPs;
-    if (deviceIPs = LoadFromLocalStorage("deviceIPs")) {
-        deviceIPs = deviceIPs.split("^");
-        dkconsole.log("attempting to restore "+deviceIPs.length+" devices");
-        for (let n = 0; n < deviceIPs.length - 1; n++) {
+    let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
+    if (deviceIPs) {
+        dkconsole.log("Loading " + deviceIPs.length + " devices");
+        for (let n = 0; n < deviceIPs.length; n++) {
             let ip = deviceIPs[n];
             AddDevice(ip);
         }
@@ -150,6 +149,40 @@ function CreateDeviceTable(parent) {
 
 //////////////////////
 function AddDevice(ip) {
+    let table = document.getElementById("deviceTable");
+    let _row = DKTableAddRow(table, ip);
+    _row.setAttribute("ip", ip);
+    if(_row.rowIndex % 2 == 0) {
+        //even
+        _row.style.backgroundColor = "rgb(90,90,90)";
+    } else {
+        //odd
+        _row.style.backgroundColor = "rgb(60,60,60)";
+    }
+    let cell;
+    //cell = row.cells[0];
+    cell = DKTableGetCellByNames(table, ip, "device");
+    cell.innerHTML = "<a>" + ip + "</a>";
+    cell.style.cursor = "pointer";
+    cell.onclick = function CellOnClickCallback() {
+         let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+    }
+    //cell = row.cells[2];
+    cell = DKTableGetCellByNames(table, ip, "data");
+    //cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
+    cell.style.textAlign = "center";
+
+    //cell = row.cells[3];
+    cell = DKTableGetCellByNames(table, ip, "wifi");
+    //cell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
+    cell.style.textAlign = "center";
+
+    //cell = table.rows[0].cells[0];
+    cell = DKTableGetCellByNames(table, "HEADER", "device");
+    cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
+    DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+
+
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function DKSendRequestCallback(success, url, data) {
         if (!success) {
             dkconsole.trace();
@@ -164,36 +197,11 @@ function AddDevice(ip) {
             dkconsole.error(LastStackCall() + "<br>  at if(!device.Hostname)");
             return;
         }
+           
+        let row = DKTableGetRowByName(table, ip);
         let hostname = device.Hostname;
-        let table = document.getElementById("deviceTable");
-        let row = DKTableAddRow(table, ip);
-        //let row = table.rows[table.rows.length - 1];
-        if (row.rowIndex % 2 == 0) {
-            //even
-            row.style.backgroundColor = "rgb(100,100,100)";
-        } else {
-            //odd
-            row.style.backgroundColor = "rgb(70,70,70)";
-        }
-
-        row.setAttribute("ip", ip);
         row.setAttribute("hostname", hostname);
 
-        // cell = row.cells[n]; will return the cell by index numbers.
-        // cell = DKTableGetCellByNames(table, "rowName", "columbName"); will return the cell by names
-        // If the table is changed, by index will be become wrong. 
-        // cell By names should stay consistant upon changes to the table. 
-
-        let cell;
-        //cell = row.cells[0];
-        cell = DKTableGetCellByNames(table, ip, "device");
-        cell.innerHTML = "<a>" + ip + "</a>";
-        cell.style.cursor = "pointer";
-        cell.onclick = function CellOnClickCallback() {
-            let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
-        }
-
-        //cell = row.cells[1];
         cell = DKTableGetCellByNames(table, ip, "power");
         cell.style.textAlign = "center";
         cell.style.cursor = "pointer";
@@ -205,58 +213,25 @@ function AddDevice(ip) {
                 dkconsole.warn("Temporarily added " + hostname + " to bypass automation, refresh page to reset");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
-        }
-
-        // TEST /////
-        //Add a coulum to test retrieving cells by index vs cells by name
-        //DKTableAddColumn(table, "debug");
-        //Event though many Columns were added on this itteration, cell by name still works
-        //////////////
-
-        //cell = row.cells[2];
-        cell = DKTableGetCellByNames(table, ip, "data");
-        //cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
-        cell.style.textAlign = "center";
-
-        //cell = row.cells[3];
-        cell = DKTableGetCellByNames(table, ip, "wifi");
-        //cell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
-        cell.style.textAlign = "center";
-
-        //cell = table.rows[0].cells[0];
-        cell = DKTableGetCellByNames(table, "HEADER", "device");
-        cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-        DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+        }       
     });
 }
 
 //////////////////////
 function ScanDevices() {
-    let table = document.getElementById("deviceTable");
-    table.parentNode.remove(table);
-    CreateDeviceTable(document.body);
-
-    let deviceIPs =  "";// = LoadFromLocalStorage("deviceIPs");
+    let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
     GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip) {
-            //for(let d=0; d<table.rows.length; d++){
-            //    if(table.rows[d].getAttribute("ip") === ip){
-                    //return;
-            //}
-            //}
-            AddDevice(ip);
-
-            //Save to local storage
-            if(!deviceIPs.includes(ip)) {
-                deviceIPs = deviceIPs + ip + "^";
-                SaveToLocalStorage("deviceIPs", deviceIPs);
+            if (ip && !deviceIPs.includes(ip)) {
+                deviceIPs.push(ip);
+                SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
+                AddDevice(ip);
             }
         }
         if (done) {
             dkconsole.log("\n");
             dkconsole.message("Scan Complete", "green");
-            dkconsole.message("(" + tasmotaDeviceCount + ") Tasmota Devices found", "green");
-            SaveToLocalStorage("deviceIPs", deviceIPs);
+            dkconsole.message("(" + deviceIPs.length + ") Tasmota Devices found", "green");
         }
     });
 }
@@ -303,7 +278,7 @@ function UpdateScreen(success, url, data) {
             continue;
         }
     }
- 
+
     //let row = DKTableGetRowByName(table, ip); //need ip for this
     if (!row) {
         dkconsole.error(LastStackCall() + "<br>  at if(!row)");
@@ -415,9 +390,13 @@ function UpdateScreen(success, url, data) {
         document.getElementById("RH").style.textAlilgn = "center";
         document.getElementById("DewP").style.color = "rgb(50,50,50)";
         document.getElementById("DewP").style.textAlign = "center";
-        
-        if(temperature && humidity && dewPoint){
-            var data = {temperature: temperature, humidity: humidity, dewPoint: dewPoint};
+
+        if (temperature && humidity && dewPoint) {
+            var data = {
+                temperature: temperature,
+                humidity: humidity,
+                dewPoint: dewPoint
+            };
             UpdateChartDevice(row.getAttribute("hostname"), JSON.stringify(data));
         }
     }
@@ -483,7 +462,7 @@ function ProcessRules() {
 
     //Water walls
     if (!bypassRules.includes("Device007") && waterWalls) {
-        if ( (time < 17) && (humidity < humTarget) && (temperature > tempTarget) ){
+        if ((time < 17) && (humidity < humTarget) && (temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {

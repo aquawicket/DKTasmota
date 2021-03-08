@@ -50,6 +50,7 @@ let console_group = console.group;
 }());
 
 window.onerror = function(msg, url, lineNo, columnNo, error) {
+    if(!error){ return; }
     dkconsole.error(StackToConsoleString(error.stack));
     return false;
 }
