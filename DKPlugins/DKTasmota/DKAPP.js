@@ -452,7 +452,7 @@ function ProcessRules() {
 
     //Exhaust fan
     if (!bypassRules.includes("Device005") && exhaustFan) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
+        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin) || (humidity > 80)) {
             dkconsole.message("Exhaust Fan ON", "green");
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
 
