@@ -200,7 +200,9 @@ function UpdateChartDevice(hostname, data) {
         t: currentdate,
         y: data
     });
-    PHP_StringToFile("data/" + stamp + hostname + ".txt", entry, "FILE_APPEND");
+    if(`${window.location.protocol}` != "file:"){
+        PHP_StringToFile("data/" + stamp + hostname + ".txt", entry, "FILE_APPEND");
+    }
 }
 
 function AddDataset(name, color, hostname) {
