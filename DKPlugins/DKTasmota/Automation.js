@@ -46,7 +46,7 @@ function ProcessRules() {
 
     //Co2
     if (!bypassRules.includes("Device008") && co2) {
-        if ((temperature < tempTarget) && (humidity < humTarget)) {
+        if ((temperature < tempMax) && (humidity < humMax)) {
             dkconsole.message("Co2 ON", "green");
             //When using Co2, temperature should be 85 degrees
             tempTarget = 85;

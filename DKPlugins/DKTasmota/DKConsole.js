@@ -74,7 +74,7 @@ function StackToConsoleString(stack) {
 }
 
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
-    DKLoadCSSFile("dkconsole.css");
+    DKLoadCSSFile("DKConsole.css");
     let dkconsoleFrame = document.createElement("div");
     dkconsoleFrame.style.padding = "0px";
     dkconsoleFrame.style.margin = "0px";

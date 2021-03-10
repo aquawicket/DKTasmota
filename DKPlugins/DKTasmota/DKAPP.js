@@ -109,7 +109,7 @@ let tempCalib = -1;
 let tempMin = tempTarget - 10;
 let tempMax = tempTarget + 10;
 
-let humTarget = 45;
+let humTarget = 50;
 let humCalib = -10;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
@@ -129,6 +129,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKConsole.js");
+    DKLoadJSFile("DKJson.js");
     DKLoadJSFile("DKPhp.js");
     DKLoadJSFile("DKDebug.js");
     DKLoadJSFile("DKNotifications.js");
@@ -366,6 +367,10 @@ function UpdateScreen(success, url, data) {
         PlaySound("PowerDown.mp3");
         return;
     }
+
+    let jsonString = PrettyJson(data);
+    let jsonSuper = HighlightJson(jsonString);
+    dkconsole.log(jsonSuper);
 
     let table = document.getElementById("deviceTable");
     let row;
