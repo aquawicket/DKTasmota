@@ -57,12 +57,12 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
-    AddDataset("Temperature", "rgb(200, 0, 0)", "", "Device013", false);
-    AddDataset("Humidity", "rgb(0, 0, 200)", "", "Device013", false);
-    AddDataset("DewPoint", "rgb(0,150,150)", "", "Device013", true);
-    AddDataset("ExhaustFan", "rgb(150,0,150)", "", "Device005", true);
-    AddDataset("WaterWalls", "rgb(90,0,150)", "", "Device007", true);
-    AddDataset("Heater", "rgb(150,0,50)", "", "Device006", true);
+    AddDataset("Temperature", "rgb(200, 0, 0)", "192.168.1.99", false);
+    AddDataset("Humidity", "rgb(0, 0, 200)", "192.168.1.99", false);
+    AddDataset("DewPoint", "rgb(0,150,150)", "192.168.1.99", true);
+    AddDataset("ExhaustFan", "rgb(150,0,150)", "192.168.1.64", true);
+    AddDataset("WaterWalls", "rgb(90,0,150)", "192.168.1.117", true);
+    AddDataset("Heater", "rgb(150,0,50)", "192.168.1.163", true);
     LoadDatasets();
 
     //Save Button
@@ -100,12 +100,11 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(loadButton);
 }
 
-function UpdateChartDevice(hostname, data) {
-    //console.debug(LastStackCall() + ": hostname:" + hostname + " data:" + data);
-    if (!hostname) {
+function UpdateChartDevice(ip, data) {
+    if (!ip){
         return;
     }
-    if (hostname === "Device013") {
+    if(ip === "192.168.1.99"){
         //Temperature/Humidity sensor
         var json = JSON.parse(data);
         if (json.temperature) {
@@ -139,7 +138,7 @@ function UpdateChartDevice(hostname, data) {
             });
         }
     }
-    if (hostname === "Device005") {
+    if(ip === "192.168.1.64"){
         //ExhaustFan
         const ex = lineChart.data.datasets[3].data;
         if (ex.length && data === ex[ex.length - 1].y) {
@@ -155,7 +154,7 @@ function UpdateChartDevice(hostname, data) {
             y: data
         });
     }
-    if (hostname === "Device007") {
+    if(ip === "192.168.1.177"){
         //WaterWalls
         const ww = lineChart.data.datasets[4].data;
         if (ww.length && data === ww[ww.length - 1].y) {
@@ -171,7 +170,7 @@ function UpdateChartDevice(hostname, data) {
             y: data
         });
     }
-    if (hostname === "Device006") {
+    if(ip === "192.168.1.163"){
         //Heater
         const he = lineChart.data.datasets[5].data;
         if (he.length && data === he[he.length - 1].y) {
@@ -188,7 +187,7 @@ function UpdateChartDevice(hostname, data) {
         });
     }
     lineChart.update();
-    SaveDatasets(hostname);
+    SaveDatasets(ip);
 
     //agressive file saving. Saving every minute of every device
     let currentdate = new Date();
@@ -198,14 +197,13 @@ function UpdateChartDevice(hostname, data) {
         y: data
     });
     if(`${window.location.protocol}` != "file:"){
-        PHP_StringToFile("data/" + stamp + hostname + ".txt", entry, "FILE_APPEND");
+        PHP_StringToFile("data/" + stamp + ip + ".txt", entry, "FILE_APPEND");
     }
 }
 
-function AddDataset(name, color, ip, hostname, hidden) {
+function AddDataset(name, color, ip, hidden) {
     var dataset = {};
     dataset.ip;
-    dataset.hostname = hostname;
     dataset.label = name;
     dataset.data = [];
     dataset.lineTension = 0;
@@ -216,9 +214,9 @@ function AddDataset(name, color, ip, hostname, hidden) {
     lineChart.update();
 }
 
-function SaveDatasets(hostname) {
+function SaveDatasets(ip) {
     for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        if (lineChart.data.datasets[d].hostname === hostname) {
+        if (lineChart.data.datasets[d].ip === ip) {
             let data = JSON.stringify(lineChart.data.datasets[d].data);
             SaveToLocalStorage(lineChart.data.datasets[d].label, data);
         }

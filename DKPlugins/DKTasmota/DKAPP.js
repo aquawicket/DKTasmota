@@ -3,14 +3,18 @@
 // New, unutalized variable structures, practice code
 
 // Date/Time 
-let dateEvent = new Date();              //format: August 19, 1975 23:15:30 UTC
-let date      = dateEvent.toJSON();      //format: 1975-08-19T23:15:30.000Z
-let utcDate   = dateEvent.toUTCString(); //format: Tue, 19 Aug 1975 23:15:30 GMT
+let dateEvent = new Date();
+//format: August 19, 1975 23:15:30 UTC
+let date = dateEvent.toJSON();
+//format: 1975-08-19T23:15:30.000Z
+let utcDate = dateEvent.toUTCString();
+//format: Tue, 19 Aug 1975 23:15:30 GMT
 
 // Device Array
 let devices = [];
 // Basic device response structure
-let device = {
+let theDevice = {
+    "ip": "192.168.1.0",
     "Status": {
         "Module": 1,
         "FriendlyName": "XXX",
@@ -94,7 +98,6 @@ let device = {
         }
     }
 }
-
 
 // Currently functioning variables, implemented code.
 let time;
@@ -249,6 +252,20 @@ function CreateDeviceTable(parent) {
 
 //////////////////////
 function AddDevice(ip) {
+    let dev = {
+        "ip": ip,
+        "Status": {},
+        "StatusPRM": {},
+        "StatusFWR": {},
+        "StatusLOG": {},
+        "StatusMEM": {},
+        "StatusNET": {},
+        "StatusTIM": {},
+        "StatusSNS": {},
+        "StatusSTS": {}
+    }
+    devices.push(dev);
+
     let table = document.getElementById("deviceTable");
     let _row = DKTableAddRow(table, ip);
     _row.setAttribute("ip", ip);
@@ -293,6 +310,7 @@ function AddDevice(ip) {
     cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
 
+    /*
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function DKSendRequestCallback(success, url, data) {
         if (!success) {
             dkconsole.trace();
@@ -321,6 +339,7 @@ function AddDevice(ip) {
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
         }
     });
+    */
 }
 
 //////////////////////
@@ -380,12 +399,56 @@ function UpdateScreen(success, url, data) {
     //let jsonSuper = HighlightJson(jsonString);
     //console.log(jsonSuper);
 
+    let device;
+    for (let d = 0; d < devices.length; d++) {
+        if (url.includes(devices[d].ip)) {
+            device = devices[d];
+            break;
+        }
+    }
+    if(!device){
+        dkconsole.error(LastStackCall() + "<br>  at if(!device)");
+        dkconsole.error("success:" + success + " url:" + url + " data:" + data);
+        dkconsole.trace();
+        return;
+    }
+
+    let deviceData = JSON.parse(data);
+    deviceData.ip = device.ip;
+    device = deviceData;
+    /*
+    if (deviceData.DeviceName) {
+        device.Status.DeviceName = deviceData.DeviceName;
+    }
+    if (deviceData.Hostname) {
+        device.StatusNET.Hostname = deviceData.Hostname;
+    }
+    if (deviceData.Power) {
+        device.StatusSTS.Power = deviceData.Power;
+    }
+    if (deviceData.Wifi) {
+        device.StatusSTS.Wifi = deviceData.Wifi;
+    }
+    if (deviceData.Status) {
+        device.Status = deviceData.Status;
+    }
+    if (deviceData.StatusNET) {
+        device.StatusNET = deviceData.StatusNET;
+    }
+    if (deviceData.StatusSTS) {
+        device.StatusSTS = deviceData.StatusSTS;
+    }
+    if (deviceData.StatusSNS) {
+        device.StatusSNS = deviceData.StatusSNS;
+    }
+    */
+
     let table = document.getElementById("deviceTable");
     let row;
     for (let n = 1; n < table.rows.length; n++) {
-        if (url.includes(table.rows[n].getAttribute("ip")) || url.includes(table.rows[n].getAttribute("hostname"))) {
+        if (table.rows[n].getAttribute("ip") === device.ip) {
             row = table.rows[n];
-            continue;
+            break;
         }
     }
 
@@ -397,35 +460,31 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    let device = JSON.parse(data);
-    let ip = row.getAttribute("ip");
-
-    let deviceHostname = device.StatusNet ? device.StatusNet.Hostname : device.Hostname;
-    if (deviceHostname) {
+    //if (device.StatusNET.Hostname) {
         //DKTableGetCellByNames(table, ip, "device");
-        row.setAttribute("Hostname", deviceHostname);
+        //row.setAttribute("Hostname", device.StatusNET.Hostname);
+    //}
+
+    //let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
+    if (device.Status.DeviceName) {
+        row.cells[0].innerHTML = "<a>" + device.Status.DeviceName + "</a>";
     }
 
-    let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
-    if (deviceName) {
-        row.cells[0].innerHTML = "<a>" + deviceName + "</a>";
-    }
-
-    let devicePower = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
-    if (devicePower) {
-        row.cells[1].innerHTML = "<a>" + devicePower + "</a>";
-        if (devicePower === "ON") {
+    //let devicePower = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
+    if (device.StatusSTS.POWER) {
+        row.cells[1].innerHTML = "<a>" + device.StatusSTS.POWER + "</a>";
+        if (device.StatusSTS.POWER === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            UpdateChartDevice(row.getAttribute("hostname"), 100);
+            UpdateChartDevice(device.ip, 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            UpdateChartDevice(row.getAttribute("hostname"), 0);
+            UpdateChartDevice(device.ip, 0);
         }
     }
 
-    let deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
-    if (deviceSI7021) {
-        temperature = (deviceSI7021.Temperature + tempCalib).toFixed(1);
+    //let deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
+    if (device.StatusSNS.SI7021) {
+        temperature = (device.StatusSNS.SI7021.Temperature + tempCalib).toFixed(1);
         let tempDirection = " ";
         if (temperature > tempTarget) {
             tempDirection = "&#8593;"
@@ -439,7 +498,7 @@ function UpdateScreen(success, url, data) {
         let tempText = "<a id='Temp'>" + temperature + " &#176;F" + tempDirection + "</a>";
         let tempTargetText = "<a id='TempTarg'> (" + tempTarget + "&#176;F)</a>";
 
-        humidity = (deviceSI7021.Humidity + humCalib).toFixed(1);
+        humidity = (device.StatusSNS.SI7021.Humidity + humCalib).toFixed(1);
         let humDirection = " ";
         if (humidity > humTarget) {
             humDirection = "&#8593;"
@@ -451,7 +510,7 @@ function UpdateScreen(success, url, data) {
             humDirection = " ";
         }
 
-        dewPoint = (deviceSI7021.DewPoint).toFixed(1);
+        dewPoint = (device.StatusSNS.SI7021.DewPoint).toFixed(1);
 
         let humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         let humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
@@ -509,13 +568,13 @@ function UpdateScreen(success, url, data) {
                 humidity: humidity,
                 dewPoint: dewPoint
             };
-            UpdateChartDevice(row.getAttribute("hostname"), JSON.stringify(data));
+            UpdateChartDevice(device.ip, JSON.stringify(data));
         }
     }
 
-    let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
-    if (deviceWifi) {
-        let signal = deviceWifi.RSSI;
+    //let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
+    if (device.StatusSTS.Wifi) {
+        let signal = device.StatusSTS.Wifi.RSSI;
         let scale = 510;
         let num = (signal * scale / 100);
         let green = num;
