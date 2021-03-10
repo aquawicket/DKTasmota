@@ -11,7 +11,6 @@ DKLoadJSFile("moment.min.js", function() {
 
 var lineChart;
 
-
 function CreateChart(parent, id, top, bottom, left, right, width, height) {
     let chartDiv = document.createElement("div");
     chartDiv.id = id;
@@ -57,12 +56,12 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
-    AddDataset("Temperature", "rgb(200, 0, 0)", "192.168.1.99", false);
-    AddDataset("Humidity", "rgb(0, 0, 200)", "192.168.1.99", false);
-    AddDataset("DewPoint", "rgb(0,150,150)", "192.168.1.99", true);
-    AddDataset("ExhaustFan", "rgb(150,0,150)", "192.168.1.64", true);
-    AddDataset("WaterWalls", "rgb(90,0,150)", "192.168.1.117", true);
-    AddDataset("Heater", "rgb(150,0,50)", "192.168.1.163", true);
+    AddDataset("Temperature", "rgb(200, 0, 0)", temperatureIp, false);
+    AddDataset("Humidity", "rgb(0, 0, 200)", temperatureIp, false);
+    AddDataset("DewPoint", "rgb(0,150,150)", temperatureIp, true);
+    AddDataset("ExhaustFan", "rgb(150,0,150)", exhaustFanIp, true);
+    AddDataset("WaterWalls", "rgb(90,0,150)", waterWallsIp, true);
+    AddDataset("Heater", "rgb(150,0,50)", heaterIp, true);
     LoadDatasets();
 
     //Save Button
@@ -101,10 +100,10 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
 }
 
 function UpdateChartDevice(ip, data) {
-    if (!ip){
+    if (!ip) {
         return;
     }
-    if(ip === "192.168.1.99"){
+    if (ip === "192.168.1.99") {
         //Temperature/Humidity sensor
         var json = JSON.parse(data);
         if (json.temperature) {
@@ -138,7 +137,7 @@ function UpdateChartDevice(ip, data) {
             });
         }
     }
-    if(ip === "192.168.1.64"){
+    if (ip === "192.168.1.64") {
         //ExhaustFan
         const ex = lineChart.data.datasets[3].data;
         if (ex.length && data === ex[ex.length - 1].y) {
@@ -154,7 +153,7 @@ function UpdateChartDevice(ip, data) {
             y: data
         });
     }
-    if(ip === "192.168.1.177"){
+    if (ip === "192.168.1.177") {
         //WaterWalls
         const ww = lineChart.data.datasets[4].data;
         if (ww.length && data === ww[ww.length - 1].y) {
@@ -170,7 +169,7 @@ function UpdateChartDevice(ip, data) {
             y: data
         });
     }
-    if(ip === "192.168.1.163"){
+    if (ip === "192.168.1.163") {
         //Heater
         const he = lineChart.data.datasets[5].data;
         if (he.length && data === he[he.length - 1].y) {
@@ -196,7 +195,7 @@ function UpdateChartDevice(ip, data) {
         t: currentdate,
         y: data
     });
-    if(`${window.location.protocol}` != "file:"){
+    if (`${window.location.protocol}` != "file:") {
         PHP_StringToFile("data/" + stamp + ip + ".txt", entry, "FILE_APPEND");
     }
 }
@@ -230,4 +229,3 @@ function LoadDatasets() {
     }
     lineChart.update();
 }
-

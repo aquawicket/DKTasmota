@@ -10,10 +10,8 @@ function IsValidVarName(name) {
     return true;
 }
 
-function IsValidCallStack(stack){
-    //TODO
+function IsValidCallStack(stack) {//TODO
 }
 
-function IsValidEmail(email){
-    //TODO
+function IsValidEmail(email) {//TODO
 }

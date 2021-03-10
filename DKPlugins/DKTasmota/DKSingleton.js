@@ -2,16 +2,16 @@
 "use strict";
 
 class UserStore {
-  constructor(){
-   if(! UserStore.instance){
-     this._data = [];
-     UserStore.instance = this;
-   }
+    constructor() {
+        if (!UserStore.instance) {
+            this._data = [];
+            UserStore.instance = this;
+        }
 
-   return UserStore.instance;
-  }
+        return UserStore.instance;
+    }
 
- //rest is the same code as preceding example
+    //rest is the same code as preceding example
 
 }
 

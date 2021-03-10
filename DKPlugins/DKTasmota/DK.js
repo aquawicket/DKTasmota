@@ -42,9 +42,13 @@ function DKSendSuperRequest(url, callback) {
     });
 }
 
-function DKSendRequest(url, callback){
-    if(!url){ dkconsole.error(LastStackCall()+" url invalid"); }
-    if(callback.length<3){ dkconsole.error(LastStackCall()+" callback requires 3 arguments"); }
+function DKSendRequest(url, callback) {
+    if (!url) {
+        dkconsole.error(LastStackCall() + " url invalid");
+    }
+    if (callback.length < 3) {
+        dkconsole.error(LastStackCall() + " callback requires 3 arguments");
+    }
     let xhr = "";
     try {
         xhr = new XMLHttpRequest();
@@ -74,8 +78,7 @@ function DKSendRequest(url, callback){
         if (xhr.readyState === 4) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
-            } else {
-                //dkconsole.trace();
+            } else {//dkconsole.trace();
             }
         }
     }
@@ -93,7 +96,7 @@ function DKSendRequest(url, callback){
 
 /////////////////////////////////////////
 function SaveToLocalStorage(name, string) {
-    if(!name || !string){
+    if (!name || !string) {
         return;
     }
     localStorage.setItem(name, string);
@@ -101,7 +104,9 @@ function SaveToLocalStorage(name, string) {
 
 ///////////////////////////////////
 function LoadFromLocalStorage(name) {
-    if(!name){ return; }
+    if (!name) {
+        return;
+    }
     return localStorage.getItem(name);
 }
 

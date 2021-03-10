@@ -2,10 +2,6 @@
 function ProcessRules() {
 
     DumpVariables();
-    let exhaustFanIp = "192.168.1.64";
-    let waterWallsIp = "192.168.1.117";
-    let co2Ip        = "192.168.1.77";
-    let heaterIp     = "192.168.1.163";
 
     if (!temperature || !humidity || !dewPoint) {
         return;
@@ -29,11 +25,11 @@ function ProcessRules() {
     if (!bypassRules.includes(exhaustFanIp) && exhaustFan) {
         if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
             dkconsole.message("Exhaust Fan ON", "green");
-            DKSendRequest("http://"+exhauseFanIp+"/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + exhaustFanIp + "/cm?cmnd=POWER%20ON", UpdateScreen);
 
         } else {
             dkconsole.warn("Exhaust Fan OFF");
-            DKSendRequest("http://"+exhaustFanIp+"/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + exhaustFanIp + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
@@ -41,10 +37,10 @@ function ProcessRules() {
     if (!bypassRules.includes(waterWallsIp) && waterWalls) {
         if ((time < 17) && (humidity < humTarget) && (temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
-            DKSendRequest("http://"+waterWallsIp+"/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + waterWallsIp + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.warn("Water walls OFF");
-            DKSendRequest("http://"+waterWallsIp+"/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + waterWallsIp + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
@@ -54,12 +50,12 @@ function ProcessRules() {
             dkconsole.message("Co2 ON", "green");
             //When using Co2, temperature should be 85 degrees
             tempTarget = 85;
-            DKSendRequest("http://"+co2Ip+"/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + co2Ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.warn("Co2 OFF");
             //When NOT using Co2, temperature should be 77 degrees
             tempTarget = 77;
-            DKSendRequest("http://"+co2Ip+"/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + co2Ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
@@ -67,10 +63,10 @@ function ProcessRules() {
     if (!bypassRules.includes(heaterIp) && heater) {
         if (temperature < tempTarget) {
             dkconsole.message("Heater ON", "green");
-            DKSendRequest("http://"+heaterIp+"/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + heaterIp + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.warn("Heater OFF");
-            DKSendRequest("http://"+heaterIp+"/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + heaterIp + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 }

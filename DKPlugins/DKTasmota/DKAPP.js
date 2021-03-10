@@ -100,6 +100,12 @@ let theDevice = {
 }
 
 // Currently functioning variables, implemented code.
+let temperatureIp = "192.168.1.99";
+let exhaustFanIp = "192.168.1.64";
+let waterWallsIp = "192.168.1.117";
+let co2Ip = "192.168.1.77";
+let heaterIp = "192.168.1.163";
+
 let time;
 
 let temperature;
@@ -406,7 +412,7 @@ function UpdateScreen(success, url, data) {
             break;
         }
     }
-    if(!device){
+    if (!device) {
         dkconsole.error(LastStackCall() + "<br>  at if(!device)");
         dkconsole.error("success:" + success + " url:" + url + " data:" + data);
         dkconsole.trace();
@@ -461,8 +467,8 @@ function UpdateScreen(success, url, data) {
     }
 
     //if (device.StatusNET.Hostname) {
-        //DKTableGetCellByNames(table, ip, "device");
-        //row.setAttribute("Hostname", device.StatusNET.Hostname);
+    //DKTableGetCellByNames(table, ip, "device");
+    //row.setAttribute("Hostname", device.StatusNET.Hostname);
     //}
 
     //let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;

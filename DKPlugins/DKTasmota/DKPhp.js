@@ -30,8 +30,7 @@ function CallPhpFunc(args) {
     DKSendRequest(url, function(success, url, rVal) {
         if (args && typeof (args[args.length - 1]) === "function") {
             args[args.length - 1](rVal);
-        } else {
-            //console.log(rVal);
+        } else {//console.log(rVal);
         }
     });
 }

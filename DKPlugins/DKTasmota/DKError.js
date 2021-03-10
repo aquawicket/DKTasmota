@@ -1,7 +1,9 @@
 "use strict";
 
 window.onerror = function(msg, url, lineNo, columnNo, error) {
-    if(!error){ return; }
+    if (!error) {
+        return;
+    }
     console.error(StackToConsoleString(error.stack));
     return false;
 }
@@ -46,7 +48,7 @@ function GetStack() {
 
 ///////////////////////////
 function StackToJSON(stack) {
-    if(!stack || typeof stack !== "string"){
+    if (!stack || typeof stack !== "string") {
         console.error("StackToJSON(): stack invalid");
         return;
     }
@@ -72,12 +74,10 @@ function StackToJSON(stack) {
         line = line.replace(")", "");
 
         let func = line.split(" ").shift();
-        
+
         // some stack lines don't have a function name
-        if (IsValidVarName(func)) {
-            //func = "<i>anonymous</i>";
-        }
-        else{
+        if (IsValidVarName(func)) {//func = "<i>anonymous</i>";
+        } else {
             line = line.replace(func, "");
         }
 
@@ -116,7 +116,7 @@ function LastStackCall() {
         return;
     }
 
-    let str = "LastStackCall: "+stack[n].func;
+    let str = "LastStackCall: " + stack[n].func;
     str += "(<a href='" + stack[n].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)";
     return str;
 }
@@ -153,6 +153,6 @@ function GetArguments(func, getArgValues) {
     return argsString;
 }
 
-function GetCurrentFunctionName(n){ 
-    return new Error().stack.split('\n')[2+n].trim().split(" ")[1]; 
+function GetCurrentFunctionName(n) {
+    return new Error().stack.split('\n')[2 + n].trim().split(" ")[1];
 }

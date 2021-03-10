@@ -47,13 +47,12 @@ function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
 
 //////////////////////////////////////
 function DKTableInsertRow(table, name) {
-    if(!name){
-    	//FIXME: why is dkConsole unavailable?
-	    if(dkConsole){
-	        dkConsole.error("DKTableInsertRow(): name parameter invalid");
-	    }
-    	else{
-	        console.error("DKTableInsertRow(): name parameter invalid");
+    if (!name) {
+        //FIXME: why is dkConsole unavailable?
+        if (dkConsole) {
+            dkConsole.error("DKTableInsertRow(): name parameter invalid");
+        } else {
+            console.error("DKTableInsertRow(): name parameter invalid");
         }
     }
     let row = table.insertRow(-1);
@@ -64,14 +63,13 @@ function DKTableInsertRow(table, name) {
 
 ////////////////////////////////////////////
 function DKTableInsertCell(table, row, name) {
-	if(!name){
-    	//FIXME: why is dkConsole unavailable?
-	    if(dkconsole){
-	        dkconsole.error("DKTableInsertCell(): name parameter invalid");
-	    }
-    	else{
-    		console.trace();
-	        console.error("DKTableInsertCell(): name parameter invalid");
+    if (!name) {
+        //FIXME: why is dkConsole unavailable?
+        if (dkconsole) {
+            dkconsole.error("DKTableInsertCell(): name parameter invalid");
+        } else {
+            console.trace();
+            console.error("DKTableInsertCell(): name parameter invalid");
         }
     }
     let cell = row.insertCell(-1);
@@ -92,14 +90,14 @@ function DKTableAddRow(table, rowName, cellName) {
         cell_count = 1;
     }
     for (let n = 0; n < cell_count; n++) {
-    	//Grab the name of the cell from the root column cell if it exists
-    	//if(!table.rows[0]){
-    	//	console.error("DKTableAddRow(): table.rows[0] is invalid");
-    	//	return;
-    	//}
-    	if(!cellName){
-    		cellName = table.rows[0].cells[n].getAttribute("name");
-    	}
+        //Grab the name of the cell from the root column cell if it exists
+        //if(!table.rows[0]){
+        //	console.error("DKTableAddRow(): table.rows[0] is invalid");
+        //	return;
+        //}
+        if (!cellName) {
+            cellName = table.rows[0].cells[n].getAttribute("name");
+        }
         let cell = DKTableInsertCell(table, row, cellName);
         //FIXME: The function above is NOT setting the cellName properly.
         //This line is a temporary fix for now. 
@@ -113,7 +111,8 @@ function DKTableAddColumn(table, name) {
     let row_count = table.rows.length;
     if (!row_count) {
         //FIXME: no name attribute for the row
-        let row = DKTableInsertRow(table/*, name*/);
+        let row = DKTableInsertRow(table /*, name*/
+        );
         row_count = 1;
     }
     let cell_count = table.rows[0].cells.length;
@@ -196,9 +195,9 @@ function DKTableGetIndex(cell) {
 }
 
 ////////////////////////////////////////////
-function DKTableGetRowByName(table, rowName){
-	return DKTableGetCellByNames(table, rowName);
-	/*
+function DKTableGetRowByName(table, rowName) {
+    return DKTableGetCellByNames(table, rowName);
+    /*
     for (let r = 0; r < table.rows.length; r++) {
         if (!table.rows[r].getAttribute("name")) {
             dkConsole.log("WARNING: row" + r + " has no name attribute");
@@ -240,7 +239,9 @@ function DKTableGetCellByNames(table, rowName, columnName) {
         if (table.rows[r].getAttribute("name") == rowName) {
             let row = table.rows[r];
             //if the column name wasn't requested, return the row 
-            if(!columnName){ return row; }
+            if (!columnName) {
+                return row;
+            }
 
             for (let c = 0; c < row.cells.length; c++) {
                 if (!row.cells[c].getAttribute("name")) {
