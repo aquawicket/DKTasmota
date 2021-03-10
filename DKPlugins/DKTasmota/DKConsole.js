@@ -17,7 +17,7 @@ let console_group = console.group;
 (function() {
     console.log = function() {
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
-        console_log.apply(this, Array.prototype.slice.call(arguments));
+        console_log.apply(this, Array.prototype.slice.call(consoleSpanFilter(arguments)));
     }
     console.info = function() {
         dkconsole.info.apply(this, Array.prototype.slice.call(arguments));
@@ -49,6 +49,24 @@ let console_group = console.group;
     }
 }());
 
+function consoleSpanFilter(args) {
+    var argArray = [];
+    if (args.length) {
+        var startTagRe = /<span\s+style=(['"])([^'"]*)\1\s*>/gi;
+        var endTagRe = /<\/span>/gi;
+        var reResultArray;
+        argArray.push(args[0].replace(startTagRe, '%c').replace(endTagRe, '%c'));
+        while (reResultArray = startTagRe.exec(args[0])) {
+            argArray.push(reResultArray[2]);
+            argArray.push('');
+        }
+        // pass through subsequent args since chrome dev tools does not (yet) support console.log styling of the following form: console.log('%cBlue!', 'color: blue;', '%cRed!', 'color: red;');
+        for (var j = 1; j < args.length; j++) {
+            argArray.push(args[j]);
+        }
+    }
+    return argArray;
+}
 
 function StackToConsoleString(stack) {
     let stk;

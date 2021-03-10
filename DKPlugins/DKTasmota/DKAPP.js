@@ -369,8 +369,9 @@ function UpdateScreen(success, url, data) {
     }
 
     let jsonString = PrettyJson(data);
+    //console.log(jsonString);
     let jsonSuper = HighlightJson(jsonString);
-    dkconsole.log(jsonSuper);
+    console.log(jsonSuper);
 
     let table = document.getElementById("deviceTable");
     let row;
