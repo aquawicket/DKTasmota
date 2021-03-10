@@ -57,16 +57,12 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
-    AddDataset("Temperature", "rgb(200, 0, 0)", "Device013");
-    AddDataset("Humidity", "rgb(0, 0, 200)", "Device013");
-    AddDataset("DewPoint", "rgb(0,150,150)", "Device013");
-    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
-    AddDataset("ExhaustFan", "rgb(150,0,150)", "Device005");
-    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
-    AddDataset("WaterWalls", "rgb(90,0,150)", "Device007");
-    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
-    AddDataset("Heater", "rgb(150,0,50)", "Device006");
-    lineChart.data.datasets[lineChart.data.datasets.length - 1].hidden = true;
+    AddDataset("Temperature", "rgb(200, 0, 0)", "", "Device013", false);
+    AddDataset("Humidity", "rgb(0, 0, 200)", "", "Device013", false);
+    AddDataset("DewPoint", "rgb(0,150,150)", "", "Device013", true);
+    AddDataset("ExhaustFan", "rgb(150,0,150)", "", "Device005", true);
+    AddDataset("WaterWalls", "rgb(90,0,150)", "", "Device007", true);
+    AddDataset("Heater", "rgb(150,0,50)", "", "Device006", true);
     LoadDatasets();
 
     //Save Button
@@ -206,14 +202,16 @@ function UpdateChartDevice(hostname, data) {
     }
 }
 
-function AddDataset(name, color, hostname) {
+function AddDataset(name, color, ip, hostname, hidden) {
     var dataset = {};
+    dataset.ip;
     dataset.hostname = hostname;
     dataset.label = name;
     dataset.data = [];
     dataset.lineTension = 0;
     dataset.fill = false;
     dataset.borderColor = color;
+    dataset.hidden = hidden;
     lineChart.data.datasets.push(dataset);
     lineChart.update();
 }
