@@ -420,9 +420,8 @@ function UpdateScreen(success, url, data) {
     }
 
     let deviceData = JSON.parse(data);
-    deviceData.ip = device.ip;
-    device = deviceData;
-    /*
+    //deviceData.ip = device.ip;
+    //device = deviceData;
     if (deviceData.DeviceName) {
         device.Status.DeviceName = deviceData.DeviceName;
     }
@@ -447,7 +446,8 @@ function UpdateScreen(success, url, data) {
     if (deviceData.StatusSNS) {
         device.StatusSNS = deviceData.StatusSNS;
     }
-    */
+
+    //SaveToLocalStorage(device.ip, JSON.stringify(device));
 
     let table = document.getElementById("deviceTable");
     let row;
@@ -466,6 +466,12 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
+    if (!device.Status) {
+        dkconsole.error(LastStackCall() + "<br>  at if(!device.Status)");
+        dkconsole.error("success:" + success + " url:" + url + " data:" + data);
+        dkconsole.trace();
+        return;
+    }
     //if (device.StatusNET.Hostname) {
     //DKTableGetCellByNames(table, ip, "device");
     //row.setAttribute("Hostname", device.StatusNET.Hostname);
