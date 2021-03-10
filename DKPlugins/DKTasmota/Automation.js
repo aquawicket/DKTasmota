@@ -22,7 +22,7 @@ function ProcessRules() {
     }
 
     //Exhaust fan
-    if (!bypassRules.includes("Device005") && exhaustFan) {
+    if (!bypassRules.includes("Device005") && !bypassRules.includes("192.168.1.64") && exhaustFan) {
         if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
             dkconsole.message("Exhaust Fan ON", "green");
             DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
@@ -34,7 +34,7 @@ function ProcessRules() {
     }
 
     //Water walls
-    if (!bypassRules.includes("Device007") && waterWalls) {
+    if (!bypassRules.includes("Device007") && !bypassRules.includes("192.168.1.117") && waterWalls) {
         if ((time < 17) && (humidity < humTarget) && (temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
             DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
@@ -45,7 +45,7 @@ function ProcessRules() {
     }
 
     //Co2
-    if (!bypassRules.includes("Device008") && co2) {
+    if (!bypassRules.includes("Device008") && !bypassRules.includes("192.168.1.77") && co2) {
         if ((temperature < tempMax) && (humidity < humMax)) {
             dkconsole.message("Co2 ON", "green");
             //When using Co2, temperature should be 85 degrees
@@ -60,7 +60,7 @@ function ProcessRules() {
     }
 
     //Heater
-    if (!bypassRules.includes("Device006") && heater) {
+    if (!bypassRules.includes("Device006") && !bypassRules.includes("192.168.1.163") && heater) {
         if (temperature < tempTarget) {
             dkconsole.message("Heater ON", "green");
             DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);

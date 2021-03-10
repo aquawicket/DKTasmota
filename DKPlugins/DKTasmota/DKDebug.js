@@ -55,15 +55,15 @@ function Debug2() {
         b: 2,
         c: 3
     };
-
     const data2 = {
         a: 1,
         bb: 2,
         c: 3,
-        e: 4
+        e: "temp",
+        f: null
     };
 
-    myData = [];
+    let myData = [];
     const onDataReceived = function(input) {
         if (myData.length) {
             for (let value in input) {
@@ -80,5 +80,4 @@ function Debug2() {
         }
         myData.push(input);
     }
-
 }

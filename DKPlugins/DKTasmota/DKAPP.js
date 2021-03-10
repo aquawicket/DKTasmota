@@ -270,6 +270,14 @@ function AddDevice(ip) {
     cell = DKTableGetCellByNames(table, ip, "power");
     cell.style.textAlign = "center";
     cell.style.cursor = "pointer";
+    cell.onclick = function CellOnClickCallback() {
+        if (!bypassRules.includes(ip)) {
+            bypassRules.push(ip);
+            dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
+        }
+        DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+    }
+
     //cell = row.cells[2];
     cell = DKTableGetCellByNames(table, ip, "data");
     //cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
@@ -368,10 +376,9 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    let jsonString = PrettyJson(data);
-    //console.log(jsonString);
-    let jsonSuper = HighlightJson(jsonString);
-    console.log(jsonSuper);
+    //let jsonString = PrettyJson(data);
+    //let jsonSuper = HighlightJson(jsonString);
+    //console.log(jsonSuper);
 
     let table = document.getElementById("deviceTable");
     let row;
