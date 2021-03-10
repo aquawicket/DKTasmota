@@ -51,7 +51,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
             },
             elements: {
                 point: {
-                    radius: 0.5
+                    radius: 0.6
                 }
             }
         }
