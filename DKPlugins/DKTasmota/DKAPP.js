@@ -266,6 +266,9 @@ function AddDevice(ip) {
     cell.onclick = function CellOnClickCallback() {
         let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
     }
+    cell = DKTableGetCellByNames(table, ip, "power");
+    cell.style.textAlign = "center";
+    cell.style.cursor = "pointer";
     //cell = row.cells[2];
     cell = DKTableGetCellByNames(table, ip, "data");
     //cell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
@@ -300,14 +303,10 @@ function AddDevice(ip) {
         let hostname = device.Hostname;
         row.setAttribute("hostname", hostname);
 
-        cell = DKTableGetCellByNames(table, ip, "power");
-        cell.style.textAlign = "center";
-        cell.style.cursor = "pointer";
         cell.onclick = function CellOnClickCallback() {
             let hostname = row.getAttribute("hostname");
             if (!bypassRules.includes(hostname)) {
-                bypassRules += hostname;
-                bypassRules += ",";
+                bypassRules.push(hostname);
                 dkconsole.warn("Temporarily added " + hostname + " to bypass automation, refresh page to reset");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
