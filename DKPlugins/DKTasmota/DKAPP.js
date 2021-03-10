@@ -1,11 +1,109 @@
 "use strict";
 
+// New, unutalized variable structures, practice code
+
+// Date/Time 
+let dateEvent = new Date();              //format: August 19, 1975 23:15:30 UTC
+let date      = dateEvent.toJSON();      //format: 1975-08-19T23:15:30.000Z
+let utcDate   = dateEvent.toUTCString(); //format: Tue, 19 Aug 1975 23:15:30 GMT
+
+// Device Array
+let devices = [];
+// Basic device response structure
+let device = {
+    "Status": {
+        "Module": 1,
+        "FriendlyName": "XXX",
+        "Topic": "sonoff",
+        "ButtonTopic": "0",
+        "Power": 0,
+        "PowerOnState": 0,
+        "LedState": 1,
+        "SaveData": 0,
+        "SaveState": 1,
+        "ButtonRetain": 0,
+        "PowerRetain": 0
+    },
+    "StatusPRM": {
+        "Baudrate": 115200,
+        "GroupTopic": "sonoffs",
+        "OtaUrl": "XXX",
+        "Uptime": "1 02:33:26",
+        "Sleep": 150,
+        "BootCount": 32,
+        "SaveCount": 72,
+        "SaveAddress": "FB000"
+    },
+    "StatusFWR": {
+        "Version": "5.12.0a",
+        "BuildDateTime": "2018.02.11 16:15:40",
+        "Boot": 31,
+        "Core": "2_4_0",
+        "SDK": "2.1.0(deb1901)"
+    },
+    "StatusLOG": {
+        "SerialLog": 0,
+        "WebLog": 4,
+        "SysLog": 0,
+        "LogHost": "domus1",
+        "LogPort": 514,
+        "SSId1": "XXX",
+        "SSId2": "XXX",
+        "TelePeriod": 300,
+        "SetOption": "00000001"
+    },
+    "StatusMEM": {
+        "ProgramSize": 457,
+        "Free": 544,
+        "Heap": 23,
+        "ProgramFlashSize": 1024,
+        "FlashSize": 1024,
+        "FlashMode": 3
+    },
+    "StatusNET": {
+        "Hostname": "XXX",
+        "IPAddress": "192.168.178.XX",
+        "Gateway": "192.168.178.XX",
+        "Subnetmask": "255.255.255.XX",
+        "DNSServer": "192.168.178.XX",
+        "Mac": "2C:3A:E8:XX:XX:XX",
+        "Webserver": 2,
+        "WifiConfig": 4
+    },
+    "StatusTIM": {
+        "UTC": "Thu Feb 15 00:00:50 2018",
+        "Local": "Thu Feb 15 01:00:50 2018",
+        "StartDST": "Sun Mar 25 02:00:00 2018",
+        "EndDST": "Sun Oct 28 03:00:00 2018",
+        "Timezone": 1
+    },
+    "StatusSNS": {
+        "Time": "2018.02.15 01:00:50",
+        "Switch1": "OFF"
+    },
+    "StatusSTS": {
+        "Time": "2018.02.15 01:00:50",
+        "Uptime": "1 02:33:26",
+        "Vcc": 3.504,
+        "POWER": "OFF",
+        "Wifi": {
+            "AP": 1,
+            "SSId": "XXX",
+            "RSSI": 100,
+            "APMac": "34:31:C4:XX:XX:XX"
+        }
+    }
+}
+
+
+// Currently functioning variables, implemented code.
 let time;
+
 let temperature;
 let humidity;
 let dewPoint;
-let bypassRules = [];
 
+let bypassRules = [];
 let tempTarget = 77;
 let tempCalib = -1;
 let tempMin = tempTarget - 10;
@@ -39,6 +137,7 @@ function DKLoadFiles() {
     DKLoadJSFile("DKTable.js");
     DKLoadJSFile("DKClock.js");
     DKLoadJSFile("DKChart.js");
+    DKLoadJSFile("Automation.js");
     DKLoadJSFile("VPDCalculator.js");
 }
 
@@ -152,7 +251,7 @@ function AddDevice(ip) {
     let table = document.getElementById("deviceTable");
     let _row = DKTableAddRow(table, ip);
     _row.setAttribute("ip", ip);
-    if(_row.rowIndex % 2 == 0) {
+    if (_row.rowIndex % 2 == 0) {
         //even
         _row.style.backgroundColor = "rgb(90,90,90)";
     } else {
@@ -165,7 +264,7 @@ function AddDevice(ip) {
     cell.innerHTML = "<a>" + ip + "</a>";
     cell.style.cursor = "pointer";
     cell.onclick = function CellOnClickCallback() {
-         let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+        let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
     }
     //cell = row.cells[2];
     cell = DKTableGetCellByNames(table, ip, "data");
@@ -182,7 +281,6 @@ function AddDevice(ip) {
     cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
 
-
     DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function DKSendRequestCallback(success, url, data) {
         if (!success) {
             dkconsole.trace();
@@ -197,7 +295,7 @@ function AddDevice(ip) {
             dkconsole.error(LastStackCall() + "<br>  at if(!device.Hostname)");
             return;
         }
-           
+
         let row = DKTableGetRowByName(table, ip);
         let hostname = device.Hostname;
         row.setAttribute("hostname", hostname);
@@ -213,7 +311,7 @@ function AddDevice(ip) {
                 dkconsole.warn("Temporarily added " + hostname + " to bypass automation, refresh page to reset");
             }
             DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
-        }       
+        }
     });
 }
 
@@ -282,7 +380,7 @@ function UpdateScreen(success, url, data) {
     //let row = DKTableGetRowByName(table, ip); //need ip for this
     if (!row) {
         dkconsole.error(LastStackCall() + "<br>  at if(!row)");
-        dkconsole.error("success:"+success+" url:"+url+" data:"+data);
+        dkconsole.error("success:" + success + " url:" + url + " data:" + data);
         dkconsole.trace();
         return;
     }
@@ -425,94 +523,4 @@ function UpdateScreen(success, url, data) {
         }
         row.cells[3].style.color = "rgb(" + red + "," + green + ",0)";
     }
-}
-
-///////////////////////
-function ProcessRules() {
-
-    DumpVariables();
-
-    if (!temperature || !humidity || !dewPoint) {
-        return;
-    }
-
-    //Alarms
-    if (temperature < tempMin) {
-        dkconsole.warn("!!! TEMPERATURE BELOW MINIMUM " + temperature + "&#176;F < " + tempMin + "&#176;F !!!");
-    }
-    if (temperature > tempMax) {
-        dkconsole.warn("!!! TEMPERATURE ABOVE MAXIMUM " + temperature + "&#176;F > " + tempMax + "&#176;F !!!");
-    }
-    if (humidity < humMin) {
-        dkconsole.warn("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + humMin + "% !!!");
-    }
-    if (humidity > humMax) {
-        dkconsole.warn("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!");
-    }
-
-    //Exhaust fan
-    if (!bypassRules.includes("Device005") && exhaustFan) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
-            dkconsole.message("Exhaust Fan ON", "green");
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20ON", UpdateScreen);
-
-        } else {
-            dkconsole.warn("Exhaust Fan OFF");
-            DKSendRequest("http://Device005/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-
-    //Water walls
-    if (!bypassRules.includes("Device007") && waterWalls) {
-        if ((time < 17) && (humidity < humTarget) && (temperature > tempTarget)) {
-            dkconsole.message("Water walls ON", "green");
-            DKSendRequest("http://Device007/cm?cmnd=POWER%20ON", UpdateScreen);
-        } else {
-            dkconsole.warn("Water walls OFF");
-            DKSendRequest("http://Device007/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-
-    //Co2
-    if (!bypassRules.includes("Device008") && co2) {
-        if ((temperature < tempTarget) && (humidity < humTarget)) {
-            dkconsole.message("Co2 ON", "green");
-            DKSendRequest("http://Device008/cm?cmnd=POWER%20ON", UpdateScreen);
-        } else {
-            dkconsole.warn("Co2 OFF");
-            DKSendRequest("http://Device008/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-
-    //Heater
-    if (!bypassRules.includes("Device006") && heater) {
-        if (temperature < tempTarget) {
-            dkconsole.message("Heater ON", "green");
-            DKSendRequest("http://Device006/cm?cmnd=POWER%20ON", UpdateScreen);
-        } else {
-            dkconsole.warn("Heater OFF");
-            DKSendRequest("http://Device006/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-}
-
-////////////////////////
-function DumpVariables() {
-    dkconsole.debug("time: " + time);
-    dkconsole.debug("temperature: " + temperature);
-    dkconsole.debug("humidity: " + humidity);
-    dkconsole.debug("dewPoint: " + dewPoint);
-    dkconsole.debug("bypassRules: " + bypassRules);
-    dkconsole.debug("tempTarget: " + tempTarget);
-    dkconsole.debug("tempCalib: " + tempCalib);
-    dkconsole.debug("tempMin: " + tempMin);
-    dkconsole.debug("tempMax: " + tempMax);
-    dkconsole.debug("humTarget: " + humTarget);
-    dkconsole.debug("humCalib: " + humCalib);
-    dkconsole.debug("humMin: " + humMin);
-    dkconsole.debug("humMax: " + humMax);
-    dkconsole.debug("exhaustFan: " + exhaustFan);
-    dkconsole.debug("co2: " + co2);
-    dkconsole.debug("waterWalls: " + waterWalls);
-    dkconsole.debug("heater: " + heater);
 }

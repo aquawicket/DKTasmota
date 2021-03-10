@@ -11,6 +11,7 @@ DKLoadJSFile("moment.min.js", function() {
 
 var lineChart;
 
+
 function CreateChart(parent, id, top, bottom, left, right, width, height) {
     let chartDiv = document.createElement("div");
     chartDiv.id = id;
@@ -233,3 +234,4 @@ function LoadDatasets() {
     }
     lineChart.update();
 }
+

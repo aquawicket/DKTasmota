@@ -5,14 +5,13 @@ let DEBUG = 0;
 /////////////////////////////
 const showDebugButton = 1;
 function DebugButtonOnClick() {
-    PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal){
-        console.log("characters written: "+rVal);
+    PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal) {
+        console.log("characters written: " + rVal);
     });
-    PHP_GetTime(function(rVal){
+    PHP_GetTime(function(rVal) {
         console.log(rVal);
     });
 }
-
 
 function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
     let debugDiv = document.createElement("div");
@@ -42,22 +41,44 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     debugButton.style.width = width;
     debugButton.style.height = height;
     debugButton.onclick = function() {
-        DebugButtonOnClick();
+        Debug2();
     }
-    ;
     parent.appendChild(debugButton);
     return debugButton;
 }
 
 ////////////////////////////////
-function TestStackTrace(a, b, c) {
+function Debug2() {
 
-    DKSendRequest("DKFile.php", function() {
-        dkconsole.debug("finnished writing the file");
-    });
+    const data1 = {
+        a: 1,
+        b: 2,
+        c: 3
+    };
 
-    //dkconsole.trace();
+    const data2 = {
+        a: 1,
+        bb: 2,
+        c: 3,
+        e: 4
+    };
 
-    //let e = new Error();
-    //throw e;
+    myData = [];
+    const onDataReceived = function(input) {
+        if (myData.length) {
+            for (let value in input) {
+                let skipUndefineds = (myData.length - 1);
+                while (skipUndefineds && !myData[skipUndefineds][value]) {
+                    skipUndefineds--;
+                }
+                if (myData[skipUndefineds][value] === input[value]) {
+                    //This variable is the same value as it's last occurence, there is no need to store it"
+                    //Let's just remove it before we save the object to save space"
+                    delete input[value];
+                }
+            }
+        }
+        myData.push(input);
+    }
+
 }
