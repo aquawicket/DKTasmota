@@ -49,19 +49,6 @@ let console_group = console.group;
     }
 }());
 
-window.onerror = function(msg, url, lineNo, columnNo, error) {
-    if(!error){ return; }
-    dkconsole.error(StackToConsoleString(error.stack));
-    return false;
-}
-
-//https://stackoverflow.com/a/49560222/688352
-//https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
-window.onunhandledrejection = function(e) {
-    dkconsole.error("window.onunhandledrejection<br>  " + JSON.stringify(e));
-    dkconsole.error(StackToConsoleString());
-    return false;
-}
 
 function StackToConsoleString(stack) {
     let stk;

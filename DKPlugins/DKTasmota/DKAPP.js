@@ -109,7 +109,7 @@ let tempCalib = -1;
 let tempMin = tempTarget - 10;
 let tempMax = tempTarget + 10;
 
-let humTarget = 50;
+let humTarget = 45;
 let humCalib = -10;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;

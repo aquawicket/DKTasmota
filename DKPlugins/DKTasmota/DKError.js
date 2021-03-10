@@ -1,5 +1,19 @@
 "use strict";
 
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+    if(!error){ return; }
+    console.error(StackToConsoleString(error.stack));
+    return false;
+}
+
+//https://stackoverflow.com/a/49560222/688352
+//https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
+window.onunhandledrejection = function(e) {
+    console.error("window.onunhandledrejection<br>  " + JSON.stringify(e));
+    console.error(StackToConsoleString());
+    return false;
+}
+
 ///////////////////
 function isStrict() {
     if (eval("var __temp = null"),
