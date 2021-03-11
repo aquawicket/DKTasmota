@@ -12,7 +12,7 @@ function GetTasmotaDevices(ipPrefix, callback) {
     if (!ipPrefix) {
         ipPrefix = "192.168.1.";
     }
-    let corsWrite = 1;
+    let corsWrite = 0;
     let cmnd;
     for (let n = 1; n < 255; n++) {
         let ip = ipPrefix + n;
