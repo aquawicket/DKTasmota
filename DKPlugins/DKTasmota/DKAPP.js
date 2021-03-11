@@ -315,43 +315,14 @@ function AddDevice(ip) {
     cell = DKTableGetCellByNames(table, "HEADER", "device");
     cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-
-    /*
-    DKSendRequest("http://" + ip + "/cm?cmnd=Hostname", function DKSendRequestCallback(success, url, data) {
-        if (!success) {
-            dkconsole.trace();
-            return;
-        }
-        if (!url.includes(ip)) {
-            dkconsole.trace();
-            return;
-        }
-        let device = JSON.parse(data);
-        if (!device.Hostname) {
-            dkconsole.error(LastStackCall() + "<br>  at if(!device.Hostname)");
-            return;
-        }
-
-        let row = DKTableGetRowByName(table, ip);
-        let hostname = device.Hostname;
-        row.setAttribute("hostname", hostname);
-
-        cell.onclick = function CellOnClickCallback() {
-            let hostname = row.getAttribute("hostname");
-            if (!bypassRules.includes(hostname)) {
-                bypassRules.push(hostname);
-                dkconsole.warn("Temporarily added " + hostname + " to bypass automation, refresh page to reset");
-            }
-            DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
-        }
-    });
-    */
 }
 
 //////////////////////
 function ScanDevices() {
     let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
-    if(deviceIPs == null){ deviceIPs = []; }
+    if (deviceIPs == null) {
+        deviceIPs = [];
+    }
     GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip) {
             if (ip && (!deviceIPs || !deviceIPs.includes(ip))) {
@@ -397,7 +368,7 @@ function ProcessDevices() {
 function UpdateScreen(success, url, data) {
     if (!success || !url || !data) {
         //Test for power outage
-        //dkconsole.error(LastStackCall() + "<br>  at if(!success)");
+        //dkconsole.error("!success || !url || !data");
         PlaySound("PowerDown.mp3");
         return;
     }
@@ -414,15 +385,11 @@ function UpdateScreen(success, url, data) {
         }
     }
     if (!device) {
-        dkconsole.error(LastStackCall() + "<br>  at if(!device)");
-        dkconsole.error("success:" + success + " url:" + url + " data:" + data);
-        dkconsole.trace();
+        dkconsole.error("!device success:" + success + " url:" + url + " data:" + data);
         return;
     }
 
     let deviceData = JSON.parse(data);
-    //deviceData.ip = device.ip;
-    //device = deviceData;
     if (deviceData.DeviceName) {
         device.Status.DeviceName = deviceData.DeviceName;
     }
@@ -448,9 +415,9 @@ function UpdateScreen(success, url, data) {
         device.StatusSNS = deviceData.StatusSNS;
     }
 
-    //SaveToLocalStorage(device.ip, JSON.stringify(device));
-
     let table = document.getElementById("deviceTable");
+    let row = DKTableGetRowByName(table, device.ip);
+    /*
     let row;
     for (let n = 1; n < table.rows.length; n++) {
         if (table.rows[n].getAttribute("ip") === device.ip) {
@@ -458,32 +425,30 @@ function UpdateScreen(success, url, data) {
             break;
         }
     }
+    */
 
-    //let row = DKTableGetRowByName(table, ip); //need ip for this
     if (!row) {
-        dkconsole.error(LastStackCall() + "<br>  at if(!row)");
-        dkconsole.error("success:" + success + " url:" + url + " data:" + data);
-        dkconsole.trace();
+        dkconsole.error("!row success:" + success + " url:" + url + " data:" + data);
         return;
     }
 
+    /*
     if (!device.Status) {
-        dkconsole.error(LastStackCall() + "<br>  at if(!device.Status)");
-        dkconsole.error("success:" + success + " url:" + url + " data:" + data);
-        dkconsole.trace();
+        dkconsole.error("!device.Status success:" + success + " url:" + url + " data:" + data);
         return;
     }
-    //if (device.StatusNET.Hostname) {
-    //DKTableGetCellByNames(table, ip, "device");
-    //row.setAttribute("Hostname", device.StatusNET.Hostname);
-    //}
+    */
+    /*
+    if (device.StatusNET.Hostname) {
+        DKTableGetCellByNames(table, ip, "device");
+        row.setAttribute("Hostname", device.StatusNET.Hostname);
+    }
+    */
 
-    //let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (device.Status.DeviceName) {
         row.cells[0].innerHTML = "<a>" + device.Status.DeviceName + "</a>";
     }
 
-    //let devicePower = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
     if (device.StatusSTS.POWER) {
         row.cells[1].innerHTML = "<a>" + device.StatusSTS.POWER + "</a>";
         if (device.StatusSTS.POWER === "ON") {
@@ -495,7 +460,6 @@ function UpdateScreen(success, url, data) {
         }
     }
 
-    //let deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
     if (device.StatusSNS.SI7021) {
         temperature = (device.StatusSNS.SI7021.Temperature + tempCalib).toFixed(1);
         let tempDirection = " ";
@@ -522,19 +486,15 @@ function UpdateScreen(success, url, data) {
         if (humidity === humTarget) {
             humDirection = " ";
         }
-
-        dewPoint = (device.StatusSNS.SI7021.DewPoint).toFixed(1);
-
         let humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         let humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
-        // At 77F and 50% RH,  Dew Point should be 56.9°F
+        
+        dewPoint = (device.StatusSNS.SI7021.DewPoint).toFixed(1);
         let dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
 
         let tempScale = 510;
         let tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/
-        ;
         let tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/
-        ;
         let tempRed = tempNum;
         let tempGreen = 510 - tempNum;
         if (tempRed > 255) {
@@ -585,7 +545,6 @@ function UpdateScreen(success, url, data) {
         }
     }
 
-    //let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
     if (device.StatusSTS.Wifi) {
         let signal = device.StatusSTS.Wifi.RSSI;
         let scale = 510;

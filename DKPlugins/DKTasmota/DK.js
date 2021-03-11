@@ -44,11 +44,12 @@ function DKSendSuperRequest(url, callback) {
 
 function DKSendRequest(url, callback) {
     if (!url) {
-        dkconsole.error(LastStackCall() + " url invalid");
+        dkconsole.error("url invalid");
     }
     if (callback.length < 3) {
-        dkconsole.error(LastStackCall() + " callback requires 3 arguments");
+        dkconsole.error("callback requires 3 arguments");
     }
+
     let xhr = "";
     try {
         xhr = new XMLHttpRequest();
@@ -70,60 +71,61 @@ function DKSendRequest(url, callback) {
     } catch (e) {}
 
     if (!xhr) {
-        dkconsole.error("DKSendRequest(" + url + "): Error creating xhr object");
+        dkconsole.error("Error creating xhr object");
         return false;
-    }
-
-    xhr.onreadystatechange = function(e) {
-        if (xhr.readyState === 4) {
-            if (xhr.status >= 200 && xhr.status < 400) {
-                callback(true, url, xhr.responseText);
-            } else {
-                /*
-                dkconsole.log("xhr.readyState: "+xhr.readyState);
-                dkconsole.log("xhr.status: "+xhr.status);
-                dkconsole.log("xhr.response: "+xhr.response);
-                dkconsole.log("xhr.responseText: "+xhr.responseText);
-                */
-                //dkconsole.error(StackToConsoleString());
-                return false;
-             }
-        }
     }
 
     xhr.open("GET", url, true);
     xhr.timeout = 20000;
 
-    xhr.onabort = function(event){
-        dkconsole.error(event.type);
+    //Possible error codes
+    //https://github.com/richardwilkes/cef/blob/master/cef/enums_gen.go
+    xhr.onabort = function(event) {
+        //dkconsole.log("XMLHttpRequest.onreadystatechange(" + event + ")");
+        dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onabort");
         callback(false, url, event.type);
         return false;
     }
-    xhr.ontimeout = function(event){
-        let errorType = "Error";
-        if(event.type == "timeout"){
-            errorType = "net::ERR_CONNECTION_TIMED_OUT";
-        }
-        dkconsole.error("GET <a href=' "+ url +" ' target='_blank' style='color:rgb(213,213,213)'>"+url+"</a> "+errorType);
+    xhr.onerror = function(event) {
+        //dkconsole.log("XMLHttpRequest.onerror(" + event + ")");
+        dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onerror");
         callback(false, url, event.type);
         return false;
-    };
-    xhr.onerror = function(event){
-        let errorType = "Error";
-        if(event.type == "timeout"){
-            errorType = "net::ERR_CONNECTION_TIMED_OUT";
+    }
+    xhr.onload = function(event) {
+        //dkconsole.log("XMLHttpRequest.onload(" + event + ")");
+    }
+    xhr.onloadend = function(event) {
+        //dkconsole.log("XMLHttpRequest.onloadend(" + event + ")");
+    }
+    xhr.onloadstart = function(event) {
+        //dkconsole.log("XMLHttpRequest.onloadstart(" + event + ")");
+    }
+    xhr.onprogress = function(event) {
+        //dkconsole.log("XMLHttpRequest.onprogress(" + event + ")");
+    }
+    xhr.onreadystatechange = function(event) {
+        //dkconsole.log("XMLHttpRequest.onreadystatechange(" + event + ")");
+        if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                callback(true, url, xhr.responseText);
+            } else {
+                //dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onreadystatechange");
+                //callback(false, url, event);
+                return false;
+            }
         }
-        dkconsole.error("GET <a href=' "+ url +" ' target='_blank' style='color:rgb(213,213,213)'>"+url+"</a> "+errorType);
+    }
+    xhr.ontimeout = function(event) {
+        dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> net::ERR_CONNECTION_TIMED_OUT");
         callback(false, url, event.type);
         return false;
-    };
+    }
 
-    try {
+    //Try/Catch won't work here
+    try{
         xhr.send();
-    }catch(e){
-        dkconsole.log("Catching errors from send in async doesn't work");
-        dkconsole.error(StackToConsoleString(e.stack));
-    }
+    }catch{}
 }
 
 /////////////////////////////////////////

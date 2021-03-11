@@ -2,7 +2,6 @@
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement
 
-/////////////////////////////////////////////////////////////////////////
 function CreateClock(parent, id, top, bottom, left, right, width, weight) {
     const clock = document.createElement("a");
     clock.id = id;
@@ -13,7 +12,6 @@ function CreateClock(parent, id, top, bottom, left, right, width, weight) {
     window.setInterval(UpdateClock, 1000);
 }
 
-//////////////////////
 function UpdateClock() {
     const currentdate = new Date();
     const datetime = (currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();

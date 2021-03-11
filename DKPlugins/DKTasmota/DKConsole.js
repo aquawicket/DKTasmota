@@ -153,7 +153,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
             try {
                 eval(cmdbox.value);
             } catch (x) {
-                dkconsole.error(x.stack);
+                dkconsole.error("eval failed", x.stack);
             }
 
             cmdbox.value = "";
@@ -229,8 +229,9 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         dkconsole.message(str, "yellow");
     }
 
-    dkconsole.error = function(str) {
-        let stackStr = str+"<br>"+StackToConsoleString();
+    dkconsole.error = function(str, stack) {
+        //FIXME: we need to make sure stack is actually a stack
+        let stackStr = str+"<br>"+StackToConsoleString(stack);
         //Remove the call to this function from the stack
         let lines = stackStr.split('<br>');
         lines.splice(1, 1);
@@ -238,8 +239,8 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         dkconsole.message(outStr, "red");
     }
 
-    dkconsole.trace = function(inStr) {
-        let stackStr = StackToConsoleString(inStr);
+    dkconsole.trace = function(str) {
+        let stackStr = str+"<br>"+StackToConsoleString();
         //Remove the call to this function from the stack
         let lines = stackStr.split('<br>');
         lines.splice(1, 1);

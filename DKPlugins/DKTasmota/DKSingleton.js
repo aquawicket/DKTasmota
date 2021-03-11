@@ -7,15 +7,12 @@ class UserStore {
             this._data = [];
             UserStore.instance = this;
         }
-
         return UserStore.instance;
     }
-
-    //rest is the same code as preceding example
-
 }
 
 const instance = new UserStore();
 Object.freeze(instance);
 
-export default instance;
+//Uncaught SyntaxError: Unexpected token 'export'
+//export default instance;

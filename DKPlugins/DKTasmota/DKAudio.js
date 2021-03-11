@@ -9,8 +9,7 @@ function CreateSound(src) {
     audio.setAttribute("preload", "auto");
     audio.setAttribute("controls", "none");
     //audio.setAttribute("muted", "muted"); //Attemp to fix PlaySound error
-    audio.muted = true;
-    //Attemp to fix PlaySound error
+    //audio.muted = true;
     audio.style.display = "none";
     document.body.appendChild(audio);
 }

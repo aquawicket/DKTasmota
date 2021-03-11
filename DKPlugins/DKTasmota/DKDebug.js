@@ -6,10 +6,10 @@ let DEBUG = 0;
 const showDebugButton = 1;
 function DebugButtonOnClick() {
     PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal) {
-        console.log("characters written: " + rVal);
+        dkconsole.log("characters written: " + rVal);
     });
     PHP_GetTime(function(rVal) {
-        console.log(rVal);
+        dkconsole.log(rVal);
     });
 }
 

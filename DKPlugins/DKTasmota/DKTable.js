@@ -48,12 +48,7 @@ function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
 //////////////////////////////////////
 function DKTableInsertRow(table, name) {
     if (!name) {
-        //FIXME: why is dkConsole unavailable?
-        if (dkConsole) {
-            dkConsole.error("DKTableInsertRow(): name parameter invalid");
-        } else {
-            console.error("DKTableInsertRow(): name parameter invalid");
-        }
+        dkConsole.error("invalid name parameter");
     }
     let row = table.insertRow(-1);
     row.id = "row" + table.rows.length;
@@ -64,13 +59,7 @@ function DKTableInsertRow(table, name) {
 ////////////////////////////////////////////
 function DKTableInsertCell(table, row, name) {
     if (!name) {
-        //FIXME: why is dkConsole unavailable?
-        if (dkconsole) {
-            dkconsole.error("DKTableInsertCell(): name parameter invalid");
-        } else {
-            console.trace();
-            console.error("DKTableInsertCell(): name parameter invalid");
-        }
+        dkconsole.error("invalid name parameter");
     }
     let cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
@@ -183,7 +172,6 @@ function DKTableDeleteCell(table, rowNum, columnNum) {
     //FIXME: This doesn't seem to be working properly.
     //I'm using Brave browser which is a fork of chromium.
     //Bug? or user error? 
-    dkConsole.log("DKTableDeleteCell(" + rowNum + "," + columnNum + ")");
     let row = table.rows[rowNum];
     //row.deleteCell(columnNum);
     document.removeElement(row.cells[columnNum]);
@@ -200,7 +188,7 @@ function DKTableGetRowByName(table, rowName) {
     /*
     for (let r = 0; r < table.rows.length; r++) {
         if (!table.rows[r].getAttribute("name")) {
-            dkConsole.log("WARNING: row" + r + " has no name attribute");
+            dkConsole.warn("row" + r + " has no name attribute");
             return;
         }
         if (table.rows[r].getAttribute("name") == rowName) {
@@ -233,7 +221,7 @@ function DKTableGetCellByNames(table, rowName, columnName) {
 
     for (let r = 0; r < table.rows.length; r++) {
         if (!table.rows[r].getAttribute("name")) {
-            dkConsole.log("WARNING: row" + r + " has no name attribute");
+            dkConsole.warn("row" + r + " has no name attribute");
             return;
         }
         if (table.rows[r].getAttribute("name") == rowName) {
@@ -245,7 +233,7 @@ function DKTableGetCellByNames(table, rowName, columnName) {
 
             for (let c = 0; c < row.cells.length; c++) {
                 if (!row.cells[c].getAttribute("name")) {
-                    dkConsole.log("WARNING: row" + r + ", cell" + c + " has no name attribute");
+                    dkConsole.warn("row" + r + ", cell" + c + " has no name attribute");
                     return;
                 }
                 if (row.cells[c].getAttribute("name") == columnName) {

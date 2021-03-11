@@ -4,6 +4,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     if (!error) {
         return;
     }
+    //call both consoles dkconsole and console
     console.error(msg);
     return false;
 }
@@ -49,25 +50,21 @@ function GetStack() {
 ///////////////////////////
 function StackToJSON(stack) {
     if (!stack || typeof stack !== "string") {
-        console.error("StackToJSON(): stack invalid");
-        return;
+        dkconsole.error("StackToJSON(): invalid stack");
+        return false;
     }
 
-    //FIXME: how do we validate, since stack is a string
-    // it could potentially be anything. 
-
-    //split the call stack lines into an array
+     //split the call stack lines into an array
     let lines = stack.toString().split(/\r\n|\n/);
 
     //The first line should be the call stack message
     let msg = lines[0];
-    let json = [{
+    let jsonStack = [{
         msg
     }];
     for (let s = 1; s < lines.length; s++) {
         //FIXME: the original line should not be altered,
         //altering the line could mess up the extraction
-        //if something is missing or out of place.
         let line = lines[s].trim();
         line = line.replace("at ", "");
         line = line.replace("(", "");
@@ -75,11 +72,13 @@ function StackToJSON(stack) {
 
         let func = line.split(" ").shift();
 
-        // some stack lines don't have a function name
+        // some stack lines don't have a valid function name
+        /*
         if (IsValidVarName(func)) {//func = "<i>anonymous</i>";
         } else {
-            //line = line.replace(func, "");
+            line = line.replace(func, "");
         }
+        */
 
         let charNum = line.split(":").pop();
         line = line.replace(":" + charNum, "");
@@ -90,7 +89,7 @@ function StackToJSON(stack) {
         let file = line.split("/").pop();
 
         let filePath = line.trim();
-        json.push({
+        jsonStack.push({
             func,
             file,
             lineNum,
@@ -98,7 +97,7 @@ function StackToJSON(stack) {
             filePath
         });
     }
-    return json;
+    return jsonStack;
 }
 
 ////////////////////////
@@ -112,7 +111,7 @@ function LastStackCall() {
         }
     }
     if (!n) {
-        console.error("LastStackCall(): could not find 'LastStackCall' in the stack");
+        dkconsole.error("LastStackCall(): could not find 'LastStackCall' in the stack");
         return;
     }
 
@@ -127,7 +126,7 @@ function GetArguments(func, getArgValues) {
     let count = 0;
     let fn = window[func];
     if (!fn) {
-        console.error(LastStackCall() + "<br>" + "  at if(!fn)");
+        dkconsole.error(LastStackCall() + "<br>" + "  at if(!fn)");
         return "";
     }
     argsString += new RegExp('(?:' + fn.name + '\\s*|^)\\s*\\((.*?)\\)').exec(fn.toString().replace(/\n/g, ''))[1].replace(/\/\*.*?\*\//g, '').replace(/ /g, '');
