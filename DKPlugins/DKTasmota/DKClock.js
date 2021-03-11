@@ -1,6 +1,16 @@
 "use strict";
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement
 
+// Date/Time 
+/*
+let dateEvent = new Date();
+//format: August 19, 1975 23:15:30 UTC
+let date = dateEvent.toJSON();
+//format: 1975-08-19T23:15:30.000Z
+let utcDate = dateEvent.toUTCString();
+//format: Tue, 19 Aug 1975 23:15:30 GMT
+*/
+
 function CreateClock(parent, id, top, bottom, left, right, width, weight) {
     const clock = document.createElement("a");
     clock.id = id;
