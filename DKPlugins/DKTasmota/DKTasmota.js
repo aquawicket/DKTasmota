@@ -18,10 +18,11 @@ function GetTasmotaDevices(ipPrefix, callback) {
         let ip = ipPrefix + n;
         cmnd = "CORS";
         if (corsWrite) {
-            cmnd += ` ${window.location.protocol}//${window.location.hostname}`;
-            if (window.location.port && window.location.port !== "") {
-                cmnd += `:${window.location.port}`;
-            }
+            cmnd += " *";
+            //cmnd += ` ${window.location.protocol}//${window.location.hostname}`;
+            //if (window.location.port && window.location.port !== "") {
+            //    cmnd += `:${window.location.port}`;
+            //}
         }
         //let url = "http://"+ip+"/cm?cmnd="+cmnd; //Un-encodeURIComponent
         let url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
