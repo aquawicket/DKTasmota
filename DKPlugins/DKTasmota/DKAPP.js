@@ -13,6 +13,7 @@ let utcDate = dateEvent.toUTCString();
 // Device Array
 let devices = [];
 // Basic device response structure
+/*
 let theDevice = {
     "ip": "192.168.1.0",
     "Status": {
@@ -98,6 +99,7 @@ let theDevice = {
         }
     }
 }
+*/
 
 // Currently functioning variables, implemented code.
 let temperatureIp = "192.168.1.99";
@@ -128,7 +130,6 @@ let waterWalls = true;
 let heater = true;
 let co2 = false;
 
-//////////////////////
 function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
@@ -151,7 +152,6 @@ function DKLoadFiles() {
     DKLoadJSFile("VPDCalculator.js");
 }
 
-/////////////////////
 function DKLoadPage() {
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
@@ -180,7 +180,6 @@ function DKLoadPage() {
     window.setInterval(TimerLoop, 60000);
 }
 
-//////////////////////////////
 function CreateButtons(parent) {
     let scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
@@ -216,7 +215,6 @@ function CreateButtons(parent) {
     parent.appendChild(clearDevices);
 }
 
-//////////////////////////////////
 function CreateDeviceTable(parent) {
     let devices = document.createElement("div");
     parent.appendChild(devices);
@@ -256,7 +254,6 @@ function CreateDeviceTable(parent) {
     DKTableGetCellByNames(table, "HEADER", "wifi").style.textAlign = "center";
 }
 
-//////////////////////
 function AddDevice(ip) {
     let dev = {
         "ip": ip,
@@ -317,7 +314,6 @@ function AddDevice(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
 }
 
-//////////////////////
 function ScanDevices() {
     let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
     if (deviceIPs == null) {
@@ -339,7 +335,6 @@ function ScanDevices() {
     });
 }
 
-///////////////////////
 function ClearDevices() {
     let table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
@@ -347,7 +342,6 @@ function ClearDevices() {
     SaveToLocalStorage("deviceIPs", "");
 }
 
-/////////////////////////
 function TimerLoop(force) {
     let currentdate = new Date();
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
@@ -355,7 +349,6 @@ function TimerLoop(force) {
     ProcessDevices();
 }
 
-/////////////////////////
 function ProcessDevices() {
     let table = document.getElementById("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
@@ -364,7 +357,6 @@ function ProcessDevices() {
     }
 }
 
-/////////////////////////////////////////
 function UpdateScreen(success, url, data) {
     if (!success || !url || !data) {
         //Test for power outage
@@ -488,7 +480,7 @@ function UpdateScreen(success, url, data) {
         }
         let humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         let humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
-        
+
         dewPoint = (device.StatusSNS.SI7021.DewPoint).toFixed(1);
         let dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
 

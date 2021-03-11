@@ -1,9 +1,9 @@
-//////////////////////////////
+"use strict";
+
 function PHP_GetTime(callback) {
     CallPhpFunc(arguments);
 }
 
-/////////////////////////////////////////////////////
 function PHP_StringToFile(file, data, mode, callback) {
     CallPhpFunc(arguments);
 }
@@ -36,7 +36,6 @@ function CallPhpFunc(args) {
 }
 
 /*
-///////////////////////////////////////
 function CallPhpFunction(str, callback) {
     let func = str.split("(").shift();
     str = str.replace(func, "");

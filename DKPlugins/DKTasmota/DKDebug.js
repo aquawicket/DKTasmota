@@ -1,8 +1,6 @@
 "use strict";
-let DEBUG = 0;
 
 //A Convienient Debug Button Function
-/////////////////////////////
 const showDebugButton = 1;
 function DebugButtonOnClick() {
     PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal) {
@@ -47,7 +45,6 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     return debugButton;
 }
 
-////////////////////////////////
 function Debug2() {
 
     const data1 = {

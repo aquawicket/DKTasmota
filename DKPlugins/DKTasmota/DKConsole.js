@@ -1,4 +1,3 @@
-//Requires DKError.js
 "use strict";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/console
@@ -6,6 +5,11 @@ let consoleLimit = 100;
 let dkconsole;
 
 //intercept console with dkconsole
+//Example: If you use dkconsole.log, it will only log to the dk console.
+// If you use console.log, it will go to the dkconsole frame AND the browser console.
+// If you use console_log, it will only log the browser console.
+// Note: some messages cannot be withheld from the browser console.
+
 let console_log = console.log;
 let console_info = console.info;
 let console_debug = console.debug;
@@ -66,29 +70,6 @@ function consoleSpanFilter(args) {
         }
     }
     return argArray;
-}
-
-function StackToConsoleString(stack) {
-    let stk;
-    if (!stack) {
-        stk = StackToJSON(GetStack());
-    } else {
-        stk = StackToJSON(stack);
-    }
-
-    //Remove the call to this function from the stack
-    for (let s = 1; s < stk.length; s++) {
-        if (stk[s].func === "StackToConsoleString") {
-            stk.splice(s, 1);
-        }
-    }
-
-    let str = stk[0].msg + "<br>";
-    for (let s = 1; s < stk.length; s++) {
-        str += "  at " + stk[s].func + " ";
-        str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
-    }
-    return str;
 }
 
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {

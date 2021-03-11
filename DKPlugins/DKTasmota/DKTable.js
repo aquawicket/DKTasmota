@@ -29,7 +29,6 @@
 // The rowName is set to Peter on the <tr> element
 // The columnName is set to address on the <td> element
 
-/////////////////////////////////////////////////////////////////////////////
 function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
     let table = document.createElement('table');
     table.id = id;
@@ -45,7 +44,6 @@ function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
     return table;
 }
 
-//////////////////////////////////////
 function DKTableInsertRow(table, name) {
     if (!name) {
         dkConsole.error("invalid name parameter");
@@ -56,7 +54,6 @@ function DKTableInsertRow(table, name) {
     return row;
 }
 
-////////////////////////////////////////////
 function DKTableInsertCell(table, row, name) {
     if (!name) {
         dkconsole.error("invalid name parameter");
@@ -67,7 +64,6 @@ function DKTableInsertCell(table, row, name) {
     return cell;
 }
 
-////////////////////////////////////////////////
 function DKTableAddRow(table, rowName, cellName) {
     let row = DKTableInsertRow(table, rowName);
     row.id = "row" + table.rows.length;
@@ -80,10 +76,12 @@ function DKTableAddRow(table, rowName, cellName) {
     }
     for (let n = 0; n < cell_count; n++) {
         //Grab the name of the cell from the root column cell if it exists
-        //if(!table.rows[0]){
-        //	console.error("DKTableAddRow(): table.rows[0] is invalid");
-        //	return;
-        //}
+        /*
+        if(!table.rows[0]){
+        	console.error("DKTableAddRow(): table.rows[0] is invalid");
+        	return;
+        }
+        */
         if (!cellName) {
             cellName = table.rows[0].cells[n].getAttribute("name");
         }
@@ -95,7 +93,6 @@ function DKTableAddRow(table, rowName, cellName) {
     return row;
 }
 
-//////////////////////////////////////
 function DKTableAddColumn(table, name) {
     let row_count = table.rows.length;
     if (!row_count) {
@@ -112,7 +109,6 @@ function DKTableAddColumn(table, name) {
     return table.rows[0].cells.length;
 }
 
-/////////////////////////////////////
 function DKTableAddRows(table, count) {
     //The rows added will have no name
     for (let r = 0; r < count; r++) {
@@ -121,7 +117,6 @@ function DKTableAddRows(table, count) {
     return table.rows.length;
 }
 
-////////////////////////////////////////
 function DKTableAddColumns(table, count) {
     //The columns added will have no name
     for (let c = 0; c < count; c++) {
@@ -130,13 +125,11 @@ function DKTableAddColumns(table, count) {
     return table.rows[0].cells.length;
 }
 
-////////////////////////////////////////
 function DKTableDeleteRow(table, number) {
     table.deleteRow(number);
     DKTableUpdateIds(table);
 }
 
-///////////////////////////////////////////
 function DKTableDeleteColumn(table, number) {
     for (let r = 0; r < table.rows.length; r++) {
         let row = table.rows[r];
@@ -147,7 +140,6 @@ function DKTableDeleteColumn(table, number) {
     DKTableUpdateIds(table);
 }
 
-////////////////////////////////
 function DKTableUpdateIds(table) {
     for (let r = 0; r < table.rows.length; r++) {
         let row = table.rows[r]
@@ -166,7 +158,6 @@ function DKTableGetCellByIndex(table, rowNum, columnNum) {
     return cell;
 }
 
-////////////////////////////////////////////////////
 function DKTableDeleteCell(table, rowNum, columnNum) {
     dkConsole.log("DKTableDeleteCell(table," + rowNum + "," + columnNum + ")")
     //FIXME: This doesn't seem to be working properly.
@@ -177,12 +168,10 @@ function DKTableDeleteCell(table, rowNum, columnNum) {
     document.removeElement(row.cells[columnNum]);
 }
 
-//////////////////////////////
 function DKTableGetIndex(cell) {
     return cell.cellIndex;
 }
 
-////////////////////////////////////////////
 function DKTableGetRowByName(table, rowName) {
     return DKTableGetCellByNames(table, rowName);
     /*
@@ -198,7 +187,7 @@ function DKTableGetRowByName(table, rowName) {
     }
     */
 }
-//////////////////////////////////////////////////////////
+
 function DKTableGetCellByNames(table, rowName, columnName) {
     //TODO: We would like to retrieve a cell by names
     // Example:  DKGetCell("Peter", "Address");

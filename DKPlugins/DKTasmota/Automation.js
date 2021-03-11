@@ -1,4 +1,5 @@
-///////////////////////
+"use strict";
+
 function ProcessRules() {
 
     DumpVariables();
@@ -71,7 +72,6 @@ function ProcessRules() {
     }
 }
 
-////////////////////////
 function DumpVariables() {
     dkconsole.debug("time: " + time);
     dkconsole.debug("temperature: " + temperature);

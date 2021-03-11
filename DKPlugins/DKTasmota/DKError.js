@@ -4,20 +4,41 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     if (!error) {
         return;
     }
-    //call both consoles dkconsole and console
-    console.error(msg);
+    dkconsole.error(msg);
     return false;
 }
 
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
-window.onunhandledrejection = function(e) {
-    //console.error("window.onunhandledrejection<br>  " + JSON.stringify(e));
-    //console.error(StackToConsoleString());
+window.onunhandledrejection = function(event) {
+    dkconsole.error(event);
     return false;
 }
 
-///////////////////
+
+function StackToConsoleString(stack) {
+    let stk;
+    if (!stack) {
+        stk = StackToJSON(GetStack());
+    } else {
+        stk = StackToJSON(stack);
+    }
+
+    //Remove the call to this function from the stack
+    for (let s = 1; s < stk.length; s++) {
+        if (stk[s].func === "StackToConsoleString") {
+            stk.splice(s, 1);
+        }
+    }
+
+    let str = stk[0].msg + "<br>";
+    for (let s = 1; s < stk.length; s++) {
+        str += "  at " + stk[s].func + " ";
+        str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
+    }
+    return str;
+}
+
 function isStrict() {
     if (eval("var __temp = null"),
     (typeof __temp === "undefined")) {
@@ -26,7 +47,6 @@ function isStrict() {
     return false;
 }
 
-///////////////////
 function GetStack() {
     let e = new Error();
     if (!e.stack)
@@ -47,7 +67,6 @@ function GetStack() {
     return stack;
 }
 
-///////////////////////////
 function StackToJSON(stack) {
     if (!stack || typeof stack !== "string") {
         dkconsole.error("StackToJSON(): invalid stack");
@@ -100,7 +119,6 @@ function StackToJSON(stack) {
     return jsonStack;
 }
 
-////////////////////////
 function LastStackCall() {
     let stack = StackToJSON(GetStack());
     let n;
@@ -120,7 +138,6 @@ function LastStackCall() {
     return str;
 }
 
-/////////////////////////////////////////
 function GetArguments(func, getArgValues) {
     let argsString = "";
     let count = 0;

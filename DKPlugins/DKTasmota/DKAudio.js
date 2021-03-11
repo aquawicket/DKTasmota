@@ -1,7 +1,6 @@
 "use strict";
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
 
-/////////////////////////
 function CreateSound(src) {
     const audio = document.createElement("audio");
     audio.id = src;
@@ -14,13 +13,11 @@ function CreateSound(src) {
     document.body.appendChild(audio);
 }
 
-////////////////////////
 function PauseSound(src) {
     const ele = document.getElementById(src);
     ele.pause();
 }
 
-///////////////////////
 function PlaySound(src) {
     const ele = document.getElementById(src);
     // FIXME: This causes errors
@@ -28,7 +25,6 @@ function PlaySound(src) {
     ele.play();
 }
 
-///////////////////////
 function StopSound(src) {
     const ele = document.getElementById(src);
     ele.stop();

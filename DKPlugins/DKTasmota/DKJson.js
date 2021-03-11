@@ -1,3 +1,5 @@
+"use strict";
+
 const PrettyJson = function(json) {
     let prettyJson;
     if (typeof json === 'string') {
@@ -47,4 +49,3 @@ function StringifyJson(object) {
     return JSON.stringify(simpleObject);
     // returns cleaned up JSON
 }
-;

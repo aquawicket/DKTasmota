@@ -1,5 +1,4 @@
 "use strict";
-
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement
 
 function CreateClock(parent, id, top, bottom, left, right, width, weight) {
