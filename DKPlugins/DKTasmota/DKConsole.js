@@ -230,11 +230,16 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.error = function(str) {
-        dkconsole.message(str, "red");
+        let stackStr = str+"<br>"+StackToConsoleString();
+        //Remove the call to this function from the stack
+        let lines = stackStr.split('<br>');
+        lines.splice(1, 1);
+        let outStr = lines.join('\n');
+        dkconsole.message(outStr, "red");
     }
 
     dkconsole.trace = function(inStr) {
-        let stackStr = StackToConsoleString();
+        let stackStr = StackToConsoleString(inStr);
         //Remove the call to this function from the stack
         let lines = stackStr.split('<br>');
         lines.splice(1, 1);

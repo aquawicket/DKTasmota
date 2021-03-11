@@ -74,24 +74,56 @@ function DKSendRequest(url, callback) {
         return false;
     }
 
-    xhr.onreadystatechange = function XMLHttpRequestReadystatechangeCallback() {
+    xhr.onreadystatechange = function(e) {
         if (xhr.readyState === 4) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
-            } else {//dkconsole.trace();
-            }
+            } else {
+                /*
+                dkconsole.log("xhr.readyState: "+xhr.readyState);
+                dkconsole.log("xhr.status: "+xhr.status);
+                dkconsole.log("xhr.response: "+xhr.response);
+                dkconsole.log("xhr.responseText: "+xhr.responseText);
+                */
+                //dkconsole.error(StackToConsoleString());
+                return false;
+             }
         }
     }
 
     xhr.open("GET", url, true);
     xhr.timeout = 20000;
-    xhr.addEventListener('timeout', function XMLHttpRequestTimeoutCallback(event) {
-        callback(false, url, "DKSendRequest(" + url + ") -> Timed out");
-    });
-    xhr.addEventListener('error', function XMLHttpRequestErrorCallback(event) {
-        callback(false, url, "DKSendRequest(" + url + ")-> ERROR");
-    });
-    xhr.send();
+
+    xhr.onabort = function(event){
+        dkconsole.error(event.type);
+        callback(false, url, event.type);
+        return false;
+    }
+    xhr.ontimeout = function(event){
+        let errorType = "Error";
+        if(event.type == "timeout"){
+            errorType = "net::ERR_CONNECTION_TIMED_OUT";
+        }
+        dkconsole.error("GET <a href=' "+ url +" ' target='_blank' style='color:rgb(213,213,213)'>"+url+"</a> "+errorType);
+        callback(false, url, event.type);
+        return false;
+    };
+    xhr.onerror = function(event){
+        let errorType = "Error";
+        if(event.type == "timeout"){
+            errorType = "net::ERR_CONNECTION_TIMED_OUT";
+        }
+        dkconsole.error("GET <a href=' "+ url +" ' target='_blank' style='color:rgb(213,213,213)'>"+url+"</a> "+errorType);
+        callback(false, url, event.type);
+        return false;
+    };
+
+    try {
+        xhr.send();
+    }catch(e){
+        dkconsole.log("Catching errors from send in async doesn't work");
+        dkconsole.error(StackToConsoleString(e.stack));
+    }
 }
 
 /////////////////////////////////////////

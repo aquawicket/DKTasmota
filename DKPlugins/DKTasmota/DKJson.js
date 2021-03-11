@@ -6,12 +6,7 @@ const PrettyJson = function(json) {
     return JSON.stringify(prettyJson, undefined, 4);
 }
 
-//TODO: we can't output this to console. It doesn't handle the spans
 const HighlightJson = function(jsonString) {
-    //pre
-    //outline: 1px solid #ccc;
-    //padding: 5px;
-    //margin: 5px;
     let hightlightedJson = jsonString.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return hightlightedJson.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
         var cls = 'number';
@@ -33,3 +28,23 @@ const HighlightJson = function(jsonString) {
         return '<span style="color:darkOrange;">' + match + '</span>';
     });
 }
+
+///Takes care of circular refrences in objects
+function StringifyJson(object) {
+    var simpleObject = {};
+    for (var prop in object) {
+        if (!object.hasOwnProperty(prop)) {
+            continue;
+        }
+        if (typeof (object[prop]) == 'object') {
+            continue;
+        }
+        if (typeof (object[prop]) == 'function') {
+            continue;
+        }
+        simpleObject[prop] = object[prop];
+    }
+    return JSON.stringify(simpleObject);
+    // returns cleaned up JSON
+}
+;

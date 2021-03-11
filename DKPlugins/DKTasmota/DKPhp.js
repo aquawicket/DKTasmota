@@ -26,7 +26,7 @@ function CallPhpFunc(args) {
     }
     //console.log(JSON.stringify(jsonData));
     let data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
-    let url = "http://192.168.1.78:8000/DK.php?" + data;
+    let url = "/DK.php?" + data;
     DKSendRequest(url, function(success, url, rVal) {
         if (args && typeof (args[args.length - 1]) === "function") {
             args[args.length - 1](rVal);

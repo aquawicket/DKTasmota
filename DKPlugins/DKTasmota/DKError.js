@@ -4,15 +4,15 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     if (!error) {
         return;
     }
-    console.error(StackToConsoleString(error.stack));
+    console.error(msg);
     return false;
 }
 
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
 window.onunhandledrejection = function(e) {
-    console.error("window.onunhandledrejection<br>  " + JSON.stringify(e));
-    console.error(StackToConsoleString());
+    //console.error("window.onunhandledrejection<br>  " + JSON.stringify(e));
+    //console.error(StackToConsoleString());
     return false;
 }
 
@@ -78,7 +78,7 @@ function StackToJSON(stack) {
         // some stack lines don't have a function name
         if (IsValidVarName(func)) {//func = "<i>anonymous</i>";
         } else {
-            line = line.replace(func, "");
+            //line = line.replace(func, "");
         }
 
         let charNum = line.split(":").pop();

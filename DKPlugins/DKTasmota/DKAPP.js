@@ -351,9 +351,10 @@ function AddDevice(ip) {
 //////////////////////
 function ScanDevices() {
     let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
+    if(deviceIPs == null){ deviceIPs = []; }
     GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip) {
-            if (ip && !deviceIPs.includes(ip)) {
+            if (ip && (!deviceIPs || !deviceIPs.includes(ip))) {
                 deviceIPs.push(ip);
                 SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
                 AddDevice(ip);
