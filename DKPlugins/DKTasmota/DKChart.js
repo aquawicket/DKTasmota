@@ -65,23 +65,24 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     LoadDatasets();
 
     //Save Button
-    let saveButton = document.createElement("button");
-    saveButton.id = "saveButton";
-    saveButton.innerHTML = "Save";
-    saveButton.style.zIndex = "2";
-    saveButton.style.position = "absolute";
-    saveButton.style.top = "5px";
-    saveButton.style.left = "5px";
-    saveButton.style.height = "18px";
-    saveButton.style.width = "40px";
-    saveButton.style.padding = "0px";
-    saveButton.style.cursor = "pointer";
-    saveButton.onclick = function saveButtonOnclickCallback() {
-        SaveDatasets();
+    let clearButton = document.createElement("button");
+    clearButton.id = "clearButton";
+    clearButton.innerHTML = "Clear";
+    clearButton.style.zIndex = "2";
+    clearButton.style.position = "absolute";
+    clearButton.style.top = "5px";
+    clearButton.style.left = "5px";
+    clearButton.style.height = "18px";
+    clearButton.style.width = "40px";
+    clearButton.style.padding = "0px";
+    clearButton.style.cursor = "pointer";
+    clearButton.onclick = function clearButtonOnclickCallback() {
+        ClearDatasets();
     }
-    chartDiv.appendChild(saveButton);
+    chartDiv.appendChild(clearButton);
 
     //Load Button
+    /*
     let loadButton = document.createElement("button");
     loadButton.id = "loadButton";
     loadButton.innerHTML = "Load";
@@ -97,6 +98,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         LoadDatasets();
     }
     chartDiv.appendChild(loadButton);
+    */
 }
 
 function UpdateChartDevice(ip, data) {
@@ -228,4 +230,10 @@ function LoadDatasets() {
         lineChart.data.datasets[d].data = JSON.parse(data);
     }
     lineChart.update();
+}
+
+function ClearDatasets(){
+    for (let d = 0; d < lineChart.data.datasets.length; d++) {
+         lineChart.data.datasets[d].data = [];
+    }
 }

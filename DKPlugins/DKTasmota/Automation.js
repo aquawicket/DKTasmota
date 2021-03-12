@@ -23,6 +23,9 @@ function ProcessRules() {
     }
 
     //Exhaust fan
+    //let Co2Device = GetObjectMatch(co2Ip);
+    const Co2Device = FindObject(devices, "ip", co2Ip);
+    if(Co2Device){ console.log("found the Co2 Device"); }
     if (!bypassRules.includes(exhaustFanIp) && exhaustFan) {
         if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
             dkconsole.message("Exhaust Fan ON", "green");

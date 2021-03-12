@@ -290,7 +290,14 @@ function AddDevice(ip) {
     cell = DKTableGetCellByNames(table, ip, "power");
     cell.style.textAlign = "center";
     cell.style.cursor = "pointer";
-    cell.onclick = function CellOnClickCallback() {
+    cell.onclick = function CellOnClickCallback(id) {
+        cell = DKTableGetCellByNames(table, ip, "power");
+        cell.innerHTML = "";
+        let loading = document.createElement("img");
+        loading.src = "loading.gif";
+        loading.style.width = "15px";
+        loading.style.height = "15px";
+        cell.appendChild(loading);
         if (!bypassRules.includes(ip)) {
             bypassRules.push(ip);
             dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
@@ -382,14 +389,17 @@ function UpdateScreen(success, url, data) {
     }
 
     let deviceData = JSON.parse(data);
+    deviceData.ip = device.ip;
+    device = deviceData;
+    /*
     if (deviceData.DeviceName) {
         device.Status.DeviceName = deviceData.DeviceName;
     }
     if (deviceData.Hostname) {
         device.StatusNET.Hostname = deviceData.Hostname;
     }
-    if (deviceData.Power) {
-        device.StatusSTS.Power = deviceData.Power;
+    if (deviceData.POWER) {
+        device.StatusSTS.POWER = deviceData.POWER;
     }
     if (deviceData.Wifi) {
         device.StatusSTS.Wifi = deviceData.Wifi;
@@ -397,6 +407,8 @@ function UpdateScreen(success, url, data) {
     if (deviceData.Status) {
         device.Status = deviceData.Status;
     }
+    */
+    /*
     if (deviceData.StatusNET) {
         device.StatusNET = deviceData.StatusNET;
     }
@@ -406,6 +418,7 @@ function UpdateScreen(success, url, data) {
     if (deviceData.StatusSNS) {
         device.StatusSNS = deviceData.StatusSNS;
     }
+    */
 
     let table = document.getElementById("deviceTable");
     let row = DKTableGetRowByName(table, device.ip);
@@ -436,14 +449,15 @@ function UpdateScreen(success, url, data) {
         row.setAttribute("Hostname", device.StatusNET.Hostname);
     }
     */
-
-    if (device.Status.DeviceName) {
-        row.cells[0].innerHTML = "<a>" + device.Status.DeviceName + "</a>";
+    let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
+    if (deviceName) {
+        row.cells[0].innerHTML = "<a>" + deviceName + "</a>";
     }
 
-    if (device.StatusSTS.POWER) {
-        row.cells[1].innerHTML = "<a>" + device.StatusSTS.POWER + "</a>";
-        if (device.StatusSTS.POWER === "ON") {
+    let devicePOWER = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
+    if (devicePOWER) {
+        row.cells[1].innerHTML = "<a>" + devicePOWER + "</a>";
+        if (devicePOWER === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
             UpdateChartDevice(device.ip, 100);
         } else {
@@ -452,8 +466,9 @@ function UpdateScreen(success, url, data) {
         }
     }
 
-    if (device.StatusSNS.SI7021) {
-        temperature = (device.StatusSNS.SI7021.Temperature + tempCalib).toFixed(1);
+    let deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
+    if (deviceSI7021) {
+        temperature = (deviceSI7021.Temperature + tempCalib).toFixed(1);
         let tempDirection = " ";
         if (temperature > tempTarget) {
             tempDirection = "&#8593;"
@@ -467,7 +482,7 @@ function UpdateScreen(success, url, data) {
         let tempText = "<a id='Temp'>" + temperature + " &#176;F" + tempDirection + "</a>";
         let tempTargetText = "<a id='TempTarg'> (" + tempTarget + "&#176;F)</a>";
 
-        humidity = (device.StatusSNS.SI7021.Humidity + humCalib).toFixed(1);
+        humidity = (deviceSI7021.Humidity + humCalib).toFixed(1);
         let humDirection = " ";
         if (humidity > humTarget) {
             humDirection = "&#8593;"
@@ -481,7 +496,7 @@ function UpdateScreen(success, url, data) {
         let humText = "<a id='RH'>" + humidity + " RH%" + humDirection + "</a>";
         let humTargetText = "<a id='humTarg'> (" + humTarget + "%)</a>";
 
-        dewPoint = (device.StatusSNS.SI7021.DewPoint).toFixed(1);
+        dewPoint = (deviceSI7021.DewPoint).toFixed(1);
         let dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
 
         let tempScale = 510;
@@ -537,8 +552,9 @@ function UpdateScreen(success, url, data) {
         }
     }
 
-    if (device.StatusSTS.Wifi) {
-        let signal = device.StatusSTS.Wifi.RSSI;
+    let deviceWifi = device.StatusSTS ? device.StatusSTS.Wifi : device.Wifi;
+    if (deviceWifi) {
+        let signal = deviceWifi.RSSI;
         let scale = 510;
         let num = (signal * scale / 100);
         let green = num;

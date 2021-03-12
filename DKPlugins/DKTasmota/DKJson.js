@@ -49,3 +49,12 @@ function StringifyJson(object) {
     return JSON.stringify(simpleObject);
     // returns cleaned up JSON
 }
+
+function FindObject(obj, key, value)
+{
+    for (var i = 0; i < obj.length; i++){
+        if(obj[i].key == value){
+            return obj[i].name;
+        }
+    }
+}
