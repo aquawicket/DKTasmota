@@ -91,7 +91,6 @@ let theDevice = {
 }
 */
 
-// Currently functioning variables, implemented code.
 let temperatureIp = "192.168.1.99";
 let exhaustFanIp = "192.168.1.64";
 let waterWallsIp = "192.168.1.117";
