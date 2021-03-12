@@ -197,14 +197,14 @@ function UpdateChartDevice(ip, data) {
         t: currentdate,
         y: data
     });
-    if (`${window.location.protocol}` != "file:") {
-        PHP_StringToFile("data/" + stamp + ip + ".txt", entry, "FILE_APPEND");
-    }
+    //if (`${window.location.protocol}` != "file:") {
+        PHP_StringToFile("data/" + stamp +"_"+ ip + ".txt", entry, "FILE_APPEND");
+    //}
 }
 
 function AddDataset(name, color, ip, hidden) {
     var dataset = {};
-    dataset.ip;
+    dataset.ip = ip;
     dataset.label = name;
     dataset.data = [];
     dataset.lineTension = 0;

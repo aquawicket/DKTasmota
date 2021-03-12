@@ -1,6 +1,6 @@
 "use strict";
 
-function ProcessRules() {
+function Automate() {
 
     DumpVariables();
 

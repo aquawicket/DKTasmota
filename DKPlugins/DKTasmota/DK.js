@@ -110,9 +110,9 @@ function DKSendRequest(url, callback) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
             } else {
-                //dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onreadystatechange");
-                //callback(false, url, event);
-                //return false;
+                dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onreadystatechange");
+                callback(false, url, event);
+                return false;
             }
         }
     }
