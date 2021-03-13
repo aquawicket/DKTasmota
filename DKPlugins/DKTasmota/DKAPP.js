@@ -143,10 +143,8 @@ function DKLoadFiles() {
 }
 
 function DKLoadPage() {
-    window.onanyerror = function(entity){
-        console.log('DKErrorHandler:', entity);
-    };
-    LoadErrorHandlers();
+    DKCreateErrorHandler();
+    
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
     CreateButtons(document.body);
