@@ -7,8 +7,6 @@ function CreateSound(src) {
     audio.src = src;
     audio.setAttribute("preload", "auto");
     audio.setAttribute("controls", "none");
-    //audio.setAttribute("muted", "muted"); //Attemp to fix PlaySound error
-    //audio.muted = true;
     audio.style.display = "none";
     document.body.appendChild(audio);
 }
@@ -18,11 +16,14 @@ function PauseSound(src) {
     ele.pause();
 }
 
-function PlaySound(src) {
-    const ele = document.getElementById(src);
-    // FIXME: This causes errors
-    // DKAudio.js:23 Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
-    ele.play();
+//https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+async function PlaySound(src) {
+  //try {
+    const ele = document.getElementById(src);  
+    await ele.play();
+  //} catch(errMsg) {
+  //    dkconsole.error(errMsg);
+  //}
 }
 
 function StopSound(src) {

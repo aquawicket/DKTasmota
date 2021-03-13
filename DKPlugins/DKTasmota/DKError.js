@@ -1,40 +1,64 @@
 "use strict";
 
+
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     if (!error) {
-        return;
+        dkconsole.error("window.onerror failed: error variable invalid");
+        return false;
     }
-    dkconsole.error(msg);
+    dkconsole.error(error);
     return false;
 }
 
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
+
+
 window.onunhandledrejection = function(event) {
     dkconsole.error(event);
     return false;
 }
 
-
-function StackToConsoleString(stack) {
-    let stk;
-    if (!stack) {
-        stk = StackToJSON(GetStack());
-    } else {
-        stk = StackToJSON(stack);
+function StackToConsoleString(arg, deleteTo) {
+    let jsonStack;
+    if(arg instanceof Error){
+        if(arg.stack){
+            jsonStack = StackToJSON(arg.stack);
+        }
+        else if(arg instanceof DOMException){
+            const str = arg.name+" "+arg.message;
+            jsonStack = StackToJSON(GetStack(str));
+        }
+        else{
+            dkconsole.error("arg is an instance of Error, but it doesn't have a stack");
+            return false;
+        }  
+    }
+    else if(arg instanceof PromiseRejectionEvent){
+        jsonStack = StackToJSON(GetStack(arg.reason));
+    }
+    else if(typeof arg === 'string'){
+        jsonStack = StackToJSON(GetStack(arg));
+    }
+    else{
+        dkconsole.error("StackToConsoleString(): typeof arg invalid: "+typeof arg);
+        return false;
     }
 
-    //Remove the call to this function from the stack
-    for (let s = 1; s < stk.length; s++) {
-        if (stk[s].func === "StackToConsoleString") {
-            stk.splice(s, 1);
+    //deleteTo = 0;
+    //Remove calls up to the function specified in deleteTo
+    if (deleteTo) {
+        for (let s = 1; s < jsonStack.length; s++) {
+            if (jsonStack[s].func.includes(deleteTo)) {
+                jsonStack.splice(1, s);
+            }
         }
     }
 
-    let str = stk[0].msg + "<br>";
-    for (let s = 1; s < stk.length; s++) {
-        str += "  at " + stk[s].func + " ";
-        str += "(<a href='" + stk[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stk[s].file + ":" + stk[s].lineNum + "</a>)<br>";
+    let str = jsonStack[0].msg + "<br>";
+    for (let s = 1; s < jsonStack.length; s++) {
+        str += "  at " + jsonStack[s].func + " ";
+        str += "(<a href='" + jsonStack[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + jsonStack[s].file + ":" + jsonStack[s].lineNum + "</a>)<br>";
     }
     return str;
 }
@@ -47,9 +71,9 @@ function isStrict() {
     return false;
 }
 
-function GetStack() {
-    let e = new Error();
-    if (!e.stack)
+function GetStack(msg) {
+    let e = new Error(msg);
+    if (!e.stack){
         try {
             // old browsers need the Error thrown to fill the stack
             throw e;
@@ -59,21 +83,17 @@ function GetStack() {
                 // browser too old
             }
         }
-    //Remove the call to this function from the stack
-    let lines = e.stack.split('\n');
-    lines.splice(1, 1);
-    let stack = lines.join('\n');
-
-    return stack;
+    }
+    return e.stack;
 }
 
 function StackToJSON(stack) {
-    if (!stack || typeof stack !== "string") {
+    if (!stack || typeof stack !== 'string') {
         dkconsole.error("StackToJSON(): invalid stack");
         return false;
     }
 
-     //split the call stack lines into an array
+    //split the call stack lines into an array
     let lines = stack.toString().split(/\r\n|\n/);
 
     //The first line should be the call stack message

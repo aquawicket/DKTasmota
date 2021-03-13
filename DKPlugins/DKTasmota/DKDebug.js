@@ -47,6 +47,7 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
 
 function Debug2() {
 
+    Throw(e);
     const data1 = {
         a: 1,
         b: 2,

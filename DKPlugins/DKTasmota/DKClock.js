@@ -11,7 +11,7 @@ let utcDate = dateEvent.toUTCString();
 //format: Tue, 19 Aug 1975 23:15:30 GMT
 */
 
-function CreateClock(parent, id, top, bottom, left, right, width, weight) {
+function DKCreateClock(parent, id, top, bottom, left, right, width, weight) {
     const clock = document.createElement("a");
     clock.id = id;
     clock.style.position = "absolute";
@@ -23,7 +23,34 @@ function CreateClock(parent, id, top, bottom, left, right, width, weight) {
 
 function UpdateClock() {
     const currentdate = new Date();
-    const datetime = (currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+    let dayOfWeek; 
+    switch(currentdate.getDay()) {
+        case 0:
+            dayOfWeek = "Sunday";
+            break;
+        case 1:
+            dayOfWeek = "Monday";
+            break;
+        case 2:
+            dayOfWeek = "Tuesday";
+            break;
+        case 3:
+            dayOfWeek = "Wednesday";
+            break;
+        case 4:
+            dayOfWeek = "Thursday";
+            break;
+        case 5:
+            dayOfWeek = "Friday";
+            break;
+        case 6:
+            dayOfWeek = "Saturday";
+            break;
+        default:
+            dayOfWeek = "ERROR";
+    }
+
+    const datetime = dayOfWeek +" "+(currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
     if (document.getElementById("clock")) {
         document.getElementById("clock").innerHTML = datetime;
     }

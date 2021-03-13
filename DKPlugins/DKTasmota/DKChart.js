@@ -80,25 +80,6 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         ClearDatasets();
     }
     chartDiv.appendChild(clearButton);
-
-    //Load Button
-    /*
-    let loadButton = document.createElement("button");
-    loadButton.id = "loadButton";
-    loadButton.innerHTML = "Load";
-    loadButton.style.zIndex = "2";
-    loadButton.style.position = "absolute";
-    loadButton.style.top = "5px";
-    loadButton.style.left = "45px";
-    loadButton.style.height = "18px";
-    loadButton.style.width = "40px";
-    loadButton.style.padding = "0px";
-    loadButton.style.cursor = "pointer";
-    loadButton.onclick = function loadButtonOnclickCallback() {
-        LoadDatasets();
-    }
-    chartDiv.appendChild(loadButton);
-    */
 }
 
 function UpdateChartDevice(ip, data) {

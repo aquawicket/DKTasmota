@@ -139,13 +139,18 @@ function DKLoadFiles() {
     DKLoadJSFile("DKChart.js");
     DKLoadJSFile("Automation.js");
     DKLoadJSFile("VPDCalculator.js");
+    DKLoadJSFile("DKErrorHandler.js");
 }
 
 function DKLoadPage() {
+    window.onanyerror = function(entity){
+        console.log('DKErrorHandler:', entity);
+    };
+    LoadErrorHandlers();
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
     CreateButtons(document.body);
-    CreateClock(document.body, "clock", "2px", "", "", "10px");
+    DKCreateClock(document.body, "clock", "2px", "", "200px");
     CreateDeviceTable(document.body);
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
@@ -172,9 +177,9 @@ function DKLoadPage() {
 function CreateButtons(parent) {
     let scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
-    scanDevices.position = "absolute";
-    scanDevices.top = "5px";
-    scanDevices.left = "5px";
+    //scanDevices.style.position = "absolute";
+    //scanDevices.style.top = "5px";
+    //scanDevices.style.left = "5px";
     scanDevices.style.cursor = "pointer";
     scanDevices.onclick = function ScanDevicesOnclickCallback() {
         ScanDevices();
@@ -183,9 +188,9 @@ function CreateButtons(parent) {
 
     let updateDevices = document.createElement("button");
     updateDevices.innerHTML = "Update Devices";
-    updateDevices.position = "absolute";
-    updateDevices.top = "5px";
-    updateDevices.left = "30px";
+    //updateDevices.style.position = "absolute";
+    //updateDevices.style.top = "5px";
+    //updateDevices.style.left = "30px";
     updateDevices.style.cursor = "pointer";
     updateDevices.onclick = function UpdateDevicesOnClickCallback() {
         TimerLoop(false);
@@ -194,9 +199,9 @@ function CreateButtons(parent) {
 
     let clearDevices = document.createElement("button");
     clearDevices.innerHTML = "Clear Devices";
-    clearDevices.position = "absolute";
-    clearDevices.top = "5px";
-    clearDevices.left = "55px";
+    //clearDevices.style.position = "absolute";
+    //clearDevices.style.top = "5px";
+    //clearDevices.style.left = "55px";
     clearDevices.style.cursor = "pointer";
     clearDevices.onclick = function ClearDevicesOnclickCallback() {
         ClearDevices();

@@ -210,23 +210,19 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         dkconsole.message(str, "yellow");
     }
 
-    dkconsole.error = function(str, stack) {
-        //FIXME: we need to make sure stack is actually a stack
-        let stackStr = str+"<br>"+StackToConsoleString(stack);
-        //Remove the call to this function from the stack
-        let lines = stackStr.split('<br>');
-        lines.splice(1, 1);
-        let outStr = lines.join('\n');
-        dkconsole.message(outStr, "red");
+    //https://developer.mozilla.org/en-US/docs/Web/API/Console/error
+    dkconsole.error = function(arg) {
+        if(!arg){
+            dkconsole.warn("WARNING: dkconsole.error requires a valid argument");
+            return false;
+        }
+        const errMsg = StackToConsoleString(arg, "dkconsole.error");
+        dkconsole.message(errMsg, "red");
     }
 
     dkconsole.trace = function(str) {
-        let stackStr = str+"<br>"+StackToConsoleString();
-        //Remove the call to this function from the stack
-        let lines = stackStr.split('<br>');
-        lines.splice(1, 1);
-        let outStr = lines.join('\n');
-        dkconsole.message(outStr);
+       const stackStr = StackToConsoleString(str, "dkconsole.trace");
+       dkconsole.message(stackStr);
     }
 
     dkconsole.group = function(str) {
