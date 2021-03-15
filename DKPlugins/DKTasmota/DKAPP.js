@@ -148,7 +148,7 @@ function DKLoadFiles() {
 
 function DKLoadPage() {
     DKCreateErrorHandler();
-    
+
     document.body.style.backgroundColor = "rgb(100,100,100)";
 
     CreateButtons(document.body);
@@ -455,10 +455,10 @@ function UpdateScreen(success, url, data) {
         row.cells[1].innerHTML = "<a>" + devicePOWER + "</a>";
         if (devicePOWER === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            UpdateChartDevice(device.ip, 100);
+            UpdateChartDevice(device.ip, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            UpdateChartDevice(device.ip, 0);
+            UpdateChartDevice(device.ip, "switch1", 0);
         }
     }
 
@@ -496,8 +496,10 @@ function UpdateScreen(success, url, data) {
         let dewPointText = "<a id='DewP'>" + dewPoint + " DP &#176;F</a>";
 
         let tempScale = 510;
-        let tempDiff = (Math.abs(tempTarget - temperature) * 5)/*.toFixed(1)*/
-        let tempNum = (tempDiff * tempScale / 100)/*.toFixed(1)*/
+        let tempDiff = (Math.abs(tempTarget - temperature) * 5)
+        /*.toFixed(1)*/
+        let tempNum = (tempDiff * tempScale / 100)
+        /*.toFixed(1)*/
         let tempRed = tempNum;
         let tempGreen = 510 - tempNum;
         if (tempRed > 255) {
@@ -539,12 +541,9 @@ function UpdateScreen(success, url, data) {
         document.getElementById("DewP").style.textAlign = "center";
 
         if (temperature && humidity && dewPoint) {
-            var data = {
-                temperature: temperature,
-                humidity: humidity,
-                dewPoint: dewPoint
-            };
-            UpdateChartDevice(device.ip, JSON.stringify(data));
+            UpdateChartDevice(device.ip, "sensor1", temperature);
+            UpdateChartDevice(device.ip, "sensor2", humidity);
+            UpdateChartDevice(device.ip, "sensor3", dewPoint);
         }
     }
 
