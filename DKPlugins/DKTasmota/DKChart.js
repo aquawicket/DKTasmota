@@ -62,6 +62,10 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("ExhaustFan", "rgb(150,0,150)", exhaustFanIp, true);
     AddDataset("WaterWalls", "rgb(90,0,150)", waterWallsIp, true);
     AddDataset("Heater", "rgb(150,0,50)", heaterIp, true);
+    AddDataset("ShedWaterA", "rgb(150,40,40)", shedWaterAIp, true);
+    AddDataset("ShedWaterB", "rgb(30,0,90)", shedWaterBIp, true);
+    AddDataset("WaterStation", "rgb(10,30,50)", waterStationIp, true);
+    AddDataset("VegTentFan", "rgb(100,60,10)", VegTentFanIp, true);
     LoadDatasets();
 
     //Save Button
@@ -86,6 +90,15 @@ function UpdateChartDevice(ip, data) {
     if (!ip) {
         return;
     }
+
+    /*
+    for(let i=0; i<lineChart.data.datasets.length; i++){
+        if(ip === lineChart.data.datasets[i].ip){
+            data;
+        }
+    }
+    */
+    
     if (ip === "192.168.1.99") {
         //Temperature/Humidity sensor
         var json = JSON.parse(data);
@@ -183,14 +196,14 @@ function UpdateChartDevice(ip, data) {
     //}
 }
 
-function AddDataset(name, color, ip, hidden) {
+function AddDataset(label, borderColor, ip, hidden) {
     var dataset = {};
     dataset.ip = ip;
-    dataset.label = name;
+    dataset.label = label;
     dataset.data = [];
     dataset.lineTension = 0;
     dataset.fill = false;
-    dataset.borderColor = color;
+    dataset.borderColor = borderColor;
     dataset.hidden = hidden;
     lineChart.data.datasets.push(dataset);
     lineChart.update();

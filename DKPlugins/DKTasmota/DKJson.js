@@ -52,8 +52,8 @@ function StringifyJson(object) {
 
 function FindObject(obj, key, value)
 {
-    for (var i = 0; i < obj.length; i++){
-        if(obj[i].key == value){
+    for (let i = 0; i < obj.length; i++){
+        if(obj[i].key === value){
             return obj[i].name;
         }
     }

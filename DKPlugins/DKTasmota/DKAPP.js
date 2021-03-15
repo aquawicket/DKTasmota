@@ -96,6 +96,10 @@ let exhaustFanIp = "192.168.1.64";
 let waterWallsIp = "192.168.1.117";
 let co2Ip = "192.168.1.77";
 let heaterIp = "192.168.1.163";
+let shedWaterAIp = "192.168.1.206";
+let shedWaterBIp = "192.168.1.32";
+let waterStationIp = "192.168.1.107";
+let VegTentFanIp = "192.168.1.91";
 
 let time;
 
