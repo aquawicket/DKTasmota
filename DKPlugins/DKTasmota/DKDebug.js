@@ -47,6 +47,18 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
 
 function Debug2() {
 
+
+    let keyName = 'lastName'
+    let obj = {
+        firstName: 'allan',
+        lastName: 'smith'
+    }
+    FindObject(obj, keyName, "smith");
+    let keyName2 = 'ip';
+    FindObject(devices, keyName2, "test");
+
+    let breakpoint = 0;
+/*
     Throw(e);
     const data1 = {
         a: 1,
@@ -78,4 +90,5 @@ function Debug2() {
         }
         myData.push(input);
     }
+    */
 }

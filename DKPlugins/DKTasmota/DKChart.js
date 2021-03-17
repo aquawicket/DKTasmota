@@ -66,6 +66,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("ShedWaterB", "rgb(30,0,90)", shedWaterBIp, "switch1", true);
     AddDataset("WaterStation", "rgb(10,30,50)", waterStationIp, "switch1", true);
     AddDataset("VegTentFan", "rgb(100,60,10)", VegTentFanIp, "switch1", true);
+    AddDataset("Co2", "rgb(10,60,10)", co2Ip, "switch1", true);
     LoadDatasets();
 
     //Save Button

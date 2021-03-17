@@ -252,16 +252,16 @@ function CreateDeviceTable(parent) {
 
 function AddDevice(ip) {
     let dev = {
-        "ip": ip,
-        "Status": {},
-        "StatusPRM": {},
-        "StatusFWR": {},
-        "StatusLOG": {},
-        "StatusMEM": {},
-        "StatusNET": {},
-        "StatusTIM": {},
-        "StatusSNS": {},
-        "StatusSTS": {}
+        'ip': ip,
+        'Status': {},
+        'StatusPRM': {},
+        'StatusFWR': {},
+        'StatusLOG': {},
+        'StatusMEM': {},
+        'StatusNET': {},
+        'StatusTIM': {},
+        'StatusSNS': {},
+        'StatusSTS': {}
     }
     devices.push(dev);
 

@@ -20,6 +20,15 @@ function DKLoadJSFile(file, callback) {
     script.onload = callback;
 }
 
+function DKLoadHtmlFile(file, callback) {
+    DKSendRequest(file, function DKSendRequestCallback(success, url, data) {
+        if (!success) {
+            dkconsole.error("!success");
+        }
+        callback && callback(data);
+    });
+}
+
 function DKSendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,
