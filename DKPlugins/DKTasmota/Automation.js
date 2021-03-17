@@ -19,10 +19,28 @@ function Automate() {
         dkconsole.warn("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!");
     }
 
+    //Co2
+    if (co2 && !bypassRules.includes(co2.ip)) {
+        if ((temperature < tempMax) && (humidity < humMax)) {
+            dkconsole.message("Co2 ON", "green");
+            //When using Co2, temperature should be 85 degrees
+            tempTarget = 85;
+            humTarget = 55;
+            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+        } else {
+            dkconsole.warn("Co2 OFF");
+            //When NOT using Co2, temperature should be 77 degrees
+            tempTarget = 77;
+            humTarget = 50;
+            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+        }
+    }
+
     //Exhaust fan
     if (exhaustFan && !bypassRules.includes(exhaustFan.ip)) {
-        if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
-            if (co2?.StatusSTS?.POWER !== "ON") {
+        if (co2?.StatusSTS?.POWER !== "ON") {
+            if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
                 dkconsole.message("Exhaust Fan ON", "green");
                 DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             }
@@ -40,21 +58,6 @@ function Automate() {
         } else {
             dkconsole.warn("Water walls OFF");
             DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
-        }
-    }
-
-    //Co2
-    if (co2 && !bypassRules.includes(co2.ip)) {
-        if ((temperature < tempMax) && (humidity < humMax)) {
-            dkconsole.message("Co2 ON", "green");
-            //When using Co2, temperature should be 85 degrees
-            tempTarget = 85;
-            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-        } else {
-            dkconsole.warn("Co2 OFF");
-            //When NOT using Co2, temperature should be 77 degrees
-            tempTarget = 77;
-            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
