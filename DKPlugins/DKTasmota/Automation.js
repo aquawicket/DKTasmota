@@ -22,7 +22,7 @@ function Automate() {
     //Exhaust fan
     if (exhaustFan && !bypassRules.includes(exhaustFan.ip)) {
         if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
-            if (co2.StatusSTS.POWER !== "ON") {
+            if (co2?.StatusSTS?.POWER !== "ON") {
                 dkconsole.message("Exhaust Fan ON", "green");
                 DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             }
