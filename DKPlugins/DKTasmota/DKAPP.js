@@ -330,7 +330,6 @@ function ClearDevices() {
 }
 
 function TimerLoop(force) {
-    AssignDeviceShortcuts();
     Automate();
     ProcessDevices();
 }

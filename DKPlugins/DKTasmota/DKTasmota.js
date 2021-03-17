@@ -18,6 +18,7 @@ let bedroomLight;
 
 
 function AssignDeviceShortcuts(callback) {
+    if(!callback){ return; }
     let deviceCount = 0;
     for (var n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
@@ -31,44 +32,51 @@ function AssignDeviceShortcuts(callback) {
             }
             let deviceData = JSON.parse(data);
             let deviceName = deviceData?.Status?.DeviceName;
-            if (deviceName?.includes("001")) {
-                shedWaterB = devices[n];
+            let f = -1;
+            for(let d=0; d<devices.length; d++){
+                if(url.includes(devices[d].ip)){
+                    f = d;
+                    break;
+                }
             }
-            if (deviceName?.includes("002")) {
-                shedWaterA = devices[n];
+            if (deviceName.includes("001")) {
+                shedWaterB = devices[f];
             }
-            if (deviceName?.includes("003")) {
-                waterStation = devices[n];
+            if (deviceName.includes("002")) {
+                shedWaterA = devices[f];
             }
-            if (deviceName?.includes("004")) {
-                vegTentLights = devices[n];
+            if (deviceName.includes("003")) {
+                waterStation = devices[f];
             }
-            if (deviceName?.includes("005")) {
-                exhaustFan = devices[n];
+            if (deviceName.includes("004")) {
+                vegTentLights = devices[f];
             }
-            if (deviceName?.includes("006")) {
-                heater = devices[n];
+            if (deviceName.includes("005")) {
+                exhaustFan = devices[f];
             }
-            if (deviceName?.includes("007")) {
-                waterWalls = devices[n];
+            if (deviceName.includes("006")) {
+                heater = devices[f];
             }
-            if (deviceName?.includes("008")) {
-                co2 = devices[n];
+            if (deviceName.includes("007")) {
+                waterWalls = devices[f];
             }
-            if (deviceName?.includes("009")) {
-                vegTentWaterPump = devices[n];
+            if (deviceName.includes("008")) {
+                co2 = devices[f];
             }
-            if (deviceName?.includes("010")) {
-                vegTentFan = devices[n];
+            if (deviceName.includes("009")) {
+                vegTentWaterPump = devices[f];
             }
-            if (deviceName?.includes("011")) {
-                kitchenLight = devices[n];
+            if (deviceName.includes("010")) {
+                vegTentFan = devices[f];
             }
-            if (deviceName?.includes("012")) {
-                bedroomLight = devices[n];
+            if (deviceName.includes("011")) {
+                kitchenLight = devices[f];
             }
-            if (deviceName?.includes("013")) {
-                temperatureD = devices[n];
+            if (deviceName.includes("012")) {
+                bedroomLight = devices[f];
+            }
+            if (deviceName.includes("013")) {
+                temperatureD = devices[f];
             }
             deviceCount++;
             if(deviceCount === devices.length){
