@@ -50,21 +50,38 @@ function StringifyJson(object) {
     // returns cleaned up JSON
 }
 
-//search the object for a key that has a matching value
-function FindObject(obj, keyName, value) {
+//search the object for a keyName's value that matches value
+function FindObject(obj, key, value) {
     if(obj.length){ //array of objects
-        for (let o = 0; o < obj.length; o++){
-            if (keyName in obj[o]) {
-                if(obj[o][keyName] === value){
-                    return obj[o];
+        for (let index = 0; index < obj.length; index++){
+            if (key in obj[index]) {
+                if(obj[index][key] === value){
+                    //return obj[index];
+                    return index;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+//search the object for a keyName's value that value includes
+function FindObjectValueIncludes(obj, keyName, value) {
+    if(obj.length){ //array of objects
+        for (let n = 0; n < obj.length; n++){
+            if (keyName in obj[n]) {
+                if(value.includes(obj[n][keyName])){
+                    //return obj[n];
+                    return n;
                 }
             }
         }
     }
     else{ //single object
         if (keyName in obj) {
-            if(obj[keyName] === value){
-                return obj;
+            if(value.includes(obj[keyName])){
+                //return obj;
+                return -1;
             }
         }
     }

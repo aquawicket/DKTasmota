@@ -130,7 +130,7 @@ function DKSendRequest(url, callback) {
 
 /////////////////////////////////////////
 function SaveToLocalStorage(name, string) {
-    if (!name || !string) {
+    if (!name) {
         return;
     }
     localStorage.setItem(name, string);
@@ -144,15 +144,54 @@ function LoadFromLocalStorage(name) {
     return localStorage.getItem(name);
 }
 
+function RemoveFromLocalStorage(name){
+    localStorage.removeItem(name);
+}
+
+function DKCreateWindow(id, width, height)
+{
+    let win = document.createElement('div');
+    win.id = id;
+    win.style.position = "absolute";
+    //win.style.top = top;
+    //win.style.bottom = bottom;
+    //win.style.left = left;
+    //win.style.right = right;
+    win.style.width = width;
+    win.style.height = height;
+    win.style.overflow = "auto";
+    win.setAttribute('border', '1');
+    win.style.backgroundColor = "rgb(80,80,80)";
+    win.style.borderColor = "rgb(58,58,58)";
+    win.style.borderStyle = "solid";
+    win.style.borderWidth = "1px";
+    win.style.boxSizing = "border-box";
+    document.body.appendChild(win);
+    CenterWindow(win);
+
+    let winClose = document.createElement('div');
+    winClose.id = win.id+"Close";
+    winClose.style.position = "absolute";
+    winClose.style.right = "5px";
+    winClose.style.top = "3px";
+    winClose.innerHTML = "X";
+    winClose.style.cursor = "pointer";
+    winClose.onclick = function ScanDevicesOnclickCallback() {
+        win.remove();
+    }
+    win.appendChild(winClose);
+    return win;
+}
+
 //////////////////////////////
 function CenterWindow(element) {
     let winW = window.innerWidth;
     let winH = window.innerHeight;
-    let eleW = element.width;
-    let eleH = element.height;
+    let eleW = parseInt(element.style.width);
+    let eleH = parseInt(element.style.height);
     let eleX = (winW / 2) - (eleW / 2);
     let eleY = (winH / 2) - (eleH / 2);
     element.style.left = eleX + "px";
     element.style.top = eleY + "px";
-    return debugDiv;
+    return element;
 }

@@ -91,17 +91,6 @@ let theDevice = {
 }
 */
 
-let temperatureIp = "192.168.1.99";
-let exhaustFanIp = "192.168.1.64";
-let waterWallsIp = "192.168.1.117";
-let co2Ip = "192.168.1.77";
-let heaterIp = "192.168.1.163";
-let shedWaterAIp = "192.168.1.206";
-let shedWaterBIp = "192.168.1.32";
-let waterStationIp = "192.168.1.107";
-let VegTentFanIp = "192.168.1.91";
-
-let time;
 
 let temperature;
 let humidity;
@@ -117,11 +106,6 @@ let humTarget = 50;
 let humCalib = -10;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
-
-let exhaustFan = true;
-let waterWalls = true;
-let heater = true;
-let co2 = false;
 
 function DKLoadFiles() {
     //If you initiate anything here, it may fail.
@@ -163,8 +147,12 @@ function DKLoadPage() {
     CreateDebugButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
 
     //Load devices from local storage
-    let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
-    if (deviceIPs) {
+    let deviceIPs = [];
+    let data = LoadFromLocalStorage("deviceIPs")
+    if (data) {
+        deviceIPs = JSON.parse(data);
+    }
+    if (deviceIPs.length) {
         dkconsole.log("Loading " + deviceIPs.length + " devices");
         for (let n = 0; n < deviceIPs.length; n++) {
             let ip = deviceIPs[n];
@@ -318,17 +306,17 @@ function AddDevice(ip) {
 }
 
 function ScanDevices() {
-    let deviceIPs = JSON.parse(LoadFromLocalStorage("deviceIPs"));
-    if (deviceIPs == null) {
-        deviceIPs = [];
+    let deviceIPs = [];
+    let data = LoadFromLocalStorage("deviceIPs");
+    if (data) {
+        deviceIPs = JSON.parse(data);
     }
+
     GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
-        if (ip) {
-            if (ip && (!deviceIPs || !deviceIPs.includes(ip))) {
-                deviceIPs.push(ip);
-                SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
-                AddDevice(ip);
-            }
+        if (ip && !deviceIPs.includes(ip)) {
+            deviceIPs.push(ip);
+            SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
+            AddDevice(ip);
         }
         if (done) {
             dkconsole.log("\n");
@@ -342,12 +330,10 @@ function ClearDevices() {
     let table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
-    SaveToLocalStorage("deviceIPs", "");
+    RemoveFromLocalStorage("deviceIPs");
 }
 
 function TimerLoop(force) {
-    let currentdate = new Date();
-    time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     Automate();
     ProcessDevices();
 }
@@ -372,21 +358,20 @@ function UpdateScreen(success, url, data) {
     //let jsonSuper = HighlightJson(jsonString);
     //console.log(jsonSuper);
 
-    let device;
-    for (let d = 0; d < devices.length; d++) {
-        if (url.includes(devices[d].ip)) {
-            device = devices[d];
-            break;
-        }
-    }
+    let deviceData = JSON.parse(data);
+    const n = FindObjectValueIncludes(devices, 'ip', url);
+    //incoming data doesn't have an ip key, so copy it in 
+    deviceData.ip = devices[n].ip;
+    //then update the device data with the new data
+    devices[n] = deviceData;
+
+    //make a copy of the device data to work with
+    const device = devices[n];
     if (!device) {
         dkconsole.error("!device success:" + success + " url:" + url + " data:" + data);
         return;
     }
 
-    let deviceData = JSON.parse(data);
-    deviceData.ip = device.ip;
-    device = deviceData;
     /*
     if (deviceData.DeviceName) {
         device.Status.DeviceName = deviceData.DeviceName;

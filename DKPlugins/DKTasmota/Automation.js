@@ -2,11 +2,8 @@
 
 function Automate() {
 
+    AssignDeviceShortcuts();
     DumpVariables();
-
-    if (!temperature || !humidity || !dewPoint) {
-        return;
-    }
 
     //Alarms
     if (temperature < tempMin) {
@@ -23,53 +20,52 @@ function Automate() {
     }
 
     //Exhaust fan
-    let Co2Device = FindObject(devices, 'ip', co2Ip); //only tuen on exhaust fan if Co2 is off
-
-    if (!bypassRules.includes(exhaustFanIp) && exhaustFan) {
+    if (!bypassRules.includes(exhaustFan?.ip) && autoExhaustFan) {
         if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
-            dkconsole.message("Exhaust Fan ON", "green");
-            DKSendRequest("http://" + exhaustFanIp + "/cm?cmnd=POWER%20ON", UpdateScreen);
-
+            if (co2.StatusSTS.POWER !== "ON") {
+                dkconsole.message("Exhaust Fan ON", "green");
+                DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            }
         } else {
             dkconsole.warn("Exhaust Fan OFF");
-            DKSendRequest("http://" + exhaustFanIp + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Water walls
-    if (!bypassRules.includes(waterWallsIp) && waterWalls) {
+    if (!bypassRules.includes(waterWalls?.ip) && autoWaterWalls) {
         if ((time < 17) && (humidity < humTarget) && (temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
-            DKSendRequest("http://" + waterWallsIp + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.warn("Water walls OFF");
-            DKSendRequest("http://" + waterWallsIp + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Co2
-    if (!bypassRules.includes(co2Ip) && co2) {
+    if (!bypassRules.includes(co2?.ip) && autoCo2) {
         if ((temperature < tempMax) && (humidity < humMax)) {
             dkconsole.message("Co2 ON", "green");
             //When using Co2, temperature should be 85 degrees
             tempTarget = 85;
-            DKSendRequest("http://" + co2Ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.warn("Co2 OFF");
             //When NOT using Co2, temperature should be 77 degrees
             tempTarget = 77;
-            DKSendRequest("http://" + co2Ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Heater
-    if (!bypassRules.includes(heaterIp) && heater) {
+    if (!bypassRules.includes(heater?.ip) && autoHeater) {
         if (temperature < tempTarget) {
             dkconsole.message("Heater ON", "green");
-            DKSendRequest("http://" + heaterIp + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.warn("Heater OFF");
-            DKSendRequest("http://" + heaterIp + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 }
@@ -88,8 +84,8 @@ function DumpVariables() {
     dkconsole.debug("humCalib: " + humCalib);
     dkconsole.debug("humMin: " + humMin);
     dkconsole.debug("humMax: " + humMax);
-    dkconsole.debug("exhaustFan: " + exhaustFan);
-    dkconsole.debug("co2: " + co2);
-    dkconsole.debug("waterWalls: " + waterWalls);
-    dkconsole.debug("heater: " + heater);
+    dkconsole.debug("autoExhaustFan: " + autoExhaustFan);
+    dkconsole.debug("autoCo2: " + autoCo2);
+    dkconsole.debug("autoWaterWalls: " + autoWaterWalls);
+    dkconsole.debug("autoHeater: " + autoHeater);
 }

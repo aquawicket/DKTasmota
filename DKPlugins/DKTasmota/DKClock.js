@@ -10,6 +10,12 @@ let date = dateEvent.toJSON();
 let utcDate = dateEvent.toUTCString();
 //format: Tue, 19 Aug 1975 23:15:30 GMT
 */
+let time;
+
+function GetDateInMilliseconds() {
+    let date = new Date();
+    return date.getTime();
+}
 
 function DKCreateClock(parent, id, top, bottom, left, right, width, weight) {
     const clock = document.createElement("a");
@@ -23,6 +29,7 @@ function DKCreateClock(parent, id, top, bottom, left, right, width, weight) {
 
 function UpdateClock() {
     const currentdate = new Date();
+    time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     let dayOfWeek; 
     switch(currentdate.getDay()) {
         case 0:

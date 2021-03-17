@@ -3,51 +3,19 @@
 //A Convienient Debug Button Function
 const showDebugButton = 1;
 function DebugButtonOnClick() {
+    DKCreateWindow("testWindow", 300, 300);
+    /*
+    //Test PHP functions
     PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal) {
         dkconsole.log("characters written: " + rVal);
     });
     PHP_GetTime(function(rVal) {
         dkconsole.log(rVal);
     });
-}
+    */
 
-function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
-    let debugDiv = document.createElement("div");
-    debugDiv.style.position = "absolute";
-    debugDiv.style.backgroundColor = "Grey";
-    debugDiv.style.top = top;
-    debugDiv.style.bottom = bottom;
-    debugDiv.style.left = left;
-    debugDiv.style.right = right;
-    debugDiv.style.width = width;
-    debugDiv.style.height = height;
-    parent.appendChild(debugDiv);
-    return debugDiv;
-}
-
-function CreateDebugButton(parent, id, top, bottom, left, right, width, height) {
-    if (!showDebugButton) {
-        return;
-    }
-    let debugButton = document.createElement("button");
-    debugButton.innerHTML = "DEBUG";
-    debugButton.style.position = "absolute";
-    debugButton.style.top = top;
-    debugButton.style.bottom = bottom;
-    debugButton.style.left = left;
-    debugButton.style.right = right;
-    debugButton.style.width = width;
-    debugButton.style.height = height;
-    debugButton.onclick = function() {
-        Debug2();
-    }
-    parent.appendChild(debugButton);
-    return debugButton;
-}
-
-function Debug2() {
-
-
+    /*
+    //FindObject() Test
     let keyName = 'lastName'
     let obj = {
         firstName: 'allan',
@@ -56,10 +24,10 @@ function Debug2() {
     FindObject(obj, keyName, "smith");
     let keyName2 = 'ip';
     FindObject(devices, keyName2, "test");
+    */
 
-    let breakpoint = 0;
-/*
-    Throw(e);
+    /*
+    //Test only pushing new values to objects
     const data1 = {
         a: 1,
         b: 2,
@@ -92,3 +60,39 @@ function Debug2() {
     }
     */
 }
+
+function CreateDebugButton(parent, id, top, bottom, left, right, width, height) {
+    if (!showDebugButton) {
+        return;
+    }
+    let debugButton = document.createElement("button");
+    debugButton.innerHTML = "DEBUG";
+    debugButton.style.position = "absolute";
+    debugButton.style.top = top;
+    debugButton.style.bottom = bottom;
+    debugButton.style.left = left;
+    debugButton.style.right = right;
+    debugButton.style.width = width;
+    debugButton.style.height = height;
+    debugButton.onclick = function() {
+        DebugButtonOnClick();
+    }
+    parent.appendChild(debugButton);
+    return debugButton;
+}
+
+/*
+function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
+    let debugDiv = document.createElement("div");
+    debugDiv.style.position = "absolute";
+    debugDiv.style.backgroundColor = "Grey";
+    debugDiv.style.top = top;
+    debugDiv.style.bottom = bottom;
+    debugDiv.style.left = left;
+    debugDiv.style.right = right;
+    debugDiv.style.width = width;
+    debugDiv.style.height = height;
+    parent.appendChild(debugDiv);
+    return debugDiv;
+}
+*/

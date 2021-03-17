@@ -39,6 +39,7 @@ function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
     table.style.right = right;
     table.style.width = width;
     table.style.height = height;
+    table.style.overflow = "auto";
     //table.setAttribute('border', '1');
     parent.appendChild(table);
     return table;

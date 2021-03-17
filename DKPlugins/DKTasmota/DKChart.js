@@ -56,17 +56,18 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
-    AddDataset("Temperature", "rgb(200, 0, 0)", temperatureIp, "sensor1", false);
-    AddDataset("Humidity", "rgb(0, 0, 200)", temperatureIp, "sensor2", false);
-    AddDataset("DewPoint", "rgb(0,150,150)", temperatureIp, "sensor3", true);
-    AddDataset("ExhaustFan", "rgb(150,0,150)", exhaustFanIp, "switch1", true);
-    AddDataset("WaterWalls", "rgb(90,0,150)", waterWallsIp, "switch1", true);
-    AddDataset("Heater", "rgb(150,0,50)", heaterIp, "switch1", true);
-    AddDataset("ShedWaterA", "rgb(150,40,40)", shedWaterAIp, "switch1", true);
-    AddDataset("ShedWaterB", "rgb(30,0,90)", shedWaterBIp, "switch1", true);
-    AddDataset("WaterStation", "rgb(10,30,50)", waterStationIp, "switch1", true);
-    AddDataset("VegTentFan", "rgb(100,60,10)", VegTentFanIp, "switch1", true);
-    AddDataset("Co2", "rgb(10,60,10)", co2Ip, "switch1", true);
+    AssignDeviceShortcuts();
+    AddDataset("Temperature", "rgb(200, 0, 0)", temperatureD?.ip, "sensor1", false);
+    AddDataset("Humidity", "rgb(0, 0, 200)", temperatureD?.ip, "sensor2", false);
+    AddDataset("DewPoint", "rgb(0,150,150)", temperatureD?.ip, "sensor3", true);
+    AddDataset("ExhaustFan", "rgb(150,0,150)", exhaustFan?.ip, "switch1", true);
+    AddDataset("WaterWalls", "rgb(90,0,150)", waterWalls?.ip, "switch1", true);
+    AddDataset("Heater", "rgb(150,0,50)", heater?.ip, "switch1", true);
+    AddDataset("ShedWaterA", "rgb(150,40,40)", shedWaterA?.ip, "switch1", true);
+    AddDataset("ShedWaterB", "rgb(30,0,90)", shedWaterB?.ip, "switch1", true);
+    AddDataset("WaterStation", "rgb(10,30,50)", waterStation?.ip, "switch1", true);
+    AddDataset("VegTentFan", "rgb(100,60,10)", vegTentFan?.ip, "switch1", true);
+    AddDataset("Co2", "rgb(10,60,10)", co2?.ip, "switch1", true);
     LoadDatasets();
 
     //Save Button
@@ -122,129 +123,9 @@ function UpdateChartDevice(ip, identifier, data) {
                 });
                 //break;
             }
-            /*
-            if (type === "sensor2") {
-                //humidity
-                const hData = lineChart.data.datasets[i].data;
-                if (hData.length && parseFloat(data) === hData[hData.length - 1].y) {
-                    hData.pop();
-                }
-                hData.push({
-                    t: new Date(),
-                    y: parseFloat(data)
-                });
-                break;
-            }
-            if (type === "sensor3") {
-                //dewPoint
-                const dData = lineChart.data.datasets[i].data;
-                if (dData.length && parseFloat(data) === dData[dData.length - 1].y) {
-                    dData.pop();
-                }
-                dData.push({
-                    t: new Date(),
-                    y: parseFloat(data)
-                });
-                break;
-            }
-            */
-        }
+          }
     }
 
-    /*
-    if (ip === "192.168.1.99") {
-        //Temperature/Humidity sensor
-        var json = JSON.parse(data);
-        //temperature
-        if (json.sensor1
-        ) {
-            const tData = lineChart.data.datasets[0].data;
-            if (tData.length && parseFloat(json.sensor1 //temperature
-            ) === tData[tData.length - 1].y) {
-                tData.pop();
-            }
-            tData.push({
-                t: new Date(),
-                y: parseFloat(json.sensor1 //temperature
-                )
-            });
-        }
-        if (json.sensor2 //humidity
-        ) {
-            const hData = lineChart.data.datasets[1].data;
-            if (hData.length && parseFloat(json.sensor2 //humidity
-            ) === hData[hData.length - 1].y) {
-                hData.pop();
-            }
-            hData.push({
-                t: new Date(),
-                y: parseFloat(json.sensor2 //humidity
-                )
-            });
-        }
-        if (json.sensor3 //dewPoint
-        ) {
-            const dData = lineChart.data.datasets[2].data;
-            if (dData.length && parseFloat(json.sensor3 //dewPoint
-            ) === dData[dData.length - 1].y) {
-                dData.pop();
-            }
-            dData.push({
-                t: new Date(),
-                y: parseFloat(json.sensor3 //dewPoint
-                )
-            });
-        }
-    }
-    if (ip === "192.168.1.64") {
-        //ExhaustFan
-        const ex = lineChart.data.datasets[3].data;
-        if (ex.length && data === ex[ex.length - 1].y) {
-            ex.pop();
-        } else {
-            ex.push({
-                t: new Date(),
-                y: data
-            });
-        }
-        ex.push({
-            t: new Date(),
-            y: data
-        });
-    }
-    if (ip === "192.168.1.177") {
-        //WaterWalls
-        const ww = lineChart.data.datasets[4].data;
-        if (ww.length && data === ww[ww.length - 1].y) {
-            ww.pop();
-        } else {
-            ww.push({
-                t: new Date(),
-                y: data
-            });
-        }
-        ww.push({
-            t: new Date(),
-            y: data
-        });
-    }
-    if (ip === "192.168.1.163") {
-        //Heater
-        const he = lineChart.data.datasets[5].data;
-        if (he.length && data === he[he.length - 1].y) {
-            he.pop();
-        } else {
-            he.push({
-                t: new Date(),
-                y: data
-            });
-        }
-        he.push({
-            t: new Date(),
-            y: data
-        });
-    }
-    */
     lineChart.update();
     SaveDatasets(ip);
 
