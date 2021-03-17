@@ -356,6 +356,9 @@ function UpdateScreen(success, url, data) {
 
     let deviceData = JSON.parse(data);
     const n = FindObjectValueIncludes(devices, 'ip', url);
+    if(!devices[n]){
+        dkconsole.error("devices[n] invalid");
+    }
     //incoming data doesn't have an ip key, so copy it in 
     deviceData.ip = devices[n].ip;
     //then update the device data with the new data
