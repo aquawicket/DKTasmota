@@ -56,7 +56,26 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
-    AssignDeviceShortcuts();
+    let clearButton = document.createElement("button");
+    clearButton.id = "clearButton";
+    clearButton.innerHTML = "Clear";
+    clearButton.style.position = "absolute";
+    clearButton.style.top = "5px";
+    clearButton.style.left = "5px";
+    clearButton.style.height = "18px";
+    clearButton.style.width = "40px";
+    clearButton.style.padding = "0px";
+    clearButton.style.cursor = "pointer";
+    clearButton.onclick = ClearDatasets();
+    chartDiv.appendChild(clearButton);
+    
+    AssignDeviceShortcuts(function(){
+        AddDatasets();
+        LoadDatasets();
+    }); 
+}
+
+function AddDatasets(){
     AddDataset("Temperature", "rgb(200, 0, 0)", temperatureD?.ip, "sensor1", false);
     AddDataset("Humidity", "rgb(0, 0, 200)", temperatureD?.ip, "sensor2", false);
     AddDataset("DewPoint", "rgb(0,150,150)", temperatureD?.ip, "sensor3", true);
@@ -68,24 +87,6 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     AddDataset("WaterStation", "rgb(10,30,50)", waterStation?.ip, "switch1", true);
     AddDataset("VegTentFan", "rgb(100,60,10)", vegTentFan?.ip, "switch1", true);
     AddDataset("Co2", "rgb(10,60,10)", co2?.ip, "switch1", true);
-    LoadDatasets();
-
-    //Save Button
-    let clearButton = document.createElement("button");
-    clearButton.id = "clearButton";
-    clearButton.innerHTML = "Clear";
-    clearButton.style.zIndex = "2";
-    clearButton.style.position = "absolute";
-    clearButton.style.top = "5px";
-    clearButton.style.left = "5px";
-    clearButton.style.height = "18px";
-    clearButton.style.width = "40px";
-    clearButton.style.padding = "0px";
-    clearButton.style.cursor = "pointer";
-    clearButton.onclick = function clearButtonOnclickCallback() {
-        ClearDatasets();
-    }
-    chartDiv.appendChild(clearButton);
 }
 
 function UpdateChartDevice(ip, identifier, data) {

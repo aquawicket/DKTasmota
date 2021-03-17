@@ -2,7 +2,15 @@
 
 // https://developer.mozilla.org/en-US/docs/Web/API/console
 let consoleLimit = 100;
-let dkconsole;
+let dkconsole = new Object;
+dkconsole.log = console.log;
+dkconsole.info = console.info;
+dkconsole.debug = console.debug;
+dkconsole.warn = console.warn;
+dkconsole.error = console.error;
+dkconsole.trace = console.trace;
+dkconsole.assert = console.assert;
+dkconsole.group = console.group;
 
 //intercept console with dkconsole
 //Example: If you use dkconsole.log, it will only log to the dk console.
@@ -19,6 +27,7 @@ let console_trace = console.trace;
 let console_assert = console.assert;
 let console_group = console.group;
 (function() {
+
     console.log = function() {
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
         console_log.apply(this, Array.prototype.slice.call(consoleSpanFilter(arguments)));

@@ -91,7 +91,6 @@ let theDevice = {
 }
 */
 
-
 let temperature;
 let humidity;
 let dewPoint;
@@ -132,70 +131,81 @@ function DKLoadFiles() {
 
 function DKLoadPage() {
     DKCreateErrorHandler();
-
+    LoadDevices();
+    //AssignDeviceShortcuts();
+    //Load Gui
+    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
+    dkconsole.debug("**** Tasmota device manager 0.1b ****");
     document.body.style.backgroundColor = "rgb(100,100,100)";
-
+    CreateSound("PowerDown.mp3");
     CreateButtons(document.body);
     DKCreateClock(document.body, "clock", "2px", "", "200px");
     CreateDeviceTable(document.body);
-    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
-    dkconsole.debug("**** Tasmota device manager 0.1b ****");
-    CreateSound("PowerDown.mp3");
     CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
-    //CreateVPDCalculator(document.body, "30px", "", "", "2px", "400px", "600px");
-    //CreateDebugBox(document.body, "30px", "", "", "2px", "200px", "400px");
     CreateDebugButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
 
-    //Load devices from local storage
-    let deviceIPs = [];
-    let data = LoadFromLocalStorage("deviceIPs")
-    if (data) {
-        deviceIPs = JSON.parse(data);
-    }
-    if (deviceIPs.length) {
-        dkconsole.log("Loading " + deviceIPs.length + " devices");
-        for (let n = 0; n < deviceIPs.length; n++) {
-            let ip = deviceIPs[n];
-            AddDevice(ip);
-        }
+    for (let n = 0; n < devices.length; n++) {
+        AddDeviceToTable(devices[n].ip);
+        //AddDeviceToChart(devices[n].ip);
     }
 
     //Run TimerLoop every minute
     window.setInterval(TimerLoop, 60000);
 }
 
+//Load devices from local storage
+function LoadDevices(){
+    let deviceIPs = [];
+    let data = LoadFromLocalStorage("deviceIPs")
+    if (data) {
+        deviceIPs = JSON.parse(data);
+    }
+    dkconsole.log("Loading ("+deviceIPs.length+") Devices");
+    for (let n = 0; n < deviceIPs.length; n++) {
+        let dev = {
+            'ip': deviceIPs[n],
+            'Status': {},
+            'StatusPRM': {},
+            'StatusFWR': {},
+            'StatusLOG': {},
+            'StatusMEM': {},
+            'StatusNET': {},
+            'StatusTIM': {},
+            'StatusSNS': {},
+            'StatusSTS': {}
+        }
+        devices.push(dev);
+        DKSendRequest("http://" + deviceIPs[n] + "/cm?cmnd=Status%200", function(success, url, data) {
+            if (!success || !url || !data){
+                return;
+            }
+            let deviceData = JSON.parse(data);
+            const n = FindObjectValueIncludes(devices, 'ip', url);
+            //incoming data doesn't have an ip key, so copy it in 
+            deviceData.ip = devices[n].ip;
+            //then update the device data with the new data
+            devices[n] = deviceData;
+        });
+    }
+}
+
 function CreateButtons(parent) {
     let scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
-    //scanDevices.style.position = "absolute";
-    //scanDevices.style.top = "5px";
-    //scanDevices.style.left = "5px";
     scanDevices.style.cursor = "pointer";
-    scanDevices.onclick = function ScanDevicesOnclickCallback() {
-        ScanDevices();
-    }
+    scanDevices.onclick = ScanDevices;
     parent.appendChild(scanDevices);
 
     let updateDevices = document.createElement("button");
     updateDevices.innerHTML = "Update Devices";
-    //updateDevices.style.position = "absolute";
-    //updateDevices.style.top = "5px";
-    //updateDevices.style.left = "30px";
     updateDevices.style.cursor = "pointer";
-    updateDevices.onclick = function UpdateDevicesOnClickCallback() {
-        TimerLoop(false);
-    }
+    updateDevices.onclick = TimerLoop;
     parent.appendChild(updateDevices);
 
     let clearDevices = document.createElement("button");
     clearDevices.innerHTML = "Clear Devices";
-    //clearDevices.style.position = "absolute";
-    //clearDevices.style.top = "5px";
-    //clearDevices.style.left = "55px";
     clearDevices.style.cursor = "pointer";
-    clearDevices.onclick = function ClearDevicesOnclickCallback() {
-        ClearDevices();
-    }
+    clearDevices.onclick = ClearDevices;
     parent.appendChild(clearDevices);
 }
 
@@ -238,21 +248,7 @@ function CreateDeviceTable(parent) {
     DKTableGetCellByNames(table, "HEADER", "wifi").style.textAlign = "center";
 }
 
-function AddDevice(ip) {
-    let dev = {
-        'ip': ip,
-        'Status': {},
-        'StatusPRM': {},
-        'StatusFWR': {},
-        'StatusLOG': {},
-        'StatusMEM': {},
-        'StatusNET': {},
-        'StatusTIM': {},
-        'StatusSNS': {},
-        'StatusSTS': {}
-    }
-    devices.push(dev);
-
+function AddDeviceToTable(ip) {
     let table = document.getElementById("deviceTable");
     let _row = DKTableAddRow(table, ip);
     _row.setAttribute("ip", ip);
@@ -316,7 +312,7 @@ function ScanDevices() {
         if (ip && !deviceIPs.includes(ip)) {
             deviceIPs.push(ip);
             SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
-            AddDevice(ip);
+            AddDeviceToTable(ip);
         }
         if (done) {
             dkconsole.log("\n");
@@ -334,6 +330,7 @@ function ClearDevices() {
 }
 
 function TimerLoop(force) {
+    AssignDeviceShortcuts();
     Automate();
     ProcessDevices();
 }

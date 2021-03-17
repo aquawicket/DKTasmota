@@ -16,56 +16,69 @@ let vegTentWaterPump;
 let kitchenLight;
 let bedroomLight;
 
-let autoExhaustFan = true;
-let autoWaterWalls = true;
-let autoHeater = true;
-let autoCo2 = false;
 
-let tasmotaDeviceCount;
-let devicesScanned;
-
-function AssignDeviceShortcuts() {
-    if (!shedWaterB) {
-        shedWaterB = GetDeviceByCode("001");
-    }
-    if (!shedWaterA) {
-        shedWaterA = GetDeviceByCode("002");
-    }
-    if (!waterStation) {
-        waterStation = GetDeviceByCode("003");
-    }
-    if (!vegTentLights) {
-        vegTentLights = GetDeviceByCode("004");
-    }
-    if (!exhaustFan) {
-        exhaustFan = GetDeviceByCode("005");
-    }
-    if (!heater) {
-        heater = GetDeviceByCode("006");
-    }
-    if (!waterWalls) {
-        waterWalls = GetDeviceByCode("007");
-    }
-    if (!co2) {
-        co2 = GetDeviceByCode("008");
-    }
-    if (!vegTentWaterPump) {
-        vegTentWaterPump = GetDeviceByCode("009");
-    }
-    if (!vegTentFan) {
-        vegTentFan = GetDeviceByCode("010");
-    }
-    if (!kitchenLight) {
-        kitchenLight = GetDeviceByCode("011");
-    }
-    if (!bedroomLight) {
-        bedroomLight = GetDeviceByCode("012");
-    }
-    if (!temperatureD) {
-        temperatureD = GetDeviceByCode("013");
+function AssignDeviceShortcuts(callback) {
+    let deviceCount = 0;
+    for (var n = 0; n < devices.length; n++) {
+        const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
+        DKSendRequest(url, function(success, url, data) {
+            if (!success || !url || !data) {
+                deviceCount++;
+                if(deviceCount === devices.length){
+                    callback && callback();
+                }
+                return;
+            }
+            let deviceData = JSON.parse(data);
+            let deviceName = deviceData?.Status?.DeviceName;
+            if (deviceName?.includes("001")) {
+                shedWaterB = devices[n];
+            }
+            if (deviceName?.includes("002")) {
+                shedWaterA = devices[n];
+            }
+            if (deviceName?.includes("003")) {
+                waterStation = devices[n];
+            }
+            if (deviceName?.includes("004")) {
+                vegTentLights = devices[n];
+            }
+            if (deviceName?.includes("005")) {
+                exhaustFan = devices[n];
+            }
+            if (deviceName?.includes("006")) {
+                heater = devices[n];
+            }
+            if (deviceName?.includes("007")) {
+                waterWalls = devices[n];
+            }
+            if (deviceName?.includes("008")) {
+                co2 = devices[n];
+            }
+            if (deviceName?.includes("009")) {
+                vegTentWaterPump = devices[n];
+            }
+            if (deviceName?.includes("010")) {
+                vegTentFan = devices[n];
+            }
+            if (deviceName?.includes("011")) {
+                kitchenLight = devices[n];
+            }
+            if (deviceName?.includes("012")) {
+                bedroomLight = devices[n];
+            }
+            if (deviceName?.includes("013")) {
+                temperatureD = devices[n];
+            }
+            deviceCount++;
+            if(deviceCount === devices.length){
+                callback && callback();
+            }
+        });
     }
 }
 
+/*
 function GetDeviceByCode(nnn) {
     for (var n = 0; n < devices.length; n++) {
         if (devices[n]?.Status?.DeviceName?.includes(nnn)) {
@@ -73,11 +86,12 @@ function GetDeviceByCode(nnn) {
         }
     }
 }
+*/
 
 //return all local network device IPs that respond to /cm?cmnd=CORS 
 function GetTasmotaDevices(ipPrefix, callback) {
-    tasmotaDeviceCount = 0;
-    devicesScanned = 0;
+    let tasmotaDeviceCount = 0;
+    let devicesScanned = 0;
     //scan 192.168.1.1 thru 192.168.1.254
     if (!ipPrefix) {
         ipPrefix = "192.168.1.";
@@ -94,7 +108,6 @@ function GetTasmotaDevices(ipPrefix, callback) {
             //    cmnd += `:${window.location.port}`;
             //}
         }
-        //let url = "http://"+ip+"/cm?cmnd="+cmnd; //Un-encodeURIComponent
         let url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         dkconsole.debug(url);
         DKSendSuperRequest(url, function DKSendSuperRequestCallback(success, data) {

@@ -81,31 +81,31 @@ function DKSendRequest(url, callback) {
     //Possible error codes
     //https://github.com/richardwilkes/cef/blob/master/cef/enums_gen.go
     xhr.onabort = function(event) {
-        //dkconsole.log("XMLHttpRequest.onreadystatechange(" + event + ")");
+        //console.log("XMLHttpRequest.onreadystatechange(" + event + ")");
         dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onabort");
         callback(false, url, event.type);
         return false;
     }
     xhr.onerror = function(event) {
-        //dkconsole.log("XMLHttpRequest.onerror(" + event + ")");
+        //console.log("XMLHttpRequest.onerror(" + event + ")");
         dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onerror");
         callback(false, url, event.type);
         return false;
     }
     xhr.onload = function(event) {
-        //dkconsole.log("XMLHttpRequest.onload(" + event + ")");
+        //console.log("XMLHttpRequest.onload(" + event + ")");
     }
     xhr.onloadend = function(event) {
-        //dkconsole.log("XMLHttpRequest.onloadend(" + event + ")");
+        //console.log("XMLHttpRequest.onloadend(" + event + ")");
     }
     xhr.onloadstart = function(event) {
-        //dkconsole.log("XMLHttpRequest.onloadstart(" + event + ")");
+        //console.log("XMLHttpRequest.onloadstart(" + event + ")");
     }
     xhr.onprogress = function(event) {
-        //dkconsole.log("XMLHttpRequest.onprogress(" + event + ")");
+        //console.log("XMLHttpRequest.onprogress(" + event + ")");
     }
     xhr.onreadystatechange = function(event) {
-        //dkconsole.log("XMLHttpRequest.onreadystatechange(" + event + ")");
+        //console.log("XMLHttpRequest.onreadystatechange(" + event + ")");
         if (xhr.readyState === 4) {
             if (xhr.status >= 200 && xhr.status < 400) {
                 callback(true, url, xhr.responseText);
@@ -123,9 +123,9 @@ function DKSendRequest(url, callback) {
     }
 
     //Try/Catch won't work here
-    try{
+    //try{
         xhr.send();
-    }catch{}
+    //}catch{}
 }
 
 /////////////////////////////////////////
@@ -194,4 +194,22 @@ function CenterWindow(element) {
     element.style.left = eleX + "px";
     element.style.top = eleY + "px";
     return element;
+}
+
+function CreateButton(parent, id, top, left, witdh, height, onclick)
+{   
+    let button = document.createElement("button");
+    button.id = id;
+    button.innerHTML = "Button";
+    //button.style.zIndex = "2";
+    button.style.position = "absolute";
+    button.style.top = top;
+    button.style.left = left;
+    button.style.height = height;
+    button.style.width = width;
+    button.style.padding = "0px";
+    button.style.cursor = "pointer";
+    button.onclick = onclick;
+    parent.appendChild(button);
+    return button;
 }

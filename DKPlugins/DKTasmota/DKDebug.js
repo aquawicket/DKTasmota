@@ -4,6 +4,9 @@
 const showDebugButton = 1;
 function DebugButtonOnClick() {
     DKCreateWindow("testWindow", 300, 300);
+    dkconsole.log("dkconsole.log Test");
+    console.log("console.log Test");
+    console_log("console_log Test");
     /*
     //Test PHP functions
     PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal) {
@@ -74,25 +77,7 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     debugButton.style.right = right;
     debugButton.style.width = width;
     debugButton.style.height = height;
-    debugButton.onclick = function() {
-        DebugButtonOnClick();
-    }
+    debugButton.onclick = DebugButtonOnClick;
     parent.appendChild(debugButton);
     return debugButton;
 }
-
-/*
-function CreateDebugBox(parent, id, top, bottom, left, right, width, height) {
-    let debugDiv = document.createElement("div");
-    debugDiv.style.position = "absolute";
-    debugDiv.style.backgroundColor = "Grey";
-    debugDiv.style.top = top;
-    debugDiv.style.bottom = bottom;
-    debugDiv.style.left = left;
-    debugDiv.style.right = right;
-    debugDiv.style.width = width;
-    debugDiv.style.height = height;
-    parent.appendChild(debugDiv);
-    return debugDiv;
-}
-*/
