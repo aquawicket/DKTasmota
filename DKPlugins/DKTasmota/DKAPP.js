@@ -185,6 +185,7 @@ function LoadDevices(){
             deviceData.ip = devices[n].ip;
             //then update the device data with the new data
             devices[n] = deviceData;
+            devices.sort((a, b) => (a.Status.DeviceName > b.Status.DeviceName) ? 1 : -1)
         });
     }
 }
@@ -340,6 +341,7 @@ function ProcessDevices() {
         let ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
+    //DKSortTable("deviceTable", 0);
 }
 
 function UpdateScreen(success, url, data) {
@@ -432,6 +434,7 @@ function UpdateScreen(success, url, data) {
     let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (deviceName) {
         row.cells[0].innerHTML = "<a>" + deviceName + "</a>";
+        DKSortRow("deviceTable", row, 0, 1);
     }
 
     let devicePOWER = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;

@@ -21,7 +21,7 @@ function Automate() {
 
     //Co2
     if (co2 && !bypassRules.includes(co2.ip)) {
-        if ((temperature < tempMax) && (humidity < humMax)) {
+        if ((temperature < 95) && (humidity < 60) && (time > 6) && (time < 14)) {
             dkconsole.message("Co2 ON", "green");
             //When using Co2, temperature should be 85 degrees
             tempTarget = 85;
@@ -39,12 +39,11 @@ function Automate() {
 
     //Exhaust fan
     if (exhaustFan && !bypassRules.includes(exhaustFan.ip)) {
-        if (co2?.StatusSTS?.POWER !== "ON") {
-            if ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
-                dkconsole.message("Exhaust Fan ON", "green");
-                DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-            }
-        } else {
+        if ((co2?.StatusSTS?.POWER !== "ON") && (temperature > tempTarget) || (humidity > humTarget && temperature > tempMin)) {
+            dkconsole.message("Exhaust Fan ON", "green");
+            DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+        }
+        else {
             dkconsole.warn("Exhaust Fan OFF");
             DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
