@@ -11,7 +11,7 @@ const PrettyJson = function(json) {
 const HighlightJson = function(jsonString) {
     let hightlightedJson = jsonString.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return hightlightedJson.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
-        var cls = 'number';
+        let cls = 'number';
         if (/^"/.test(match)) {
             if (/:$/.test(match)) {
                 cls = 'key';
@@ -33,8 +33,8 @@ const HighlightJson = function(jsonString) {
 
 ///Takes care of circular refrences in objects
 function StringifyJson(object) {
-    var simpleObject = {};
-    for (var prop in object) {
+    let simpleObject = {};
+    for (let prop in object) {
         if (!object.hasOwnProperty(prop)) {
             continue;
         }

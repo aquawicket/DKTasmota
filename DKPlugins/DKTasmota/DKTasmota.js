@@ -20,7 +20,7 @@ let bedroomLight;
 function AssignDeviceShortcuts(callback) {
     if(!callback){ return; }
     let deviceCount = 0;
-    for (var n = 0; n < devices.length; n++) {
+    for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DKSendRequest(url, function(success, url, data) {
             if (!success || !url || !data) {
@@ -88,7 +88,7 @@ function AssignDeviceShortcuts(callback) {
 
 /*
 function GetDeviceByCode(nnn) {
-    for (var n = 0; n < devices.length; n++) {
+    for (let n = 0; n < devices.length; n++) {
         if (devices[n]?.Status?.DeviceName?.includes(nnn)) {
             return devices[n];
         }

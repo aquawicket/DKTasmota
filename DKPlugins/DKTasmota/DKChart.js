@@ -9,7 +9,7 @@ DKLoadJSFile("moment.min.js", function() {
     DKLoadJSFile("Chart.min.js");
 });
 
-var lineChart;
+let lineChart;
 
 function CreateChart(parent, id, top, bottom, left, right, width, height) {
     let chartDiv = document.createElement("div");
@@ -31,7 +31,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartCanvas.style.top = "0px";
     chartCanvas.style.width = "100%";
     chartCanvas.style.height = "100%";
-    var ctx = chartCanvas.getContext('2d');
+    let ctx = chartCanvas.getContext('2d');
     chartDiv.appendChild(chartCanvas);
 
     lineChart = new Chart(ctx,{
@@ -143,7 +143,7 @@ function UpdateChartDevice(ip, identifier, data) {
 }
 
 function AddDataset(label, borderColor, ip, identifier, hidden) {
-    var dataset = {};
+    let dataset = {};
     dataset.ip = ip;
     dataset.label = label;
     dataset.identifier = identifier;

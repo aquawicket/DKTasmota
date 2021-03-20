@@ -237,14 +237,14 @@ function DKTableGetCellByNames(table, rowName, columnName) {
 
 //https://stackoverflow.com/a/37814596/688352
 function DKSortTable(table_id, sortColumn, decending) {
-    let decend = decending;
-    var tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
-    var rowData = tableData.getElementsByTagName('tr');
-    for (var i = 1; i < rowData.length - 1; i++) {
-        for (var j = 1; j < rowData.length - (i + 1); j++) {
-            if (decend && Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+    //let decend = decending;
+    const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
+    const rowData = tableData.getElementsByTagName('tr');
+    for (let i = 1; i < rowData.length - 1; i++) {
+        for (let j = 1; j < rowData.length - (i + 1); j++) {
+            if (decending && Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
                 tableData.insertBefore(rowData.item(j + 1), rowData.item(j));
-            } else if (!decend && Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            } else if (!decending && Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
                 tableData.insertBefore(rowData.item(j + 1), rowData.item(j));
             }
         }
@@ -252,15 +252,15 @@ function DKSortTable(table_id, sortColumn, decending) {
 }
 
 function DKSortRow(table_id, row, sortColumn, decending) {
-    let decend = decending;
-    var tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
-    var rowData = tableData.getElementsByTagName('tr');
-    for (var j = 1; j < rowData.length; j++) {
-        if (!decend && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+    //let decend = decending;
+    const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
+    const rowData = tableData.getElementsByTagName('tr');
+    for (let j = 1; j < rowData.length; j++) {
+        if (!decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
             tableData.insertBefore(row, rowData.item(j));
             return;
         }
-        if (decend && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+        if (decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
             tableData.insertBefore(row, rowData.item(j));
             return;
         }

@@ -21,11 +21,11 @@ function Automate() {
 
     //Co2
     if (co2 && !bypassRules.includes(co2.ip)) {
-        if ((temperature < 95) && (humidity < 60) && (time > 6) && (time < 14)) {
+        if ((time > 8) && (time < 14) && (temperature < 90) && (humidity < 60)) {
             dkconsole.message("Co2 ON", "green");
             //When using Co2, temperature should be 85 degrees
             tempTarget = 85;
-            humTarget = 55;
+            humTarget = 50;
             DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         } else {

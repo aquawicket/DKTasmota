@@ -154,13 +154,13 @@ function DKLoadPage() {
 }
 
 //Load devices from local storage
-function LoadDevices(){
+function LoadDevices() {
     let deviceIPs = [];
     let data = LoadFromLocalStorage("deviceIPs")
     if (data) {
         deviceIPs = JSON.parse(data);
     }
-    dkconsole.log("Loading ("+deviceIPs.length+") Devices");
+    dkconsole.log("Loading (" + deviceIPs.length + ") Devices");
     for (let n = 0; n < deviceIPs.length; n++) {
         let dev = {
             'ip': deviceIPs[n],
@@ -176,7 +176,7 @@ function LoadDevices(){
         }
         devices.push(dev);
         DKSendRequest("http://" + deviceIPs[n] + "/cm?cmnd=Status%200", function(success, url, data) {
-            if (!success || !url || !data){
+            if (!success || !url || !data) {
                 return;
             }
             let deviceData = JSON.parse(data);
@@ -185,7 +185,7 @@ function LoadDevices(){
             deviceData.ip = devices[n].ip;
             //then update the device data with the new data
             devices[n] = deviceData;
-            devices.sort((a, b) => (a.Status.DeviceName > b.Status.DeviceName) ? 1 : -1)
+            devices.sort((a,b)=>(a.Status.DeviceName > b.Status.DeviceName) ? 1 : -1)
         });
     }
 }
@@ -300,6 +300,23 @@ function AddDeviceToTable(ip) {
     cell = DKTableGetCellByNames(table, "HEADER", "device");
     cell.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+    DKSortRow("deviceTable", _row, 0);
+    UpdateTableStyles();
+}
+
+function UpdateTableStyles() {
+    let table = document.getElementById("deviceTable");
+    let row;
+    for (let n = 1; n < table.rows.length; n++) {
+        row = table.rows[n];
+        if (row.rowIndex % 2 == 0) {
+            //even
+            row.style.backgroundColor = "rgb(90,90,90)";
+        } else {
+            //odd
+            row.style.backgroundColor = "rgb(60,60,60)";
+        }
+    }
 }
 
 function ScanDevices() {
@@ -358,7 +375,7 @@ function UpdateScreen(success, url, data) {
 
     let deviceData = JSON.parse(data);
     const n = FindObjectValueIncludes(devices, 'ip', url);
-    if(!devices[n]){
+    if (!devices[n]) {
         dkconsole.error("devices[n] invalid");
     }
     //incoming data doesn't have an ip key, so copy it in 
@@ -434,7 +451,8 @@ function UpdateScreen(success, url, data) {
     let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (deviceName) {
         row.cells[0].innerHTML = "<a>" + deviceName + "</a>";
-        DKSortRow("deviceTable", row, 0, 1);
+        DKSortRow("deviceTable", row, 0);
+        UpdateTableStyles();
     }
 
     let devicePOWER = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;

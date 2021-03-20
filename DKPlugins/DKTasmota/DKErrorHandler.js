@@ -7,7 +7,7 @@ function DKCreateErrorHandler() {
  * Capture error data for debugging in web console.
  */
 
-    var captures = [];
+    let captures = [];
 
     /**
  * Wait until `window.onload`, so any external scripts
@@ -38,7 +38,7 @@ function DKCreateErrorHandler() {
 
     //Handle global window events.
     function handleGlobal() {
-        var onerrorx = window.onerror;
+        const onerrorx = window.onerror;
         window.addEventListener('error', onerror);
 
         function onerror(msg, url, line, col, error) {
@@ -48,9 +48,9 @@ function DKCreateErrorHandler() {
         }
     }
 
-    //Handle Promise rejections 
+    //Handle Promise rejections  
     function handleRejection() {
-        var onunhandledrejectionx = window.onunhandledrejection;
+        const onunhandledrejectionx = window.onunhandledrejection;
         window.addEventListener('unhandledrejection', onunhandledrejection);
     
         function onunhandledrejection(event){
@@ -62,7 +62,7 @@ function DKCreateErrorHandler() {
 
     //Handle ajax request errors.
     function handleXMLHttp() {
-        var sendx = XMLHttpRequest.prototype.send;
+        const sendx = XMLHttpRequest.prototype.send;
         window.XMLHttpRequest.prototype.send = function() {
             handleAsync(this);
             return sendx.apply(this, arguments);
@@ -75,7 +75,7 @@ function DKCreateErrorHandler() {
  */
 
     function handleImage() {
-        var ImageOriginal = window.Image;
+        const ImageOriginal = window.Image;
         window.Image = ImageOverride;
 
         /**
@@ -84,7 +84,7 @@ function DKCreateErrorHandler() {
    */
 
         function ImageOverride() {
-            var img = new ImageOriginal;
+            let img = new ImageOriginal;
             onnext(function() {
                 handleAsync(img);
             });
@@ -97,7 +97,7 @@ function DKCreateErrorHandler() {
  */
 
     function handleScript() {
-        var HTMLScriptElementOriginal = window.HTMLScriptElement;
+        const HTMLScriptElementOriginal = window.HTMLScriptElement;
         window.HTMLScriptElement = HTMLScriptElementOverride;
 
         /**
@@ -108,7 +108,7 @@ function DKCreateErrorHandler() {
    */
 
         function HTMLScriptElementOverride() {
-            var script = new HTMLScriptElement;
+            let script = new HTMLScriptElement;
             onnext(function() {
                 handleAsync(script);
             });
@@ -123,13 +123,13 @@ function DKCreateErrorHandler() {
  */
 
     function handleEvents() {
-        var addEventListenerx = window.EventTarget.prototype.addEventListener;
+        const addEventListenerx = window.EventTarget.prototype.addEventListener;
         window.EventTarget.prototype.addEventListener = addEventListener;
-        var removeEventListenerx = window.EventTarget.prototype.removeEventListener;
+        const removeEventListenerx = window.EventTarget.prototype.removeEventListener;
         window.EventTarget.prototype.removeEventListener = removeEventListener;
 
         function addEventListener(event, handler, bubble) {
-            var handlerx = wrap(handler);
+            const handlerx = wrap(handler);
             return addEventListenerx.call(this, event, handlerx, bubble);
         }
 
@@ -158,11 +158,11 @@ function DKCreateErrorHandler() {
  */
 
     function handleAsync(obj) {
-        var onerrorx = obj.onerror;
+        const onerrorx = obj.onerror;
         obj.onerror = onerror;
-        var onabortx = obj.onabort;
+        const onabortx = obj.onabort;
         obj.onabort = onabort;
-        var onloadx = obj.onload;
+        const onloadx = obj.onload;
         obj.onload = onload;
 
         /**
@@ -214,7 +214,7 @@ function DKCreateErrorHandler() {
  */
 
     function onanyerrorx(entity) {
-        var display = entity;
+        const display = entity;
 
         // ajax request
         if (entity instanceof XMLHttpRequest) {
@@ -222,7 +222,7 @@ function DKCreateErrorHandler() {
             display = entity.status + ' ' + entity.responseURL;
         } else if (entity instanceof Event) {
             // global window events, or image events
-            var target = entity.currentTarget;
+            const target = entity.currentTarget;
             display = target;
         } else {// not sure if there are others
         }
@@ -244,9 +244,9 @@ function DKCreateErrorHandler() {
             captures.unshift();
 
         // keep the last ones around
-        var i = captures.length;
+        const i = captures.length;
         while (--i) {
-            var x = captures[i];
+            const x = captures[i];
             window['onanyerror' + i] = x;
         }
     }
