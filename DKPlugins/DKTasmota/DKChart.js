@@ -56,6 +56,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
         }
     });
 
+    /*
     let clearButton = document.createElement("button");
     clearButton.id = "clearButton";
     clearButton.innerHTML = "Clear";
@@ -68,6 +69,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     clearButton.style.cursor = "pointer";
     clearButton.onclick = ClearDatasets();
     chartDiv.appendChild(clearButton);
+    */
     
     AssignDeviceShortcuts(function(){
         AddDatasets();
