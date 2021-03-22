@@ -210,6 +210,7 @@ function AddDeviceToTable(ip) {
 
     const optionsCell = DKTableGetCellByName(table, ip, "options");
     //optionsCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
+    optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
     let restart = document.createElement("img");
@@ -221,7 +222,9 @@ function AddDeviceToTable(ip) {
     restart.style.paddingRight = "3px";
     restart.style.paddingBottom = "2px";
     restart.onclick = function restartOnClick(){
-        //restart
+        //restart device
+        restart.src = "loading.gif";
+        DKSendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
     }
     optionsCell.appendChild(restart);
 
