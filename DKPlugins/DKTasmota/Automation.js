@@ -29,6 +29,10 @@ function Automate() {
         tempTarget = 77;
         humTarget = 50;
     }
+    tempMin = tempTarget - 10;
+    tempMax = tempTarget + 10;
+    humMin = humTarget - 10;
+    humMax = humTarget + 10;
 
     if (co2 && !bypassRules.includes(co2.ip)) {
         if (co2mode && ((time > 8) && (time < 11) || (time > 14) && (time < 17)) && (temperature < tempTarget) && (humidity < humMax)) {

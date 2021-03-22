@@ -87,7 +87,7 @@ function AddDatasets() {
     AddDataset("ShedWaterA", "rgb(150,40,40)", shedWaterA?.ip, "switch1", true);
     AddDataset("ShedWaterB", "rgb(30,0,90)", shedWaterB?.ip, "switch1", true);
     AddDataset("WaterStation", "rgb(10,30,50)", waterStation?.ip, "switch1", true);
-    AddDataset("VegTentFan", "rgb(100,60,10)", vegTentFan?.ip, "switch1", true);
+    AddDataset("VegTentCo2", "rgb(100,60,10)", vegTentCo2?.ip, "switch1", true);
     AddDataset("Co2", "rgb(10,60,10)", co2?.ip, "switch1", true);
 }
 

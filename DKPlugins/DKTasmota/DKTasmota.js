@@ -116,7 +116,7 @@ let heater;
 let shedWaterA;
 let shedWaterB;
 let waterStation;
-let vegTentFan;
+let vegTentCo2;
 let vegTentLights;
 let vegTentWaterPump;
 let kitchenLight;
@@ -187,7 +187,7 @@ function AssignDeviceShortcuts(callback) {
                 vegTentWaterPump = devices[nnn];
             }
             if (deviceName.includes("010")) {
-                vegTentFan = devices[nnn];
+                vegTentCo2 = devices[nnn];
             }
             if (deviceName.includes("011")) {
                 kitchenLight = devices[nnn];
