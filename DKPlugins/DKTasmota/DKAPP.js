@@ -22,6 +22,8 @@ function DKLoadFiles() {
     DKLoadJSFile("VPDCalculator.js");
     DKLoadJSFile("DKErrorHandler.js");
     DKLoadImage("loading.gif");
+    DKLoadImage("info.png");
+    DKLoadImage("settings.png");
 
 }
 
@@ -64,12 +66,12 @@ function LoadDevices() {
             if (!success || !url || !data) {
                 return;
             }
-            let deviceData = JSON.parse(data);
-            const n = FindObjectValueIncludes(devices, 'ip', url);
+            let device = JSON.parse(data);
+            let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
             //incoming data doesn't have an ip key, so copy it in 
-            deviceData.ip = devices[n].ip;
-            //then update the device data with the new data
-            devices[n] = deviceData;
+            device.ip = deviceInstance.ip;
+            //then update the stored device with the new data
+            devices[devices.indexOf(deviceInstance)] = device;
             devices.sort((a,b)=>(a.Status.DeviceName > b.Status.DeviceName) ? 1 : -1)
         });
     }
@@ -151,7 +153,7 @@ function CreateDeviceTable(parent) {
     DKTableAddColumn(table, "options");
     DKTableGetCellByName(table, "HEADER", "options").innerHTML = "options";
     //table.rows[0].cells[3].style.width = "70px";
-    DKTableGetCellByName(table, "HEADER", "options").style.width = "60px";
+    DKTableGetCellByName(table, "HEADER", "options").style.width = "50px";
     //table.rows[0].cells[3].style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "options").style.textAlign = "center";
 }
@@ -172,7 +174,7 @@ function AddDeviceToTable(ip) {
     const deviceCell = DKTableGetCellByName(table, ip, "device");
     deviceCell.innerHTML = "<a>" + ip + "</a>";
     deviceCell.style.cursor = "pointer";
-    deviceCell.onclick = function CellOnClickCallback() {
+    deviceCell.onclick = function CellOnClick() {
         let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
     }
 
@@ -180,7 +182,7 @@ function AddDeviceToTable(ip) {
     const powerCell = DKTableGetCellByName(table, ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
-    powerCell.onclick = function CellOnClickCallback(id) {
+    powerCell.onclick = function PowerOnClick(id) {
         powerCell.innerHTML = "";
         let loading = document.createElement("img");
         loading.src = "loading.gif";
@@ -206,12 +208,27 @@ function AddDeviceToTable(ip) {
 
     const optionsCell = DKTableGetCellByName(table, ip, "options");
     //optionsCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
-    optionsCell.style.textAlign = "center";
+    optionsCell.style.textAlign = "right";
+    let info = document.createElement("img");
+    info.src = "info.png";
+    info.style.width = "12px";
+    info.style.height = "12px";
+    info.style.cursor = "pointer";
+    info.style.paddingRight = "3px";
+    info.style.paddingBottom = "2px";
+    info.onclick = function InfoOnClick(){
+        InfoWindow(ip);
+    }
+    optionsCell.appendChild(info);
+
     let settings = document.createElement("img");
     settings.src = "settings.png";
     settings.style.width = "15px";
     settings.style.height = "15px";
     settings.style.cursor = "pointer";
+    settings.onclick = function SettingsOnClick(){
+        DKCreateWindow("Settings", "300px", "300px");
+    }
     optionsCell.appendChild(settings);
 
     //Do some final processing
@@ -220,6 +237,22 @@ function AddDeviceToTable(ip) {
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     DKSortRow("deviceTable", row, 0);
     UpdateTableStyles();
+}
+
+function InfoWindow(ip)
+{
+    DKCreateWindow("Info", "500px", "300px");
+    const info = document.getElementById("Info");
+    const div = document.createElement("div");
+    div.style.position = "absolute";
+    div.style.top = "20px";
+    div.style.left = "5px";
+    div.style.right = "5px";
+    div.style.bottom = "5px";
+    div.style.backgroundColor = "rgb(70,70,70)";
+    const device = FindObjectValueIncludes(devices, "ip", ip);
+    div.innerHTML = JSON.stringify(device);
+    info.appendChild(div);
 }
 
 function UpdateTableStyles() {
@@ -291,22 +324,12 @@ function UpdateScreen(success, url, data) {
     //let jsonSuper = HighlightJson(jsonString);
     //console.log(jsonSuper);
 
-    let deviceData = JSON.parse(data);
-    const n = FindObjectValueIncludes(devices, 'ip', url);
-    if (!devices[n]) {
-        dkconsole.error("devices[n] invalid");
-    }
+    let device = JSON.parse(data);
+    let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
     //incoming data doesn't have an ip key, so copy it in 
-    deviceData.ip = devices[n].ip;
-    //then update the device data with the new data
-    devices[n] = deviceData;
-
-    //make a copy of the device data to work with
-    const device = devices[n];
-    if (!device) {
-        dkconsole.error("!device success:" + success + " url:" + url + " data:" + data);
-        return;
-    }
+    device.ip = deviceInstance.ip;
+    //then update the stored device with the new data
+    devices[devices.indexOf(deviceInstance)] = device;
 
     /*
     if (deviceData.DeviceName) {

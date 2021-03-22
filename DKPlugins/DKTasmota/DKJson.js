@@ -50,13 +50,14 @@ function StringifyJson(object) {
     // returns cleaned up JSON
 }
 
+/*
 //search the object for a keyName's value that matches value
-function FindObject(obj, key, value) {
+function FindObject(obj, keyToFind, valueToFind) {
     if (obj.length) {
         //array of objects
         for (let n = 0; n < obj.length; n++) {
-            if (key in obj[n]) {
-                if (obj[n][key] === value) {
+            if (keyToFind in obj[n]) {
+                if (obj[n][keyToFind] === valueToFind) {
                     //return obj[n];
                     return n;
                 }
@@ -65,27 +66,41 @@ function FindObject(obj, key, value) {
     }
     return -1;
 }
+*/
 
-//search the object for a keyName's value that value includes
-function FindObjectValueIncludes(obj, keyName, value) {
+/*
+//search the object for a keyName's value that includes valueToFind
+function FindObjectValueIncludes(obj, keyToFind, valueToFind) {
     if (obj.length) {
         //array of objects
         for (let n = 0; n < obj.length; n++) {
-            if (keyName in obj[n]) {
-                if (value.includes(obj[n][keyName])) {
-                    //return obj[n];
-                    return n;
+            if (keyToFind in obj[n]) {
+                if (valueToFind.includes(obj[n][keyToFind])) {
+                    return obj[n];
                 }
             }
         }
     } else {
         //single object
-        if (keyName in obj) {
-            if (value.includes(obj[keyName])) {
-                //return obj;
-                return -1;
+        if (keyToFind in obj) {
+            if (valueToFind.includes(obj[keyToFind])) {
+                return obj;
             }
         }
     }
     return false;
 }
+*/
+
+function FindObjectValueIncludes(obj, keyToFind, valToFind) {
+    let foundObj;
+    JSON.stringify(obj, (_,nestedValue)=>{
+        if (nestedValue && valToFind.includes(nestedValue[keyToFind])) {
+            foundObj = nestedValue;
+        }
+        return nestedValue;
+    }
+    );
+    return foundObj;
+}
+;
