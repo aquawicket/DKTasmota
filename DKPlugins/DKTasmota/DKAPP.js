@@ -1,111 +1,5 @@
 "use strict";
 
-// Device Array
-let devices = [];
-// Basic device response structure
-/*
-let theDevice = {
-    "ip": "192.168.1.0",
-    "Status": {
-        "Module": 1,
-        "FriendlyName": "XXX",
-        "Topic": "sonoff",
-        "ButtonTopic": "0",
-        "Power": 0,
-        "PowerOnState": 0,
-        "LedState": 1,
-        "SaveData": 0,
-        "SaveState": 1,
-        "ButtonRetain": 0,
-        "PowerRetain": 0
-    },
-    "StatusPRM": {
-        "Baudrate": 115200,
-        "GroupTopic": "sonoffs",
-        "OtaUrl": "XXX",
-        "Uptime": "1 02:33:26",
-        "Sleep": 150,
-        "BootCount": 32,
-        "SaveCount": 72,
-        "SaveAddress": "FB000"
-    },
-    "StatusFWR": {
-        "Version": "5.12.0a",
-        "BuildDateTime": "2018.02.11 16:15:40",
-        "Boot": 31,
-        "Core": "2_4_0",
-        "SDK": "2.1.0(deb1901)"
-    },
-    "StatusLOG": {
-        "SerialLog": 0,
-        "WebLog": 4,
-        "SysLog": 0,
-        "LogHost": "domus1",
-        "LogPort": 514,
-        "SSId1": "XXX",
-        "SSId2": "XXX",
-        "TelePeriod": 300,
-        "SetOption": "00000001"
-    },
-    "StatusMEM": {
-        "ProgramSize": 457,
-        "Free": 544,
-        "Heap": 23,
-        "ProgramFlashSize": 1024,
-        "FlashSize": 1024,
-        "FlashMode": 3
-    },
-    "StatusNET": {
-        "Hostname": "XXX",
-        "IPAddress": "192.168.178.XX",
-        "Gateway": "192.168.178.XX",
-        "Subnetmask": "255.255.255.XX",
-        "DNSServer": "192.168.178.XX",
-        "Mac": "2C:3A:E8:XX:XX:XX",
-        "Webserver": 2,
-        "WifiConfig": 4
-    },
-    "StatusTIM": {
-        "UTC": "Thu Feb 15 00:00:50 2018",
-        "Local": "Thu Feb 15 01:00:50 2018",
-        "StartDST": "Sun Mar 25 02:00:00 2018",
-        "EndDST": "Sun Oct 28 03:00:00 2018",
-        "Timezone": 1
-    },
-    "StatusSNS": {
-        "Time": "2018.02.15 01:00:50",
-        "Switch1": "OFF"
-    },
-    "StatusSTS": {
-        "Time": "2018.02.15 01:00:50",
-        "Uptime": "1 02:33:26",
-        "Vcc": 3.504,
-        "POWER": "OFF",
-        "Wifi": {
-            "AP": 1,
-            "SSId": "XXX",
-            "RSSI": 100,
-            "APMac": "34:31:C4:XX:XX:XX"
-        }
-    }
-}
-*/
-
-let temperature;
-let humidity;
-let dewPoint;
-
-let bypassRules = [];
-let tempTarget = 77;
-let tempCalib = -1;
-let tempMin = tempTarget - 10;
-let tempMax = tempTarget + 10;
-
-let humTarget = 50;
-let humCalib = -10;
-let humMin = humTarget - 10;
-let humMax = humTarget + 10;
-
 function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
@@ -127,12 +21,14 @@ function DKLoadFiles() {
     DKLoadJSFile("Automation.js");
     DKLoadJSFile("VPDCalculator.js");
     DKLoadJSFile("DKErrorHandler.js");
+    DKLoadImage("loading.gif");
 }
 
 function DKLoadPage() {
+    //Load Non-Gui Stuff
     DKCreateErrorHandler();
     LoadDevices();
-    //AssignDeviceShortcuts();
+
     //Load Gui
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
@@ -146,7 +42,6 @@ function DKLoadPage() {
 
     for (let n = 0; n < devices.length; n++) {
         AddDeviceToTable(devices[n].ip);
-        //AddDeviceToChart(devices[n].ip);
     }
 
     //Run TimerLoop every minute
@@ -164,6 +59,9 @@ function LoadDevices() {
     for (let n = 0; n < deviceIPs.length; n++) {
         let dev = {
             'ip': deviceIPs[n],
+            'DK': {
+                'ip': deviceIPs[n],
+            },
             'Status': {},
             'StatusPRM': {},
             'StatusFWR': {},

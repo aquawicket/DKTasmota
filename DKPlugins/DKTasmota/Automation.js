@@ -2,7 +2,7 @@
 
 function Automate() {
 
-    AssignDeviceShortcuts();
+    //AssignDeviceShortcuts();
     DumpVariables();
 
     //Alarms
@@ -20,7 +20,6 @@ function Automate() {
     }
 
     //Co2
-    let co2mode = 0;
     if(co2mode){
         //When using Co2, temperature should be 85 degrees
         tempTarget = 85;
@@ -93,4 +92,5 @@ function DumpVariables() {
     dkconsole.debug("humCalib: " + humCalib);
     dkconsole.debug("humMin: " + humMin);
     dkconsole.debug("humMax: " + humMax);
+    dkconsole.debug("co2mode: " + co2mode);
 }

@@ -29,6 +29,11 @@ function DKLoadHtmlFile(file, callback) {
     });
 }
 
+function DKLoadImage(url) {
+    var img = new Image();
+    img.src = url;
+}
+
 function DKSendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,
@@ -92,17 +97,13 @@ function DKSendRequest(url, callback) {
         callback(false, url, event.type);
         return false;
     }
-    xhr.onload = function(event) {
-        //console.log("XMLHttpRequest.onload(" + event + ")");
+    xhr.onload = function(event) {//console.log("XMLHttpRequest.onload(" + event + ")");
     }
-    xhr.onloadend = function(event) {
-        //console.log("XMLHttpRequest.onloadend(" + event + ")");
+    xhr.onloadend = function(event) {//console.log("XMLHttpRequest.onloadend(" + event + ")");
     }
-    xhr.onloadstart = function(event) {
-        //console.log("XMLHttpRequest.onloadstart(" + event + ")");
+    xhr.onloadstart = function(event) {//console.log("XMLHttpRequest.onloadstart(" + event + ")");
     }
-    xhr.onprogress = function(event) {
-        //console.log("XMLHttpRequest.onprogress(" + event + ")");
+    xhr.onprogress = function(event) {//console.log("XMLHttpRequest.onprogress(" + event + ")");
     }
     xhr.onreadystatechange = function(event) {
         //console.log("XMLHttpRequest.onreadystatechange(" + event + ")");
@@ -124,7 +125,7 @@ function DKSendRequest(url, callback) {
 
     //Try/Catch won't work here
     //try{
-        xhr.send();
+    xhr.send();
     //}catch{}
 }
 
@@ -144,12 +145,11 @@ function LoadFromLocalStorage(name) {
     return localStorage.getItem(name);
 }
 
-function RemoveFromLocalStorage(name){
+function RemoveFromLocalStorage(name) {
     localStorage.removeItem(name);
 }
 
-function DKCreateWindow(id, width, height)
-{
+function DKCreateWindow(id, width, height) {
     let win = document.createElement('div');
     win.id = id;
     win.style.position = "absolute";
@@ -170,7 +170,7 @@ function DKCreateWindow(id, width, height)
     CenterWindow(win);
 
     let winClose = document.createElement('div');
-    winClose.id = win.id+"Close";
+    winClose.id = win.id + "Close";
     winClose.style.position = "absolute";
     winClose.style.right = "5px";
     winClose.style.top = "3px";
@@ -196,8 +196,7 @@ function CenterWindow(element) {
     return element;
 }
 
-function CreateButton(parent, id, top, left, witdh, height, onclick)
-{   
+function CreateButton(parent, id, top, left, witdh, height, onclick) {
     let button = document.createElement("button");
     button.id = id;
     button.innerHTML = "Button";
