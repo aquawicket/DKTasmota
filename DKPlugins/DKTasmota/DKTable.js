@@ -237,14 +237,14 @@ function DKTableGetCellByName(table, rowName, columnName) {
 
 //https://stackoverflow.com/a/37814596/688352
 function DKSortTable(table_id, sortColumn, decending) {
-    //let decend = decending;
     const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
     const rowData = tableData.getElementsByTagName('tr');
     for (let n = 1; n < rowData.length - 1; n++) {
         for (let nn = 1; nn < rowData.length - (n + 1); nn++) {
-            if (decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            if (!decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
                 tableData.insertBefore(rowData.item(nn + 1), rowData.item(nn));
-            } else if (!decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            }
+            else if (decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
                 tableData.insertBefore(rowData.item(nn + 1), rowData.item(nn));
             }
         }
@@ -252,7 +252,6 @@ function DKSortTable(table_id, sortColumn, decending) {
 }
 
 function DKSortRow(table_id, row, sortColumn, decending) {
-    //let decend = decending;
     const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
     const rowData = tableData.getElementsByTagName('tr');
     for (let n = 1; n < rowData.length; n++) {

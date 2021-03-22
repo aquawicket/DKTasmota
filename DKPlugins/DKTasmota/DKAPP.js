@@ -35,7 +35,8 @@ function DKLoadApp() {
     LoadDevices();
     LoadGui();
     //Run TimerLoop every minute
-    window.setInterval(TimerLoop, 60000);
+    //window.setInterval(TimerLoop, 60000);
+    window.setInterval(TimerLoop, 20000);
 }
 
 //Load devices from local storage
@@ -115,48 +116,54 @@ function CreateButtons(parent) {
 }
 
 function CreateDeviceTable(parent) {
-    let devices = document.createElement("div");
-    parent.appendChild(devices);
-    let table = DKCreateTable(devices, "deviceTable", "30px", "", "20px");
+    let deviceDiv = document.createElement("div");
+    parent.appendChild(deviceDiv);
+    let table = DKCreateTable(deviceDiv, "deviceTable", "30px", "", "20px");
 
     //Create Header Row as a normal <tr>
+    //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
     DKTableAddRow(table, "HEADER", "device");
-    //table.rows[0].style.backgroundColor = "rgb(50,50,50)";
     DKTableGetRowByName(table, "HEADER").style.backgroundColor = "rgb(50,50,50)";
-    //table.rows[0].style.fontWeight = "bold";
     DKTableGetRowByName(table, "HEADER").style.fontWeight = "bold";
-    //table.rows[0].cells[0].setAttribute("name", "device");
-    //table.rows[0].cells[0].innerHTML = "Devices (0)";
+    DKTableGetRowByName(table, "HEADER").style.cursor = "pointer";
     DKTableGetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
-    //table.rows[0].cells[0].style.width = "220px";
     DKTableGetCellByName(table, "HEADER", "device").style.width = "220px";
+    DKTableGetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick(){
+        dkconsole.log("deviceHeaderOnClick");
+        DKSortTable("deviceTable", 0);
+    }
+    
     DKTableAddColumn(table, "power");
-    //table.rows[0].cells[1].innerHTML = "power";
     DKTableGetCellByName(table, "HEADER", "power").innerHTML = "power";
-    //table.rows[0].cells[1].style.width = "50px";
     DKTableGetCellByName(table, "HEADER", "power").style.width = "50px";
-    //table.rows[0].cells[1].style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "power").style.textAlign = "center";
+    DKTableGetCellByName(table, "HEADER", "power").onclick = function powerHeaderOnClick(){
+        dkconsole.log("powerHeaderOnClick");
+    }
+
     DKTableAddColumn(table, "data");
-    //table.rows[0].cells[2].innerHTML = "data";
     DKTableGetCellByName(table, "HEADER", "data").innerHTML = "data";
-    //table.rows[0].cells[2].style.width = "140px";
     DKTableGetCellByName(table, "HEADER", "data").style.width = "140px";
-    //table.rows[0].cells[2].style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "data").style.textAlign = "center";
+    DKTableGetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick(){
+        dkconsole.log("dataHeaderOnClick");
+    }
+
     DKTableAddColumn(table, "wifi");
-    //table.rows[0].cells[3].innerHTML = "wifi signal";
     DKTableGetCellByName(table, "HEADER", "wifi").innerHTML = "wifi signal";
-    //table.rows[0].cells[3].style.width = "70px";
     DKTableGetCellByName(table, "HEADER", "wifi").style.width = "70px";
-    //table.rows[0].cells[3].style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
+    DKTableGetCellByName(table, "HEADER", "wifi").onclick = function wifiHeaderOnClick(){
+        dkconsole.log("wifiHeaderOnClick");
+    }
+
     DKTableAddColumn(table, "options");
     DKTableGetCellByName(table, "HEADER", "options").innerHTML = "options";
-    //table.rows[0].cells[3].style.width = "70px";
     DKTableGetCellByName(table, "HEADER", "options").style.width = "50px";
-    //table.rows[0].cells[3].style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "options").style.textAlign = "center";
+    DKTableGetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick(){
+        dkconsole.log("optionsHeaderOnClick");
+    }
 }
 
 function AddDeviceToTable(ip) {
@@ -176,7 +183,7 @@ function AddDeviceToTable(ip) {
     deviceCell.innerHTML = "<a>" + ip + "</a>";
     deviceCell.style.cursor = "pointer";
     deviceCell.onclick = function CellOnClick() {
-        let theWindow = window.open("http://" + ip, "MsgWindow", "width=500,height=700");
+        const deviceWindow = window.open("http://" + ip, ip, "_blank, width=500, height=700");
     }
 
     //const powerCell = row.cells[1];
@@ -338,8 +345,12 @@ function ProcessDevices() {
 }
 
 function UpdateScreen(success, url, data) {
-    if (!success || !url || !data) {
-        //Test for power outage
+    if(!url || !data){
+
+        PlaySound("PowerDown.mp3");
+        return;
+    }
+    if (!success){
         //dkconsole.error("!success || !url || !data");
         PlaySound("PowerDown.mp3");
         return;
@@ -350,8 +361,12 @@ function UpdateScreen(success, url, data) {
     let jsonSuper = HighlightJson(jsonString);
     dkconsole.log(jsonSuper);
     */
-
-    let device = JSON.parse(data);
+    let device;
+    try{
+        device = JSON.parse(data);
+    }catch{
+        dkconsole.error("data could not be parsed to json");
+    }
     let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
     //incoming data doesn't have an ip key, so copy it in 
     device.ip = deviceInstance.ip;

@@ -92,8 +92,7 @@ function DKSendRequest(url, callback) {
         return false;
     }
     xhr.onerror = function(event) {
-        //console.log("XMLHttpRequest.onerror(" + event + ")");
-        dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onerror");
+        //dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onerror");
         callback(false, url, event.type);
         return false;
     }
@@ -118,7 +117,7 @@ function DKSendRequest(url, callback) {
         }
     }
     xhr.ontimeout = function(event) {
-        dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> net::ERR_CONNECTION_TIMED_OUT");
+        //dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> net::ERR_CONNECTION_TIMED_OUT");
         callback(false, url, event.type);
         return false;
     }

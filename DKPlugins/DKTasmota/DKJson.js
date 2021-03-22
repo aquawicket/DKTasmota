@@ -103,4 +103,3 @@ function FindObjectValueIncludes(obj, keyToFind, valToFind) {
     );
     return foundObj;
 }
-;

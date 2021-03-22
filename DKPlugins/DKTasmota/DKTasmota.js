@@ -98,12 +98,12 @@ let dewPoint;
 
 let bypassRules = [];
 let tempTarget = 77;
-let tempCalib = -1;
+let tempCalib = -5;
 let tempMin = tempTarget - 10;
 let tempMax = tempTarget + 10;
 
 let humTarget = 50;
-let humCalib = -10;
+let humCalib = 0;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
 
@@ -121,7 +121,7 @@ let vegTentLights;
 let vegTentWaterPump;
 let kitchenLight;
 let vegTentExhaust;
-let co2mode = 1;
+let co2mode = 0;
 
 function AssignDeviceShortcuts(callback) {
     if (!callback) {

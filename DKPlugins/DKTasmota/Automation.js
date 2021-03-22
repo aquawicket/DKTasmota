@@ -35,24 +35,25 @@ function Automate() {
     humMax = humTarget + 10;
 
     if (co2 && !bypassRules.includes(co2.ip)) {
-        if (co2mode && ((time > 8) && (time < 11) || (time > 14) && (time < 17)) && (temperature < tempTarget) && (humidity < humMax)) {
+        if (co2mode && ((time > 8) && (time < 11) || (time > 14) && (time < 17)) && (temperature < (tempTarget-1)) && (humidity < humMax)) {
             dkconsole.message("Co2 ON", "green");
             co2.StatusSTS.POWER = "ON";
             DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         } else {
-            dkconsole.warn("Co2 OFF");
+            dkconsole.message("Co2 OFF", "yellow");
+            co2.StatusSTS.POWER = "OFF";
             DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Exhaust fan
     if (exhaustFan && !bypassRules.includes(exhaustFan.ip)) {
-        if ((co2?.StatusSTS?.POWER !== "ON") && ((temperature > tempTarget) || (humidity > humTarget && temperature > tempMin))) {
+        if ((co2?.StatusSTS?.POWER !== "ON") && ((temperature > (tempTarget + 1)) || (humidity > humMax && temperature > tempMin))) {
             dkconsole.message("Exhaust Fan ON", "green");
             DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
-            dkconsole.warn("Exhaust Fan OFF");
+            dkconsole.message("Exhaust Fan OFF", "yellow");
             DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
@@ -63,7 +64,7 @@ function Automate() {
             dkconsole.message("Water walls ON", "green");
             DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
-            dkconsole.warn("Water walls OFF");
+            dkconsole.message("Water walls OFF", "yellow");
             DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
@@ -74,7 +75,7 @@ function Automate() {
             dkconsole.message("Heater ON", "green");
             DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
-            dkconsole.warn("Heater OFF");
+            dkconsole.message("Heater OFF", "yellow");
             DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
