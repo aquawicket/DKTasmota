@@ -49,9 +49,9 @@ function LoadDevices() {
     for (let n = 0; n < deviceIPs.length; n++) {
         let dev = {
             'ip': deviceIPs[n],
-            'DK': {
+            /*'DK': {
                 'ip': deviceIPs[n],
-            },
+            },*/
             'Status': {},
             'StatusPRM': {},
             'StatusFWR': {},
@@ -222,7 +222,6 @@ function AddDeviceToTable(ip) {
     restart.style.paddingRight = "3px";
     restart.style.paddingBottom = "2px";
     restart.onclick = function restartOnClick(){
-        //restart device
         restart.src = "loading.gif";
         DKSendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
     }
@@ -262,7 +261,7 @@ function AddDeviceToTable(ip) {
 
 function InfoWindow(ip)
 {
-    DKCreateWindow("Info", "500px", "300px");
+    DKCreateWindow("Info", "600px", "500px");
     const info = document.getElementById("Info");
     const div = document.createElement("div");
     div.style.position = "absolute";
@@ -271,8 +270,13 @@ function InfoWindow(ip)
     div.style.right = "5px";
     div.style.bottom = "5px";
     div.style.backgroundColor = "rgb(70,70,70)";
-    const device = FindObjectValueIncludes(devices, "ip", ip);
-    div.innerHTML = JSON.stringify(device);
+    const obj = FindObjectValueIncludes(devices, "ip", ip);
+    const n = devices.indexOf(obj);
+    let jsonString = PrettyJson(JSON.stringify(devices[n]));
+    let jsonSuper = HighlightJson(jsonString);
+    dkconsole.log(jsonSuper);
+
+    div.innerHTML = jsonSuper;
     info.appendChild(div);
 }
 
@@ -340,10 +344,12 @@ function UpdateScreen(success, url, data) {
         PlaySound("PowerDown.mp3");
         return;
     }
-
-    //let jsonString = PrettyJson(data);
-    //let jsonSuper = HighlightJson(jsonString);
-    //console.log(jsonSuper);
+    
+    /*
+    let jsonString = PrettyJson(data);
+    let jsonSuper = HighlightJson(jsonString);
+    dkconsole.log(jsonSuper);
+    */
 
     let device = JSON.parse(data);
     let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
