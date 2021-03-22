@@ -48,17 +48,17 @@ function StackToConsoleString(arg, deleteTo) {
     //deleteTo = 0;
     //Remove calls up to the function specified in deleteTo
     if (deleteTo) {
-        for (let s = 1; s < jsonStack.length; s++) {
-            if (jsonStack[s].func.includes(deleteTo)) {
-                jsonStack.splice(1, s);
+        for (let n = 1; n < jsonStack.length; n++) {
+            if (jsonStack[n].func.includes(deleteTo)) {
+                jsonStack.splice(1, n);
             }
         }
     }
 
     let str = jsonStack[0].msg + "<br>";
-    for (let s = 1; s < jsonStack.length; s++) {
-        str += "  at " + jsonStack[s].func + " ";
-        str += "(<a href='" + jsonStack[s].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + jsonStack[s].file + ":" + jsonStack[s].lineNum + "</a>)<br>";
+    for (let n = 1; n < jsonStack.length; n++) {
+        str += "  at " + jsonStack[n].func + " ";
+        str += "(<a href='" + jsonStack[n].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + jsonStack[n].file + ":" + jsonStack[n].lineNum + "</a>)<br>";
     }
     return str;
 }
@@ -101,10 +101,10 @@ function StackToJSON(stack) {
     let jsonStack = [{
         msg
     }];
-    for (let s = 1; s < lines.length; s++) {
+    for (let n = 1; n < lines.length; n++) {
         //FIXME: the original line should not be altered,
         //altering the line could mess up the extraction
-        let line = lines[s].trim();
+        let line = lines[n].trim();
         line = line.replace("at ", "");
         line = line.replace("(", "");
         line = line.replace(")", "");
@@ -141,20 +141,20 @@ function StackToJSON(stack) {
 
 function LastStackCall() {
     let stack = StackToJSON(GetStack());
-    let n;
-    for (let s = 1; s < stack.length; s++) {
-        if (stack[s].func === "LastStackCall") {
-            n = s + 1;
+    let nn;
+    for (let n = 1; n < stack.length; n++) {
+        if (stack[n].func === "LastStackCall") {
+            nn = n + 1;
             break;
         }
     }
-    if (!n) {
+    if (!nn) {
         dkconsole.error("LastStackCall(): could not find 'LastStackCall' in the stack");
         return;
     }
 
-    let str = "LastStackCall: " + stack[n].func;
-    str += "(<a href='" + stack[n].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stack[n].file + ":" + stack[n].lineNum + "</a>)";
+    let str = "LastStackCall: " + stack[nn].func;
+    str += "(<a href='" + stack[nn].filePath + "' target='_blank' style='color:rgb(213,213,213)'>" + stack[nn].file + ":" + stack[nn].lineNum + "</a>)";
     return str;
 }
 

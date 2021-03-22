@@ -74,8 +74,8 @@ function consoleSpanFilter(args) {
             argArray.push('');
         }
         // pass through subsequent args since chrome dev tools does not (yet) support console.log styling of the following form: console.log('%cBlue!', 'color: blue;', '%cRed!', 'color: red;');
-        for (let j = 1; j < args.length; j++) {
-            argArray.push(args[j]);
+        for (let n = 1; n < args.length; n++) {
+            argArray.push(args[n]);
         }
     }
     return argArray;

@@ -142,51 +142,51 @@ function AssignDeviceShortcuts(callback) {
             }
             let deviceData = JSON.parse(data);
             let deviceName = deviceData?.Status?.DeviceName;
-            let f = -1;
-            for(let d=0; d<devices.length; d++){
-                if(url.includes(devices[d].ip)){
-                    f = d;
+            let nnn = -1;
+            for(let nn=0; nn<devices.length; nn++){
+                if(url.includes(devices[nn].ip)){
+                    nnn = nn;
                     break;
                 }
             }
             if (deviceName.includes("001")) {
-                shedWaterB = devices[f];
+                shedWaterB = devices[nnn];
             }
             if (deviceName.includes("002")) {
-                shedWaterA = devices[f];
+                shedWaterA = devices[nnn];
             }
             if (deviceName.includes("003")) {
-                waterStation = devices[f];
+                waterStation = devices[nnn];
             }
             if (deviceName.includes("004")) {
-                vegTentLights = devices[f];
+                vegTentLights = devices[nnn];
             }
             if (deviceName.includes("005")) {
-                exhaustFan = devices[f];
+                exhaustFan = devices[nnn];
             }
             if (deviceName.includes("006")) {
-                heater = devices[f];
+                heater = devices[nnn];
             }
             if (deviceName.includes("007")) {
-                waterWalls = devices[f];
+                waterWalls = devices[nnn];
             }
             if (deviceName.includes("008")) {
-                co2 = devices[f];
+                co2 = devices[nnn];
             }
             if (deviceName.includes("009")) {
-                vegTentWaterPump = devices[f];
+                vegTentWaterPump = devices[nnn];
             }
             if (deviceName.includes("010")) {
-                vegTentFan = devices[f];
+                vegTentFan = devices[nnn];
             }
             if (deviceName.includes("011")) {
-                kitchenLight = devices[f];
+                kitchenLight = devices[nnn];
             }
             if (deviceName.includes("012")) {
-                bedroomLight = devices[f];
+                bedroomLight = devices[nnn];
             }
             if (deviceName.includes("013")) {
-                temperatureD = devices[f];
+                temperatureD = devices[nnn];
             }
             deviceCount++;
             if(deviceCount === devices.length){

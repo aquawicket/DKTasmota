@@ -112,7 +112,7 @@ function DKTableAddColumn(table, name) {
 
 function DKTableAddRows(table, count) {
     //The rows added will have no name
-    for (let r = 0; r < count; r++) {
+    for (let n = 0; n < count; n++) {
         DKTableAddRow(table);
     }
     return table.rows.length;
@@ -120,7 +120,7 @@ function DKTableAddRows(table, count) {
 
 function DKTableAddColumns(table, count) {
     //The columns added will have no name
-    for (let c = 0; c < count; c++) {
+    for (let n = 0; n < count; n++) {
         DKTableAddColumn(table);
     }
     return table.rows[0].cells.length;
@@ -132,8 +132,8 @@ function DKTableDeleteRow(table, number) {
 }
 
 function DKTableDeleteColumn(table, number) {
-    for (let r = 0; r < table.rows.length; r++) {
-        let row = table.rows[r];
+    for (let n = 0; n < table.rows.length; n++) {
+        let row = table.rows[n];
         if (row.cells[number]) {
             row.deleteCell(number - 1);
         }
@@ -142,11 +142,11 @@ function DKTableDeleteColumn(table, number) {
 }
 
 function DKTableUpdateIds(table) {
-    for (let r = 0; r < table.rows.length; r++) {
-        let row = table.rows[r]
-        row.id = "row" + (r + 1);
-        for (let c = 0; c < row.cells.length; c++) {
-            let cell = row.cells[c];
+    for (let n = 0; n < table.rows.length; n++) {
+        let row = table.rows[n];
+        row.id = "row" + (n + 1);
+        for (let nn = 0; nn < row.cells.length; nn++) {
+            let cell = row.cells[nn];
             cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
             //cell.innerHTML = cell.id; //For debug
         }
@@ -176,13 +176,13 @@ function DKTableGetIndex(cell) {
 function DKTableGetRowByName(table, rowName) {
     return DKTableGetCellByNames(table, rowName);
     /*
-    for (let r = 0; r < table.rows.length; r++) {
-        if (!table.rows[r].getAttribute("name")) {
-            dkConsole.warn("row" + r + " has no name attribute");
+    for (let n = 0; n < table.rows.length; n++) {
+        if (!table.rows[n].getAttribute("name")) {
+            dkConsole.warn("row" + n + " has no name attribute");
             return;
         }
-        if (table.rows[r].getAttribute("name") == rowName) {
-            let row = table.rows[r];
+        if (table.rows[n].getAttribute("name") == rowName) {
+            let row = table.rows[n];
             return row;
         }
     }
@@ -209,25 +209,25 @@ function DKTableGetCellByNames(table, rowName, columnName) {
     // The rowName is set to Peter on the <tr> element
     // The columnName is set to address on the <td> element
 
-    for (let r = 0; r < table.rows.length; r++) {
-        if (!table.rows[r].getAttribute("name")) {
-            dkConsole.warn("row" + r + " has no name attribute");
+    for (let n = 0; n < table.rows.length; n++) {
+        if (!table.rows[n].getAttribute("name")) {
+            dkConsole.warn("row" + n + " has no name attribute");
             return;
         }
-        if (table.rows[r].getAttribute("name") == rowName) {
-            let row = table.rows[r];
+        if (table.rows[n].getAttribute("name") == rowName) {
+            let row = table.rows[n];
             //if the column name wasn't requested, return the row 
             if (!columnName) {
                 return row;
             }
 
-            for (let c = 0; c < row.cells.length; c++) {
-                if (!row.cells[c].getAttribute("name")) {
-                    dkConsole.warn("row" + r + ", cell" + c + " has no name attribute");
+            for (let nn = 0; nn < row.cells.length; nn++) {
+                if (!row.cells[nn].getAttribute("name")) {
+                    dkConsole.warn("row" + n + ", cell" + nn + " has no name attribute");
                     return;
                 }
-                if (row.cells[c].getAttribute("name") == columnName) {
-                    return row.cells[c];
+                if (row.cells[nn].getAttribute("name") == columnName) {
+                    return row.cells[nn];
                     //we found the cell, return it's element
                 }
             }
@@ -240,12 +240,12 @@ function DKSortTable(table_id, sortColumn, decending) {
     //let decend = decending;
     const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
     const rowData = tableData.getElementsByTagName('tr');
-    for (let i = 1; i < rowData.length - 1; i++) {
-        for (let j = 1; j < rowData.length - (i + 1); j++) {
-            if (decending && Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
-                tableData.insertBefore(rowData.item(j + 1), rowData.item(j));
-            } else if (!decending && Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
-                tableData.insertBefore(rowData.item(j + 1), rowData.item(j));
+    for (let n = 1; n < rowData.length - 1; n++) {
+        for (let nn = 1; nn < rowData.length - (n + 1); nn++) {
+            if (decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+                tableData.insertBefore(rowData.item(nn + 1), rowData.item(nn));
+            } else if (!decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+                tableData.insertBefore(rowData.item(nn + 1), rowData.item(nn));
             }
         }
     }
@@ -255,13 +255,13 @@ function DKSortRow(table_id, row, sortColumn, decending) {
     //let decend = decending;
     const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
     const rowData = tableData.getElementsByTagName('tr');
-    for (let j = 1; j < rowData.length; j++) {
-        if (!decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
-            tableData.insertBefore(row, rowData.item(j));
+    for (let n = 1; n < rowData.length; n++) {
+        if (!decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(n).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            tableData.insertBefore(row, rowData.item(n));
             return;
         }
-        if (decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
-            tableData.insertBefore(row, rowData.item(j));
+        if (decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(n).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            tableData.insertBefore(row, rowData.item(n));
             return;
         }
     }

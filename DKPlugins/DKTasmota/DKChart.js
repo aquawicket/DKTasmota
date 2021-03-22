@@ -93,13 +93,14 @@ function AddDatasets(){
 
 function UpdateChartDevice(ip, identifier, data) {
     if (!ip) {
+        dkconsole.error("ip invalid");
         return;
     }
 
-    for (let i = 0; i < lineChart.data.datasets.length; i++) {
-        if (ip === lineChart.data.datasets[i].ip && identifier === lineChart.data.datasets[i].identifier) {
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        if (ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
             if (identifier.includes("switch")) {
-                const ex = lineChart.data.datasets[i].data;
+                const ex = lineChart.data.datasets[n].data;
                 if (ex.length && data === ex[ex.length - 1].y) {
                     ex.pop();
                 } else {
@@ -112,11 +113,10 @@ function UpdateChartDevice(ip, identifier, data) {
                     t: new Date(),
                     y: data
                 });
-                //break;
             }
             if (identifier.includes("sensor")) {
                 //temperature
-                const tData = lineChart.data.datasets[i].data;
+                const tData = lineChart.data.datasets[n].data;
                 if (tData.length && parseFloat(data) === tData[tData.length - 1].y) {
                     tData.pop();
                 }
@@ -124,7 +124,6 @@ function UpdateChartDevice(ip, identifier, data) {
                     t: new Date(),
                     y: parseFloat(data)
                 });
-                //break;
             }
           }
     }
@@ -159,24 +158,24 @@ function AddDataset(label, borderColor, ip, identifier, hidden) {
 }
 
 function SaveDatasets(ip) {
-    for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        if (lineChart.data.datasets[d].ip === ip) {
-            let data = JSON.stringify(lineChart.data.datasets[d].data);
-            SaveToLocalStorage(lineChart.data.datasets[d].label, data);
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        if (lineChart.data.datasets[n].ip === ip) {
+            let data = JSON.stringify(lineChart.data.datasets[n].data);
+            SaveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
 }
 
 function LoadDatasets() {
-    for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        let data = LoadFromLocalStorage(lineChart.data.datasets[d].label);
-        lineChart.data.datasets[d].data = JSON.parse(data);
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        let data = LoadFromLocalStorage(lineChart.data.datasets[n].label);
+        lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();
 }
 
 function ClearDatasets() {
-    for (let d = 0; d < lineChart.data.datasets.length; d++) {
-        lineChart.data.datasets[d].data = [];
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        lineChart.data.datasets[n].data = [];
     }
 }

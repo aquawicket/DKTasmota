@@ -53,11 +53,11 @@ function StringifyJson(object) {
 //search the object for a keyName's value that matches value
 function FindObject(obj, key, value) {
     if(obj.length){ //array of objects
-        for (let index = 0; index < obj.length; index++){
-            if (key in obj[index]) {
-                if(obj[index][key] === value){
-                    //return obj[index];
-                    return index;
+        for (let n = 0; n < obj.length; n++){
+            if (key in obj[n]) {
+                if(obj[n][key] === value){
+                    //return obj[n];
+                    return n;
                 }
             }
         }
