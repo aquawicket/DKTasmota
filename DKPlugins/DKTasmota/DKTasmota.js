@@ -120,7 +120,7 @@ let vegTentCo2;
 let vegTentLights;
 let vegTentWaterPump;
 let kitchenLight;
-let bedroomLight;
+let vegTentExhaust;
 let co2mode = 1;
 
 function AssignDeviceShortcuts(callback) {
@@ -193,7 +193,7 @@ function AssignDeviceShortcuts(callback) {
                 kitchenLight = devices[nnn];
             }
             if (deviceName.includes("012")) {
-                bedroomLight = devices[nnn];
+                vegTentExhaust = devices[nnn];
             }
             if (deviceName.includes("013")) {
                 temperatureD = devices[nnn];

@@ -70,7 +70,7 @@ function Automate() {
 
     //Heater
     if (heater && !bypassRules.includes(heater.ip)) {
-        if (temperature < tempTarget) {
+        if (co2?.StatusSTS?.POWER !== "ON" && (temperature < tempTarget)) {
             dkconsole.message("Heater ON", "green");
             DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {

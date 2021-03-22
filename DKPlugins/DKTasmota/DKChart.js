@@ -89,6 +89,7 @@ function AddDatasets() {
     AddDataset("WaterStation", "rgb(10,30,50)", waterStation?.ip, "switch1", true);
     AddDataset("VegTentCo2", "rgb(100,60,10)", vegTentCo2?.ip, "switch1", true);
     AddDataset("Co2", "rgb(10,60,10)", co2?.ip, "switch1", true);
+    AddDataset("VegTentExhaust", "rgb(10,60,10)", vegTentExhaust?.ip, "switch1", true);
 }
 
 function UpdateChartDevice(ip, identifier, data) {
@@ -115,7 +116,6 @@ function UpdateChartDevice(ip, identifier, data) {
                 });
             }
             if (identifier.includes("sensor")) {
-                //temperature
                 const tData = lineChart.data.datasets[n].data;
                 if (tData.length && parseFloat(data) === tData[tData.length - 1].y) {
                     tData.pop();

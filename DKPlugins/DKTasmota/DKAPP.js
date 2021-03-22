@@ -22,6 +22,7 @@ function DKLoadFiles() {
     DKLoadJSFile("VPDCalculator.js");
     DKLoadJSFile("DKErrorHandler.js");
     DKLoadImage("loading.gif");
+    DKLoadImage("restart.png");
     DKLoadImage("info.png");
     DKLoadImage("settings.png");
 
@@ -206,10 +207,26 @@ function AddDeviceToTable(ip) {
     //wifiCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
     wifiCell.style.textAlign = "center";
 
+
     const optionsCell = DKTableGetCellByName(table, ip, "options");
     //optionsCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
-    optionsCell.style.textAlign = "right";
+    optionsCell.style.textAlign = "center";
+
+    let restart = document.createElement("img");
+    restart.setAttribute("title", "Restart Device");
+    restart.src = "restart.png";
+    restart.style.width = "12px";
+    restart.style.height = "12px";
+    restart.style.cursor = "pointer";
+    restart.style.paddingRight = "3px";
+    restart.style.paddingBottom = "2px";
+    restart.onclick = function restartOnClick(){
+        //restart
+    }
+    optionsCell.appendChild(restart);
+
     let info = document.createElement("img");
+    info.setAttribute("title", "Device info");
     info.src = "info.png";
     info.style.width = "12px";
     info.style.height = "12px";
@@ -222,6 +239,7 @@ function AddDeviceToTable(ip) {
     optionsCell.appendChild(info);
 
     let settings = document.createElement("img");
+    settings.setAttribute("title", "Device settings");
     settings.src = "settings.png";
     settings.style.width = "15px";
     settings.style.height = "15px";
