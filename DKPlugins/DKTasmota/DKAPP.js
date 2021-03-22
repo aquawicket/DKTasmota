@@ -207,7 +207,12 @@ function AddDeviceToTable(ip) {
     const optionsCell = DKTableGetCellByName(table, ip, "options");
     //optionsCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
     optionsCell.style.textAlign = "center";
-    optionsCell.style.cursor = "pointer";
+    let settings = document.createElement("img");
+    settings.src = "settings.png";
+    settings.style.width = "15px";
+    settings.style.height = "15px";
+    settings.style.cursor = "pointer";
+    optionsCell.appendChild(settings);
 
     //Do some final processing
     const deviceHeader = DKTableGetCellByName(table, "HEADER", "device");
