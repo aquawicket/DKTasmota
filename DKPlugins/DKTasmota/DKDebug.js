@@ -3,7 +3,7 @@
 //A Convienient Debug Button Function
 const showDebugButton = 1;
 function DebugButtonOnClick() {
-    
+
     /*
     //Update time on all devices
     let dateInMilliseconds = GetDateInMilliseconds();
@@ -25,8 +25,9 @@ function DebugButtonOnClick() {
     for (let n = 0; n < devices.length; n++) {
         let cmnd = "time";
         let url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-        DKSendRequest(url, function(success, url, data) {//console.log("DKSendRequest("+success+","+url+","+data+")");
-            console.log(""+data+"");
+        DKSendRequest(url, function(success, url, data) {
+            //console.log("DKSendRequest("+success+","+url+","+data+")");
+            console.log("" + data + "");
         });
     }
 

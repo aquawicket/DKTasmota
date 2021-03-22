@@ -22,27 +22,16 @@ function DKLoadFiles() {
     DKLoadJSFile("VPDCalculator.js");
     DKLoadJSFile("DKErrorHandler.js");
     DKLoadImage("loading.gif");
+
 }
 
-function DKLoadPage() {
+function DKLoadApp() {
     //Load Non-Gui Stuff
     DKCreateErrorHandler();
+    CreateSound("PowerDown.mp3");
     LoadDevices();
 
-    //Load Gui
-    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
-    dkconsole.debug("**** Tasmota device manager 0.1b ****");
-    document.body.style.backgroundColor = "rgb(100,100,100)";
-    CreateSound("PowerDown.mp3");
-    CreateButtons(document.body);
-    DKCreateClock(document.body, "clock", "2px", "", "200px");
-    CreateDeviceTable(document.body);
-    CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
-    CreateDebugButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
-
-    for (let n = 0; n < devices.length; n++) {
-        AddDeviceToTable(devices[n].ip);
-    }
+    LoadGui();
 
     //Run TimerLoop every minute
     window.setInterval(TimerLoop, 60000);
@@ -85,6 +74,22 @@ function LoadDevices() {
             devices[n] = deviceData;
             devices.sort((a,b)=>(a.Status.DeviceName > b.Status.DeviceName) ? 1 : -1)
         });
+    }
+}
+
+function LoadGui() {
+    //Load Gui
+    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
+    dkconsole.debug("**** Tasmota device manager 0.1b ****");
+    document.body.style.backgroundColor = "rgb(100,100,100)";
+    CreateButtons(document.body);
+    DKCreateClock(document.body, "clock", "2px", "", "200px");
+    CreateDeviceTable(document.body);
+    CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
+    CreateDebugButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
+
+    for (let n = 0; n < devices.length; n++) {
+        AddDeviceToTable(devices[n].ip);
     }
 }
 

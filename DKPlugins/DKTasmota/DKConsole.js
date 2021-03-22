@@ -221,7 +221,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
 
     //https://developer.mozilla.org/en-US/docs/Web/API/Console/error
     dkconsole.error = function(arg) {
-        if(!arg){
+        if (!arg) {
             dkconsole.warn("WARNING: dkconsole.error requires a valid argument");
             return false;
         }
@@ -230,8 +230,8 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     }
 
     dkconsole.trace = function(str) {
-       const stackStr = StackToConsoleString(str, "dkconsole.trace");
-       dkconsole.message(stackStr);
+        const stackStr = StackToConsoleString(str, "dkconsole.trace");
+        dkconsole.message(stackStr);
     }
 
     dkconsole.group = function(str) {

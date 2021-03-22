@@ -30,34 +30,34 @@ function DKCreateClock(parent, id, top, bottom, left, right, width, weight) {
 function UpdateClock() {
     const currentdate = new Date();
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
-    let dayOfWeek; 
-    switch(currentdate.getDay()) {
-        case 0:
-            dayOfWeek = "Sunday";
-            break;
-        case 1:
-            dayOfWeek = "Monday";
-            break;
-        case 2:
-            dayOfWeek = "Tuesday";
-            break;
-        case 3:
-            dayOfWeek = "Wednesday";
-            break;
-        case 4:
-            dayOfWeek = "Thursday";
-            break;
-        case 5:
-            dayOfWeek = "Friday";
-            break;
-        case 6:
-            dayOfWeek = "Saturday";
-            break;
-        default:
-            dayOfWeek = "ERROR";
+    let dayOfWeek;
+    switch (currentdate.getDay()) {
+    case 0:
+        dayOfWeek = "Sunday";
+        break;
+    case 1:
+        dayOfWeek = "Monday";
+        break;
+    case 2:
+        dayOfWeek = "Tuesday";
+        break;
+    case 3:
+        dayOfWeek = "Wednesday";
+        break;
+    case 4:
+        dayOfWeek = "Thursday";
+        break;
+    case 5:
+        dayOfWeek = "Friday";
+        break;
+    case 6:
+        dayOfWeek = "Saturday";
+        break;
+    default:
+        dayOfWeek = "ERROR";
     }
 
-    const datetime = dayOfWeek +" "+(currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+    const datetime = dayOfWeek + " " + (currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
     if (document.getElementById("clock")) {
         document.getElementById("clock").innerHTML = datetime;
     }

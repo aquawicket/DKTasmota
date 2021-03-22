@@ -70,14 +70,14 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     clearButton.onclick = ClearDatasets();
     chartDiv.appendChild(clearButton);
     */
-    
-    AssignDeviceShortcuts(function(){
+
+    AssignDeviceShortcuts(function() {
         AddDatasets();
         LoadDatasets();
-    }); 
+    });
 }
 
-function AddDatasets(){
+function AddDatasets() {
     AddDataset("Temperature", "rgb(200, 0, 0)", temperatureD?.ip, "sensor1", false);
     AddDataset("Humidity", "rgb(0, 0, 200)", temperatureD?.ip, "sensor2", false);
     AddDataset("DewPoint", "rgb(0,150,150)", temperatureD?.ip, "sensor3", true);
@@ -125,7 +125,7 @@ function UpdateChartDevice(ip, identifier, data) {
                     y: parseFloat(data)
                 });
             }
-          }
+        }
     }
 
     lineChart.update();

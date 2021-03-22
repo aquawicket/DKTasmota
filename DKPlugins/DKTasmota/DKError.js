@@ -1,6 +1,5 @@
 "use strict";
 
-
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     if (!error) {
         dkconsole.error("window.onerror failed: error variable invalid");
@@ -13,7 +12,6 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 //https://stackoverflow.com/a/49560222/688352
 //https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onunhandledrejection
 
-
 window.onunhandledrejection = function(event) {
     dkconsole.error(event);
     return false;
@@ -21,27 +19,22 @@ window.onunhandledrejection = function(event) {
 
 function StackToConsoleString(arg, deleteTo) {
     let jsonStack;
-    if(arg instanceof Error){
-        if(arg.stack){
+    if (arg instanceof Error) {
+        if (arg.stack) {
             jsonStack = StackToJSON(arg.stack);
-        }
-        else if(arg instanceof DOMException){
-            const str = arg.name+" "+arg.message;
+        } else if (arg instanceof DOMException) {
+            const str = arg.name + " " + arg.message;
             jsonStack = StackToJSON(GetStack(str));
-        }
-        else{
+        } else {
             dkconsole.error("arg is an instance of Error, but it doesn't have a stack");
             return false;
-        }  
-    }
-    else if(arg instanceof PromiseRejectionEvent){
+        }
+    } else if (arg instanceof PromiseRejectionEvent) {
         jsonStack = StackToJSON(GetStack(arg.reason));
-    }
-    else if(typeof arg === 'string'){
+    } else if (typeof arg === 'string') {
         jsonStack = StackToJSON(GetStack(arg));
-    }
-    else{
-        dkconsole.error("StackToConsoleString(): typeof arg invalid: "+typeof arg);
+    } else {
+        dkconsole.error("StackToConsoleString(): typeof arg invalid: " + typeof arg);
         return false;
     }
 
@@ -73,7 +66,7 @@ function isStrict() {
 
 function GetStack(msg) {
     let e = new Error(msg);
-    if (!e.stack){
+    if (!e.stack) {
         try {
             // old browsers need the Error thrown to fill the stack
             throw e;

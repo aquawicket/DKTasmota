@@ -18,12 +18,12 @@ function PauseSound(src) {
 
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
 async function PlaySound(src) {
-  //try {
-    const ele = document.getElementById(src);  
+    //try {
+    const ele = document.getElementById(src);
     await ele.play();
-  //} catch(errMsg) {
-  //    dkconsole.error(errMsg);
-  //}
+    //} catch(errMsg) {
+    //    dkconsole.error(errMsg);
+    //}
 }
 
 function StopSound(src) {

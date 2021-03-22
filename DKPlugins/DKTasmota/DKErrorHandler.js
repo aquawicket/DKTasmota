@@ -52,10 +52,10 @@ function DKCreateErrorHandler() {
     function handleRejection() {
         const onunhandledrejectionx = window.onunhandledrejection;
         window.addEventListener('unhandledrejection', onunhandledrejection);
-    
-        function onunhandledrejection(event){
+
+        function onunhandledrejection(event) {
             window.onanyerror.apply(this, arguments);
-            if(onunhandledrejectionx)
+            if (onunhandledrejectionx)
                 return onunhandledrejectionx.apply(null, arguments);
         }
     }
@@ -174,8 +174,7 @@ function DKCreateErrorHandler() {
             if (onerrorx)
                 return onerrorx.apply(this, arguments);
         }
-        ;
-        /**
+        ;/**
    * Handle `onabort`.
    */
 
@@ -184,8 +183,7 @@ function DKCreateErrorHandler() {
             if (onabortx)
                 return onabortx.apply(this, arguments);
         }
-        ;
-        /**
+        ;/**
    * Handle `onload`.
    *
    * For images, you can get a 403 response error,

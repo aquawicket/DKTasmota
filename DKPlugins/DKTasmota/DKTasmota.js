@@ -124,9 +124,9 @@ let bedroomLight;
 let co2mode = 0;
 
 function AssignDeviceShortcuts(callback) {
-    if(!callback){ 
+    if (!callback) {
         dkconsole.error("callback invalid");
-        return; 
+        return;
     }
     let deviceCount = 0;
     for (let n = 0; n < devices.length; n++) {
@@ -134,17 +134,27 @@ function AssignDeviceShortcuts(callback) {
         DKSendRequest(url, function(success, url, data) {
             if (!success || !url || !data) {
                 deviceCount++;
-                if(deviceCount === devices.length){
+                if (deviceCount === devices.length) {
                     callback && callback();
                 }
-                dkconsole.error("variable invalid");
+                let errorMessage = "";
+                if (!success) {
+                    errorMessage += "success invalid, ";
+                }
+                if (!url) {
+                    errorMessage += "url invalid, ";
+                }
+                if (!data) {
+                    errorMessage += "data invalid";
+                }
+                dkconsole.error(errorMessage);
                 return;
             }
             let deviceData = JSON.parse(data);
             let deviceName = deviceData?.Status?.DeviceName;
             let nnn = -1;
-            for(let nn=0; nn<devices.length; nn++){
-                if(url.includes(devices[nn].ip)){
+            for (let nn = 0; nn < devices.length; nn++) {
+                if (url.includes(devices[nn].ip)) {
                     nnn = nn;
                     break;
                 }
@@ -189,7 +199,7 @@ function AssignDeviceShortcuts(callback) {
                 temperatureD = devices[nnn];
             }
             deviceCount++;
-            if(deviceCount === devices.length){
+            if (deviceCount === devices.length) {
                 callback && callback();
             }
         });
