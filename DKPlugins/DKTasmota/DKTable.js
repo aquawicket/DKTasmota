@@ -174,7 +174,7 @@ function DKTableGetIndex(cell) {
 }
 
 function DKTableGetRowByName(table, rowName) {
-    return DKTableGetCellByNames(table, rowName);
+    return DKTableGetCellByName(table, rowName);
     /*
     for (let n = 0; n < table.rows.length; n++) {
         if (!table.rows[n].getAttribute("name")) {
@@ -189,7 +189,7 @@ function DKTableGetRowByName(table, rowName) {
     */
 }
 
-function DKTableGetCellByNames(table, rowName, columnName) {
+function DKTableGetCellByName(table, rowName, columnName) {
     //TODO: We would like to retrieve a cell by names
     // Example:  DKGetCell("Peter", "Address");
     // This should return the cell that is on the Peter Row and the Address Column
