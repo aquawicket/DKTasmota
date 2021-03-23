@@ -36,7 +36,7 @@ function DKLoadApp() {
     LoadGui();
     //Run TimerLoop every minute
     //window.setInterval(TimerLoop, 60000);
-    window.setInterval(TimerLoop, 20000);
+    window.setInterval(TimerLoop, 40000);
 }
 
 //Load devices from local storage

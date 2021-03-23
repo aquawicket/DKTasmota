@@ -235,33 +235,66 @@ function DKTableGetCellByName(table, rowName, columnName) {
     }
 }
 
+/*
 //https://stackoverflow.com/a/37814596/688352
 function DKSortTable(table_id, sortColumn, decending) {
     const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
     const rowData = tableData.getElementsByTagName('tr');
     for (let n = 1; n < rowData.length - 1; n++) {
         for (let nn = 1; nn < rowData.length - (n + 1); nn++) {
-            if (!decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            if (!decending && String(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > String(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
                 tableData.insertBefore(rowData.item(nn + 1), rowData.item(nn));
             }
-            else if (decending && Number(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+            else if (decending && String(rowData.item(nn).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < String(rowData.item(nn + 1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
                 tableData.insertBefore(rowData.item(nn + 1), rowData.item(nn));
             }
         }
     }
 }
+*/
 
+function DKSortTable(table_id, col, reverse) {
+    let table = document.getElementById(table_id);
+    var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+        tr = Array.prototype.slice.call(tb.rows, 1), // put rows into array, 1 to skip the header
+        i;
+    reverse = -((+reverse) || -1);
+    tr = tr.sort(function (a, b) { // sort rows
+        return reverse // `-1 *` if want opposite order
+            * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
+                .localeCompare(b.cells[col].textContent.trim())
+               );
+    });
+    for(i = 1; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
+}
+
+//TODO
+function DKSortRow(table_id, row, col, reverse) {
+    let table = document.getElementById(table_id);
+    var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+    tr = Array.prototype.slice.call(tb.rows, 1), // put rows into array, 1 to skip the header
+        //i;
+    reverse = -((+reverse) || -1);
+    tr = tr.sort(function (a, b) { // sort rows
+        return reverse * (a.cells[col].textContent.trim().localeCompare(b.cells[col].textContent.trim()));
+    });
+    //just append the single row
+    let insertedNode = tb.insertBefore(/*newNode*/row, referenceNode)
+}
+
+/*
 function DKSortRow(table_id, row, sortColumn, decending) {
     const tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
     const rowData = tableData.getElementsByTagName('tr');
     for (let n = 1; n < rowData.length; n++) {
-        if (!decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(n).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+        if (!decending && parseInt(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < parseInt(rowData.item(n).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
             tableData.insertBefore(row, rowData.item(n));
             return;
         }
-        if (decending && Number(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(n).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+        if (decending && parseInt(row.getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > parseInt(rowData.item(n).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
             tableData.insertBefore(row, rowData.item(n));
             return;
         }
     }
 }
+*/
