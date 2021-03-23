@@ -208,3 +208,8 @@ function CreateButton(parent, id, top, left, witdh, height, onclick) {
     parent.appendChild(button);
     return button;
 }
+
+function DKComfirmation(callback)
+{
+    
+}

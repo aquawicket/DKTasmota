@@ -121,7 +121,7 @@ let vegTentLights;
 let vegTentWaterPump;
 let kitchenLight;
 let vegTentExhaust;
-let co2mode = 0;
+let co2mode = 1;
 
 function AssignDeviceShortcuts(callback) {
     if (!callback) {

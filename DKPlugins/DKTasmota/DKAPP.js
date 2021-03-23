@@ -129,8 +129,8 @@ function CreateDeviceTable(parent) {
     DKTableGetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
     DKTableGetCellByName(table, "HEADER", "device").style.width = "220px";
     DKTableGetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick(){
-        dkconsole.log("deviceHeaderOnClick");
         DKSortTable("deviceTable", 0);
+        UpdateTableStyles();
     }
     
     DKTableAddColumn(table, "power");
@@ -138,7 +138,8 @@ function CreateDeviceTable(parent) {
     DKTableGetCellByName(table, "HEADER", "power").style.width = "50px";
     DKTableGetCellByName(table, "HEADER", "power").style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "power").onclick = function powerHeaderOnClick(){
-        dkconsole.log("powerHeaderOnClick");
+        DKSortTable("deviceTable", 1);
+        UpdateTableStyles();
     }
 
     DKTableAddColumn(table, "data");
@@ -146,7 +147,8 @@ function CreateDeviceTable(parent) {
     DKTableGetCellByName(table, "HEADER", "data").style.width = "140px";
     DKTableGetCellByName(table, "HEADER", "data").style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick(){
-        dkconsole.log("dataHeaderOnClick");
+        DKSortTable("deviceTable", 2);
+        UpdateTableStyles();
     }
 
     DKTableAddColumn(table, "wifi");
@@ -154,7 +156,8 @@ function CreateDeviceTable(parent) {
     DKTableGetCellByName(table, "HEADER", "wifi").style.width = "70px";
     DKTableGetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "wifi").onclick = function wifiHeaderOnClick(){
-        dkconsole.log("wifiHeaderOnClick");
+        DKSortTable("deviceTable", 3);
+        UpdateTableStyles();
     }
 
     DKTableAddColumn(table, "options");
@@ -262,7 +265,8 @@ function AddDeviceToTable(ip) {
     const deviceHeader = DKTableGetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    DKSortRow("deviceTable", row, 0);
+    //DKSortRow("deviceTable", row, 0);
+    DKSortTable("deviceTable", 0);
     UpdateTableStyles();
 }
 
@@ -434,7 +438,8 @@ function UpdateScreen(success, url, data) {
     let deviceName = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (deviceName) {
         row.cells[0].innerHTML = "<a>" + deviceName + "</a>";
-        DKSortRow("deviceTable", row, 0);
+        //DKSortRow("deviceTable", row, 0);
+        DKSortTable("deviceTable", 0);
         UpdateTableStyles();
     }
 

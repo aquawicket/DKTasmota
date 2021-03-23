@@ -4,6 +4,36 @@
 const showDebugButton = 1;
 function DebugButtonOnClick() {
 
+    let resizableDiv = document.createElement("div");
+    resizableDiv.style.width = "5px";
+    resizableDiv.style.height = "5px";
+    resizableDiv.style.resize = "both";
+    resizableDiv.style.overflow = "auto";
+    resizableDiv.style.border = "solid 2px blue";
+    document.body.appendChild(resizableDiv);
+
+    DKAddResizeHandler(resizableDiv, function(){
+        dkconsole.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
+    });
+
+
+//TODO  //https://github.com/juggle/resize-observer 
+//https://stackoverflow.com/a/48718956/688352
+function DKAddResizeHandler(element, callback){
+    var observer = new MutationObserver(function(mutations){
+        callback && callback();
+    });
+    observer.observe(element, { attributes: true  });
+}
+
+
+
+
+
+
+
+
+
     /*
     //Update time on all devices
     let dateInMilliseconds = GetDateInMilliseconds();
@@ -21,6 +51,7 @@ function DebugButtonOnClick() {
     }
     */
 
+    /*
     //Get time from all devices
     for (let n = 0; n < devices.length; n++) {
         let cmnd = "time";
@@ -30,6 +61,7 @@ function DebugButtonOnClick() {
             console.log("" + data + "");
         });
     }
+    */
 
     //DKCreateWindow("testWindow", 300, 300);
 
