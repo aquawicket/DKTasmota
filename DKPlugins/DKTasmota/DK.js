@@ -209,7 +209,18 @@ function CreateButton(parent, id, top, left, witdh, height, onclick) {
     return button;
 }
 
-function DKComfirmation(callback)
-{
-    
+function DKComfirmation(callback) {//TODO
+}
+
+//TODO  //https://github.com/juggle/resize-observer
+//TODO:  make this a CustomEvent
+//https://stackoverflow.com/a/48718956/688352
+function DKAddResizeHandler(element, callback) {
+    var observer = new MutationObserver(function(mutations) {
+        callback && callback();
+    }
+    );
+    observer.observe(element, {
+        attributes: true
+    });
 }

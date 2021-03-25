@@ -34,6 +34,12 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     let ctx = chartCanvas.getContext('2d');
     chartDiv.appendChild(chartCanvas);
 
+    //FIXME - do proper refreshing on resize    
+    DKAddResizeHandler(chartCanvas, function(){
+        //dkconsole.info("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
+        chartCanvas.style.height = "100%";
+    });
+
     lineChart = new Chart(ctx,{
         type: "line",
         data: {

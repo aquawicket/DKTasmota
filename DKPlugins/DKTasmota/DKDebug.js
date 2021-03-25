@@ -11,27 +11,17 @@ function DebugButtonOnClick() {
     resizableDiv.style.overflow = "auto";
     resizableDiv.style.border = "solid 2px blue";
     document.body.appendChild(resizableDiv);
-
     DKAddResizeHandler(resizableDiv, function(){
         dkconsole.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
     });
+    /*
+    //only works on window object
+    resizableDiv.onresize = function() {
+        dkconsole.info("resized: x:" + resizableDiv.style.width + " y:" + resizableDiv.style.height);
+    }
+    */
 
-
-//TODO  //https://github.com/juggle/resize-observer 
-//https://stackoverflow.com/a/48718956/688352
-function DKAddResizeHandler(element, callback){
-    var observer = new MutationObserver(function(mutations){
-        callback && callback();
-    });
-    observer.observe(element, { attributes: true  });
-}
-
-
-
-
-
-
-
+    
 
 
     /*
