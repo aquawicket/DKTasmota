@@ -4,6 +4,12 @@
 const showDebugButton = 1;
 function DebugButtonOnClick() {
 
+    DKConfirm("do this?", function(){
+        dkconsole.log("confirm callback");
+    });
+
+
+    /*
     let resizableDiv = document.createElement("div");
     resizableDiv.style.width = "5px";
     resizableDiv.style.height = "5px";
@@ -14,16 +20,12 @@ function DebugButtonOnClick() {
     DKAddResizeHandler(resizableDiv, function(){
         dkconsole.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
     });
-    /*
     //only works on window object
-    resizableDiv.onresize = function() {
-        dkconsole.info("resized: x:" + resizableDiv.style.width + " y:" + resizableDiv.style.height);
-    }
+    //resizableDiv.onresize = function() {
+    //    dkconsole.info("resized: x:" + resizableDiv.style.width + " y:" + resizableDiv.style.height);
+    //}
     */
-
-    
-
-
+  
     /*
     //Update time on all devices
     let dateInMilliseconds = GetDateInMilliseconds();

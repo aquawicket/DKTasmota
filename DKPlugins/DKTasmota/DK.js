@@ -192,16 +192,16 @@ function CenterWindow(element) {
     return element;
 }
 
-function CreateButton(parent, id, top, left, witdh, height, onclick) {
+function CreateButton(parent, id, top, left, width, height, onclick) {
     let button = document.createElement("button");
     button.id = id;
-    button.innerHTML = "Button";
+    button.innerHTML = id;
     //button.style.zIndex = "2";
     button.style.position = "absolute";
     button.style.top = top;
     button.style.left = left;
     button.style.height = height;
-    button.style.width = width;
+    if(width){ button.style.width = width; }
     button.style.padding = "0px";
     button.style.cursor = "pointer";
     button.onclick = onclick;
@@ -209,7 +209,20 @@ function CreateButton(parent, id, top, left, witdh, height, onclick) {
     return button;
 }
 
-function DKComfirmation(callback) {//TODO
+function DKConfirm(msg, callback) {
+    let confirm = DKCreateWindow("DKConfirm", "200px", "100px");
+    confirm.style.textAlign = "center";
+    confirm.style.paddingTop = "20px";
+    let message = document.createElement("span");
+    message.innerHTML = msg;
+    confirm.appendChild(message);
+    let no = CreateButton(confirm, "No", "50px", "75px", "", "", function(){
+        document.body.removeChild(confirm);
+    });
+    let yes = CreateButton(confirm, "Yes", "50px", "105px", "", "", function(){
+        callback && callback();
+        document.body.removeChild(confirm);
+    });
 }
 
 //TODO  //https://github.com/juggle/resize-observer

@@ -232,8 +232,10 @@ function AddDeviceToTable(ip) {
     restart.style.paddingRight = "3px";
     restart.style.paddingBottom = "2px";
     restart.onclick = function restartOnClick(){
-        restart.src = "loading.gif";
-        DKSendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
+        DKConfirm("Restart this device?", function(){
+            restart.src = "loading.gif";
+            DKSendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
+        });
     }
     optionsCell.appendChild(restart);
 
