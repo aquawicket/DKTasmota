@@ -125,23 +125,21 @@ function DKSendRequest(url, callback) {
     xhr.send();
 }
 
-/////////////////////////////////////////
-function SaveToLocalStorage(name, string) {
+function DKSaveToLocalStorage(name, string) {
     if (!name) {
         return;
     }
     localStorage.setItem(name, string);
 }
 
-///////////////////////////////////
-function LoadFromLocalStorage(name) {
+function DKLoadFromLocalStorage(name) {
     if (!name) {
         return;
     }
     return localStorage.getItem(name);
 }
 
-function RemoveFromLocalStorage(name) {
+function DKRemoveFromLocalStorage(name) {
     localStorage.removeItem(name);
 }
 
@@ -163,7 +161,7 @@ function DKCreateWindow(id, width, height) {
     win.style.borderWidth = "1px";
     win.style.boxSizing = "border-box";
     document.body.appendChild(win);
-    CenterWindow(win);
+    DKCenterWindow(win);
 
     let winClose = document.createElement('div');
     winClose.id = win.id + "Close";
@@ -179,8 +177,7 @@ function DKCreateWindow(id, width, height) {
     return win;
 }
 
-//////////////////////////////
-function CenterWindow(element) {
+function DKCenterWindow(element) {
     let winW = window.innerWidth;
     let winH = window.innerHeight;
     let eleW = parseInt(element.style.width);
@@ -192,7 +189,7 @@ function CenterWindow(element) {
     return element;
 }
 
-function CreateButton(parent, id, top, left, width, height, onclick) {
+function DKCreateButton(parent, id, top, left, width, height, onclick) {
     let button = document.createElement("button");
     button.id = id;
     button.innerHTML = id;
@@ -216,10 +213,10 @@ function DKConfirm(msg, callback) {
     let message = document.createElement("span");
     message.innerHTML = msg;
     confirm.appendChild(message);
-    let no = CreateButton(confirm, "No", "50px", "75px", "", "", function(){
+    let no = DKCreateButton(confirm, "No", "50px", "75px", "", "", function(){
         document.body.removeChild(confirm);
     });
-    let yes = CreateButton(confirm, "Yes", "50px", "105px", "", "", function(){
+    let yes = DKCreateButton(confirm, "Yes", "50px", "105px", "", "", function(){
         callback && callback();
         document.body.removeChild(confirm);
     });

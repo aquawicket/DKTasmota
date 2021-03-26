@@ -167,14 +167,14 @@ function SaveDatasets(ip) {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             let data = JSON.stringify(lineChart.data.datasets[n].data);
-            SaveToLocalStorage(lineChart.data.datasets[n].label, data);
+            DKSaveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
 }
 
 function LoadDatasets() {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        let data = LoadFromLocalStorage(lineChart.data.datasets[n].label);
+        let data = DKLoadFromLocalStorage(lineChart.data.datasets[n].label);
         lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();

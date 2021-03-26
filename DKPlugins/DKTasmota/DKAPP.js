@@ -42,7 +42,7 @@ function DKLoadApp() {
 //Load devices from local storage
 function LoadDevices() {
     let deviceIPs = [];
-    let data = LoadFromLocalStorage("deviceIPs")
+    let data = DKLoadFromLocalStorage("deviceIPs")
     if (data) {
         deviceIPs = JSON.parse(data);
     }
@@ -277,17 +277,36 @@ function InfoWindow(ip)
     DKCreateWindow("Info", "600px", "500px");
     const info = document.getElementById("Info");
     const div = document.createElement("div");
+    
     div.style.position = "absolute";
+    div.style.top = "20px";
+    /*
     div.style.top = "20px";
     div.style.left = "5px";
     div.style.right = "5px";
     div.style.bottom = "5px";
     div.style.backgroundColor = "rgb(70,70,70)";
+    */
+    
+    div.style.width = "100%";
+    div.style.fontSize = "12px";
+    div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
+    div.style.whiteSpace = "pre-wrap";
+    div.style.boxSizing = "border-box";
+    div.style.padding = "2px";
+    div.style.paddingLeft = "20px";
+    div.style.borderStyle = "solid";
+    div.style.borderWidth = "1px";
+    div.style.borderTopWidth = "0px";
+    div.style.borderLeftWidth = "0px";
+    div.style.borderRightWidth = "0px";
+    div.style.backgroundColor = "rgb(36,36,36)";
+
     const obj = FindObjectValueIncludes(devices, "ip", ip);
     const n = devices.indexOf(obj);
     let jsonString = PrettyJson(JSON.stringify(devices[n]));
     let jsonSuper = HighlightJson(jsonString);
-    dkconsole.log(jsonSuper);
+    //dkconsole.log(jsonSuper);
 
     div.innerHTML = jsonSuper;
     info.appendChild(div);

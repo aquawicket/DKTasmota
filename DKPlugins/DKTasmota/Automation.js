@@ -35,7 +35,7 @@ function Automate() {
     humMax = humTarget + 10;
 
     if (co2 && !bypassRules.includes(co2.ip)) {
-        if (co2mode && /*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */temperature < (tempTarget-1) && humidity < humMax ) {
+        if (co2mode && /*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */temperature < (tempTarget-5) && humidity < humMax ) {
             dkconsole.message("Co2 ON", "green");
             co2.StatusSTS.POWER = "ON";
             DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
