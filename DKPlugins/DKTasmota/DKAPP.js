@@ -33,7 +33,6 @@ function DKLoadApp() {
     //Load Non-Gui Stuff
     DKCreateErrorHandler();
     CreateSound("PowerDown.mp3");
-    SetVolume("PowerDown.mp3", 0.1);
     LoadDevices();
     LoadGui();
     
@@ -116,6 +115,25 @@ function CreateButtons(parent) {
     clearDevices.style.cursor = "pointer";
     clearDevices.onclick = ClearDevices;
     parent.appendChild(clearDevices);
+
+    let volume = document.createElement("img");
+    volume.src = "volume_100.png";
+    volume.style.position = "absolute";
+    volume.style.height = "21px";
+    volume.style.top = "2px";
+    volume.style.right = "2px";
+    volume.style.cursor = "pointer";
+    parent.appendChild(volume);
+    volume.onclick = function(){
+        if(GetVolume("PowerDown.mp3") === 1.0){
+            SetVolume("PowerDown.mp3", 0.0);
+            volume.src = "volume_0.png";
+        }
+        else{
+            SetVolume("PowerDown.mp3", 1.0);
+            volume.src = "volume_100.png";
+        }
+    }
 }
 
 function CreateDeviceTable(parent) {

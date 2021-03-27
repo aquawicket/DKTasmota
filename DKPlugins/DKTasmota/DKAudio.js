@@ -33,6 +33,11 @@ function StopSound(src) {
     ele.stop();
 }
 
+function GetVolume(src) {
+    const ele = document.getElementById(src);
+    return ele.volume;
+}
+
 function SetVolume(src, volume) {
     const ele = document.getElementById(src);
     ele.volume = volume;
