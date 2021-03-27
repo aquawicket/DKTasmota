@@ -6,6 +6,7 @@ function DKLoadFiles() {
     //DKLoadPage() will be call after this loads everything.
     //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("superagent.js");
+    DKLoadJSFile("DKMqtt.js");
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
     DKLoadJSFile("DKConsole.js");
@@ -25,15 +26,17 @@ function DKLoadFiles() {
     DKLoadImage("restart.png");
     DKLoadImage("info.png");
     DKLoadImage("settings.png");
-
+    DKLoadAudio("PowerDown.mp3");
 }
 
 function DKLoadApp() {
     //Load Non-Gui Stuff
     DKCreateErrorHandler();
     CreateSound("PowerDown.mp3");
+    SetVolume("PowerDown.mp3", 0.1);
     LoadDevices();
     LoadGui();
+    
     //Run TimerLoop every minute
     //window.setInterval(TimerLoop, 60000);
     window.setInterval(TimerLoop, 40000);

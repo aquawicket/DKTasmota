@@ -34,6 +34,11 @@ function DKLoadImage(url) {
     img.src = url;
 }
 
+function DKLoadAudio(url) {
+    const audio = new Audio();
+    audio.src = url;
+}
+
 function DKSendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,

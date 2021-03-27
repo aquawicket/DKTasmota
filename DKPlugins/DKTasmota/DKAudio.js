@@ -1,6 +1,8 @@
 "use strict";
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
 
+
+
 function CreateSound(src) {
     const audio = document.createElement("audio");
     audio.id = src;
@@ -29,4 +31,9 @@ async function PlaySound(src) {
 function StopSound(src) {
     const ele = document.getElementById(src);
     ele.stop();
+}
+
+function SetVolume(src, volume) {
+    const ele = document.getElementById(src);
+    ele.volume = volume;
 }
