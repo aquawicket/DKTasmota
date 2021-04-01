@@ -22,7 +22,7 @@ function Automate() {
     //Co2
     if (co2mode) {
         //When using Co2, temperature should be 85 degrees
-        tempTarget = 85;
+        tempTarget = 82;
         humTarget = 55;
     } else {
         //When NOT using Co2, temperature should be 77 degrees
@@ -71,7 +71,7 @@ function Automate() {
 
     //Heater
     if (heater && !bypassRules.includes(heater.ip)) {
-        if (co2?.StatusSTS?.POWER !== "ON" && (temperature < tempTarget)) {
+        if (!co2mode && (temperature < tempTarget)) {
             dkconsole.message("Heater ON", "green");
             DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {

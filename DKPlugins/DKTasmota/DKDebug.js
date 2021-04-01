@@ -4,9 +4,16 @@
 const showDebugButton = 1;
 function DebugButtonOnClick() {
 
+
+    //var result =  1+11+8*9+2/14*8-4;
+    //console.log("it's "+result+" ...  computers never lie");
+
+    /*
     DKConfirm("do this?", function(){
         dkconsole.log("confirm callback");
     });
+    */
+
 
 
     /*
