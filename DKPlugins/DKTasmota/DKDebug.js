@@ -33,7 +33,7 @@ function DebugButtonOnClick() {
     //}
     */
   
-    /*
+    
     //Update time on all devices
     let dateInMilliseconds = GetDateInMilliseconds();
     for (let n = 0; n < devices.length; n++) {
@@ -48,7 +48,7 @@ function DebugButtonOnClick() {
             console.log("DKSendRequest(" + success + "," + url + "," + data + ")");
         });
     }
-    */
+    
 
     /*
     //Get time from all devices

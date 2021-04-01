@@ -119,7 +119,7 @@ let waterStation;
 let vegTentCo2;
 let vegTentLights;
 let vegTentWaterPump;
-let kitchenLight;
+let exhaustFanA;
 let vegTentExhaust;
 let co2mode = 0;
 
@@ -190,7 +190,7 @@ function AssignDeviceShortcuts(callback) {
                 vegTentCo2 = devices[nnn];
             }
             if (deviceName.includes("011")) {
-                kitchenLight = devices[nnn];
+                exhaustFanA = devices[nnn];
             }
             if (deviceName.includes("012")) {
                 vegTentExhaust = devices[nnn];

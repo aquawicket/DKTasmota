@@ -498,7 +498,7 @@ function UpdateScreen(success, url, data) {
     }
 
     let deviceSI7021 = device.StatusSNS ? device.StatusSNS.SI7021 : 0;
-    if (deviceSI7021) {
+    if (deviceSI7021 && deviceName.includes("013")) {
         temperature = (deviceSI7021.Temperature + tempCalib).toFixed(1);
         let tempDirection = " ";
         if (temperature > tempTarget) {

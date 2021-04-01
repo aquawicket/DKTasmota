@@ -60,7 +60,7 @@ function Automate() {
 
     //Water walls
     if (waterWalls && !bypassRules.includes(waterWalls.ip)) {
-        if ((time < 17) && (humidity < humTarget) && (temperature > tempTarget)) {
+        if ((time < 16) && (humidity < humTarget) && (temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
             DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
