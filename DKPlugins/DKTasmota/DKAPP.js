@@ -350,7 +350,7 @@ function UpdateTableStyles() {
 
 function ScanDevices() {
     let deviceIPs = [];
-    let data = LoadFromLocalStorage("deviceIPs");
+    let data = DKLoadFromLocalStorage("deviceIPs");
     if (data) {
         deviceIPs = JSON.parse(data);
     }
@@ -358,7 +358,7 @@ function ScanDevices() {
     GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip && !deviceIPs.includes(ip)) {
             deviceIPs.push(ip);
-            SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
+            DKSaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
             AddDeviceToTable(ip);
         }
         if (done) {
