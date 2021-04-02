@@ -92,6 +92,7 @@ let theDevice = {
 }
 */
 
+//TODO: move all of these varaibles into the devices object.
 let temperature;
 let humidity;
 let dewPoint;
