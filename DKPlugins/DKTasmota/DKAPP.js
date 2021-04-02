@@ -397,13 +397,8 @@ function ProcessDevices() {
 }
 
 function UpdateScreen(success, url, data) {
-    if(!url || !data){
-
-        PlaySound("PowerDown.mp3");
-        return;
-    }
-    if (!success){
-        //dkconsole.error("!success || !url || !data");
+    if(!success || !url || !data){
+        dkconsole.warn("UpdateScreen("+success+","+url+","+data+")");
         PlaySound("PowerDown.mp3");
         return;
     }

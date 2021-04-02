@@ -116,7 +116,7 @@ function DKSendRequest(url, callback) {
                 callback(true, url, xhr.responseText);
             } else {
                 //dkconsole.error("GET <a href=' " + url + " ' target='_blank' style='color:rgb(213,213,213)'>" + url + "</a> onreadystatechange");
-                callback(false, url, event);
+                callback(false, url, event.type);
                 return false;
             }
         }
