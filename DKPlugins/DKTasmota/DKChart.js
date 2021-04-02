@@ -77,25 +77,25 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(clearButton);
     */
 
-    AssignDeviceShortcuts(function() {
+    WaitForDevices(function() {
         AddDatasets();
         LoadDatasets();
     });
 }
 
 function AddDatasets() {
-    AddDataset("Temperature", "rgb(200, 0, 0)", temperatureD?.ip, "sensor1", false);
-    AddDataset("Humidity", "rgb(0, 0, 200)", temperatureD?.ip, "sensor2", false);
-    AddDataset("DewPoint", "rgb(0,150,150)", temperatureD?.ip, "sensor3", true);
-    AddDataset("ExhaustFan", "rgb(150,0,150)", exhaustFan?.ip, "switch1", true);
-    AddDataset("WaterWalls", "rgb(90,0,150)", waterWalls?.ip, "switch1", true);
-    AddDataset("Heater", "rgb(150,0,50)", heater?.ip, "switch1", true);
-    AddDataset("ShedWaterA", "rgb(150,40,40)", shedWaterA?.ip, "switch1", true);
-    AddDataset("ShedWaterB", "rgb(30,0,90)", shedWaterB?.ip, "switch1", true);
-    AddDataset("WaterStation", "rgb(10,30,50)", waterStation?.ip, "switch1", true);
-    AddDataset("VegTentCo2", "rgb(100,60,10)", vegTentCo2?.ip, "switch1", true);
-    AddDataset("Co2", "rgb(10,60,10)", co2?.ip, "switch1", true);
-    AddDataset("VegTentExhaust", "rgb(10,60,10)", vegTentExhaust?.ip, "switch1", true);
+    AddDataset("Temperature", "rgb(200, 0, 0)", Device("013").ip, "sensor1", false);
+    AddDataset("Humidity", "rgb(0, 0, 200)", Device("013").ip, "sensor2", false);
+    AddDataset("DewPoint", "rgb(0,150,150)", Device("013").ip, "sensor3", true);
+    AddDataset("ExhaustFan", "rgb(150,0,150)", Device("005").ip, "switch1", true);
+    AddDataset("WaterWalls", "rgb(90,0,150)", Device("007").ip, "switch1", true);
+    AddDataset("Heater", "rgb(150,0,50)", Device("006").ip, "switch1", true);
+    AddDataset("ShedWaterA", "rgb(150,40,40)", Device("002").ip, "switch1", true);
+    AddDataset("ShedWaterB", "rgb(30,0,90)", Device("001").ip, "switch1", true);
+    AddDataset("WaterStation", "rgb(10,30,50)", Device("003").ip, "switch1", true);
+    AddDataset("VegTentCo2", "rgb(100,60,10)", Device("010").ip, "switch1", true);
+    AddDataset("Co2", "rgb(10,60,10)", Device("008").ip, "switch1", true);
+    AddDataset("VegTentExhaust", "rgb(10,60,10)", Device("012").ip, "switch1", true);
 }
 
 function UpdateChartDevice(ip, identifier, data) {

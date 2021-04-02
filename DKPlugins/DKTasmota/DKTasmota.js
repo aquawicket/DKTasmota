@@ -92,12 +92,11 @@ let theDevice = {
 }
 */
 
-//TODO: move all of these varaibles into the devices object.
+//TODO: move all of these user varaibles into the devices object.
 let temperature;
 let humidity;
 let dewPoint;
 
-let bypassRules = [];
 let tempTarget = 77;
 let tempCalib = -5;
 let tempMin = tempTarget - 10;
@@ -108,23 +107,9 @@ let humCalib = 0;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
 
-//Device shortcut variables
-let temperatureD;
-let exhaustFan;
-let waterWalls;
-let co2;
-let heater;
-let shedWaterA;
-let shedWaterB;
-let waterStation;
-let vegTentCo2;
-let vegTentLights;
-let vegTentWaterPump;
-let exhaustFanA;
-let vegTentExhaust;
 let co2mode = 0;
 
-function AssignDeviceShortcuts(callback) {
+function WaitForDevices(callback) {
     if (!callback) {
         dkconsole.error("callback invalid");
         return;
@@ -133,72 +118,6 @@ function AssignDeviceShortcuts(callback) {
     for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DKSendRequest(url, function(success, url, data) {
-            if (!success || !url || !data) {
-                deviceCount++;
-                if (deviceCount === devices.length) {
-                    callback && callback();
-                }
-                let errorMessage = "";
-                if (!success) {
-                    errorMessage += "success invalid, ";
-                }
-                if (!url) {
-                    errorMessage += "url invalid, ";
-                }
-                if (!data) {
-                    errorMessage += "data invalid";
-                }
-                dkconsole.error(errorMessage);
-                return;
-            }
-            let deviceData = JSON.parse(data);
-            let deviceName = deviceData?.Status?.DeviceName;
-            let nnn = -1;
-            for (let nn = 0; nn < devices.length; nn++) {
-                if (url.includes(devices[nn].ip)) {
-                    nnn = nn;
-                    break;
-                }
-            }
-            if (deviceName.includes("001")) {
-                shedWaterB = devices[nnn];
-            }
-            if (deviceName.includes("002")) {
-                shedWaterA = devices[nnn];
-            }
-            if (deviceName.includes("003")) {
-                waterStation = devices[nnn];
-            }
-            if (deviceName.includes("004")) {
-                vegTentLights = devices[nnn];
-            }
-            if (deviceName.includes("005")) {
-                exhaustFan = devices[nnn];
-            }
-            if (deviceName.includes("006")) {
-                heater = devices[nnn];
-            }
-            if (deviceName.includes("007")) {
-                waterWalls = devices[nnn];
-            }
-            if (deviceName.includes("008")) {
-                co2 = devices[nnn];
-            }
-            if (deviceName.includes("009")) {
-                vegTentWaterPump = devices[nnn];
-            }
-            if (deviceName.includes("010")) {
-                vegTentCo2 = devices[nnn];
-            }
-            if (deviceName.includes("011")) {
-                exhaustFanA = devices[nnn];
-            }
-            if (deviceName.includes("012")) {
-                vegTentExhaust = devices[nnn];
-            }
-            if (deviceName.includes("013")) {
-                temperatureD = devices[nnn];
-            }
             deviceCount++;
             if (deviceCount === devices.length) {
                 callback && callback();
@@ -207,15 +126,14 @@ function AssignDeviceShortcuts(callback) {
     }
 }
 
-/*
-function GetDeviceByCode(nnn) {
+//Get the Device by partial matching name
+function Device(str) {
     for (let n = 0; n < devices.length; n++) {
-        if (devices[n]?.Status?.DeviceName?.includes(nnn)) {
+        if (devices[n]?.Status?.DeviceName?.includes(str)) {
             return devices[n];
         }
     }
 }
-*/
 
 //return all local network device IPs that respond to /cm?cmnd=CORS 
 function GetTasmotaDevices(ipPrefix, callback) {

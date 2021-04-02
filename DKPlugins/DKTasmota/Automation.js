@@ -1,8 +1,9 @@
 "use strict";
 
-function Automate() {
 
-    //AssignDeviceShortcuts();
+function Automate() {
+//AssignDeviceShortcuts(function(){
+
     DumpVariables();
 
     //Alarms
@@ -34,59 +35,61 @@ function Automate() {
     humMin = humTarget - 10;
     humMax = humTarget + 10;
 
-    if (co2 && !bypassRules.includes(co2.ip)) {
+    if(Device("B Tent Co2") && !Device("B Tent Co2").bypass) {
         if (co2mode && /*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */temperature < (tempTarget-5) && humidity < humMax ) {
             dkconsole.message("Co2 ON", "green");
-            co2.StatusSTS.POWER = "ON";
-            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-            DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            Device("B Tent Co2").StatusSTS.POWER = "ON";
+            DKSendRequest("http://" + Device("B Tent Co2").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         } else {
             dkconsole.message("Co2 OFF", "yellow");
-            co2.StatusSTS.POWER = "OFF";
-            DKSendRequest("http://" + co2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            Device("B Tent Co2").StatusSTS.POWER = "OFF";
+            DKSendRequest("http://" + Device("B Tent Co2").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Exhaust fan
-    if (exhaustFan && !bypassRules.includes(exhaustFan.ip)) {
-        if ((co2?.StatusSTS?.POWER !== "ON") && ((temperature > (tempTarget + 1)) || (humidity > humMax && temperature > tempMin))) {
+    if (Device("B Tent Exhaust Fan") && !Device("B Tent Exhaust Fan").bypass) {
+        if ((Device("B Tent Co2")?.StatusSTS?.POWER !== "ON") && ((temperature > (tempTarget + 1)) || (humidity > humMax && temperature > tempMin))) {
             dkconsole.message("Exhaust Fan ON", "green");
-            DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.message("Exhaust Fan OFF", "yellow");
-            DKSendRequest("http://" + exhaustFan.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Water walls
-    if (waterWalls && !bypassRules.includes(waterWalls.ip)) {
+    if (Device("B Tent Water Walls") && !Device("B Tent Water Walls").bypass) {
         if ((time < 16) && (humidity < humTarget) && (temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
-            DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Water Walls").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.message("Water walls OFF", "yellow");
-            DKSendRequest("http://" + waterWalls.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Water Walls").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
 
     //Heater
-    if (heater && !bypassRules.includes(heater.ip)) {
+    if (Device("B Tent Heater") && !Device("B Tent Heater").bypass) {
         if (!co2mode && (temperature < tempTarget)) {
             dkconsole.message("Heater ON", "green");
-            DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Heater").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
             dkconsole.message("Heater OFF", "yellow");
-            DKSendRequest("http://" + heater.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Heater").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
-}
+    
+//});
+
+};
 
 function DumpVariables() {
     dkconsole.debug("time: " + time);
     dkconsole.debug("temperature: " + temperature);
     dkconsole.debug("humidity: " + humidity);
     dkconsole.debug("dewPoint: " + dewPoint);
-    dkconsole.debug("bypassRules: " + bypassRules);
     dkconsole.debug("tempTarget: " + tempTarget);
     dkconsole.debug("tempCalib: " + tempCalib);
     dkconsole.debug("tempMin: " + tempMin);

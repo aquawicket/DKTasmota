@@ -52,6 +52,7 @@ function LoadDevices() {
     for (let n = 0; n < deviceIPs.length; n++) {
         let dev = {
             'ip': deviceIPs[n],
+            'bypass' : false,
             /*'DK': {
                 'ip': deviceIPs[n],
             },*/
@@ -72,8 +73,9 @@ function LoadDevices() {
             }
             let device = JSON.parse(data);
             let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
-            //incoming data doesn't have an ip key, so copy it in 
+            //incoming data doesn't have user data, so copy them in 
             device.ip = deviceInstance.ip;
+            device.bypass = deviceInstance.bypass;
             //then update the stored device with the new data
             devices[devices.indexOf(deviceInstance)] = device;
             devices.sort((a,b)=>(a.Status.DeviceName > b.Status.DeviceName) ? 1 : -1)
@@ -221,9 +223,13 @@ function AddDeviceToTable(ip) {
         loading.style.width = "15px";
         loading.style.height = "15px";
         powerCell.appendChild(loading);
-        if (!bypassRules.includes(ip)) {
-            bypassRules.push(ip);
-            dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
+        
+        //FIXME: get the device from devices and add bypass=1
+        for(let n=0; n<devices.length; n++){
+            if(devices[n].ip === ip){
+                devices[n].bypass = true;
+                 dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
+            }
         }
         DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
@@ -414,8 +420,9 @@ function UpdateScreen(success, url, data) {
         dkconsole.error("data could not be parsed to json");
     }
     let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
-    //incoming data doesn't have an ip key, so copy it in 
+    //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
+    device.bypass = deviceInstance.bypass;
     //then update the stored device with the new data
     devices[devices.indexOf(deviceInstance)] = device;
 
