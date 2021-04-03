@@ -93,10 +93,6 @@ let theDevice = {
 */
 
 //TODO: move all of these user varaibles into the devices object.
-//let temperature;
-//let humidity;
-//let dewPoint;
-
 let tempTarget = 77;
 let tempMin = tempTarget - 10;
 let tempMax = tempTarget + 10;
@@ -105,9 +101,34 @@ let humTarget = 50;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
 
-let co2mode = 0;
+//return a Device by partial matching name
+function Device(str) {
+    for (let n = 0; n < devices.length; n++) {
+        if (devices[n]?.Status?.DeviceName?.includes(str)) {
+            return devices[n];
+        }
+    }
+}
 
-function WaitForDevices(callback) {
+//Load devices from local storage
+function LoadDevicesFromStorage() {
+    let deviceIPs = [];
+    const data = DKLoadFromLocalStorage("deviceIPs")
+    if(!data){ return; }
+  
+    deviceIPs = JSON.parse(data);
+    dkconsole.log("Loading (" + deviceIPs.length + ") Devices");
+    for (let n = 0; n < deviceIPs.length; n++) {
+        let dev = {
+            'ip': deviceIPs[n],
+            'automate': true
+        }
+        devices.push(dev);
+    }
+}
+
+
+function InitializeDevices(callback) {
     if (!callback) {
         dkconsole.error("callback invalid");
         return;
@@ -116,20 +137,24 @@ function WaitForDevices(callback) {
     for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DKSendRequest(url, function(success, url, data) {
+            if (success && url && data) {
+                let device = JSON.parse(data);
+                let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+
+                //incoming data doesn't have user data, so copy them in
+                device.ip = deviceInstance.ip;
+                device.automate = deviceInstance.automate;
+
+                //then update the stored device with the new data
+                devices[devices.indexOf(deviceInstance)] = device;
+                devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
+            }
+            
             deviceCount++;
             if (deviceCount === devices.length) {
                 callback && callback();
             }
         });
-    }
-}
-
-//Get the Device by partial matching name
-function Device(str) {
-    for (let n = 0; n < devices.length; n++) {
-        if (devices[n]?.Status?.DeviceName?.includes(str)) {
-            return devices[n];
-        }
     }
 }
 

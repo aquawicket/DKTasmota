@@ -33,54 +33,11 @@ function DKLoadApp() {
     //Load Non-Gui Stuff
     DKCreateErrorHandler();
     CreateSound("PowerDown.mp3");
-    LoadDevices();
+    LoadDevicesFromStorage();
     LoadGui();
-
-    //Run TimerLoop every minute
-    //window.setInterval(TimerLoop, 60000);
-    window.setInterval(TimerLoop, 40000);
-}
-
-//Load devices from local storage
-function LoadDevices() {
-    let deviceIPs = [];
-    let data = DKLoadFromLocalStorage("deviceIPs")
-    if (data) {
-        deviceIPs = JSON.parse(data);
-    }
-    dkconsole.log("Loading (" + deviceIPs.length + ") Devices");
-    for (let n = 0; n < deviceIPs.length; n++) {
-        let dev = {
-            'ip': deviceIPs[n],
-            'automate': true,
-            /*'DK': {
-                'ip': deviceIPs[n],
-            },*/
-            'Status': {},
-            'StatusPRM': {},
-            'StatusFWR': {},
-            'StatusLOG': {},
-            'StatusMEM': {},
-            'StatusNET': {},
-            'StatusTIM': {},
-            'StatusSNS': {},
-            'StatusSTS': {}
-        }
-        devices.push(dev);
-        DKSendRequest("http://" + deviceIPs[n] + "/cm?cmnd=Status%200", function(success, url, data) {
-            if (!success || !url || !data) {
-                return;
-            }
-            let device = JSON.parse(data);
-            let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
-            //incoming data doesn't have user data, so copy them in 
-            device.ip = deviceInstance.ip;
-            device.automate = deviceInstance.automate;
-            //then update the stored device with the new data
-            devices[devices.indexOf(deviceInstance)] = device;
-            devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
-        });
-    }
+   
+    //Run app main loop
+    window.setInterval(MainAppLoop, 40000); 
 }
 
 function LoadGui() {
@@ -99,6 +56,11 @@ function LoadGui() {
     }
 }
 
+function MainAppLoop() {
+    Automate();
+    ProcessDevices();
+}
+
 function CreateButtons(parent) {
     let scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
@@ -109,7 +71,7 @@ function CreateButtons(parent) {
     let updateDevices = document.createElement("button");
     updateDevices.innerHTML = "Update Devices";
     updateDevices.style.cursor = "pointer";
-    updateDevices.onclick = TimerLoop;
+    updateDevices.onclick = MainAppLoop;
     parent.appendChild(updateDevices);
 
     let clearDevices = document.createElement("button");
@@ -147,7 +109,7 @@ function CreateDeviceTable(parent) {
     //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
- 
+
     let table = DKCreateTable(deviceDiv, "deviceTable", "0px", "", "0px");
 
     //Create Header Row as a normal <tr>
@@ -311,14 +273,6 @@ function InfoWindow(ip) {
 
     div.style.position = "absolute";
     div.style.top = "20px";
-    /*
-    div.style.top = "20px";
-    div.style.left = "5px";
-    div.style.right = "5px";
-    div.style.bottom = "5px";
-    div.style.backgroundColor = "rgb(70,70,70)";
-    */
-
     div.style.width = "100%";
     div.style.fontSize = "12px";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
@@ -338,16 +292,14 @@ function InfoWindow(ip) {
     let jsonString = PrettyJson(JSON.stringify(devices[n]));
     let jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
-
     div.innerHTML = jsonSuper;
     info.appendChild(div);
 }
 
 function UpdateTableStyles() {
-    let table = document.getElementById("deviceTable");
-    let row;
+    const table = document.getElementById("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
-        row = table.rows[n];
+        const row = table.rows[n];
         if (row.rowIndex % 2 == 0) {
             //even
             row.style.backgroundColor = "rgb(90,90,90)";
@@ -386,18 +338,12 @@ function ClearDevices() {
     RemoveFromLocalStorage("deviceIPs");
 }
 
-function TimerLoop(force) {
-    Automate();
-    ProcessDevices();
-}
-
 function ProcessDevices() {
     let table = document.getElementById("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         let ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
-    //DKSortTable("deviceTable", 0);
 }
 
 function UpdateScreen(success, url, data) {
@@ -407,18 +353,17 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    /*
-    let jsonString = PrettyJson(data);
-    let jsonSuper = HighlightJson(jsonString);
-    dkconsole.log(jsonSuper);
-    */
+    //let jsonString = PrettyJson(data);
+    //let jsonSuper = HighlightJson(jsonString);
+    //dkconsole.log(jsonSuper);
+    
     let device;
     try {
         device = JSON.parse(data);
     } catch {
         dkconsole.error("data could not be parsed to json");
     }
-    let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+    const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
     //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
     device.automate = deviceInstance.automate;
@@ -435,9 +380,7 @@ function UpdateScreen(success, url, data) {
 
     device.name = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (device.name) {
-        row.cells[0].innerHTML = "<a title='"+device.ip+"'>" + device.name + "</a>";
-        //row.cells[0].setAttribute("title", device.ip);
-        //DKSortRow("deviceTable", row, 0);
+        row.cells[0].innerHTML = "<a title='" + device.ip + "'>" + device.name + "</a>";
         DKSortTable("deviceTable", 0);
         UpdateTableStyles();
     }

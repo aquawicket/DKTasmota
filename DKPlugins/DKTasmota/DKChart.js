@@ -77,7 +77,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(clearButton);
     */
 
-    WaitForDevices(function() {
+    InitializeDevices(function() {
         AddDatasets();
         LoadDatasets();
     });
@@ -86,9 +86,9 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
 function AddDatasets() {
     AddDataset("A Tent Water Walls", "rgb(10,30,50)", Device("003")?.ip, "switch1", true);
     AddDataset("A Tent Exhaust Fan", "rgb(10,30,90)", Device("011")?.ip, "switch1", true);
-    //AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", false);
-    //AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", false);
-    //AddDataset("A Tent DewPoint", "rgb(0,150,150)", Device("013")?.ip, "sensor3", true);
+    AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", false);
+    AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", false);
+    AddDataset("A Tent DewPoint", "rgb(0,150,150)", Device("013")?.ip, "sensor3", true);
     
     AddDataset("B Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", false);
     AddDataset("B Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", false);
