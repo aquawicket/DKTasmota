@@ -35,9 +35,9 @@ function DKLoadApp() {
     CreateSound("PowerDown.mp3");
     LoadDevicesFromStorage();
     LoadGui();
-   
+
     //Run app main loop
-    window.setInterval(MainAppLoop, 40000); 
+    window.setInterval(MainAppLoop, 40000);
 }
 
 function LoadGui() {
@@ -62,25 +62,25 @@ function MainAppLoop() {
 }
 
 function CreateButtons(parent) {
-    let scanDevices = document.createElement("button");
+    const scanDevices = document.createElement("button");
     scanDevices.innerHTML = "Scan Devices";
     scanDevices.style.cursor = "pointer";
     scanDevices.onclick = ScanDevices;
     parent.appendChild(scanDevices);
 
-    let updateDevices = document.createElement("button");
+    const updateDevices = document.createElement("button");
     updateDevices.innerHTML = "Update Devices";
     updateDevices.style.cursor = "pointer";
     updateDevices.onclick = MainAppLoop;
     parent.appendChild(updateDevices);
 
-    let clearDevices = document.createElement("button");
+    const clearDevices = document.createElement("button");
     clearDevices.innerHTML = "Clear Devices";
     clearDevices.style.cursor = "pointer";
     clearDevices.onclick = ClearDevices;
     parent.appendChild(clearDevices);
 
-    let volume = document.createElement("img");
+    const volume = document.createElement("img");
     volume.src = "volume_100.png";
     volume.style.position = "absolute";
     volume.style.height = "21px";
@@ -100,7 +100,7 @@ function CreateButtons(parent) {
 }
 
 function CreateDeviceTable(parent) {
-    let deviceDiv = document.createElement("div");
+    const deviceDiv = document.createElement("div");
     deviceDiv.style.position = "absolute";
     deviceDiv.style.top = "25px";
     deviceDiv.style.left = "20px";
@@ -110,7 +110,7 @@ function CreateDeviceTable(parent) {
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
 
-    let table = DKCreateTable(deviceDiv, "deviceTable", "0px", "", "0px");
+    const table = DKCreateTable(deviceDiv, "deviceTable", "0px", "", "0px");
 
     //Create Header Row as a normal <tr>
     //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
@@ -162,8 +162,8 @@ function CreateDeviceTable(parent) {
 }
 
 function AddDeviceToTable(ip) {
-    let table = document.getElementById("deviceTable");
-    let row = DKTableAddRow(table, ip);
+    const table = document.getElementById("deviceTable");
+    const row = DKTableAddRow(table, ip);
     row.setAttribute("ip", ip);
     if (row.rowIndex % 2 == 0) {
         //even
@@ -173,7 +173,6 @@ function AddDeviceToTable(ip) {
         row.style.backgroundColor = "rgb(60,60,60)";
     }
 
-    //const deviceCell = row.cells[0];
     const deviceCell = DKTableGetCellByName(table, ip, "device");
     deviceCell.innerHTML = "<a>" + ip + "</a>";
     deviceCell.style.cursor = "pointer";
@@ -181,13 +180,12 @@ function AddDeviceToTable(ip) {
         const deviceWindow = window.open("http://" + ip, ip, "_blank, width=500, height=700");
     }
 
-    //const powerCell = row.cells[1];
     const powerCell = DKTableGetCellByName(table, ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
     powerCell.onclick = function PowerOnClick(id) {
         powerCell.innerHTML = "";
-        let loading = document.createElement("img");
+        const loading = document.createElement("img");
         loading.src = "loading.gif";
         loading.style.width = "15px";
         loading.style.height = "15px";
@@ -202,22 +200,17 @@ function AddDeviceToTable(ip) {
         DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
 
-    //const dataCell = row.cells[2];
     const dataCell = DKTableGetCellByName(table, ip, "data");
-    //dataCell.setAttribute("name", table.rows[0].cells[2].getAttribute("name"));
     dataCell.style.textAlign = "center";
 
-    //const wifiCell = row.cells[3];
     const wifiCell = DKTableGetCellByName(table, ip, "wifi");
-    //wifiCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
     wifiCell.style.textAlign = "center";
 
     const optionsCell = DKTableGetCellByName(table, ip, "options");
-    //optionsCell.setAttribute("name", table.rows[0].cells[3].getAttribute("name"));
     optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
-    let restart = document.createElement("img");
+    const restart = document.createElement("img");
     restart.setAttribute("title", "Restart Device");
     restart.src = "restart.png";
     restart.style.width = "12px";
@@ -233,7 +226,7 @@ function AddDeviceToTable(ip) {
     }
     optionsCell.appendChild(restart);
 
-    let info = document.createElement("img");
+    const info = document.createElement("img");
     info.setAttribute("title", "Device info");
     info.src = "info.png";
     info.style.width = "12px";
@@ -246,7 +239,7 @@ function AddDeviceToTable(ip) {
     }
     optionsCell.appendChild(info);
 
-    let settings = document.createElement("img");
+    const settings = document.createElement("img");
     settings.setAttribute("title", "Device settings");
     settings.src = "settings.png";
     settings.style.width = "15px";
@@ -261,7 +254,6 @@ function AddDeviceToTable(ip) {
     const deviceHeader = DKTableGetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    //DKSortRow("deviceTable", row, 0);
     DKSortTable("deviceTable", 0);
     UpdateTableStyles();
 }
@@ -289,8 +281,8 @@ function InfoWindow(ip) {
 
     const obj = FindObjectValueIncludes(devices, "ip", ip);
     const n = devices.indexOf(obj);
-    let jsonString = PrettyJson(JSON.stringify(devices[n]));
-    let jsonSuper = HighlightJson(jsonString);
+    const jsonString = PrettyJson(JSON.stringify(devices[n]));
+    const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
     div.innerHTML = jsonSuper;
     info.appendChild(div);
@@ -312,7 +304,7 @@ function UpdateTableStyles() {
 
 function ScanDevices() {
     let deviceIPs = [];
-    let data = DKLoadFromLocalStorage("deviceIPs");
+    const data = DKLoadFromLocalStorage("deviceIPs");
     if (data) {
         deviceIPs = JSON.parse(data);
     }
@@ -332,16 +324,16 @@ function ScanDevices() {
 }
 
 function ClearDevices() {
-    let table = document.getElementById("deviceTable");
+    const table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
     RemoveFromLocalStorage("deviceIPs");
 }
 
 function ProcessDevices() {
-    let table = document.getElementById("deviceTable");
+    const table = document.getElementById("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
-        let ip = table.rows[n].getAttribute("ip");
+        const ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
 }
@@ -353,10 +345,10 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    //let jsonString = PrettyJson(data);
-    //let jsonSuper = HighlightJson(jsonString);
+    //const jsonString = PrettyJson(data);
+    //const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
-    
+
     let device;
     try {
         device = JSON.parse(data);
@@ -370,9 +362,8 @@ function UpdateScreen(success, url, data) {
     //then update the stored device with the new data
     devices[devices.indexOf(deviceInstance)] = device;
 
-    let table = document.getElementById("deviceTable");
-    let row = DKTableGetRowByName(table, device.ip);
-
+    const table = document.getElementById("deviceTable");
+    const row = DKTableGetRowByName(table, device.ip);
     if (!row) {
         dkconsole.error("!row success:" + success + " url:" + url + " data:" + data);
         return;
@@ -380,14 +371,16 @@ function UpdateScreen(success, url, data) {
 
     device.name = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (device.name) {
-        row.cells[0].innerHTML = "<a title='" + device.ip + "'>" + device.name + "</a>";
+        const deviceCell = DKTableGetCellByName(table, device.ip, "device");
+        deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.name + "</a>";
         DKSortTable("deviceTable", 0);
         UpdateTableStyles();
     }
 
     device.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
     if (device.power) {
-        row.cells[1].innerHTML = "<a>" + device.power + "</a>";
+        const powerCell = DKTableGetCellByName(table, device.ip, "power");
+        powerCell.innerHTML = "<a>" + device.power + "</a>";
         if (device.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
             UpdateChartDevice(device.ip, "switch1", 100);
@@ -397,7 +390,8 @@ function UpdateScreen(success, url, data) {
         }
     }
 
-    row.cells[2].innerHTML = "";
+    const dataCell = DKTableGetCellByName(table, device.ip, "data");
+    dataCell.innerHTML = "";
     if (device.StatusSNS?.DS18B20?.Temperature)
         device.temperature = device.StatusSNS.DS18B20.Temperature
     if (device.StatusSNS?.SI7021?.Temperature)
@@ -412,13 +406,13 @@ function UpdateScreen(success, url, data) {
         }
         const tempText = "<a id='" + device.ip + "Temp'>" + device.temperature + " &#176;F" + tempDirection + "</a>";
         const tempTargetText = "<a id='" + device.ip + "TempTarg'> (" + tempTarget + "&#176;F)</a>";
-        row.cells[2].innerHTML = row.cells[2].innerHTML + tempTargetText + " " + tempText + "<br>"
+        dataCell.innerHTML = dataCell.innerHTML + tempTargetText + " " + tempText + "<br>"
 
         const tempScale = 510;
         const tempDiff = (Math.abs(tempTarget - device.temperature) * 5)
         const tempNum = (tempDiff * tempScale / 100)
-        let tempRed = tempNum.clamp(0, 255);
-        let tempGreen = (510 - tempNum).clamp(0, 255);
+        const tempRed = tempNum.clamp(0, 255);
+        const tempGreen = (510 - tempNum).clamp(0, 255);
         document.getElementById(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById(device.ip + "Temp").style.textAlign = "center";
 
@@ -436,13 +430,13 @@ function UpdateScreen(success, url, data) {
         }
         const humText = "<a id='" + device.ip + "RH'>" + device.humidity + " RH%" + humDirection + "</a>";
         const humTargetText = "<a id='" + device.ip + "humTarg'> (" + humTarget + "%)</a>";
-        row.cells[2].innerHTML = row.cells[2].innerHTML + humTargetText + " " + humText + "<br>";
+        dataCell.innerHTML = dataCell.innerHTML + humTargetText + " " + humText + "<br>";
 
         const humScale = 510;
         const humDiff = (Math.abs(humTarget - device.humidity) * 5);
         const humNum = (humDiff * humScale / 100);
-        let humRed = humNum.clamp(0, 255);
-        let humGreen = (510 - humNum).clamp(0, 255);
+        const humRed = humNum.clamp(0, 255);
+        const humGreen = (510 - humNum).clamp(0, 255);
         document.getElementById(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         document.getElementById(device.ip + "RH").style.textAlilgn = "center";
 
@@ -452,7 +446,7 @@ function UpdateScreen(success, url, data) {
     device.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
     if (device.dewpoint) {
         const dewPointText = "<a id='" + device.ip + "DewP'>" + device.dewpoint + " DP &#176;F</a>";
-        row.cells[2].innerHTML = row.cells[2].innerHTML + dewPointText;
+        dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         document.getElementById(device.ip + "DewP").style.color = "rgb(40,40,40)";
         document.getElementById(device.ip + "DewP").style.textAlign = "center";
 
@@ -461,12 +455,13 @@ function UpdateScreen(success, url, data) {
 
     device.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
     if (device.rssi) {
-        let signal = device.rssi;
-        let scale = 510;
-        let num = (signal * scale / 100);
-        let green = num.clamp(0, 255);
-        let red = (510 - num).clamp(0, 255);
-        row.cells[3].innerHTML = signal + "%";
-        row.cells[3].style.color = "rgb(" + red + "," + green + ",0)";
+        const signal = device.rssi;
+        const scale = 510;
+        const num = (signal * scale / 100);
+        const green = num.clamp(0, 255);
+        const red = (510 - num).clamp(0, 255);
+        const wifiCell = DKTableGetCellByName(table, device.ip, "wifi");
+        wifiCell.innerHTML = signal + "%";
+        wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }
 }
