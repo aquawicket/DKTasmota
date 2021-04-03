@@ -1,7 +1,7 @@
 "use strict";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/console
-let consoleLimit = 100;
+const consoleLimit = 100;
 let dkconsole = new Object;
 dkconsole.log = console.log;
 dkconsole.info = console.info;
@@ -18,14 +18,14 @@ dkconsole.group = console.group;
 // If you use console_log, it will only log the browser console.
 // Note: some messages cannot be withheld from the browser console.
 
-let console_log = console.log;
-let console_info = console.info;
-let console_debug = console.debug;
-let console_warn = console.warn;
-let console_error = console.error;
-let console_trace = console.trace;
-let console_assert = console.assert;
-let console_group = console.group;
+const console_log = console.log;
+const console_info = console.info;
+const console_debug = console.debug;
+const console_warn = console.warn;
+const console_error = console.error;
+const console_trace = console.trace;
+const console_assert = console.assert;
+const console_group = console.group;
 (function() {
 
     console.log = function() {
@@ -65,8 +65,8 @@ let console_group = console.group;
 function consoleSpanFilter(args) {
     let argArray = [];
     if (args.length) {
-        let startTagRe = /<span\s+style=(['"])([^'"]*)\1\s*>/gi;
-        let endTagRe = /<\/span>/gi;
+        const startTagRe = /<span\s+style=(['"])([^'"]*)\1\s*>/gi;
+        const endTagRe = /<\/span>/gi;
         let reResultArray;
         argArray.push(args[0].replace(startTagRe, '%c').replace(endTagRe, '%c'));
         while (reResultArray = startTagRe.exec(args[0])) {
@@ -83,7 +83,7 @@ function consoleSpanFilter(args) {
 
 function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     DKLoadCSSFile("DKConsole.css");
-    let dkconsoleFrame = document.createElement("div");
+    const dkconsoleFrame = document.createElement("div");
     dkconsoleFrame.style.padding = "0px";
     dkconsoleFrame.style.margin = "0px";
     dkconsoleFrame.id = id;
@@ -119,7 +119,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.appendChild(dkconsole);
 
     //command box
-    let cmdbox = document.createElement("input");
+    const cmdbox = document.createElement("input");
     cmdbox.type = "text";
     cmdbox.style.position = "absolute";
     cmdbox.style.left = "0px";
@@ -130,7 +130,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     cmdbox.style.backgroundColor = "rgb(150,150,150)";
     dkconsoleFrame.style.borderColor = "rgb(40,40,40)";
     cmdbox.onkeydown = function cmdboxOnKeydownCallback(event) {
-        let key = event.charCode || event.keyCode;
+        const key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter
             if (cmdbox.value === "clear" || cmdbox.value === "cls") {
@@ -152,7 +152,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
     dkconsoleFrame.appendChild(cmdbox);
 
     dkconsole.message = function(msg, style) {
-        let msgDiv = document.createElement("div");
+        const msgDiv = document.createElement("div");
         msgDiv.style.width = "100%";
         msgDiv.style.fontSize = "12px";
         msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
@@ -166,7 +166,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.style.borderLeftWidth = "0px";
         msgDiv.style.borderRightWidth = "0px";
 
-        let msgText = document.createElement("span");
+        const msgText = document.createElement("span");
         msgText.className = "dkconsole";
         //TODO: If the message is the same as the last, just have a count next to the original. 
         msgText.innerHTML = msg;

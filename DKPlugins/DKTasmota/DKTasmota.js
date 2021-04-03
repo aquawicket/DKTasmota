@@ -92,14 +92,7 @@ let theDevice = {
 }
 */
 
-//TODO: move all of these user varaibles into the devices object.
-let tempTarget = 77;
-let tempMin = tempTarget - 10;
-let tempMax = tempTarget + 10;
 
-let humTarget = 50;
-let humMin = humTarget - 10;
-let humMax = humTarget + 10;
 
 //return a Device by partial matching name
 function Device(str) {
@@ -119,7 +112,7 @@ function LoadDevicesFromStorage() {
     deviceIPs = JSON.parse(data);
     dkconsole.log("Loading (" + deviceIPs.length + ") Devices");
     for (let n = 0; n < deviceIPs.length; n++) {
-        let dev = {
+        const dev = {
             'ip': deviceIPs[n],
             'automate': true
         }
@@ -138,8 +131,8 @@ function InitializeDevices(callback) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DKSendRequest(url, function(success, url, data) {
             if (success && url && data) {
-                let device = JSON.parse(data);
-                let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+                const device = JSON.parse(data);
+                const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
 
                 //incoming data doesn't have user data, so copy them in
                 device.ip = deviceInstance.ip;
@@ -166,10 +159,10 @@ function GetTasmotaDevices(ipPrefix, callback) {
     if (!ipPrefix) {
         ipPrefix = "192.168.1.";
     }
-    let corsWrite = 1;
+    const corsWrite = 1;
     let cmnd;
     for (let n = 1; n < 255; n++) {
-        let ip = ipPrefix + n;
+        const ip = ipPrefix + n;
         cmnd = "CORS";
         if (corsWrite) {
             cmnd += " *";
@@ -178,7 +171,7 @@ function GetTasmotaDevices(ipPrefix, callback) {
             //    cmnd += `:${window.location.port}`;
             //}
         }
-        let url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
+        const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         dkconsole.debug(url);
         DKSendSuperRequest(url, function DKSendSuperRequestCallback(success, data) {
             //send request using superAgent

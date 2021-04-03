@@ -65,7 +65,7 @@ function isStrict() {
 }
 
 function GetStack(msg) {
-    let e = new Error(msg);
+    const e = new Error(msg);
     if (!e.stack) {
         try {
             // old browsers need the Error thrown to fill the stack
@@ -87,11 +87,11 @@ function StackToJSON(stack) {
     }
 
     //split the call stack lines into an array
-    let lines = stack.toString().split(/\r\n|\n/);
+    const lines = stack.toString().split(/\r\n|\n/);
 
     //The first line should be the call stack message
-    let msg = lines[0];
-    let jsonStack = [{
+    const msg = lines[0];
+    const jsonStack = [{
         msg
     }];
     for (let n = 1; n < lines.length; n++) {
@@ -102,7 +102,7 @@ function StackToJSON(stack) {
         line = line.replace("(", "");
         line = line.replace(")", "");
 
-        let func = line.split(" ").shift();
+        const func = line.split(" ").shift();
 
         // some stack lines don't have a valid function name
         /*
@@ -112,15 +112,15 @@ function StackToJSON(stack) {
         }
         */
 
-        let charNum = line.split(":").pop();
+        const charNum = line.split(":").pop();
         line = line.replace(":" + charNum, "");
 
-        let lineNum = line.split(":").pop();
+        const lineNum = line.split(":").pop();
         line = line.replace(":" + lineNum, "");
 
-        let file = line.split("/").pop();
+        const file = line.split("/").pop();
 
-        let filePath = line.trim();
+        const filePath = line.trim();
         jsonStack.push({
             func,
             file,
@@ -133,7 +133,7 @@ function StackToJSON(stack) {
 }
 
 function LastStackCall() {
-    let stack = StackToJSON(GetStack());
+    const stack = StackToJSON(GetStack());
     let nn;
     for (let n = 1; n < stack.length; n++) {
         if (stack[n].func === "LastStackCall") {
@@ -154,7 +154,7 @@ function LastStackCall() {
 function GetArguments(func, getArgValues) {
     let argsString = "";
     let count = 0;
-    let fn = window[func];
+    const fn = window[func];
     if (!fn) {
         dkconsole.error(LastStackCall() + "<br>" + "  at if(!fn)");
         return "";

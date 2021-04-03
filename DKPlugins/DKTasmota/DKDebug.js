@@ -17,7 +17,7 @@ function DebugButtonOnClick() {
 
 
     /*
-    let resizableDiv = document.createElement("div");
+    const resizableDiv = document.createElement("div");
     resizableDiv.style.width = "5px";
     resizableDiv.style.height = "5px";
     resizableDiv.style.resize = "both";
@@ -35,10 +35,10 @@ function DebugButtonOnClick() {
   
     
     //Update time on all devices
-    let dateInMilliseconds = GetDateInMilliseconds();
+    const dateInMilliseconds = GetDateInMilliseconds();
     for (let n = 0; n < devices.length; n++) {
-        let cmnd = "timezone -7";
-        let url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
+        const cmnd = "timezone -7";
+        const url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         DKSendRequest(url, function(success, url, data) {//console.log("DKSendRequest("+success+","+url+","+data+")");
         });
 
@@ -53,8 +53,8 @@ function DebugButtonOnClick() {
     /*
     //Get time from all devices
     for (let n = 0; n < devices.length; n++) {
-        let cmnd = "time";
-        let url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
+        const cmnd = "time";
+        const url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         DKSendRequest(url, function(success, url, data) {
             //console.log("DKSendRequest("+success+","+url+","+data+")");
             console.log("" + data + "");
@@ -83,13 +83,13 @@ function DebugButtonOnClick() {
 
     /*
     //FindObject() Test
-    let keyName = 'lastName'
-    let obj = {
+    const keyName = 'lastName'
+    const obj = {
         firstName: 'allan',
         lastName: 'smith'
     }
     FindObject(obj, keyName, "smith");
-    let keyName2 = 'ip';
+    const keyName2 = 'ip';
     FindObject(devices, keyName2, "test");
     */
 
@@ -132,7 +132,7 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     if (!showDebugButton) {
         return;
     }
-    let debugButton = document.createElement("button");
+    const debugButton = document.createElement("button");
     debugButton.innerHTML = "DEBUG";
     debugButton.style.position = "absolute";
     debugButton.style.top = top;

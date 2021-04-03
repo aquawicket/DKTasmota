@@ -30,7 +30,7 @@
 // The columnName is set to address on the <td> element
 
 function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
-    let table = document.createElement('table');
+    const table = document.createElement('table');
     table.id = id;
     table.style.position = "absolute";
     table.style.top = top;
@@ -49,7 +49,7 @@ function DKTableInsertRow(table, name) {
     if (!name) {
         dkConsole.error("invalid name parameter");
     }
-    let row = table.insertRow(-1);
+    const row = table.insertRow(-1);
     row.id = "row" + table.rows.length;
     row.setAttribute("name", name);
     return row;
@@ -59,17 +59,17 @@ function DKTableInsertCell(table, row, name) {
     if (!name) {
         dkconsole.error("invalid name parameter");
     }
-    let cell = row.insertCell(-1);
+    const cell = row.insertCell(-1);
     cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
     cell.setAttribute("name", name);
     return cell;
 }
 
 function DKTableAddRow(table, rowName, cellName) {
-    let row = DKTableInsertRow(table, rowName);
+    const row = DKTableInsertRow(table, rowName);
     row.id = "row" + table.rows.length;
     //dkconsole.debug("DKTableAddRow() -> row.id = "+row.id);
-    let row_count = table.rows.length;
+    const row_count = table.rows.length;
 
     let cell_count = table.rows[0].cells.length;
     if (!cell_count) {
@@ -86,7 +86,7 @@ function DKTableAddRow(table, rowName, cellName) {
         if (!cellName) {
             cellName = table.rows[0].cells[n].getAttribute("name");
         }
-        let cell = DKTableInsertCell(table, row, cellName);
+        const cell = DKTableInsertCell(table, row, cellName);
         //FIXME: The function above is NOT setting the cellName properly.
         //This line is a temporary fix for now. 
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
@@ -98,13 +98,13 @@ function DKTableAddColumn(table, name) {
     let row_count = table.rows.length;
     if (!row_count) {
         //FIXME: no name attribute for the row
-        let row = DKTableInsertRow(table /*, name*/
+        const row = DKTableInsertRow(table /*, name*/
         );
         row_count = 1;
     }
-    let cell_count = table.rows[0].cells.length;
+    const cell_count = table.rows[0].cells.length;
     for (let n = 0; n < row_count; n++) {
-        let cell = DKTableInsertCell(table, table.rows[n], name);
+        const cell = DKTableInsertCell(table, table.rows[n], name);
     }
     //return the created column number
     return table.rows[0].cells.length;
@@ -133,7 +133,7 @@ function DKTableDeleteRow(table, number) {
 
 function DKTableDeleteColumn(table, number) {
     for (let n = 0; n < table.rows.length; n++) {
-        let row = table.rows[n];
+        const row = table.rows[n];
         if (row.cells[number]) {
             row.deleteCell(number - 1);
         }
@@ -146,7 +146,7 @@ function DKTableUpdateIds(table) {
         let row = table.rows[n];
         row.id = "row" + (n + 1);
         for (let nn = 0; nn < row.cells.length; nn++) {
-            let cell = row.cells[nn];
+            const cell = row.cells[nn];
             cell.id = String.fromCharCode(65 + (cell.cellIndex)) + (row.rowIndex + 1);
             //cell.innerHTML = cell.id; //For debug
         }
@@ -154,8 +154,8 @@ function DKTableUpdateIds(table) {
 }
 
 function DKTableGetCellByIndex(table, rowNum, columnNum) {
-    let row = table.rows[rowNum];
-    let cell = row.cells[columnNum];
+    const row = table.rows[rowNum];
+    const cell = row.cells[columnNum];
     return cell;
 }
 
@@ -164,7 +164,7 @@ function DKTableDeleteCell(table, rowNum, columnNum) {
     //FIXME: This doesn't seem to be working properly.
     //I'm using Brave browser which is a fork of chromium.
     //Bug? or user error? 
-    let row = table.rows[rowNum];
+    const row = table.rows[rowNum];
     //row.deleteCell(columnNum);
     document.removeElement(row.cells[columnNum]);
 }
@@ -182,7 +182,7 @@ function DKTableGetRowByName(table, rowName) {
             return;
         }
         if (table.rows[n].getAttribute("name") == rowName) {
-            let row = table.rows[n];
+            const row = table.rows[n];
             return row;
         }
     }

@@ -1,8 +1,8 @@
 "use strict";
 
 function DKLoadCSSFile(file) {
-    let head = document.getElementsByTagName('head')[0];
-    let link = document.createElement('link');
+    const head = document.getElementsByTagName('head')[0];
+    const link = document.createElement('link');
     link.id = file;
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -12,8 +12,8 @@ function DKLoadCSSFile(file) {
 }
 
 function DKLoadJSFile(file, callback) {
-    let head = document.getElementsByTagName('head')[0];
-    let script = document.createElement('script');
+    const head = document.getElementsByTagName('head')[0];
+    const script = document.createElement('script');
     script.id = file;
     script.src = file;
     head.appendChild(script);
@@ -149,7 +149,7 @@ function DKRemoveFromLocalStorage(name) {
 }
 
 function DKCreateWindow(id, width, height) {
-    let win = document.createElement('div');
+    const win = document.createElement('div');
     win.id = id;
     win.style.position = "absolute";
     //win.style.top = top;
@@ -168,7 +168,7 @@ function DKCreateWindow(id, width, height) {
     document.body.appendChild(win);
     DKCenterWindow(win);
 
-    let winClose = document.createElement('div');
+    const winClose = document.createElement('div');
     winClose.id = win.id + "Close";
     winClose.style.position = "absolute";
     winClose.style.right = "5px";
@@ -183,19 +183,19 @@ function DKCreateWindow(id, width, height) {
 }
 
 function DKCenterWindow(element) {
-    let winW = window.innerWidth;
-    let winH = window.innerHeight;
-    let eleW = parseInt(element.style.width);
-    let eleH = parseInt(element.style.height);
-    let eleX = (winW / 2) - (eleW / 2);
-    let eleY = (winH / 2) - (eleH / 2);
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+    const eleW = parseInt(element.style.width);
+    const eleH = parseInt(element.style.height);
+    const eleX = (winW / 2) - (eleW / 2);
+    const eleY = (winH / 2) - (eleH / 2);
     element.style.left = eleX + "px";
     element.style.top = eleY + "px";
     return element;
 }
 
 function DKCreateButton(parent, id, top, left, width, height, onclick) {
-    let button = document.createElement("button");
+    const button = document.createElement("button");
     button.id = id;
     button.innerHTML = id;
     //button.style.zIndex = "2";
@@ -212,16 +212,16 @@ function DKCreateButton(parent, id, top, left, width, height, onclick) {
 }
 
 function DKConfirm(msg, callback) {
-    let confirm = DKCreateWindow("DKConfirm", "200px", "100px");
+    const confirm = DKCreateWindow("DKConfirm", "200px", "100px");
     confirm.style.textAlign = "center";
     confirm.style.paddingTop = "20px";
-    let message = document.createElement("span");
+    const message = document.createElement("span");
     message.innerHTML = msg;
     confirm.appendChild(message);
-    let no = DKCreateButton(confirm, "No", "50px", "75px", "", "", function(){
+    const no = DKCreateButton(confirm, "No", "50px", "75px", "", "", function(){
         document.body.removeChild(confirm);
     });
-    let yes = DKCreateButton(confirm, "Yes", "50px", "105px", "", "", function(){
+    const yes = DKCreateButton(confirm, "Yes", "50px", "105px", "", "", function(){
         callback && callback();
         document.body.removeChild(confirm);
     });

@@ -1,10 +1,8 @@
 "use strict";
 
 const PrettyJson = function(json) {
-    let prettyJson;
-    if (typeof json === 'string') {
-        prettyJson = JSON.parse(json);
-    }
+    if (typeof json !== 'string') { return; }
+    const prettyJson = JSON.parse(json);
     return JSON.stringify(prettyJson, undefined, 4);
 }
 

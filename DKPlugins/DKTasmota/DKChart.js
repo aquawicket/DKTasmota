@@ -12,7 +12,7 @@ DKLoadJSFile("moment.min.js", function() {
 let lineChart;
 
 function CreateChart(parent, id, top, bottom, left, right, width, height) {
-    let chartDiv = document.createElement("div");
+    const chartDiv = document.createElement("div");
     chartDiv.id = id;
     chartDiv.style.position = "absolute";
     chartDiv.style.backgroundColor = "rgb(70,70,70)";
@@ -24,14 +24,14 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     chartDiv.style.height = height;
     parent.appendChild(chartDiv);
 
-    let chartCanvas = document.createElement("canvas");
+    const chartCanvas = document.createElement("canvas");
     chartCanvas.id = "chartCanvas";
     chartCanvas.style.position = "absolute";
     chartCanvas.style.left = "0px";
     chartCanvas.style.top = "0px";
     chartCanvas.style.width = "100%";
     chartCanvas.style.height = "100%";
-    let ctx = chartCanvas.getContext('2d');
+    const ctx = chartCanvas.getContext('2d');
     chartDiv.appendChild(chartCanvas);
 
     //FIXME - do proper refreshing on resize    
@@ -63,7 +63,7 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
     });
 
     /*
-    let clearButton = document.createElement("button");
+    const clearButton = document.createElement("button");
     clearButton.id = "clearButton";
     clearButton.innerHTML = "Clear";
     clearButton.style.position = "absolute";
@@ -146,8 +146,8 @@ function UpdateChartDevice(ip, identifier, data) {
     SaveDatasets(ip);
 
     //agressive file saving. Saving every minute of every device
-    let currentdate = new Date();
-    let stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
+    const currentdate = new Date();
+    const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
     const entry = JSON.stringify({
         t: currentdate,
         y: data
@@ -158,7 +158,7 @@ function UpdateChartDevice(ip, identifier, data) {
 }
 
 function AddDataset(label, borderColor, ip, identifier, hidden) {
-    let dataset = {};
+    const dataset = {};
     dataset.ip = ip;
     dataset.label = label;
     dataset.identifier = identifier;
@@ -174,7 +174,7 @@ function AddDataset(label, borderColor, ip, identifier, hidden) {
 function SaveDatasets(ip) {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
-            let data = JSON.stringify(lineChart.data.datasets[n].data);
+            const data = JSON.stringify(lineChart.data.datasets[n].data);
             DKSaveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
@@ -182,7 +182,7 @@ function SaveDatasets(ip) {
 
 function LoadDatasets() {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        let data = DKLoadFromLocalStorage(lineChart.data.datasets[n].label);
+        const data = DKLoadFromLocalStorage(lineChart.data.datasets[n].label);
         lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();

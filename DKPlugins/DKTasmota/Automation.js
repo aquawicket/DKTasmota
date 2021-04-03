@@ -1,5 +1,14 @@
 "use strict";
 
+//TODO: move all of these user varaibles into the devices object.
+let tempTarget = 77;
+let tempMin = tempTarget - 10;
+let tempMax = tempTarget + 10;
+
+let humTarget = 50;
+let humMin = humTarget - 10;
+let humMax = humTarget + 10;
+
 function Automate() {
     
     if (Device("A Tent Co2"))

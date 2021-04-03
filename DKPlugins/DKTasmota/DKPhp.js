@@ -11,8 +11,8 @@ function PHP_StringToFile(file, data, mode, callback) {
 function noCB(rVal) {}
 
 function CallPhpFunc(args) {
-    let funcName = GetCurrentFunctionName(1).replace("PHP_", "");
-    let jsonData = {
+    const funcName = GetCurrentFunctionName(1).replace("PHP_", "");
+    const jsonData = {
         func: funcName,
         args: []
     };
@@ -25,8 +25,8 @@ function CallPhpFunc(args) {
         jsonData.args.push(newArg);
     }
     //console.log(JSON.stringify(jsonData));
-    let data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
-    let url = "DK.php?" + data;
+    const data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
+    const url = "DK.php?" + data;
     DKSendRequest(url, function(success, url, rVal) {
         if (args && typeof (args[args.length - 1]) === "function") {
             args[args.length - 1](rVal);
@@ -37,12 +37,12 @@ function CallPhpFunc(args) {
 
 /*
 function CallPhpFunction(str, callback) {
-    let func = str.split("(").shift();
+    const func = str.split("(").shift();
     str = str.replace(func, "");
     str = str.replace("(", "");
     str = str.replace(")", "");
-    let arg = str.split(",");
-    let jsonData = {
+    const arg = str.split(",");
+    const jsonData = {
         func: func,
         args: []
     };
@@ -52,8 +52,8 @@ function CallPhpFunction(str, callback) {
         newArg[typeof (arg[n])] = arg[n];
         jsonData.args.push(newArg);
     }
-    let data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
-    let url = "http://192.168.1.78:8000/DK.php?" + data;
+    const data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
+    const url = "http://192.168.1.78:8000/DK.php?" + data;
     DKSendRequest(url, function(success, url, data) {
         callback(data);
     });
