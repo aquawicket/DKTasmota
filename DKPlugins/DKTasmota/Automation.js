@@ -1,11 +1,11 @@
 "use strict";
 
-
-
 function Automate() {
-    
-    Device("B Tent Co2").automate = false;
-    if (Device("B Tent Co2").automate) {
+
+    if (Device("B Tent Co2"))
+        Device("B Tent Co2").automate = false;
+        
+    if (Device("B Tent Co2")?.automate) {
         //When using Co2, temperature should be 85 degrees
         tempTarget = 82;
         humTarget = 55;
@@ -50,7 +50,7 @@ function Automate() {
 
     //Exhaust fan
     if (Device("B Tent Exhaust Fan")?.automate) {
-        if (Device("B Tent Co2").power !== "ON" && Device("B Tent Temp").temperature > (tempTarget + 1) || Device("B Tent Temp").humidity > humMax && Device("B Tent Temp").temperature > tempMin) {
+        if (Device("B Tent Co2")?.power !== "ON" && Device("B Tent Temp").temperature > (tempTarget + 1) || Device("B Tent Temp").humidity > humMax && Device("B Tent Temp").temperature > tempMin) {
             dkconsole.message("Exhaust Fan ON", "green");
             DKSendRequest("http://" + Device("B Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {

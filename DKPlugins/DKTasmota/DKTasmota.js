@@ -116,7 +116,8 @@ function WaitForDevices(callback) {
     for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DKSendRequest(url, function(success, url, data) {
-            if (deviceCount++ === devices.length) {
+            deviceCount++;
+            if (deviceCount === devices.length) {
                 callback && callback();
             }
         });

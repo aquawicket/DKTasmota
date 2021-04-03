@@ -53,7 +53,6 @@ function LoadDevices() {
         let dev = {
             'ip': deviceIPs[n],
             'automate': true,
-            'bypass': false,
             /*'DK': {
                 'ip': deviceIPs[n],
             },*/
@@ -76,7 +75,6 @@ function LoadDevices() {
             let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
             //incoming data doesn't have user data, so copy them in 
             device.ip = deviceInstance.ip;
-            device.bypass = deviceInstance.bypass;
             device.automate = deviceInstance.automate;
             //then update the stored device with the new data
             devices[devices.indexOf(deviceInstance)] = device;
@@ -141,8 +139,16 @@ function CreateButtons(parent) {
 
 function CreateDeviceTable(parent) {
     let deviceDiv = document.createElement("div");
+    deviceDiv.style.position = "absolute";
+    deviceDiv.style.top = "25px";
+    deviceDiv.style.left = "20px";
+    deviceDiv.style.width = "550px";
+    deviceDiv.style.height = "420px";
+    //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
+    deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
-    let table = DKCreateTable(deviceDiv, "deviceTable", "30px", "", "20px");
+ 
+    let table = DKCreateTable(deviceDiv, "deviceTable", "0px", "", "0px");
 
     //Create Header Row as a normal <tr>
     //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
@@ -227,7 +233,6 @@ function AddDeviceToTable(ip) {
 
         for (let n = 0; n < devices.length; n++) {
             if (devices[n].ip === ip) {
-                devices[n].bypass = true;
                 devices[n].automate = false;
                 dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
             }
@@ -416,7 +421,6 @@ function UpdateScreen(success, url, data) {
     let deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
     //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
-    device.bypass = deviceInstance.bypass;
     device.automate = deviceInstance.automate;
     //then update the stored device with the new data
     devices[devices.indexOf(deviceInstance)] = device;
@@ -431,7 +435,8 @@ function UpdateScreen(success, url, data) {
 
     device.name = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (device.name) {
-        row.cells[0].innerHTML = "<a>" + device.name + "</a>";
+        row.cells[0].innerHTML = "<a title='"+device.ip+"'>" + device.name + "</a>";
+        //row.cells[0].setAttribute("title", device.ip);
         //DKSortRow("deviceTable", row, 0);
         DKSortTable("deviceTable", 0);
         UpdateTableStyles();
