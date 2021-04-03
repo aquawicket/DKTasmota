@@ -93,17 +93,15 @@ let theDevice = {
 */
 
 //TODO: move all of these user varaibles into the devices object.
-let temperature;
-let humidity;
-let dewPoint;
+//let temperature;
+//let humidity;
+//let dewPoint;
 
 let tempTarget = 77;
-let tempCalib = -5;
 let tempMin = tempTarget - 10;
 let tempMax = tempTarget + 10;
 
 let humTarget = 50;
-let humCalib = 0;
 let humMin = humTarget - 10;
 let humMax = humTarget + 10;
 
@@ -118,8 +116,7 @@ function WaitForDevices(callback) {
     for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DKSendRequest(url, function(success, url, data) {
-            deviceCount++;
-            if (deviceCount === devices.length) {
+            if (deviceCount++ === devices.length) {
                 callback && callback();
             }
         });

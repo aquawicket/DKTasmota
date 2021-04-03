@@ -84,18 +84,26 @@ function CreateChart(parent, id, top, bottom, left, right, width, height) {
 }
 
 function AddDatasets() {
-    AddDataset("Temperature", "rgb(200, 0, 0)", Device("013").ip, "sensor1", false);
-    AddDataset("Humidity", "rgb(0, 0, 200)", Device("013").ip, "sensor2", false);
-    AddDataset("DewPoint", "rgb(0,150,150)", Device("013").ip, "sensor3", true);
-    AddDataset("ExhaustFan", "rgb(150,0,150)", Device("005").ip, "switch1", true);
-    AddDataset("WaterWalls", "rgb(90,0,150)", Device("007").ip, "switch1", true);
-    AddDataset("Heater", "rgb(150,0,50)", Device("006").ip, "switch1", true);
-    AddDataset("ShedWaterA", "rgb(150,40,40)", Device("002").ip, "switch1", true);
-    AddDataset("ShedWaterB", "rgb(30,0,90)", Device("001").ip, "switch1", true);
-    AddDataset("WaterStation", "rgb(10,30,50)", Device("003").ip, "switch1", true);
-    AddDataset("VegTentCo2", "rgb(100,60,10)", Device("010").ip, "switch1", true);
-    AddDataset("Co2", "rgb(10,60,10)", Device("008").ip, "switch1", true);
-    AddDataset("VegTentExhaust", "rgb(10,60,10)", Device("012").ip, "switch1", true);
+    AddDataset("A Tent Water Walls", "rgb(10,30,50)", Device("003").ip, "switch1", true);
+    AddDataset("A Tent Exhaust Fan", "rgb(10,30,90)", Device("011").ip, "switch1", true);
+    //AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("013").ip, "sensor1", false);
+    //AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("013").ip, "sensor2", false);
+    //AddDataset("A Tent DewPoint", "rgb(0,150,150)", Device("013").ip, "sensor3", true);
+    
+    AddDataset("B Tent Temperature", "rgb(200, 0, 0)", Device("013").ip, "sensor1", false);
+    AddDataset("B Tent Humidity", "rgb(0, 0, 200)", Device("013").ip, "sensor2", false);
+    AddDataset("B Tent DewPoint", "rgb(0,150,150)", Device("013").ip, "sensor3", true);
+    AddDataset("B Tent Exhaust Fan", "rgb(150,0,150)", Device("005").ip, "switch1", true);
+    AddDataset("B Tent Water Walls", "rgb(90,0,150)", Device("007").ip, "switch1", true);
+    AddDataset("B Tent Heater", "rgb(150,0,50)", Device("006").ip, "switch1", true);
+    AddDataset("B Tent Co2", "rgb(10,60,10)", Device("008").ip, "switch1", true);
+    
+    AddDataset("Shed Water A", "rgb(150,40,40)", Device("002").ip, "switch1", true);
+    AddDataset("Shed Water B", "rgb(30,0,90)", Device("001").ip, "switch1", true); 
+
+    AddDataset("Veg Tent Temperature", "rgb(200, 20, 20)", Device("015").ip, "sensor1", false);
+    AddDataset("Veg Tent Exhaust", "rgb(10,60,10)", Device("012").ip, "switch1", true);
+    AddDataset("Veg Tent Co2", "rgb(100,60,10)", Device("010").ip, "switch1", true);  
 }
 
 function UpdateChartDevice(ip, identifier, data) {

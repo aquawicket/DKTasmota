@@ -1,27 +1,11 @@
 "use strict";
 
 
+
 function Automate() {
-//AssignDeviceShortcuts(function(){
-
-    DumpVariables();
-
-    //Alarms
-    if (temperature < tempMin) {
-        dkconsole.warn("!!! TEMPERATURE BELOW MINIMUM " + temperature + "&#176;F < " + tempMin + "&#176;F !!!");
-    }
-    if (temperature > tempMax) {
-        dkconsole.warn("!!! TEMPERATURE ABOVE MAXIMUM " + temperature + "&#176;F > " + tempMax + "&#176;F !!!");
-    }
-    if (humidity < humMin) {
-        dkconsole.warn("!!! HUMUDITY BELOW MINIMUM " + humidity + "% < " + humMin + "% !!!");
-    }
-    if (humidity > humMax) {
-        dkconsole.warn("!!! HUMUDITY ABOVE MAXIMUM " + humidity + "% > " + humMax + "% !!!");
-    }
-
-    //Co2
-    if (co2mode) {
+    
+    Device("B Tent Co2").automate = false;
+    if (Device("B Tent Co2").automate) {
         //When using Co2, temperature should be 85 degrees
         tempTarget = 82;
         humTarget = 55;
@@ -35,8 +19,24 @@ function Automate() {
     humMin = humTarget - 10;
     humMax = humTarget + 10;
 
-    if(Device("B Tent Co2") && !Device("B Tent Co2").bypass) {
-        if (co2mode && /*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */temperature < (tempTarget-5) && humidity < humMax ) {
+    //Alarms
+    if (Device("B Tent Temp")?.temperature < tempMin) {
+        dkconsole.warn("!!! TEMPERATURE BELOW MINIMUM " + Device("B Tent Temp").temperature + "&#176;F < " + tempMin + "&#176;F !!!");
+    }
+    if (Device("B Tent Temp")?.temperature > tempMax) {
+        dkconsole.warn("!!! TEMPERATURE ABOVE MAXIMUM " + Device("B Tent Temp").temperature + "&#176;F > " + tempMax + "&#176;F !!!");
+    }
+    if (Device("B Tent Temp")?.humidity < humMin) {
+        dkconsole.warn("!!! HUMUDITY BELOW MINIMUM " + Device("B Tent Temp").humidity + "% < " + humMin + "% !!!");
+    }
+    if (Device("B Tent Temp")?.humidity > humMax) {
+        dkconsole.warn("!!! HUMUDITY ABOVE MAXIMUM " + Device("B Tent Temp").humidity + "% > " + humMax + "% !!!");
+    }
+
+    //Co2
+    if (Device("B Tent Co2")?.automate) {
+        if (/*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */
+        temperature < (tempTarget - 5) && humidity < humMax) {
             dkconsole.message("Co2 ON", "green");
             Device("B Tent Co2").StatusSTS.POWER = "ON";
             DKSendRequest("http://" + Device("B Tent Co2").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
@@ -49,8 +49,8 @@ function Automate() {
     }
 
     //Exhaust fan
-    if (Device("B Tent Exhaust Fan") && !Device("B Tent Exhaust Fan").bypass) {
-        if ((Device("B Tent Co2")?.StatusSTS?.POWER !== "ON") && ((temperature > (tempTarget + 1)) || (humidity > humMax && temperature > tempMin))) {
+    if (Device("B Tent Exhaust Fan")?.automate) {
+        if (Device("B Tent Co2").power !== "ON" && Device("B Tent Temp").temperature > (tempTarget + 1) || Device("B Tent Temp").humidity > humMax && Device("B Tent Temp").temperature > tempMin) {
             dkconsole.message("Exhaust Fan ON", "green");
             DKSendRequest("http://" + Device("B Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
@@ -60,8 +60,8 @@ function Automate() {
     }
 
     //Water walls
-    if (Device("B Tent Water Walls") && !Device("B Tent Water Walls").bypass) {
-        if ((time < 16) && (humidity < humTarget) && (temperature > tempTarget)) {
+    if (Device("B Tent Water Walls")?.automate) {
+        if ((time < 18) && (Device("B Tent Temp").humidity < humTarget) && (Device("B Tent Temp").temperature > tempTarget)) {
             dkconsole.message("Water walls ON", "green");
             DKSendRequest("http://" + Device("B Tent Water Walls").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
@@ -71,8 +71,8 @@ function Automate() {
     }
 
     //Heater
-    if (Device("B Tent Heater") && !Device("B Tent Heater").bypass) {
-        if (!co2mode && (temperature < tempTarget)) {
+    if (Device("B Tent Heater")?.automate) {
+        if (Device("B Tent Temp").temperature < tempTarget) {
             dkconsole.message("Heater ON", "green");
             DKSendRequest("http://" + Device("B Tent Heater").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
@@ -80,23 +80,4 @@ function Automate() {
             DKSendRequest("http://" + Device("B Tent Heater").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
-    
-//});
-
-};
-
-function DumpVariables() {
-    dkconsole.debug("time: " + time);
-    dkconsole.debug("temperature: " + temperature);
-    dkconsole.debug("humidity: " + humidity);
-    dkconsole.debug("dewPoint: " + dewPoint);
-    dkconsole.debug("tempTarget: " + tempTarget);
-    dkconsole.debug("tempCalib: " + tempCalib);
-    dkconsole.debug("tempMin: " + tempMin);
-    dkconsole.debug("tempMax: " + tempMax);
-    dkconsole.debug("humTarget: " + humTarget);
-    dkconsole.debug("humCalib: " + humCalib);
-    dkconsole.debug("humMin: " + humMin);
-    dkconsole.debug("humMax: " + humMax);
-    dkconsole.debug("co2mode: " + co2mode);
 }
