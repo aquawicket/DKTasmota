@@ -358,7 +358,8 @@ function UpdateScreen(success, url, data) {
     const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
     //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
-    device.automate = deviceInstance.automate;
+    device.user = deviceInstance.user;
+
     //then update the stored device with the new data
     devices[devices.indexOf(deviceInstance)] = device;
 
@@ -369,19 +370,19 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    device.name = device.Status ? device.Status.DeviceName : device.DeviceName;
-    if (device.name) {
+    device.user.name = device.Status ? device.Status.DeviceName : device.DeviceName;
+    if (device.user.name) {
         const deviceCell = DKTableGetCellByName(table, device.ip, "device");
-        deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.name + "</a>";
+        deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.user.name + "</a>";
         DKSortTable("deviceTable", 0);
         UpdateTableStyles();
     }
 
-    device.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
-    if (device.power) {
+    device.user.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
+    if (device.user.power) {
         const powerCell = DKTableGetCellByName(table, device.ip, "power");
-        powerCell.innerHTML = "<a>" + device.power + "</a>";
-        if (device.power === "ON") {
+        powerCell.innerHTML = "<a>" + device.user.power + "</a>";
+        if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
             UpdateChartDevice(device.ip, "switch1", 100);
         } else {
@@ -393,69 +394,69 @@ function UpdateScreen(success, url, data) {
     const dataCell = DKTableGetCellByName(table, device.ip, "data");
     dataCell.innerHTML = "";
     if (device.StatusSNS?.DS18B20?.Temperature)
-        device.temperature = device.StatusSNS.DS18B20.Temperature
+        device.user.temperature = device.StatusSNS.DS18B20.Temperature
     if (device.StatusSNS?.SI7021?.Temperature)
-        device.temperature = device.StatusSNS.SI7021.Temperature;
-    if (device.temperature) {
+        device.user.temperature = device.StatusSNS.SI7021.Temperature;
+    if (device.user.temperature) {
         let tempDirection = " ";
-        if (device.temperature > tempTarget) {
+        if (device.user.temperature > device.user.temperatureTarget) {
             tempDirection = "&#8593;"
         }
-        if (device.temperature < tempTarget) {
+        if (device.user.temperature < device.user.temperatureTarget) {
             tempDirection = "&#8595;"
         }
-        const tempText = "<a id='" + device.ip + "Temp'>" + device.temperature + " &#176;F" + tempDirection + "</a>";
-        const tempTargetText = "<a id='" + device.ip + "TempTarg'> (" + tempTarget + "&#176;F)</a>";
+        const tempText = "<a id='" + device.ip + "Temp'>" + device.user.temperature + " &#176;F" + tempDirection + "</a>";
+        const tempTargetText = "<a id='" + device.ip + "TempTarg'> (" + device.user.temperatureTarget + "&#176;F)</a>";
         dataCell.innerHTML = dataCell.innerHTML + tempTargetText + " " + tempText + "<br>"
 
         const tempScale = 510;
-        const tempDiff = (Math.abs(tempTarget - device.temperature) * 5)
+        const tempDiff = (Math.abs(device.user.temperatureTarget - device.user.temperature) * 5)
         const tempNum = (tempDiff * tempScale / 100)
         const tempRed = tempNum.clamp(0, 255);
         const tempGreen = (510 - tempNum).clamp(0, 255);
         document.getElementById(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById(device.ip + "Temp").style.textAlign = "center";
 
-        UpdateChartDevice(device.ip, "sensor1", device.temperature);
+        UpdateChartDevice(device.ip, "sensor1", device.user.temperature);
     }
 
-    device.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
-    if (device.humidity) {
+    device.user.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
+    if (device.user.humidity) {
         let humDirection = " ";
-        if (device.humidity > humTarget) {
+        if (device.user.humidity > device.user.humidityTarget) {
             humDirection = "&#8593;"
         }
-        if (device.humidity < humTarget) {
+        if (device.user.humidity < device.user.humidityTarget) {
             humDirection = "&#8595;"
         }
-        const humText = "<a id='" + device.ip + "RH'>" + device.humidity + " RH%" + humDirection + "</a>";
-        const humTargetText = "<a id='" + device.ip + "humTarg'> (" + humTarget + "%)</a>";
+        const humText = "<a id='" + device.ip + "RH'>" + device.user.humidity + " RH%" + humDirection + "</a>";
+        const humTargetText = "<a id='" + device.ip + "humTarg'> (" + device.user.humidityTarget + "%)</a>";
         dataCell.innerHTML = dataCell.innerHTML + humTargetText + " " + humText + "<br>";
 
         const humScale = 510;
-        const humDiff = (Math.abs(humTarget - device.humidity) * 5);
+        const humDiff = (Math.abs(device.user.humidityTarget - device.user.humidity) * 5);
         const humNum = (humDiff * humScale / 100);
         const humRed = humNum.clamp(0, 255);
         const humGreen = (510 - humNum).clamp(0, 255);
         document.getElementById(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         document.getElementById(device.ip + "RH").style.textAlilgn = "center";
 
-        UpdateChartDevice(device.ip, "sensor2", device.humidity);
+        UpdateChartDevice(device.ip, "sensor2", device.user.humidity);
     }
 
-    device.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
-    if (device.dewpoint) {
-        const dewPointText = "<a id='" + device.ip + "DewP'>" + device.dewpoint + " DP &#176;F</a>";
+    device.user.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
+    if (device.user.dewpoint) {
+        const dewPointText = "<a id='" + device.ip + "DewP'>" + device.user.dewpoint + " DP &#176;F</a>";
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         document.getElementById(device.ip + "DewP").style.color = "rgb(40,40,40)";
         document.getElementById(device.ip + "DewP").style.textAlign = "center";
 
-        UpdateChartDevice(device.ip, "sensor3", device.dewpoint);
+        UpdateChartDevice(device.ip, "sensor3", device.user.dewpoint);
     }
 
-    device.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
-    if (device.rssi) {
-        const signal = device.rssi;
+    device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
+    if (device.user.rssi) {
+        const signal = device.user.rssi;
         const scale = 510;
         const num = (signal * scale / 100);
         const green = num.clamp(0, 255);

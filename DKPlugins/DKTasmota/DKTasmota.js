@@ -114,7 +114,13 @@ function LoadDevicesFromStorage() {
     for (let n = 0; n < deviceIPs.length; n++) {
         const dev = {
             'ip': deviceIPs[n],
-            'automate': true
+            'user':{
+                'automate': true,
+                'temperatureTarget': 77,
+                'temperatureZone' : 20,
+                'humidityTarget' : 50,
+                'humidityZone' : 20
+            }
         }
         devices.push(dev);
     }
@@ -136,13 +142,13 @@ function InitializeDevices(callback) {
 
                 //incoming data doesn't have user data, so copy them in
                 device.ip = deviceInstance.ip;
-                device.automate = deviceInstance.automate;
+                device.user = deviceInstance.user;
 
                 //then update the stored device with the new data
                 devices[devices.indexOf(deviceInstance)] = device;
                 devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
             }
-            
+
             deviceCount++;
             if (deviceCount === devices.length) {
                 callback && callback();
