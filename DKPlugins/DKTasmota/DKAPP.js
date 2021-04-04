@@ -282,6 +282,7 @@ function InfoWindow(ip) {
     div.style.borderLeftWidth = "0px";
     div.style.borderRightWidth = "0px";
     div.style.backgroundColor = "rgb(36,36,36)";
+    div.style.overflow = "auto";
 
     const obj = FindObjectValueIncludes(devices, "ip", ip);
     const n = devices.indexOf(obj);
