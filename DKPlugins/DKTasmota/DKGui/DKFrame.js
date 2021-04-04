@@ -229,7 +229,7 @@ function DKFrame_CreateResize(frame)
 	resizeImage.style.position = "absolute";
 	resizeImage.style.top = "0rem";
 	resizeImage.style.right = "0rem";
-	//DK_AddResizeHandle(resizeImage, frame);
+	DK_AddResizeHandle(resizeImage, frame.id);
 	
 	return resize;
 }

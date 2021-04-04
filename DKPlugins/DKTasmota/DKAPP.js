@@ -263,10 +263,10 @@ function AddDeviceToTable(ip) {
 }
 
 function InfoWindow(ip) {
-    DKCreateWindow("Info", "600px", "500px");
-    const info = document.getElementById("Info");
+    //DKCreateWindow("Info", "600px", "500px");
+    //const info = document.getElementById("Info");
     const div = document.createElement("div");
-
+    div.id = "info";
     div.style.position = "absolute";
     div.style.top = "20px";
     div.style.width = "100%";
@@ -289,7 +289,8 @@ function InfoWindow(ip) {
     const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
     div.innerHTML = jsonSuper;
-    info.appendChild(div);
+    document.body.appendChild(div);
+    DKFrame_Html("info");
 }
 
 function UpdateTableStyles() {
