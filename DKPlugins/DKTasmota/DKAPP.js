@@ -5,10 +5,14 @@ function DKLoadFiles() {
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
     //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
+    DKLoadJSFile("DK/DK.js");
+    DKLoadCSSFile("DK/DK.css");
+    DKLoadJSFile("DKFile/DKFile.js");
     DKLoadJSFile("superagent.js");
     DKLoadJSFile("DKMqtt.js");
     DKLoadJSFile("DKValidate.js");
     DKLoadJSFile("DKError.js");
+    DKLoadJSFile("DKGui/DKFrame.js");
     DKLoadJSFile("DKConsole.js");
     DKLoadJSFile("DKJson.js");
     DKLoadJSFile("DKPhp.js");
@@ -356,6 +360,9 @@ function UpdateScreen(success, url, data) {
         dkconsole.error("data could not be parsed to json");
     }
     const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+    if(!deviceInstance){
+        return;
+    }
     //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
     device.user = deviceInstance.user;

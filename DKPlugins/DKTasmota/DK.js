@@ -1,5 +1,16 @@
 "use strict";
 
+var byId = function(id) {
+    return document.getElementById(id);
+}
+
+function DK_CreateElement(parent, tag, id){
+	var ele = document.createElement(tag);
+	ele.id = id;//DK_GetAvailableId(id);
+	parent.appendChild(ele); //This is not working on IE
+	return ele;
+}
+
 function DKLoadCSSFile(file) {
     const head = document.getElementsByTagName('head')[0];
     const link = document.createElement('link');
@@ -203,7 +214,9 @@ function DKCreateButton(parent, id, top, left, width, height, onclick) {
     button.style.top = top;
     button.style.left = left;
     button.style.height = height;
-    if(width){ button.style.width = width; }
+    if (width) {
+        button.style.width = width;
+    }
     button.style.padding = "0px";
     button.style.cursor = "pointer";
     button.onclick = onclick;
@@ -218,10 +231,10 @@ function DKConfirm(msg, callback) {
     const message = document.createElement("span");
     message.innerHTML = msg;
     confirm.appendChild(message);
-    const no = DKCreateButton(confirm, "No", "50px", "75px", "", "", function(){
+    const no = DKCreateButton(confirm, "No", "50px", "75px", "", "", function() {
         document.body.removeChild(confirm);
     });
-    const yes = DKCreateButton(confirm, "Yes", "50px", "105px", "", "", function(){
+    const yes = DKCreateButton(confirm, "Yes", "50px", "105px", "", "", function() {
         callback && callback();
         document.body.removeChild(confirm);
     });
@@ -240,7 +253,6 @@ function DKAddResizeHandler(element, callback) {
     });
 }
 
-
 /**
  * Returns a number whose value is limited to the given range.
  *
@@ -253,5 +265,6 @@ function DKAddResizeHandler(element, callback) {
  * @type Number
  */
 Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max);
-};
+    return Math.min(Math.max(this, min), max);
+}
+;

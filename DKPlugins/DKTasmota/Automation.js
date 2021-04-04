@@ -172,7 +172,7 @@ function Automate() {
 
     //B Tent Heater
     if (Device("B Tent Heater")?.user?.automate) {
-        if (Device("B Tent Co2").user.power !== "ON" && Device("B Tent Temp").user.temperature < Device("B Tent Temp").user.temperatureTarget) {
+        if (Device("B Tent Co2")?.user.power !== "ON" && Device("B Tent Temp").user.temperature < Device("B Tent Temp").user.temperatureTarget) {
             dkconsole.message("B Tent Heater ON", "green");
             DKSendRequest("http://" + Device("B Tent Heater").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {

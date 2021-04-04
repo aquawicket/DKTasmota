@@ -4,6 +4,13 @@
 const showDebugButton = 1;
 function DebugButtonOnClick() {
 
+    const test = document.createElement("div");
+    test.id = "test";
+    test.style.width = "300px";
+    test.style.height = "300px";
+    test.style.backgroundColor = "rgb(0,0,0)";
+    document.body.appendChild(test);
+    DKFrame_Html("test");
 
     //var result =  1+11+8*9+2/14*8-4;
     //console.log("it's "+result+" ...  computers never lie");
@@ -33,7 +40,7 @@ function DebugButtonOnClick() {
     //}
     */
   
-    
+    /*
     //Update time on all devices
     const dateInMilliseconds = GetDateInMilliseconds();
     for (let n = 0; n < devices.length; n++) {
@@ -48,6 +55,7 @@ function DebugButtonOnClick() {
             console.log("DKSendRequest(" + success + "," + url + "," + data + ")");
         });
     }
+    */
     
 
     /*
