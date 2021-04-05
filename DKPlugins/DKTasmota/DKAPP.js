@@ -382,7 +382,7 @@ function DConsoleWindow(ip) {
                     const msgText = document.createElement("span");
                     msgText.innerHTML = data;
                     msgText.style.color = "rgb(250,250,250)";
-                    
+
                     output.appendChild(msgDiv);
                     msgDiv.appendChild(msgText);
                     output.scrollTop = output.scrollHeight;
@@ -454,9 +454,21 @@ function ProcessDevices() {
 }
 
 function UpdateScreen(success, url, data) {
-    if (!success || !url || !data) {
-        dkconsole.warn("UpdateScreen(" + success + "," + url + "," + data + ")");
+    if(!url){
+        dkconsole.log("url invalid");
+        return;
+    }
+    const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+    if(!deviceInstance){
+        dkconsole.error("device invalid");
+        return;
+    }
+    const table = document.getElementById("deviceTable");
+    if (!success || !data){
         PlaySound("PowerDown.mp3");
+        dkconsole.warn(deviceInstance.ip+" did not respond");
+        const row = DKTableGetRowByName(table, deviceInstance.ip);
+        row.style.backgroundColor = "red";
         return;
     }
 
@@ -470,10 +482,7 @@ function UpdateScreen(success, url, data) {
     } catch {
         dkconsole.error("data could not be parsed to json");
     }
-    const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
-    if(!deviceInstance){
-        return;
-    }
+
     //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
     device.user = deviceInstance.user;
@@ -481,7 +490,6 @@ function UpdateScreen(success, url, data) {
     //then update the stored device with the new data
     devices[devices.indexOf(deviceInstance)] = device;
 
-    const table = document.getElementById("deviceTable");
     const row = DKTableGetRowByName(table, device.ip);
     if (!row) {
         dkconsole.error("!row success:" + success + " url:" + url + " data:" + data);
