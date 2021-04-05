@@ -159,6 +159,7 @@ function DKRemoveFromLocalStorage(name) {
     localStorage.removeItem(name);
 }
 
+/*
 function DKCreateWindow(id, width, height) {
     const win = document.createElement('div');
     win.id = id;
@@ -204,6 +205,7 @@ function DKCenterWindow(element) {
     element.style.top = eleY + "px";
     return element;
 }
+*/
 
 function DKCreateButton(parent, id, top, left, width, height, onclick) {
     const button = document.createElement("button");

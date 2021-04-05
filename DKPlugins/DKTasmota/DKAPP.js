@@ -34,7 +34,6 @@ function DKLoadFiles() {
 }
 
 function DKLoadApp() {
-    //Load Non-Gui Stuff
     DKCreateErrorHandler();
     CreateSound("PowerDown.mp3");
     LoadDevicesFromStorage();
@@ -45,7 +44,6 @@ function DKLoadApp() {
 }
 
 function LoadGui() {
-    //Load Gui
     CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
     document.body.style.backgroundColor = "rgb(100,100,100)";
@@ -158,7 +156,7 @@ function CreateDeviceTable(parent) {
 
     DKTableAddColumn(table, "options");
     DKTableGetCellByName(table, "HEADER", "options").innerHTML = "options";
-    DKTableGetCellByName(table, "HEADER", "options").style.width = "50px";
+    DKTableGetCellByName(table, "HEADER", "options").style.width = "80px";
     DKTableGetCellByName(table, "HEADER", "options").style.textAlign = "center";
     DKTableGetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick() {
         dkconsole.log("optionsHeaderOnClick");
@@ -214,6 +212,7 @@ function AddDeviceToTable(ip) {
     optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
+    //Device Restart
     const restart = document.createElement("img");
     restart.setAttribute("title", "Restart Device");
     restart.src = "restart.png";
@@ -230,8 +229,9 @@ function AddDeviceToTable(ip) {
     }
     optionsCell.appendChild(restart);
 
+    //Device Info
     const info = document.createElement("img");
-    info.setAttribute("title", "Device info");
+    info.setAttribute("title", "Device Info");
     info.src = "info.png";
     info.style.width = "12px";
     info.style.height = "12px";
@@ -243,16 +243,29 @@ function AddDeviceToTable(ip) {
     }
     optionsCell.appendChild(info);
 
+    //Device Settings
     const settings = document.createElement("img");
-    settings.setAttribute("title", "Device settings");
+    settings.setAttribute("title", "Device Settings");
     settings.src = "settings.png";
     settings.style.width = "15px";
     settings.style.height = "15px";
     settings.style.cursor = "pointer";
     settings.onclick = function SettingsOnClick() {
-        DKCreateWindow("Settings", "300px", "300px");
+        SettingsWindow(ip);
     }
     optionsCell.appendChild(settings);
+
+    const dConsole = document.createElement("img");
+    dConsole.setAttribute("title", "Device Console");
+    dConsole.src = "console.png";
+    dConsole.style.width = "15px";
+    dConsole.style.height = "15px";
+    dConsole.style.paddingLeft = "3px";
+    dConsole.style.cursor = "pointer";
+    dConsole.onclick = function SettingsOnClick() {
+        DConsoleWindow(ip);
+    }
+    optionsCell.appendChild(dConsole);
 
     //Do some final processing
     const deviceHeader = DKTableGetCellByName(table, "HEADER", "device");
@@ -263,10 +276,8 @@ function AddDeviceToTable(ip) {
 }
 
 function InfoWindow(ip) {
-    //DKCreateWindow("Info", "600px", "500px");
-    //const info = document.getElementById("Info");
     const div = document.createElement("div");
-    div.id = "info";
+    div.id = "Info";
     div.style.position = "absolute";
     div.style.top = "20px";
     div.style.width = "100%";
@@ -291,7 +302,110 @@ function InfoWindow(ip) {
     //dkconsole.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
-    DKFrame_Html("info");
+    DKFrame_Html("Info");
+}
+
+function SettingsWindow(ip) {
+    const div = document.createElement("div");
+    div.id = "Settings";
+    div.style.position = "absolute";
+    div.style.top = "20px";
+    div.style.width = "100%";
+    div.style.fontSize = "12px";
+    div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
+    div.style.whiteSpace = "pre-wrap";
+    div.style.boxSizing = "border-box";
+    div.style.padding = "2px";
+    div.style.paddingLeft = "20px";
+    div.style.borderStyle = "solid";
+    div.style.borderWidth = "1px";
+    div.style.borderTopWidth = "0px";
+    div.style.borderLeftWidth = "0px";
+    div.style.borderRightWidth = "0px";
+    div.style.backgroundColor = "rgb(36,36,36)";
+    div.style.overflow = "auto";
+
+    document.body.appendChild(div);
+    DKFrame_Html("Settings");
+}
+
+function DConsoleWindow(ip) {
+    const div = document.createElement("div");
+    div.id = "Console";
+    div.style.position = "absolute";
+    div.style.width = "100%";
+    //div.style.backgroundColor = "rgb(36,36,36)";
+    div.style.overflow = "auto";
+
+    const output = document.createElement("div");
+    output.style.position = "absolute";
+    output.style.top = "10px";
+    output.style.left = "10px";
+    //output.style.width = "";
+    //output.style.height = "";
+    output.style.right = "10px";
+    output.style.bottom = "40px";
+    output.style.backgroundColor = "rgb(0,0,0)";
+    div.appendChild(output);
+
+    //command box
+    const input = document.createElement("input");
+    input.type = "text";
+    input.style.position = "absolute";
+    //input.style.top = "";
+    input.style.left = "10px";
+    input.style.width = "90%";
+    input.style.height = "22px";
+    //input.style.right = "10px";
+    input.style.bottom = "10px";
+    input.style.color = "rgb(255,255,255)";
+    input.style.backgroundColor = "rgb(0,0,0)";
+    input.onkeydown = function(){
+        const key = event.charCode || event.keyCode;
+        if (key === 13) {
+            //enter
+            dkconsole.debug("Send command -> " + input.value);
+            const cmnd = input.value;
+            const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
+            DKSendRequest(url, function(success, url, data){
+                dkconsole.log("function("+success+","+url+","+data+")");
+                if(data){
+                    const msgDiv = document.createElement("div");
+                    msgDiv.style.width = "100%";
+                    msgDiv.style.fontSize = "12px";
+                    msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
+                    msgDiv.style.whiteSpace = "pre-wrap";
+                    msgDiv.style.boxSizing = "border-box";
+                    msgDiv.style.padding = "2px";
+                    msgDiv.style.paddingLeft = "10px";
+                    //msgDiv.style.borderStyle = "solid";
+                    //msgDiv.style.borderWidth = "1px";
+                    //msgDiv.style.borderTopWidth = "0px";
+                    //msgDiv.style.borderLeftWidth = "0px";
+                    //msgDiv.style.borderRightWidth = "0px";
+
+                    const msgText = document.createElement("span");
+                    msgText.innerHTML = data;
+                    msgText.style.color = "rgb(250,250,250)";
+
+                    output.appendChild(msgDiv);
+                    msgDiv.appendChild(msgText);
+                    output.scrollTop = output.scrollHeight;
+
+                    //Limit the number of lines to the dkconsole
+                    if (output.childElementCount > 500) {
+                        output.removeChild(output.firstChild);
+                    }
+                    input.value = "";
+                }
+            });
+            
+        }
+    }
+    div.appendChild(input);
+
+    document.body.appendChild(div);
+    DKFrame_Html("Console");
 }
 
 function UpdateTableStyles() {

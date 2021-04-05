@@ -23,8 +23,6 @@ function Automate() {
     if (Device("Veg Tent Co2")?.user)
         Device("Veg Tent Co2").user.automate = false;
 
-    
-
     ////////////////////////////////////////////////////////////
     //A Tent Presets
     if (Device("A Tent Co2")?.user.automate && Device("A Tent Temp").user) {
@@ -33,7 +31,7 @@ function Automate() {
         Device("A Tent Temp").user.temperatureZone = 20;
         Device("A Tent Temp").user.humidityTarget = 55;
         Device("A Tent Temp").user.humidityZone = 20;
-    } else {
+    } else if (Device("A Tent Temp").user) {
         //When NOT using Co2, temperature should be 77 degrees
         Device("A Tent Temp").user.temperatureTarget = 77;
         Device("A Tent Temp").user.temperatureZone = 20;
@@ -180,7 +178,6 @@ function Automate() {
             DKSendRequest("http://" + Device("B Tent Heater").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         }
     }
-
 
     ////////////////////////////////////////////////////////////
     //Veg Tent Presets
