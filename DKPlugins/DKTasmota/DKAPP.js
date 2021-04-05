@@ -368,7 +368,7 @@ function DConsoleWindow(ip) {
             const cmnd = input.value;
             const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
             DKSendRequest(url, function(success, url, data){
-                dkconsole.log("function("+success+","+url+","+data+")");
+                //dkconsole.log("function("+success+","+url+","+data+")");
                 if(data){
                     const msgDiv = document.createElement("div");
                     msgDiv.style.width = "100%";
@@ -378,21 +378,16 @@ function DConsoleWindow(ip) {
                     msgDiv.style.boxSizing = "border-box";
                     msgDiv.style.padding = "2px";
                     msgDiv.style.paddingLeft = "10px";
-                    //msgDiv.style.borderStyle = "solid";
-                    //msgDiv.style.borderWidth = "1px";
-                    //msgDiv.style.borderTopWidth = "0px";
-                    //msgDiv.style.borderLeftWidth = "0px";
-                    //msgDiv.style.borderRightWidth = "0px";
-
+   
                     const msgText = document.createElement("span");
                     msgText.innerHTML = data;
                     msgText.style.color = "rgb(250,250,250)";
-
+                    
                     output.appendChild(msgDiv);
                     msgDiv.appendChild(msgText);
                     output.scrollTop = output.scrollHeight;
 
-                    //Limit the number of lines to the dkconsole
+                    //Limit the number of stored lines
                     if (output.childElementCount > 500) {
                         output.removeChild(output.firstChild);
                     }

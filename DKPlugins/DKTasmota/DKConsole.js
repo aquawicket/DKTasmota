@@ -197,7 +197,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
         msgDiv.appendChild(msgText);
         dkconsole.scrollTop = dkconsole.scrollHeight;
 
-        //Limit the number of lines to the dkconsole
+        //Limit the number of stored lines
         if (dkconsole.childElementCount > consoleLimit) {
             dkconsole.removeChild(dkconsole.firstChild);
         }
