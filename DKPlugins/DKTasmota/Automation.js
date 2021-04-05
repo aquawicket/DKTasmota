@@ -11,22 +11,10 @@ function MakeAliases(){
 let automate = true;
 
 function Automate() {
-
-    //MakeAliases();
     if(!automate){
         return;
     }
-
-    //Co2 flags
-    if (Device("A Tent Co2")?.user)
-        Device("A Tent Co2").user.automate = false;
-
-    if (Device("B Tent Co2")?.user)
-        Device("B Tent Co2").user.automate = true;
-
-    if (Device("Veg Tent Co2")?.user)
-        Device("Veg Tent Co2").user.automate = false;
-
+    //MakeAliases();
     ////////////////////////////////////////////////////////////
     //A Tent Presets
     if (Device("A Tent Co2")?.user.automate && Device("A Tent Temp").user) {
