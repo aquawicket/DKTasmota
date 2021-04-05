@@ -8,17 +8,21 @@ function MakeAliases(){
     const VegTentCo2 = Device("Veg Tent Co2")?.user ? Device("Veg Tent Co2").user : false;
 }
 */
+let automate = true;
 
 function Automate() {
 
     //MakeAliases();
+    if(!automate){
+        return;
+    }
 
     //Co2 flags
     if (Device("A Tent Co2")?.user)
         Device("A Tent Co2").user.automate = false;
 
     if (Device("B Tent Co2")?.user)
-        Device("B Tent Co2").user.automate = false;
+        Device("B Tent Co2").user.automate = true;
 
     if (Device("Veg Tent Co2")?.user)
         Device("Veg Tent Co2").user.automate = false;
@@ -134,11 +138,11 @@ function Automate() {
     //B Tent Co2
     if (Device("B Tent Co2")?.user?.automate) {
         if (/*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */
-        Device("B Tent Temp").user.temperature < (Device("B Tent Temp").user.temperatureTarget - 5) && Device("B Tent Temp").user.humidity < (Device("B Tent Temp").user.humidityTarget + Device("B Tent Temp").user.humidityZone)) {
+        Device("B Tent Temp").user.temperature < (Device("B Tent Temp").user.temperatureTarget - 1) && Device("B Tent Temp").user.humidity < (Device("B Tent Temp").user.humidityTarget + Device("B Tent Temp").user.humidityZone)) {
             dkconsole.message("B Tent Co2 ON", "green");
             Device("B Tent Co2").user.power = "ON";
             DKSendRequest("http://" + Device("B Tent Co2").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-            DKSendRequest("http://" + Device("B Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + Device("B Tent Exhaust Fan")?.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         } else {
             dkconsole.message("B Tent Co2 OFF", "yellow");
             Device("B Tent Co2").user.power = "OFF";

@@ -82,6 +82,20 @@ function CreateButtons(parent) {
     clearDevices.onclick = ClearDevices;
     parent.appendChild(clearDevices);
 
+    const automation = document.createElement("button");
+    automation.innerHTML = "Automat ON";
+    automation.style.cursor = "pointer";
+    automation.onclick = function() {
+        if (automate === true) {
+            automate = false;
+            automation.innerHTML = "Automat OFF";
+        } else {
+            automate = true;
+            automation.innerHTML = "Automat ON";
+        }
+    }
+    parent.appendChild(automation);
+
     const volume = document.createElement("img");
     volume.src = "volume_100.png";
     volume.style.position = "absolute";
@@ -121,7 +135,7 @@ function CreateDeviceTable(parent) {
     DKTableGetRowByName(table, "HEADER").style.fontWeight = "bold";
     DKTableGetRowByName(table, "HEADER").style.cursor = "pointer";
     DKTableGetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
-    DKTableGetCellByName(table, "HEADER", "device").style.width = "220px";
+    DKTableGetCellByName(table, "HEADER", "device").style.width = "240px";
     DKTableGetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick() {
         DKSortTable("deviceTable", 0);
         UpdateTableStyles();
@@ -195,7 +209,7 @@ function AddDeviceToTable(ip) {
 
         for (let n = 0; n < devices.length; n++) {
             if (devices[n].ip === ip) {
-                devices[n].automate = false;
+                devices[n].user.automate = false;
                 dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
             }
         }
@@ -442,7 +456,7 @@ function ClearDevices() {
     const table = document.getElementById("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
-    RemoveFromLocalStorage("deviceIPs");
+    DKRemoveFromLocalStorage("deviceIPs");
 }
 
 function ProcessDevices() {
@@ -468,7 +482,9 @@ function UpdateScreen(success, url, data) {
         PlaySound("PowerDown.mp3");
         dkconsole.warn(deviceInstance.ip+" did not respond");
         const row = DKTableGetRowByName(table, deviceInstance.ip);
-        row.style.backgroundColor = "red";
+        if(row){
+            row.style.backgroundColor = "red";
+        }
         return;
     }
 
