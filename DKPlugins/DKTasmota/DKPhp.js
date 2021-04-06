@@ -1,5 +1,9 @@
 "use strict";
 
+function PHP_GetRemoteAddress(callback){
+    CallPhpFunc(arguments);
+}
+
 function PHP_GetTime(callback) {
     CallPhpFunc(arguments);
 }

@@ -74,4 +74,9 @@ function GetTime()
     echo $str;
 }
 
+function GetRemoteAddress()
+{
+	echo $_SERVER["REMOTE_ADDR"];
+}
+
 ?>

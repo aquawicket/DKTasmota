@@ -4,6 +4,11 @@
 const showDebugButton = 1;
 function DebugButtonOnClick() {
 
+    PHP_GetRemoteAddress(function(rval){
+        dkconsole.log(rval);
+    });
+
+    /*
     const test = document.createElement("div");
     test.id = "test";
     test.style.width = "300px";
@@ -11,6 +16,7 @@ function DebugButtonOnClick() {
     test.style.backgroundColor = "rgb(0,0,0)";
     document.body.appendChild(test);
     DKFrame_Html("test");
+    */
 
     //var result =  1+11+8*9+2/14*8-4;
     //console.log("it's "+result+" ...  computers never lie");

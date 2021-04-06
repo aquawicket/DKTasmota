@@ -1,11 +1,13 @@
 "use strict";
 
+const app = [];
+
 function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
     //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
-    DKLoadJSFile("DK/DK.js");
+    DKLoadJSFile("DK/DK.js", function(){
     DKLoadCSSFile("DK/DK.css");
     DKLoadJSFile("DKFile/DKFile.js");
     DKLoadJSFile("superagent.js");
@@ -31,14 +33,25 @@ function DKLoadFiles() {
     DKLoadImage("info.png");
     DKLoadImage("settings.png");
     DKLoadAudio("PowerDown.mp3");
+    });
 }
 
 function DKLoadApp() {
     DKCreateErrorHandler();
     CreateSound("PowerDown.mp3");
     LoadDevicesFromStorage();
-    LoadGui();
 
+    PHP_GetRemoteAddress(function(rval){
+        if(rval === "192.168.1.78"){
+            app.automate = true;   
+        }
+        else{
+            app.automate = false;
+        }
+
+        LoadGui();
+    });
+    
     //Run app main loop
     window.setInterval(MainAppLoop, 40000);
 }
@@ -59,8 +72,10 @@ function LoadGui() {
 }
 
 function MainAppLoop() {
-    Automate();
     ProcessDevices();
+    if(app.automate){
+        Automate();
+    }
 }
 
 function CreateButtons(parent) {
@@ -83,14 +98,19 @@ function CreateButtons(parent) {
     parent.appendChild(clearDevices);
 
     const automation = document.createElement("button");
-    automation.innerHTML = "Automat ON";
+    if (app.automate === true) {
+        automation.innerHTML = "Automat ON";
+    }
+    else{
+        automation.innerHTML = "Automat OFF";
+    }
     automation.style.cursor = "pointer";
     automation.onclick = function() {
-        if (automate === true) {
-            automate = false;
+        if (app.automate === true) {
+            app.automate = false;
             automation.innerHTML = "Automat OFF";
         } else {
-            automate = true;
+            app.automate = true;
             automation.innerHTML = "Automat ON";
         }
     }

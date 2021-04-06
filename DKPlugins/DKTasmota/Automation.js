@@ -1,24 +1,20 @@
 "use strict";
 
+/*
 function MakeAliases(){
-    const ATentCo2 = Device("A Tent Co2")?.user ? Device("A Tent Co2").user : false;
-    const ATentTemp = Device("A Tent Temp")?.user ? Device("A Tent Temp").user : false;
-    const BTentCo2 = Device("B Tent Co2")?.user ? Device("B Tent Co2").user : false;
-    const VegTentCo2 = Device("Veg Tent Co2")?.user ? Device("Veg Tent Co2").user : false;
+    ATentCo2 = Device("A Tent Co2")?.user ? Device("A Tent Co2").user : false;
+    ATentTemp = Device("A Tent Temp")?.user ? Device("A Tent Temp").user : false;
+    BTentCo2 = Device("B Tent Co2")?.user ? Device("B Tent Co2").user : false;
+    VegTentCo2 = Device("Veg Tent Co2")?.user ? Device("Veg Tent Co2").user : false;
 }
-
-let automate = true;
+*/
 
 function Automate() {
-    if (!automate) {
-        return;
-    }
-    
-    MakeAliases();
+    //MakeAliases();
     if (Device("A Tent Co2"))
         Device("A Tent Co2").user.automate = false;
-    //if (Device("B Tent Co2"))
-        //Device("B Tent Co2").user.automate = false;
+    if (Device("B Tent Co2"))
+        Device("B Tent Co2").user.automate = false;
     if (Device("Veg Tent Co2"))
         Device("Veg Tent Co2").user.automate = false;
 
