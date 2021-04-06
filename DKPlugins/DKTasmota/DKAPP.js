@@ -478,16 +478,19 @@ function UpdateScreen(success, url, data) {
         return;
     }
     const table = document.getElementById("deviceTable");
+    const row = DKTableGetRowByName(table, deviceInstance.ip);
+    if(!row){
+        doconsole.error("row invlid");
+        return;
+    }
     if (!success || !data){
         PlaySound("PowerDown.mp3");
         dkconsole.warn(deviceInstance.ip+" did not respond");
-        const row = DKTableGetRowByName(table, deviceInstance.ip);
-        if(row){
-            row.style.backgroundColor = "red";
-        }
+        row.style.backgroundColor = "red";
         return;
     }
 
+    
     //const jsonString = PrettyJson(data);
     //const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
@@ -502,16 +505,10 @@ function UpdateScreen(success, url, data) {
     //incoming data doesn't have user defined variable, so copy them
     device.ip = deviceInstance.ip;
     device.user = deviceInstance.user;
-
     //then update the stored device with the new data
     devices[devices.indexOf(deviceInstance)] = device;
 
-    const row = DKTableGetRowByName(table, device.ip);
-    if (!row) {
-        dkconsole.error("!row success:" + success + " url:" + url + " data:" + data);
-        return;
-    }
-
+    // UPDATE TABLE
     device.user.name = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (device.user.name) {
         const deviceCell = DKTableGetCellByName(table, device.ip, "device");

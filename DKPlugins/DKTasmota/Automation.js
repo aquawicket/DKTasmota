@@ -1,20 +1,27 @@
 "use strict";
 
-/*
 function MakeAliases(){
     const ATentCo2 = Device("A Tent Co2")?.user ? Device("A Tent Co2").user : false;
     const ATentTemp = Device("A Tent Temp")?.user ? Device("A Tent Temp").user : false;
     const BTentCo2 = Device("B Tent Co2")?.user ? Device("B Tent Co2").user : false;
     const VegTentCo2 = Device("Veg Tent Co2")?.user ? Device("Veg Tent Co2").user : false;
 }
-*/
+
 let automate = true;
 
 function Automate() {
-    if(!automate){
+    if (!automate) {
         return;
     }
-    //MakeAliases();
+    
+    MakeAliases();
+    if (Device("A Tent Co2"))
+        Device("A Tent Co2").user.automate = false;
+    //if (Device("B Tent Co2"))
+        //Device("B Tent Co2").user.automate = false;
+    if (Device("Veg Tent Co2"))
+        Device("Veg Tent Co2").user.automate = false;
+
     ////////////////////////////////////////////////////////////
     //A Tent Presets
     if (Device("A Tent Co2")?.user.automate && Device("A Tent Temp").user) {
@@ -62,7 +69,7 @@ function Automate() {
 
     //A Tent Exhaust fan
     if (Device("A Tent Exhaust Fan")?.user?.automate) {
-        if (Device("A Tent Co2")?.user?.power !== "ON" && Device("A Tent Temp")?.user?.temperature > (Device("A Tent Temp").user.temperatureTarget + 1) || Device("A Tent Temp").user.humidity > (Device("A Tent Temp").user.humidityTarget + Device("A Tent Temp").user.humidityZone) && Device("A Tent Temp").user.temperature > 60) {
+        if (Device("A Tent Co2")?.user?.power !== "ON" && Device("A Tent Temp")?.user?.temperature > (Device("A Tent Temp").user.temperatureTarget) || Device("A Tent Temp").user.humidity > (Device("A Tent Temp").user.humidityTarget + Device("A Tent Temp").user.humidityZone) && Device("A Tent Temp").user.temperature > 60) {
             dkconsole.message("A Tent Exhaust Fan ON", "green");
             DKSendRequest("http://" + Device("A Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
@@ -207,8 +214,8 @@ function Automate() {
         Device("Veg Tent Temp").user.temperature < (Device("Veg Tent Temp").user.temperatureTarget - 5) && Device("Veg Tent Temp").user.humidity < (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone)) {
             dkconsole.message("Veg Tent Co2 ON", "green");
             Device("Veg Tent Co2").user.power = "ON";
-            DKSendRequest("http://" + Device("Veg Tent Co2").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-            DKSendRequest("http://" + Device("Veg Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            DKSendRequest("http://" + Device("Veg Tent Co2")?.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
+            DKSendRequest("http://" + Device("Veg Tent Exhaust Fan")?.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         } else {
             dkconsole.message("Veg Tent Co2 OFF", "yellow");
             Device("Veg Tent Co2").user.power = "OFF";

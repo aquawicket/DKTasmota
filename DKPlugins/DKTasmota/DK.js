@@ -1,16 +1,5 @@
 "use strict";
 
-var byId = function(id) {
-    return document.getElementById(id);
-}
-
-function DK_CreateElement(parent, tag, id){
-	var ele = document.createElement(tag);
-	ele.id = id;//DK_GetAvailableId(id);
-	parent.appendChild(ele); //This is not working on IE
-	return ele;
-}
-
 function DKLoadCSSFile(file) {
     const head = document.getElementsByTagName('head')[0];
     const link = document.createElement('link');
