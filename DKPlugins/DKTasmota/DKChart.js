@@ -2,11 +2,11 @@
 
 //https://www.chartjs.org/
 //https://www.chartjs.org/docs/latest/axes/cartesian/time.html
-//DKLoadJSFile("https://momentjs.com/downloads/moment.min.js", function() {
-//    DKLoadJSFile("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+//DK_Create("https://momentjs.com/downloads/moment.min.js", function() {
+//    DK_Create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
 //});
-DKLoadJSFile("moment.min.js", function() {
-    DKLoadJSFile("Chart.min.js");
+DK_Create("moment.min.js", function() {
+    DK_Create("Chart.min.js");
 });
 
 let lineChart;
@@ -35,7 +35,7 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(chartCanvas);
 
     //FIXME - do proper refreshing on resize    
-    DKAddResizeHandler(chartCanvas, function() {
+    DKGui_AddResizeHandler(chartCanvas, function() {
         //dkconsole.info("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
         chartCanvas.style.height = "100%";
     });
@@ -175,14 +175,14 @@ function DKChart_SaveDatasets(ip) {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             const data = JSON.stringify(lineChart.data.datasets[n].data);
-            DKSaveToLocalStorage(lineChart.data.datasets[n].label, data);
+            DK_SaveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
 }
 
 function DKChart_LoadDatasets() {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        const data = DKLoadFromLocalStorage(lineChart.data.datasets[n].label);
+        const data = DK_LoadFromLocalStorage(lineChart.data.datasets[n].label);
         lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();

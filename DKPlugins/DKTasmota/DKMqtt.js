@@ -2,7 +2,7 @@
 
 "use strict";
 
-DKLoadJSFile("mqttws31.min.js");
+DK_Create("mqttws31.min.js");
 
 var mqtt;
 var reconnectTimeout = 2000;

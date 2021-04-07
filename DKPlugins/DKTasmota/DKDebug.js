@@ -50,13 +50,13 @@ function DKDebug_ButtonOnClick() {
     for (let n = 0; n < devices.length; n++) {
         const cmnd = "timezone -7";
         const url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-        DKSendRequest(url, function(success, url, data) {//console.log("DKSendRequest("+success+","+url+","+data+")");
+        DK_SendRequest(url, function(success, url, data) {//console.log("DK_SendRequest("+success+","+url+","+data+")");
         });
 
         cmnd = "time 4 " + dateInMilliseconds;
         url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-        DKSendRequest(url, function(success, url, data) {
-            console.log("DKSendRequest(" + success + "," + url + "," + data + ")");
+        DK_SendRequest(url, function(success, url, data) {
+            console.log("DK_SendRequest(" + success + "," + url + "," + data + ")");
         });
     }
     */
@@ -66,8 +66,8 @@ function DKDebug_ButtonOnClick() {
     for (let n = 0; n < devices.length; n++) {
         const cmnd = "time";
         const url = "http://" + devices[n].ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-        DKSendRequest(url, function(success, url, data) {
-            //console.log("DKSendRequest("+success+","+url+","+data+")");
+        DK_SendRequest(url, function(success, url, data) {
+            //console.log("DK_SendRequest("+success+","+url+","+data+")");
             console.log("" + data + "");
         });
     }

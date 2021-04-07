@@ -104,7 +104,7 @@ function Device(str) {
 //Load devices from local storage
 function DKTasmota_LoadDevices() {
     let deviceIPs = [];
-    const data = DKLoadFromLocalStorage("deviceIPs")
+    const data = DK_LoadFromLocalStorage("deviceIPs")
     if (!data) {
         return;
     }
@@ -134,7 +134,7 @@ function DKTasmota_InitializeDevices(callback) {
     let deviceCount = 0;
     for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
-        DKSendRequest(url, function(success, url, data) {
+        DK_SendRequest(url, function(success, url, data) {
             if (success && url && data) {
                 const device = JSON.parse(data);
                 const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);

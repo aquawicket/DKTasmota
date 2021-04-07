@@ -38,7 +38,7 @@ function DKPhp_CallPhpFunc(args) {
     //dkconsole.log(JSON.stringify(jsonData));
     const data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
     const url = "DK.php?" + data;
-    DKSendRequest(url, function(success, url, rVal) {
+    DK_SendRequest(url, function(success, url, rVal) {
         if (args && typeof (args[args.length - 1]) === "function") {
             args[args.length - 1](rVal);
         } else {//dkconsole.log(rVal);
@@ -65,7 +65,7 @@ function DKPhp_CallPhpFunction(str, callback) {
     }
     const data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
     const url = "http://192.168.1.78:8000/DK.php?" + data;
-    DKSendRequest(url, function(success, url, data) {
+    DK_SendRequest(url, function(success, url, data) {
         callback(data);
     });
 }

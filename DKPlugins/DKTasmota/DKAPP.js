@@ -6,40 +6,41 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
-    //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
-    DKLoadJSFile("DK/DK.js", function() {
-        DKLoadJSFile("DKErrorHandler.js");
-        DKLoadCSSFile("DK/DK.css");
-        DKLoadJSFile("DKFile/DKFile.js");
-        DKLoadJSFile("superagent.js");
-        DKLoadJSFile("DKMqtt.js");
-        DKLoadJSFile("DKValidate.js");
-        DKLoadJSFile("DKError.js");
-        DKLoadJSFile("DKGui/DKFrame.js");
-        DKLoadJSFile("DKGui/DKMessageBox.js");
-        DKLoadJSFile("DKGui/DKDrag.js");
-        DKLoadJSFile("DKGui/DKClipboard.js");
-        DKLoadJSFile("DKGui/DKTable.js");
-        DKLoadJSFile("DKGui/DKConsole.js");
-        DKLoadJSFile("DKJson.js");
-        DKLoadJSFile("DKPhp.js");
-        DKLoadJSFile("DKDebug.js");
-        DKLoadJSFile("DKNotifications.js");
-        DKLoadJSFile("DKAudio.js", function() {
+    //DK_Create("https://cdn.jsdelivr.net/npm/superagent");
+    //DK_Create("DK.js", function() {
+        DK_Create("DKErrorHandler.js");
+        DK_Create("DK/DK.css");
+        DK_Create("DKFile/DKFile.js");
+        DK_Create("superagent.js");
+        DK_Create("DKMqtt.js");
+        DK_Create("DKValidate.js");
+        DK_Create("DKError.js");
+        DK_Create("DKGui/DKGui.js");
+        DK_Create("DKGui/DKFrame.js");
+        //DK_Create("DKGui/DKMessageBox.js");
+        DK_Create("DKGui/DKDrag.js");
+        DK_Create("DKGui/DKClipboard.js");
+        DK_Create("DKGui/DKTable.js");
+        DK_Create("DKGui/DKConsole.js");
+        DK_Create("DKJson.js");
+        DK_Create("DKPhp.js");
+        DK_Create("DKDebug.js");
+        DK_Create("DKNotifications.js");
+        DK_Create("DKAudio.js", function() {
             DKAudio_PreLoadAudio("PowerDown.mp3");
         });
-        DKLoadJSFile("DKTasmota.js");
-        DKLoadJSFile("DKClock.js");
-        DKLoadJSFile("DKChart.js");
-        DKLoadJSFile("Automation.js");
-        DKLoadJSFile("VPDCalculator.js");
-        DKLoadImage("loading.gif");
-        DKLoadImage("restart.png");
-        DKLoadImage("info.png");
-        DKLoadImage("settings.png");
-        DKLoadImage("online.png");
-        DKLoadImage("offline.png");
-    });
+        DK_Create("DKTasmota.js");
+        DK_Create("DKClock.js");
+        DK_Create("DKChart.js");
+        DK_Create("Automation.js");
+        DK_Create("VPDCalculator.js");
+        DK_PreloadImage("loading.gif");
+        DK_PreloadImage("restart.png");
+        DK_PreloadImage("info.png");
+        DK_PreloadImage("settings.png");
+        DK_PreloadImage("online.png");
+        DK_PreloadImage("offline.png");
+    //});
 }
 
 function DKLoadApp() {
@@ -82,7 +83,7 @@ function LoadGui() {
 function MainAppLoop() {
     //Check internet connection
     const internet = byId("internet");
-    if (DKIsOnline()) {
+    if (DK_IsOnline()) {
         internet.src = "online.png";
     } else {
         internet.src = "offline.png";
@@ -92,6 +93,19 @@ function MainAppLoop() {
     if (app.automate) {
         Automate();
     }
+}
+
+function DKSendSuperRequest(url, callback) {
+    superagent.get(url).timeout({
+        response: 18000,
+        // Wait 18 seconds for the server to start sending,
+        deadline: 20000,
+        // but allow 20 seconds for the file to finish loading.
+    }).then(function DKSendSuperRequestSuccessCallback(res) {
+        callback(true, res);
+    }, function DKSendSuperRequestFailCallback(res) {
+        callback(false, res);
+    });
 }
 
 function CreateButtons(parent) {
@@ -133,7 +147,7 @@ function CreateButtons(parent) {
 
     const internet = document.createElement("img");
     internet.id = "internet";
-    if (DKIsOnline()) {
+    if (DK_IsOnline()) {
         internet.src = "online.png";
     } else {
         internet.src = "onffline.png";
@@ -261,7 +275,7 @@ function AddDeviceToTable(ip) {
                 dkconsole.warn("Temporarily added " + ip + " to bypass automation, refresh page to reset");
             }
         }
-        DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        DK_SendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
 
     const dataCell = DKTable_GetCellByName(table, ip, "data");
@@ -287,7 +301,7 @@ function AddDeviceToTable(ip) {
         DKMessageBox_Confirm("Restart this device?", function() {
         //DKConfirm("Restart this device?", function() {
             restart.src = "loading.gif";
-            DKSendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
+            DK_SendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
         });
     }
     optionsCell.appendChild(restart);
@@ -333,7 +347,7 @@ function AddDeviceToTable(ip) {
     //Do some final processing
     const deviceHeader = DKTable_GetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-    DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+    DK_SendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     DKTable_Sort("deviceTable", 0);
     UpdateTableStyles();
 }
@@ -430,7 +444,7 @@ function DConsoleWindow(ip) {
             dkconsole.debug("Send command -> " + input.value);
             const cmnd = input.value;
             const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-            DKSendRequest(url, function(success, url, data) {
+            DK_SendRequest(url, function(success, url, data) {
                 //dkconsole.log("function("+success+","+url+","+data+")");
                 if (data) {
                     const msgDiv = document.createElement("div");
@@ -512,7 +526,7 @@ function ProcessDevices() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const ip = table.rows[n].getAttribute("ip");
-        DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+        DK_SendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
 }
 
