@@ -75,7 +75,7 @@ function LoadGui() {
 }
 
 function MainAppLoop() {
-    if(!DKIsOnline){
+    if(!DKIsOnline()){
         dkconsole.message("OFFLINE", "red");
     }
     ProcessDevices();

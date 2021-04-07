@@ -231,8 +231,7 @@ function DKConfirm(msg, callback) {
     });
 }
 
-function DKIsOnline()
-{
+function DKIsOnline(){
     if(navigator.onLine) return true;
     else return false;
 }
