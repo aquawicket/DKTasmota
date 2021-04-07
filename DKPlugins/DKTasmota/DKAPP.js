@@ -8,6 +8,7 @@ function DKLoadFiles() {
     //DKLoadPage() will be call after this loads everything.
     //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
     DKLoadJSFile("DK/DK.js", function(){
+    DKLoadJSFile("DKErrorHandler.js");
     DKLoadCSSFile("DK/DK.css");
     DKLoadJSFile("DKFile/DKFile.js");
     DKLoadJSFile("superagent.js");
@@ -27,7 +28,6 @@ function DKLoadFiles() {
     DKLoadJSFile("DKChart.js");
     DKLoadJSFile("Automation.js");
     DKLoadJSFile("VPDCalculator.js");
-    DKLoadJSFile("DKErrorHandler.js");
     DKLoadImage("loading.gif");
     DKLoadImage("restart.png");
     DKLoadImage("info.png");
