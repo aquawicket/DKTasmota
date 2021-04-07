@@ -178,7 +178,7 @@ function DKTasmota_GetDevices(ipPrefix, callback) {
         }
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         dkconsole.debug(url);
-        DKSendSuperRequest(url, function DKSendSuperRequestCallback(success, data) {
+        SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
             //send request using superAgent
             dkconsole.log("pinged " + ip);
             if (success) {
