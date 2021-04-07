@@ -547,7 +547,7 @@ function UpdateScreen(success, url, data) {
         return;
     }
     if (!success || !data) {
-        DKAudio_PlaySound("PowerDown.mp3");
+        DKAudio_Play("PowerDown.mp3");
         dkconsole.warn(device.ip + " did not respond");
         row.style.backgroundColor = "red";
         return;
