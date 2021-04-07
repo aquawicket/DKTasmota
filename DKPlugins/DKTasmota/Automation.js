@@ -1,16 +1,7 @@
 "use strict";
 
-/*
-function MakeAliases(){
-    ATentCo2 = Device("A Tent Co2")?.user ? Device("A Tent Co2").user : false;
-    ATentTemp = Device("A Tent Temp")?.user ? Device("A Tent Temp").user : false;
-    BTentCo2 = Device("B Tent Co2")?.user ? Device("B Tent Co2").user : false;
-    VegTentCo2 = Device("Veg Tent Co2")?.user ? Device("Veg Tent Co2").user : false;
-}
-*/
-
 function Automate() {
-    //MakeAliases();
+    
     if (Device("A Tent Co2"))
         Device("A Tent Co2").user.automate = false;
     if (Device("B Tent Co2"))
@@ -36,16 +27,16 @@ function Automate() {
 
     //A Tent Alarms
     if (Device("A Tent Temp").user.temperature < (Device("A Tent Temp").user.temperatureTarget - Device("A Tent Temp").user.temperatureZone)) {
-        dkconsole.warn("!!! A TENT TEMPERATURE BELOW MINIMUM " + Device("A Tent Temp").user.temperature + "&#176;F < " + (Device("A Tent Temp").user.temperatureTarget - Device("A Tent Temp").user.temperatureZone) + "&#176;F !!!");
+        dkconsole.message("!!! A TENT TEMPERATURE BELOW MINIMUM " + Device("A Tent Temp").user.temperature + "&#176;F < " + (Device("A Tent Temp").user.temperatureTarget - Device("A Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
     if (Device("A Tent Temp").user.temperature > (Device("A Tent Temp").user.temperatureTarget + Device("A Tent Temp").user.temperatureZone)) {
-        dkconsole.warn("!!! A TENT TEMPERATURE ABOVE MAXIMUM " + Device("A Tent Temp").user.temperature + "&#176;F > " + (Device("A Tent Temp").user.temperatureTarget + Device("A Tent Temp").user.temperatureZone) + "&#176;F !!!");
+        dkconsole.message("!!! A TENT TEMPERATURE ABOVE MAXIMUM " + Device("A Tent Temp").user.temperature + "&#176;F > " + (Device("A Tent Temp").user.temperatureTarget + Device("A Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
     if (Device("A Tent Temp").user.humidity < (Device("A Tent Temp").user.humidityTarget - Device("A Tent Temp").user.humidityZone)) {
-        dkconsole.warn("!!! A TENT HUMUDITY BELOW MINIMUM " + Device("A Tent Temp").user.humidity + "% < " + (Device("A Tent Temp").user.humidityTarget - Device("A Tent Temp").user.humidityZone) + "% !!!");
+        dkconsole.message("!!! A TENT HUMUDITY BELOW MINIMUM " + Device("A Tent Temp").user.humidity + "% < " + (Device("A Tent Temp").user.humidityTarget - Device("A Tent Temp").user.humidityZone) + "% !!!", "red");
     }
     if (Device("A Tent Temp").user.humidity > (Device("A Tent Temp").user.humidityTarget + Device("A Tent Temp").user.humidityZone)) {
-        dkconsole.warn("!!! A TENT HUMUDITY ABOVE MAXIMUM " + Device("A Tent Temp").user.humidity + "% > " + (Device("A Tent Temp").user.humidityTarget + Device("A Tent Temp").user.humidityZone) + "% !!!");
+        dkconsole.message("!!! A TENT HUMUDITY ABOVE MAXIMUM " + Device("A Tent Temp").user.humidity + "% > " + (Device("A Tent Temp").user.humidityTarget + Device("A Tent Temp").user.humidityZone) + "% !!!", "red");
     }
 
     //A Tent Co2
@@ -114,16 +105,16 @@ function Automate() {
 
     //B Tent Alarms
     if (Device("B Tent Temp").user.temperature < (Device("B Tent Temp").user.temperatureTarget - Device("B Tent Temp").user.temperatureZone)) {
-        dkconsole.warn("!!! B TENT TEMPERATURE BELOW MINIMUM " + Device("B Tent Temp").user.temperature + "&#176;F < " + (Device("B Tent Temp").user.temperatureTarget - Device("B Tent Temp").user.temperatureZone) + "&#176;F !!!");
+        dkconsole.message("!!! B TENT TEMPERATURE BELOW MINIMUM " + Device("B Tent Temp").user.temperature + "&#176;F < " + (Device("B Tent Temp").user.temperatureTarget - Device("B Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
     if (Device("B Tent Temp").user.temperature > (Device("B Tent Temp").user.temperatureTarget + Device("B Tent Temp").user.temperatureZone)) {
-        dkconsole.warn("!!! B TENT TEMPERATURE ABOVE MAXIMUM " + Device("B Tent Temp").user.temperature + "&#176;F > " + (Device("B Tent Temp").user.temperatureTarget + Device("B Tent Temp").user.temperatureZone) + "&#176;F !!!");
+        dkconsole.message("!!! B TENT TEMPERATURE ABOVE MAXIMUM " + Device("B Tent Temp").user.temperature + "&#176;F > " + (Device("B Tent Temp").user.temperatureTarget + Device("B Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
     if (Device("B Tent Temp").user.humidity < (Device("B Tent Temp").user.humidityTarget - Device("B Tent Temp").user.humidityZone)) {
-        dkconsole.warn("!!! B TENT HUMUDITY BELOW MINIMUM " + Device("B Tent Temp").user.humidity + "% < " + (Device("B Tent Temp").user.humidityTarget - Device("B Tent Temp").user.humidityZone) + "% !!!");
+        dkconsole.message("!!! B TENT HUMUDITY BELOW MINIMUM " + Device("B Tent Temp").user.humidity + "% < " + (Device("B Tent Temp").user.humidityTarget - Device("B Tent Temp").user.humidityZone) + "% !!!", "red");
     }
     if (Device("B Tent Temp").user.humidity > (Device("B Tent Temp").user.humidityTarget + Device("B Tent Temp").user.humidityZone)) {
-        dkconsole.warn("!!! B TENT HUMUDITY ABOVE MAXIMUM " + Device("B Tent Temp").user.humidity + "% > " + (Device("B Tent Temp").user.humidityTarget + Device("B Tent Temp").user.humidityZone) + "% !!!");
+        dkconsole.message("!!! B TENT HUMUDITY ABOVE MAXIMUM " + Device("B Tent Temp").user.humidity + "% > " + (Device("B Tent Temp").user.humidityTarget + Device("B Tent Temp").user.humidityZone) + "% !!!", "red");
     }
 
     //B Tent Co2
@@ -192,17 +183,17 @@ function Automate() {
 
     //Veg Tent Alarms
     if (Device("Veg Tent Temp").user.temperature < (Device("Veg Tent Temp").user.temperatureTarget - Device("Veg Tent Temp").user.temperatureZone)) {
-        dkconsole.warn("!!! Veg TENT TEMPERATURE BELOW MINIMUM " + Device("Veg Tent Temp").user.temperature + "&#176;F < " + (Device("Veg Tent Temp").user.temperatureTarget - Device("Veg Tent Temp").user.temperatureZone) + "&#176;F !!!");
+        dkconsole.message("!!! Veg TENT TEMPERATURE BELOW MINIMUM " + Device("Veg Tent Temp").user.temperature + "&#176;F < " + (Device("Veg Tent Temp").user.temperatureTarget - Device("Veg Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
     if (Device("Veg Tent Temp").user.temperature > (Device("Veg Tent Temp").user.temperatureTarget + Device("Veg Tent Temp").user.temperatureZone)) {
-        dkconsole.warn("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM " + Device("Veg Tent Temp").user.temperature + "&#176;F > " + (Device("Veg Tent Temp").user.temperatureTarget + Device("Veg Tent Temp").user.temperatureZone) + "&#176;F !!!");
+        dkconsole.message("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM " + Device("Veg Tent Temp").user.temperature + "&#176;F > " + (Device("Veg Tent Temp").user.temperatureTarget + Device("Veg Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
     /*
     if (Device("Veg Tent Temp").user.humidity < (Device("Veg Tent Temp").user.humidityTarget - Device("Veg Tent Temp").user.humidityZone)) {
-        dkconsole.warn("!!! Veg TENT HUMUDITY BELOW MINIMUM " + Device("Veg Tent Temp").user.humidity + "% < " + (Device("Veg Tent Temp").user.humidityTarget - Device("Veg Tent Temp").user.humidityZone) + "% !!!");
+        dkconsole.message("!!! Veg TENT HUMUDITY BELOW MINIMUM " + Device("Veg Tent Temp").user.humidity + "% < " + (Device("Veg Tent Temp").user.humidityTarget - Device("Veg Tent Temp").user.humidityZone) + "% !!!", "red");
     }
     if (Device("Veg Tent Temp").user.humidity > (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone)) {
-        dkconsole.warn("!!! Veg TENT HUMUDITY ABOVE MAXIMUM " + Device("Veg Tent Temp").user.humidity + "% > " + (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone) + "% !!!");
+        dkconsole.message("!!! Veg TENT HUMUDITY ABOVE MAXIMUM " + Device("Veg Tent Temp").user.humidity + "% > " + (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone) + "% !!!", "red");
     }
     */
 
