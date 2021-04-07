@@ -37,6 +37,8 @@ function DKLoadFiles() {
         DKLoadImage("restart.png");
         DKLoadImage("info.png");
         DKLoadImage("settings.png");
+        DKLoadImage("online.png");
+        DKLoadImage("offline.png");
     });
 }
 
