@@ -19,7 +19,8 @@ function DKLoadFiles() {
         DKLoadJSFile("DKGui/DKMessageBox.js");
         DKLoadJSFile("DKGui/DKDrag.js");
         DKLoadJSFile("DKGui/DKClipboard.js");
-        DKLoadJSFile("DKConsole.js");
+        DKLoadJSFile("DKGui/DKTable.js");
+        DKLoadJSFile("DKGui/DKConsole.js");
         DKLoadJSFile("DKJson.js");
         DKLoadJSFile("DKPhp.js");
         DKLoadJSFile("DKDebug.js");
@@ -28,7 +29,6 @@ function DKLoadFiles() {
             DKAudio_PreLoadAudio("PowerDown.mp3");
         });
         DKLoadJSFile("DKTasmota.js");
-        DKLoadJSFile("DKTable.js");
         DKLoadJSFile("DKClock.js");
         DKLoadJSFile("DKChart.js");
         DKLoadJSFile("Automation.js");
