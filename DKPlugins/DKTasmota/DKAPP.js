@@ -75,9 +75,15 @@ function LoadGui() {
 }
 
 function MainAppLoop() {
-    if(!DKIsOnline()){
-        dkconsole.message("OFFLINE", "red");
+    //Check internet connection
+    const internet = document.getElementById("internet");
+    if(DKIsOnline()){
+        internet.src = "online.png";
     }
+    else{
+        internet.src = "offline.png"; 
+    }
+
     ProcessDevices();
     if(app.automate){
         Automate();
@@ -122,10 +128,24 @@ function CreateButtons(parent) {
     }
     parent.appendChild(automation);
 
+    const internet = document.createElement("img");
+    internet.id = "internet";
+    if(DKIsOnline()){
+        internet.src = "online.png";
+    }
+    else{
+        internet.src = "onffline.png"; 
+    }
+    internet.style.position = "absolute";
+    internet.style.height = "19px";
+    internet.style.top = "2px";
+    internet.style.right = "28px";
+    parent.appendChild(internet);
+
     const volume = document.createElement("img");
     volume.src = "volume_100.png";
     volume.style.position = "absolute";
-    volume.style.height = "21px";
+    volume.style.height = "19px";
     volume.style.top = "2px";
     volume.style.right = "2px";
     volume.style.cursor = "pointer";
