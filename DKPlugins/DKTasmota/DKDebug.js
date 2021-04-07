@@ -4,7 +4,7 @@
 const showDebugButton = 1;
 function DKDebug_ButtonOnClick() {
 
-    PHP_GetRemoteUser(function(rval) {
+    PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
     });
 
@@ -22,7 +22,7 @@ function DKDebug_ButtonOnClick() {
     //console.log("it's "+result+" ...  computers never lie");
 
     /*
-    DKConfirm("do this?", function(){
+    DKGui_ConfirmBox("do this?", function(){
         dkconsole.log("confirm callback");
     });
     */
@@ -35,7 +35,7 @@ function DKDebug_ButtonOnClick() {
     resizableDiv.style.overflow = "auto";
     resizableDiv.style.border = "solid 2px blue";
     document.body.appendChild(resizableDiv);
-    DKAddResizeHandler(resizableDiv, function(){
+    DKDrag_AddResizeHandler(resizableDiv, function(){
         dkconsole.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
     });
     //only works on window object
@@ -73,7 +73,7 @@ function DKDebug_ButtonOnClick() {
     }
     */
 
-    //DKCreateWindow("testWindow", 300, 300);
+    //DKCreateFramedWindow("testWindow", 300, 300);
 
     /*
     // Test DKConsole

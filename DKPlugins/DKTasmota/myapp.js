@@ -9,6 +9,7 @@ function DKLoadFiles() {
     //DK_Create("https://cdn.jsdelivr.net/npm/superagent");
     DK_Create("DKErrorHandler.js");
     DK_Create("DK/DK.css");
+    DK_Create("DK/DKPhp.js");
     DK_Create("DKFile/DKFile.js");
     DK_Create("superagent.js");
     DK_Create("DKMqtt.js");
@@ -21,8 +22,7 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
-    DK_Create("DKJson.js");
-    DK_Create("DKPhp.js");
+    DK_Create("DKJson.js"); 
     DK_Create("DKDebug.js");
     DK_Create("DKNotifications.js");
     DK_Create("DKAudio.js", function() {
