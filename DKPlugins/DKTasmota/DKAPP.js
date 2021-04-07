@@ -18,6 +18,7 @@ function DKLoadFiles() {
         DKLoadJSFile("DKGui/DKFrame.js");
         DKLoadJSFile("DKGui/DKMessageBox.js");
         DKLoadJSFile("DKGui/DKDrag.js");
+        DKLoadJSFile("DKGui/DKClipboard.js");
         DKLoadJSFile("DKConsole.js");
         DKLoadJSFile("DKJson.js");
         DKLoadJSFile("DKPhp.js");
