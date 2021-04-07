@@ -11,6 +11,7 @@ function DKLoadFiles() {
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
     DK_Create("DK/DKTrace.js");
+    DK_Create("DK/DKJson.js"); 
     DK_Create("DKFile/DKFile.js");
     DK_Create("superagent.js");
     DK_Create("DKMqtt.js");
@@ -26,7 +27,7 @@ function DKLoadFiles() {
         DKAudio_PreLoadAudio("PowerDown.mp3");
     });
 
-    DK_Create("DKJson.js"); 
+    
     DK_Create("DKDebug.js");
     DK_Create("DKNotifications.js");
     DK_Create("DKTasmota.js");
