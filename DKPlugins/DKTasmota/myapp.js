@@ -7,7 +7,7 @@ function DKLoadFiles() {
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
     //DK_Create("https://cdn.jsdelivr.net/npm/superagent");
-    DK_Create("DKErrorHandler.js");
+    DK_Create("DK/DKErrorHandler.js");
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
     DK_Create("DKFile/DKFile.js");
@@ -22,17 +22,19 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
-    DK_Create("DKJson.js"); 
-    DK_Create("DKDebug.js");
-    DK_Create("DKNotifications.js");
     DK_Create("DKAudio/DKAudio2.js", function() {
         DKAudio_PreLoadAudio("PowerDown.mp3");
     });
+
+    DK_Create("DKJson.js"); 
+    DK_Create("DKDebug.js");
+    DK_Create("DKNotifications.js");
     DK_Create("DKTasmota.js");
     DK_Create("DKClock.js");
     DK_Create("DKChart.js");
     DK_Create("Automation.js");
     DK_Create("VPDCalculator.js");
+    
     DK_PreloadImage("loading.gif");
     DK_PreloadImage("restart.png");
     DK_PreloadImage("info.png");
