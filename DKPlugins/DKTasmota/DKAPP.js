@@ -536,14 +536,12 @@ function UpdateScreen(success, url, data) {
     //const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
 
-    //let deviceData
-    try { 
+    try {
         let deviceData = JSON.parse(data);
         deviceData.ip = device.ip;
         deviceData.user = device.user;
-        device = deviceData;
         devices[devices.indexOf(device)] = deviceData;
-
+        device = deviceData;
     } catch {
         dkconsole.error("data could not be parsed to json");
     }
