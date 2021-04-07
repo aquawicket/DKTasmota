@@ -21,7 +21,7 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
-    DK_Create("DKAudio/DKAudio2.js", function() {
+    DK_Create("DKAudio/DKAudio.js", function() {
         DKAudio_PreLoadAudio("PowerDown.mp3");
     });
 

@@ -102,7 +102,7 @@ function DKChart_AddDatasets() {
     DKChart_AddDataset("Shed Water B", "rgb(30,0,90)", Device("001")?.ip, "switch1", true);
 
     DKChart_AddDataset("Veg Tent Temperature", "rgb(200, 20, 20)", Device("015")?.ip, "sensor1", false);
-    DKChart_AddDataset("Veg Tent Exhaust", "rgb(10,60,10)", Device("012")?.ip, "switch1", true);
+    DKChart_AddDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", Device("012")?.ip, "switch1", true);
     DKChart_AddDataset("Veg Tent Co2", "rgb(100,60,10)", Device("010")?.ip, "switch1", true);
 }
 
