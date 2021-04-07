@@ -214,7 +214,7 @@ function CreateDeviceTable(parent) {
 
     DKTable_AddColumn(table, "data");
     DKTable_GetCellByName(table, "HEADER", "data").innerHTML = "data";
-    DKTable_GetCellByName(table, "HEADER", "data").style.width = "140px";
+    DKTable_GetCellByName(table, "HEADER", "data").style.width = "150px";
     DKTable_GetCellByName(table, "HEADER", "data").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick() {
         DKTable_Sort("deviceTable", 2);
