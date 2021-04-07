@@ -64,7 +64,7 @@ function LoadGui() {
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
     document.body.style.backgroundColor = "rgb(100,100,100)";
     CreateButtons(document.body);
-    DKClock_Create(document.body, "clock", "2px", "", "200px");
+    DKClock_Create(document.body, "clock", "2px", "", "25%");
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
     DKDebug_CreateButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
@@ -75,6 +75,9 @@ function LoadGui() {
 }
 
 function MainAppLoop() {
+    if(!DKIsOnline){
+        dkconsole.message("OFFLINE", "red");
+    }
     ProcessDevices();
     if(app.automate){
         Automate();
@@ -144,7 +147,7 @@ function CreateDeviceTable(parent) {
     deviceDiv.style.top = "25px";
     deviceDiv.style.left = "20px";
     deviceDiv.style.width = "550px";
-    deviceDiv.style.height = "420px";
+    deviceDiv.style.height = "47.0%";
     //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);

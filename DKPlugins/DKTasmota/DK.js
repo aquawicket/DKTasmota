@@ -231,6 +231,12 @@ function DKConfirm(msg, callback) {
     });
 }
 
+function DKIsOnline()
+{
+    if(navigator.onLine) return true;
+    else return false;
+}
+
 //TODO  //https://github.com/juggle/resize-observer
 //TODO:  make this a CustomEvent
 //https://stackoverflow.com/a/48718956/688352
