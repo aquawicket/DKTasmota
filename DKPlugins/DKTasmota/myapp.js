@@ -13,9 +13,7 @@ function DKLoadFiles() {
     DK_Create("DK/DKTrace.js");
     DK_Create("DK/DKJson.js");
     DK_Create("DK/DKValidate.js");
-    
     DK_Create("DKFile/DKFile.js");
-    
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
     //DK_Create("DKGui/DKMessageBox.js");
@@ -23,7 +21,6 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
-    
     DK_Create("DKAudio/DKAudio2.js", function() {
         DKAudio_PreLoadAudio("PowerDown.mp3");
     });
@@ -98,15 +95,15 @@ function MainAppLoop() {
     }
 }
 
-function DKSendSuperRequest(url, callback) {
+function SendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,
         // Wait 18 seconds for the server to start sending,
         deadline: 20000,
         // but allow 20 seconds for the file to finish loading.
-    }).then(function DKSendSuperRequestSuccessCallback(res) {
+    }).then(function SendSuperRequestSuccessCallback(res) {
         callback(true, res);
-    }, function DKSendSuperRequestFailCallback(res) {
+    }, function SendSuperRequestFailCallback(res) {
         callback(false, res);
     });
 }
@@ -499,15 +496,15 @@ function UpdateTableStyles() {
 
 function ScanDevices() {
     let deviceIPs = [];
-    const data = DKLoadFromLocalStorage("deviceIPs");
+    const data = DK_LoadFromLocalStorage("deviceIPs");
     if (data) {
         deviceIPs = JSON.parse(data);
     }
 
-    DKTasmota_GetDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
+    DKTasmota_GetDevices("192.168.1.", function DKTasmota_GetDevicesCallback(ip, done) {
         if (ip && !deviceIPs.includes(ip)) {
             deviceIPs.push(ip);
-            DKSaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
+            DK_SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
             AddDeviceToTable(ip);
         }
         if (done) {
@@ -522,7 +519,7 @@ function ClearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
-    DKRemoveFromLocalStorage("deviceIPs");
+    DK_RemoveFromLocalStorage("deviceIPs");
 }
 
 function ProcessDevices() {
@@ -556,8 +553,8 @@ function UpdateScreen(success, url, data) {
         return;
     }
 
-    //const jsonString = PrettyJson(data);
-    //const jsonSuper = HighlightJson(jsonString);
+    //const jsonString = DKJson_PrettyJson(data);
+    //const jsonSuper = DKJson_HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
 
     try {
