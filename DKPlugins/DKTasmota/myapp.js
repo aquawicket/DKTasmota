@@ -10,11 +10,11 @@ function DKLoadFiles() {
     DK_Create("DK/DKErrorHandler.js");
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
+    DK_Create("DK/DKTrace.js");
     DK_Create("DKFile/DKFile.js");
     DK_Create("superagent.js");
     DK_Create("DKMqtt.js");
     DK_Create("DKValidate.js");
-    DK_Create("DKError.js");
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
     //DK_Create("DKGui/DKMessageBox.js");
@@ -34,7 +34,7 @@ function DKLoadFiles() {
     DK_Create("DKChart.js");
     DK_Create("Automation.js");
     DK_Create("VPDCalculator.js");
-    
+
     DK_PreloadImage("loading.gif");
     DK_PreloadImage("restart.png");
     DK_PreloadImage("info.png");
