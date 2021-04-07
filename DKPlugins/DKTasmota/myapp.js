@@ -541,9 +541,13 @@ function UpdateScreen(success, url, data) {
         return;
     }
     const table = byId("deviceTable");
+    if(!table){
+        dkconsole.error("table invlid");
+        return;
+    }
     const row = DKTable_GetRowByName(table, device.ip);
     if (!row) {
-        doconsole.error("row invlid");
+        dkconsole.error("row invlid");
         return;
     }
     if (!success || !data) {
