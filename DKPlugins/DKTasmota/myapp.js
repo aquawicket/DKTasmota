@@ -50,7 +50,7 @@ function DKLoadApp() {
 
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
-        if (rval === "192.168.1.78" || rval === "192.168.1.1") {
+        if (rval === "192.168.1.78"/* || rval === "192.168.1.1"*/) {
             app.server = true;
             app.automate = true;
         } else {
