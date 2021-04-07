@@ -11,11 +11,11 @@ function DKLoadFiles() {
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
     DK_Create("DK/DKTrace.js");
-    DK_Create("DK/DKJson.js"); 
+    DK_Create("DK/DKJson.js");
+    DK_Create("DK/DKValidate.js");
+    
     DK_Create("DKFile/DKFile.js");
-    DK_Create("superagent.js");
-    DK_Create("DKMqtt.js");
-    DK_Create("DKValidate.js");
+    
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
     //DK_Create("DKGui/DKMessageBox.js");
@@ -23,11 +23,13 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
+    
     DK_Create("DKAudio/DKAudio2.js", function() {
         DKAudio_PreLoadAudio("PowerDown.mp3");
     });
 
-    
+    DK_Create("superagent.js");
+    DK_Create("DKMqtt.js");
     DK_Create("DKDebug.js");
     DK_Create("DKNotifications.js");
     DK_Create("DKTasmota.js");
