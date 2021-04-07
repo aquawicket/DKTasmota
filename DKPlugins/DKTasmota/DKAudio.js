@@ -1,6 +1,11 @@
 "use strict";
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
 
+function DKAudio_PreLoadAudio(url) {
+    const audio = new Audio();
+    audio.src = url;
+}
+
 function DKAudio_CreateSound(src) {
     const audio = document.createElement("audio");
     audio.id = src;
@@ -12,14 +17,14 @@ function DKAudio_CreateSound(src) {
 }
 
 function DKAudio_PauseSound(src) {
-    const ele = document.getElementById(src);
+    const ele = byId(src);
     ele.pause();
 }
 
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
 async function DKAudio_PlaySound(src) {
     //try {
-    const ele = document.getElementById(src);
+    const ele = byId(src);
     await ele.play();
     //} catch(errMsg) {
     //    dkconsole.error(errMsg);
@@ -27,16 +32,16 @@ async function DKAudio_PlaySound(src) {
 }
 
 function DKAudio_StopSound(src) {
-    const ele = document.getElementById(src);
+    const ele = byId(src);
     ele.stop();
 }
 
 function DKAudio_GetVolume(src) {
-    const ele = document.getElementById(src);
+    const ele = byId(src);
     return ele.volume;
 }
 
 function DKAudio_SetVolume(src, volume) {
-    const ele = document.getElementById(src);
+    const ele = byId(src);
     ele.volume = volume;
 }

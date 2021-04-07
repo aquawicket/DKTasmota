@@ -58,7 +58,7 @@ function DKClock_Update() {
     }
 
     const datetime = dayOfWeek + " " + (currentdate.getMonth() + 1) + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-    if (document.getElementById("clock")) {
-        document.getElementById("clock").innerHTML = datetime;
+    if (byId("clock")) {
+        byId("clock").innerHTML = datetime;
     }
 }

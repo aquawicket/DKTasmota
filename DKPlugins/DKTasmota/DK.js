@@ -34,11 +34,6 @@ function DKLoadImage(url) {
     img.src = url;
 }
 
-function DKLoadAudio(url) {
-    const audio = new Audio();
-    audio.src = url;
-}
-
 function DKSendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,
@@ -148,54 +143,6 @@ function DKRemoveFromLocalStorage(name) {
     localStorage.removeItem(name);
 }
 
-/*
-function DKCreateWindow(id, width, height) {
-    const win = document.createElement('div');
-    win.id = id;
-    win.style.position = "absolute";
-    //win.style.top = top;
-    //win.style.bottom = bottom;
-    //win.style.left = left;
-    //win.style.right = right;
-    win.style.width = width;
-    win.style.height = height;
-    win.style.overflow = "auto";
-    win.setAttribute('border', '1');
-    win.style.backgroundColor = "rgb(80,80,80)";
-    win.style.borderColor = "rgb(58,58,58)";
-    win.style.borderStyle = "solid";
-    win.style.borderWidth = "1px";
-    win.style.boxSizing = "border-box";
-    document.body.appendChild(win);
-    DKCenterWindow(win);
-
-    const winClose = document.createElement('div');
-    winClose.id = win.id + "Close";
-    winClose.style.position = "absolute";
-    winClose.style.right = "5px";
-    winClose.style.top = "3px";
-    winClose.innerHTML = "X";
-    winClose.style.cursor = "pointer";
-    winClose.onclick = function ScanDevicesOnclickCallback() {
-        win.remove();
-    }
-    win.appendChild(winClose);
-    return win;
-}
-
-function DKCenterWindow(element) {
-    const winW = window.innerWidth;
-    const winH = window.innerHeight;
-    const eleW = parseInt(element.style.width);
-    const eleH = parseInt(element.style.height);
-    const eleX = (winW / 2) - (eleW / 2);
-    const eleY = (winH / 2) - (eleH / 2);
-    element.style.left = eleX + "px";
-    element.style.top = eleY + "px";
-    return element;
-}
-*/
-
 function DKCreateButton(parent, id, top, left, width, height, onclick) {
     const button = document.createElement("button");
     button.id = id;
@@ -215,6 +162,7 @@ function DKCreateButton(parent, id, top, left, width, height, onclick) {
     return button;
 }
 
+/*
 function DKConfirm(msg, callback) {
     const confirm = DKCreateWindow("DKConfirm", "200px", "100px");
     confirm.style.textAlign = "center";
@@ -230,6 +178,7 @@ function DKConfirm(msg, callback) {
         document.body.removeChild(confirm);
     });
 }
+*/
 
 function DKIsOnline() {
     if (navigator.onLine)

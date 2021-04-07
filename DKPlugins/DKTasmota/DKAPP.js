@@ -16,12 +16,16 @@ function DKLoadFiles() {
         DKLoadJSFile("DKValidate.js");
         DKLoadJSFile("DKError.js");
         DKLoadJSFile("DKGui/DKFrame.js");
+        DKLoadJSFile("DKGui/DKMessageBox.js");
+        DKLoadJSFile("DKGui/DKDrag.js");
         DKLoadJSFile("DKConsole.js");
         DKLoadJSFile("DKJson.js");
         DKLoadJSFile("DKPhp.js");
         DKLoadJSFile("DKDebug.js");
         DKLoadJSFile("DKNotifications.js");
-        DKLoadJSFile("DKAudio.js");
+        DKLoadJSFile("DKAudio.js", function() {
+            DKAudio_PreLoadAudio("PowerDown.mp3");
+        });
         DKLoadJSFile("DKTasmota.js");
         DKLoadJSFile("DKTable.js");
         DKLoadJSFile("DKClock.js");
@@ -32,7 +36,6 @@ function DKLoadFiles() {
         DKLoadImage("restart.png");
         DKLoadImage("info.png");
         DKLoadImage("settings.png");
-        DKLoadAudio("PowerDown.mp3");
     });
 }
 
@@ -75,7 +78,7 @@ function LoadGui() {
 
 function MainAppLoop() {
     //Check internet connection
-    const internet = document.getElementById("internet");
+    const internet = byId("internet");
     if (DKIsOnline()) {
         internet.src = "online.png";
     } else {
@@ -220,7 +223,7 @@ function CreateDeviceTable(parent) {
 }
 
 function AddDeviceToTable(ip) {
-    const table = document.getElementById("deviceTable");
+    const table = byId("deviceTable");
     const row = DKTable_AddRow(table, ip);
     row.setAttribute("ip", ip);
     if (row.rowIndex % 2 == 0) {
@@ -278,7 +281,8 @@ function AddDeviceToTable(ip) {
     restart.style.paddingRight = "3px";
     restart.style.paddingBottom = "2px";
     restart.onclick = function restartOnClick() {
-        DKConfirm("Restart this device?", function() {
+        DKMessageBox_Confirm("Restart this device?", function() {
+        //DKConfirm("Restart this device?", function() {
             restart.src = "loading.gif";
             DKSendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
         });
@@ -460,7 +464,7 @@ function DConsoleWindow(ip) {
 }
 
 function UpdateTableStyles() {
-    const table = document.getElementById("deviceTable");
+    const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const row = table.rows[n];
         if (row.rowIndex % 2 == 0) {
@@ -495,14 +499,14 @@ function ScanDevices() {
 }
 
 function ClearDevices() {
-    const table = document.getElementById("deviceTable");
+    const table = byId("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
     DKRemoveFromLocalStorage("deviceIPs");
 }
 
 function ProcessDevices() {
-    const table = document.getElementById("deviceTable");
+    const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const ip = table.rows[n].getAttribute("ip");
         DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
@@ -519,7 +523,7 @@ function UpdateScreen(success, url, data) {
         dkconsole.error("device invalid");
         return;
     }
-    const table = document.getElementById("deviceTable");
+    const table = byId("deviceTable");
     const row = DKTable_GetRowByName(table, device.ip);
     if (!row) {
         doconsole.error("row invlid");
@@ -591,8 +595,8 @@ function UpdateScreen(success, url, data) {
         const tempNum = (tempDiff * tempScale / 100)
         const tempRed = tempNum.clamp(0, 255);
         const tempGreen = (510 - tempNum).clamp(0, 255);
-        document.getElementById(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
-        document.getElementById(device.ip + "Temp").style.textAlign = "center";
+        byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
+        byId(device.ip + "Temp").style.textAlign = "center";
 
         DKChart_UpdateChartDevice(device.ip, "sensor1", device.user.temperature);
     }
@@ -615,8 +619,8 @@ function UpdateScreen(success, url, data) {
         const humNum = (humDiff * humScale / 100);
         const humRed = humNum.clamp(0, 255);
         const humGreen = (510 - humNum).clamp(0, 255);
-        document.getElementById(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
-        document.getElementById(device.ip + "RH").style.textAlilgn = "center";
+        byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
+        byId(device.ip + "RH").style.textAlilgn = "center";
 
         DKChart_UpdateChartDevice(device.ip, "sensor2", device.user.humidity);
     }
@@ -625,8 +629,8 @@ function UpdateScreen(success, url, data) {
     if (device.user.dewpoint) {
         const dewPointText = "<a id='" + device.ip + "DewP'>" + device.user.dewpoint + " DP &#176;F</a>";
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
-        document.getElementById(device.ip + "DewP").style.color = "rgb(40,40,40)";
-        document.getElementById(device.ip + "DewP").style.textAlign = "center";
+        byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
+        byId(device.ip + "DewP").style.textAlign = "center";
 
         DKChart_UpdateChartDevice(device.ip, "sensor3", device.user.dewpoint);
     }

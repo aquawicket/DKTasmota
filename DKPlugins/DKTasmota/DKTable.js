@@ -236,7 +236,7 @@ function DKTable_GetCellByName(table, rowName, columnName) {
 }
 
 function DKTable_Sort(table_id, col, reverse) {
-    const table = document.getElementById(table_id);
+    const table = byId(table_id);
     const tb = table.tBodies[0];
     // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
     let tr = Array.prototype.slice.call(tb.rows, 1);
@@ -256,7 +256,7 @@ function DKTable_Sort(table_id, col, reverse) {
 /*
 //TODO
 function DKTable_SortRow(table_id, row, col, reverse) {
-    const table = document.getElementById(table_id);
+    const table = byId(table_id);
     const tb = table.tBodies[0]; // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
     let tr = Array.prototype.slice.call(tb.rows, 1); // put rows into array, 1 to skip the header
     reverse = -((+reverse) || -1);
