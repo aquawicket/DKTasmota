@@ -1,7 +1,9 @@
 "use strict";
 
 const DKJson_PrettyJson = function(json) {
-    if (typeof json !== 'string') { return; }
+    if (typeof json !== 'string') {
+        return;
+    }
     const prettyJson = JSON.parse(json);
     return JSON.stringify(prettyJson, undefined, 4);
 }

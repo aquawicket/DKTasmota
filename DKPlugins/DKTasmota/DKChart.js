@@ -35,7 +35,7 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(chartCanvas);
 
     //FIXME - do proper refreshing on resize    
-    DKAddResizeHandler(chartCanvas, function(){
+    DKAddResizeHandler(chartCanvas, function() {
         //dkconsole.info("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
         chartCanvas.style.height = "100%";
     });
@@ -89,7 +89,7 @@ function DKChart_AddDatasets() {
     DKChart_AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", false);
     DKChart_AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", false);
     DKChart_AddDataset("A Tent DewPoint", "rgb(0,150,150)", Device("013")?.ip, "sensor3", true);
-    
+
     DKChart_AddDataset("B Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", false);
     DKChart_AddDataset("B Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", false);
     DKChart_AddDataset("B Tent DewPoint", "rgb(0,150,150)", Device("013")?.ip, "sensor3", true);
@@ -97,13 +97,13 @@ function DKChart_AddDatasets() {
     DKChart_AddDataset("B Tent Water Walls", "rgb(90,0,150)", Device("007")?.ip, "switch1", true);
     DKChart_AddDataset("B Tent Heater", "rgb(150,0,50)", Device("006")?.ip, "switch1", true);
     DKChart_AddDataset("B Tent Co2", "rgb(10,60,10)", Device("008")?.ip, "switch1", true);
-    
+
     DKChart_AddDataset("Shed Water A", "rgb(150,40,40)", Device("002")?.ip, "switch1", true);
-    DKChart_AddDataset("Shed Water B", "rgb(30,0,90)", Device("001")?.ip, "switch1", true); 
+    DKChart_AddDataset("Shed Water B", "rgb(30,0,90)", Device("001")?.ip, "switch1", true);
 
     DKChart_AddDataset("Veg Tent Temperature", "rgb(200, 20, 20)", Device("015")?.ip, "sensor1", false);
     DKChart_AddDataset("Veg Tent Exhaust", "rgb(10,60,10)", Device("012")?.ip, "switch1", true);
-    DKChart_AddDataset("Veg Tent Co2", "rgb(100,60,10)", Device("010")?.ip, "switch1", true);  
+    DKChart_AddDataset("Veg Tent Co2", "rgb(100,60,10)", Device("010")?.ip, "switch1", true);
 }
 
 function DKChart_UpdateChartDevice(ip, identifier, data) {

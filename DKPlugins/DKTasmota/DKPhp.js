@@ -20,7 +20,7 @@ function PHP_StringToFile(file, data, mode, callback) {
 
 function DKPhp_CallPhpFunc(args) {
     let func = DKError_GetCurrentFunctionName(1);
-    const n = func.indexOf("_")+1;
+    const n = func.indexOf("_") + 1;
     func = func.substring(n, func.length);
     const funcName = func.replace("PHP_", "");
     const jsonData = {

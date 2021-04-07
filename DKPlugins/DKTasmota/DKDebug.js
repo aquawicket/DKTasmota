@@ -4,7 +4,7 @@
 const showDebugButton = 1;
 function DKDebug_ButtonOnClick() {
 
-    PHP_GetRemoteUser(function(rval){
+    PHP_GetRemoteUser(function(rval) {
         dkconsole.log(rval);
     });
 
@@ -27,8 +27,6 @@ function DKDebug_ButtonOnClick() {
     });
     */
 
-
-
     /*
     const resizableDiv = document.createElement("div");
     resizableDiv.style.width = "5px";
@@ -45,7 +43,7 @@ function DKDebug_ButtonOnClick() {
     //    dkconsole.info("resized: x:" + resizableDiv.style.width + " y:" + resizableDiv.style.height);
     //}
     */
-  
+
     /*
     //Update time on all devices
     const dateInMilliseconds = GetDateInMilliseconds();
@@ -62,7 +60,6 @@ function DKDebug_ButtonOnClick() {
         });
     }
     */
-    
 
     /*
     //Get time from all devices

@@ -205,7 +205,7 @@ function Automate() {
         dkconsole.warn("!!! Veg TENT HUMUDITY ABOVE MAXIMUM " + Device("Veg Tent Temp").user.humidity + "% > " + (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone) + "% !!!");
     }
     */
-    
+
     //Veg Tent Co2
     if (Device("Veg Tent Co2")?.user?.automate) {
         if (/*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */

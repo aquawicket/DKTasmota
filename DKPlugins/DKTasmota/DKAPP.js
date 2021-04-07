@@ -7,32 +7,32 @@ function DKLoadFiles() {
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
     //DKLoadJSFile("https://cdn.jsdelivr.net/npm/superagent");
-    DKLoadJSFile("DK/DK.js", function(){
-    DKLoadJSFile("DKErrorHandler.js");
-    DKLoadCSSFile("DK/DK.css");
-    DKLoadJSFile("DKFile/DKFile.js");
-    DKLoadJSFile("superagent.js");
-    DKLoadJSFile("DKMqtt.js");
-    DKLoadJSFile("DKValidate.js");
-    DKLoadJSFile("DKError.js");
-    DKLoadJSFile("DKGui/DKFrame.js");
-    DKLoadJSFile("DKConsole.js");
-    DKLoadJSFile("DKJson.js");
-    DKLoadJSFile("DKPhp.js");
-    DKLoadJSFile("DKDebug.js");
-    DKLoadJSFile("DKNotifications.js");
-    DKLoadJSFile("DKAudio.js");
-    DKLoadJSFile("DKTasmota.js");
-    DKLoadJSFile("DKTable.js");
-    DKLoadJSFile("DKClock.js");
-    DKLoadJSFile("DKChart.js");
-    DKLoadJSFile("Automation.js");
-    DKLoadJSFile("VPDCalculator.js");
-    DKLoadImage("loading.gif");
-    DKLoadImage("restart.png");
-    DKLoadImage("info.png");
-    DKLoadImage("settings.png");
-    DKLoadAudio("PowerDown.mp3");
+    DKLoadJSFile("DK/DK.js", function() {
+        DKLoadJSFile("DKErrorHandler.js");
+        DKLoadCSSFile("DK/DK.css");
+        DKLoadJSFile("DKFile/DKFile.js");
+        DKLoadJSFile("superagent.js");
+        DKLoadJSFile("DKMqtt.js");
+        DKLoadJSFile("DKValidate.js");
+        DKLoadJSFile("DKError.js");
+        DKLoadJSFile("DKGui/DKFrame.js");
+        DKLoadJSFile("DKConsole.js");
+        DKLoadJSFile("DKJson.js");
+        DKLoadJSFile("DKPhp.js");
+        DKLoadJSFile("DKDebug.js");
+        DKLoadJSFile("DKNotifications.js");
+        DKLoadJSFile("DKAudio.js");
+        DKLoadJSFile("DKTasmota.js");
+        DKLoadJSFile("DKTable.js");
+        DKLoadJSFile("DKClock.js");
+        DKLoadJSFile("DKChart.js");
+        DKLoadJSFile("Automation.js");
+        DKLoadJSFile("VPDCalculator.js");
+        DKLoadImage("loading.gif");
+        DKLoadImage("restart.png");
+        DKLoadImage("info.png");
+        DKLoadImage("settings.png");
+        DKLoadAudio("PowerDown.mp3");
     });
 }
 
@@ -41,20 +41,19 @@ function DKLoadApp() {
     DKAudio_CreateSound("PowerDown.mp3");
     DKTasmota_LoadDevices();
 
-    PHP_GetRemoteAddress(function(rval){
+    PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
-        if(rval === "192.168.1.78" || rval === "192.168.1.1"){
+        if (rval === "192.168.1.78" || rval === "192.168.1.1") {
             app.server = true;
-            app.automate = true;   
-        }
-        else{
+            app.automate = true;
+        } else {
             app.client = true;
             app.automate = false;
         }
 
         LoadGui();
     });
-    
+
     //Run app main loop
     window.setInterval(MainAppLoop, 40000);
 }
@@ -77,15 +76,14 @@ function LoadGui() {
 function MainAppLoop() {
     //Check internet connection
     const internet = document.getElementById("internet");
-    if(DKIsOnline()){
+    if (DKIsOnline()) {
         internet.src = "online.png";
-    }
-    else{
-        internet.src = "offline.png"; 
+    } else {
+        internet.src = "offline.png";
     }
 
     ProcessDevices();
-    if(app.automate){
+    if (app.automate) {
         Automate();
     }
 }
@@ -112,8 +110,7 @@ function CreateButtons(parent) {
     const automation = document.createElement("button");
     if (app.automate === true) {
         automation.innerHTML = "Automat ON";
-    }
-    else{
+    } else {
         automation.innerHTML = "Automat OFF";
     }
     automation.style.cursor = "pointer";
@@ -130,11 +127,10 @@ function CreateButtons(parent) {
 
     const internet = document.createElement("img");
     internet.id = "internet";
-    if(DKIsOnline()){
+    if (DKIsOnline()) {
         internet.src = "online.png";
-    }
-    else{
-        internet.src = "onffline.png"; 
+    } else {
+        internet.src = "onffline.png";
     }
     internet.style.position = "absolute";
     internet.style.height = "19px";
@@ -420,16 +416,16 @@ function DConsoleWindow(ip) {
     input.style.bottom = "10px";
     input.style.color = "rgb(255,255,255)";
     input.style.backgroundColor = "rgb(0,0,0)";
-    input.onkeydown = function(){
+    input.onkeydown = function() {
         const key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter
             dkconsole.debug("Send command -> " + input.value);
             const cmnd = input.value;
             const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-            DKSendRequest(url, function(success, url, data){
+            DKSendRequest(url, function(success, url, data) {
                 //dkconsole.log("function("+success+","+url+","+data+")");
-                if(data){
+                if (data) {
                     const msgDiv = document.createElement("div");
                     msgDiv.style.width = "100%";
                     msgDiv.style.fontSize = "12px";
@@ -438,7 +434,7 @@ function DConsoleWindow(ip) {
                     msgDiv.style.boxSizing = "border-box";
                     msgDiv.style.padding = "2px";
                     msgDiv.style.paddingLeft = "10px";
-   
+
                     const msgText = document.createElement("span");
                     msgText.innerHTML = data;
                     msgText.style.color = "rgb(250,250,250)";
@@ -454,7 +450,7 @@ function DConsoleWindow(ip) {
                     input.value = "";
                 }
             });
-            
+
         }
     }
     div.appendChild(input);
@@ -514,29 +510,28 @@ function ProcessDevices() {
 }
 
 function UpdateScreen(success, url, data) {
-    if(!url){
+    if (!url) {
         dkconsole.log("url invalid");
         return;
     }
     const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);
-    if(!deviceInstance){
+    if (!deviceInstance) {
         dkconsole.error("device invalid");
         return;
     }
     const table = document.getElementById("deviceTable");
     const row = DKTable_GetRowByName(table, deviceInstance.ip);
-    if(!row){
+    if (!row) {
         doconsole.error("row invlid");
         return;
     }
-    if (!success || !data){
+    if (!success || !data) {
         DKAudio_PlaySound("PowerDown.mp3");
-        dkconsole.warn(deviceInstance.ip+" did not respond");
+        dkconsole.warn(deviceInstance.ip + " did not respond");
         row.style.backgroundColor = "red";
         return;
     }
 
-    
     //const jsonString = PrettyJson(data);
     //const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
@@ -565,7 +560,7 @@ function UpdateScreen(success, url, data) {
 
     device.user.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
     if (device.user.power) {
-       const powerCell = DKTable_GetCellByName(table, device.ip, "power");
+        const powerCell = DKTable_GetCellByName(table, device.ip, "power");
         powerCell.innerHTML = "<a>" + device.user.power + "</a>";
         if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";

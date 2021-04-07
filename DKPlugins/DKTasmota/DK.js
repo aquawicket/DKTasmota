@@ -231,9 +231,11 @@ function DKConfirm(msg, callback) {
     });
 }
 
-function DKIsOnline(){
-    if(navigator.onLine) return true;
-    else return false;
+function DKIsOnline() {
+    if (navigator.onLine)
+        return true;
+    else
+        return false;
 }
 
 //TODO  //https://github.com/juggle/resize-observer

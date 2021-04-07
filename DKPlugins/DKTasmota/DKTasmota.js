@@ -92,8 +92,6 @@ let theDevice = {
 }
 */
 
-
-
 //return a Device by partial matching name
 function Device(str) {
     for (let n = 0; n < devices.length; n++) {
@@ -107,25 +105,26 @@ function Device(str) {
 function DKTasmota_LoadDevices() {
     let deviceIPs = [];
     const data = DKLoadFromLocalStorage("deviceIPs")
-    if(!data){ return; }
-  
+    if (!data) {
+        return;
+    }
+
     deviceIPs = JSON.parse(data);
     dkconsole.log("Loading (" + deviceIPs.length + ") Devices");
     for (let n = 0; n < deviceIPs.length; n++) {
         const dev = {
             'ip': deviceIPs[n],
-            'user':{
+            'user': {
                 'automate': true,
                 'temperatureTarget': 77,
-                'temperatureZone' : 20,
-                'humidityTarget' : 50,
-                'humidityZone' : 20
+                'temperatureZone': 20,
+                'humidityTarget': 50,
+                'humidityZone': 20
             }
         }
         devices.push(dev);
     }
 }
-
 
 function DKTasmota_InitializeDevices(callback) {
     if (!callback) {

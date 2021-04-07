@@ -237,16 +237,20 @@ function DKTable_GetCellByName(table, rowName, columnName) {
 
 function DKTable_Sort(table_id, col, reverse) {
     const table = document.getElementById(table_id);
-    const tb = table.tBodies[0]; // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
-    let tr = Array.prototype.slice.call(tb.rows, 1); // put rows into array, 1 to skip the header
+    const tb = table.tBodies[0];
+    // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+    let tr = Array.prototype.slice.call(tb.rows, 1);
+    // put rows into array, 1 to skip the header
     reverse = -((+reverse) || -1);
-    tr = tr.sort(function (a, b) { // sort rows
+    tr = tr.sort(function(a, b) {
+        // sort rows
         return reverse // `-1 *` if want opposite order
-            * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
-                .localeCompare(b.cells[col].textContent.trim())
-               );
+        * (a.cells[col].textContent.trim()// using `.textContent.trim()` for test
+        .localeCompare(b.cells[col].textContent.trim()));
     });
-    for(let i = 1; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
+    for (let i = 1; i < tr.length; ++i)
+        tb.appendChild(tr[i]);
+    // append each row in order
 }
 
 /*
