@@ -351,10 +351,10 @@ function InfoWindow(ip) {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
-    const obj = FindObjectValueIncludes(devices, "ip", ip);
+    const obj = DKJson_FindObjectValueIncludes(devices, "ip", ip);
     const n = devices.indexOf(obj);
-    const jsonString = PrettyJson(JSON.stringify(devices[n]));
-    const jsonSuper = HighlightJson(jsonString);
+    const jsonString = DKJson_PrettyJson(JSON.stringify(devices[n]));
+    const jsonSuper = DKJson_HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
@@ -514,20 +514,20 @@ function UpdateScreen(success, url, data) {
         dkconsole.log("url invalid");
         return;
     }
-    const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);
-    if (!deviceInstance) {
+    let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
+    if (!device) {
         dkconsole.error("device invalid");
         return;
     }
     const table = document.getElementById("deviceTable");
-    const row = DKTable_GetRowByName(table, deviceInstance.ip);
+    const row = DKTable_GetRowByName(table, device.ip);
     if (!row) {
         doconsole.error("row invlid");
         return;
     }
     if (!success || !data) {
         DKAudio_PlaySound("PowerDown.mp3");
-        dkconsole.warn(deviceInstance.ip + " did not respond");
+        dkconsole.warn(device.ip + " did not respond");
         row.style.backgroundColor = "red";
         return;
     }
@@ -536,18 +536,17 @@ function UpdateScreen(success, url, data) {
     //const jsonSuper = HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
 
-    let device;
-    try {
-        device = JSON.parse(data);
+    //let deviceData
+    try { 
+        let deviceData = JSON.parse(data);
+        deviceData.ip = device.ip;
+        deviceData.user = device.user;
+        device = deviceData;
+        devices[devices.indexOf(device)] = deviceData;
+
     } catch {
         dkconsole.error("data could not be parsed to json");
     }
-
-    //incoming data doesn't have user defined variable, so copy them
-    device.ip = deviceInstance.ip;
-    device.user = deviceInstance.user;
-    //then update the stored device with the new data
-    devices[devices.indexOf(deviceInstance)] = device;
 
     // UPDATE TABLE
     device.user.name = device.Status ? device.Status.DeviceName : device.DeviceName;
