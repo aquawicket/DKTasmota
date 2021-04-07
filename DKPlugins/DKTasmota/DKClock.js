@@ -12,22 +12,22 @@ const utcDate = dateEvent.toUTCString();
 */
 let time;
 
-function GetDateInMilliseconds() {
+function DKClock_GetDateInMilliseconds() {
     const date = new Date();
     return date.getTime();
 }
 
-function DKCreateClock(parent, id, top, bottom, left, right, width, weight) {
+function DKClock_Create(parent, id, top, bottom, left, right, width, weight) {
     const clock = document.createElement("a");
     clock.id = id;
     clock.style.position = "absolute";
     clock.style.top = top;
     clock.style.right = right;
     parent.appendChild(clock);
-    window.setInterval(UpdateClock, 1000);
+    window.setInterval(DKClock_Update, 1000);
 }
 
-function UpdateClock() {
+function DKClock_Update() {
     const currentdate = new Date();
     time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     let dayOfWeek;

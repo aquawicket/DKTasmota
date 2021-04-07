@@ -29,7 +29,7 @@
 // The rowName is set to Peter on the <tr> element
 // The columnName is set to address on the <td> element
 
-function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
+function DKTable_Create(parent, id, top, bottom, left, right, width, height) {
     const table = document.createElement('table');
     table.id = id;
     table.style.position = "absolute";
@@ -45,7 +45,7 @@ function DKCreateTable(parent, id, top, bottom, left, right, width, height) {
     return table;
 }
 
-function DKTableInsertRow(table, name) {
+function DKTable_InsertRow(table, name) {
     if (!name) {
         dkConsole.error("invalid name parameter");
     }
@@ -55,7 +55,7 @@ function DKTableInsertRow(table, name) {
     return row;
 }
 
-function DKTableInsertCell(table, row, name) {
+function DKTable_InsertCell(table, row, name) {
     if (!name) {
         dkconsole.error("invalid name parameter");
     }
@@ -65,8 +65,8 @@ function DKTableInsertCell(table, row, name) {
     return cell;
 }
 
-function DKTableAddRow(table, rowName, cellName) {
-    const row = DKTableInsertRow(table, rowName);
+function DKTable_AddRow(table, rowName, cellName) {
+    const row = DKTable_InsertRow(table, rowName);
     row.id = "row" + table.rows.length;
     //dkconsole.debug("DKTableAddRow() -> row.id = "+row.id);
     const row_count = table.rows.length;
@@ -86,7 +86,7 @@ function DKTableAddRow(table, rowName, cellName) {
         if (!cellName) {
             cellName = table.rows[0].cells[n].getAttribute("name");
         }
-        const cell = DKTableInsertCell(table, row, cellName);
+        const cell = DKTable_InsertCell(table, row, cellName);
         //FIXME: The function above is NOT setting the cellName properly.
         //This line is a temporary fix for now. 
         cell.setAttribute("name", table.rows[0].cells[n].getAttribute("name"));
@@ -94,54 +94,54 @@ function DKTableAddRow(table, rowName, cellName) {
     return row;
 }
 
-function DKTableAddColumn(table, name) {
+function DKTable_AddColumn(table, name) {
     let row_count = table.rows.length;
     if (!row_count) {
         //FIXME: no name attribute for the row
-        const row = DKTableInsertRow(table /*, name*/
+        const row = DKTable_InsertRow(table /*, name*/
         );
         row_count = 1;
     }
     const cell_count = table.rows[0].cells.length;
     for (let n = 0; n < row_count; n++) {
-        const cell = DKTableInsertCell(table, table.rows[n], name);
+        const cell = DKTable_InsertCell(table, table.rows[n], name);
     }
     //return the created column number
     return table.rows[0].cells.length;
 }
 
-function DKTableAddRows(table, count) {
+function DKTable_AddRows(table, count) {
     //The rows added will have no name
     for (let n = 0; n < count; n++) {
-        DKTableAddRow(table);
+        DKTable_AddRow(table);
     }
     return table.rows.length;
 }
 
-function DKTableAddColumns(table, count) {
+function DKTable_AddColumns(table, count) {
     //The columns added will have no name
     for (let n = 0; n < count; n++) {
-        DKTableAddColumn(table);
+        DKTable_AddColumn(table);
     }
     return table.rows[0].cells.length;
 }
 
-function DKTableDeleteRow(table, number) {
+function DKTable_DeleteRow(table, number) {
     table.deleteRow(number);
-    DKTableUpdateIds(table);
+    DKTable_UpdateIds(table);
 }
 
-function DKTableDeleteColumn(table, number) {
+function DKTable_DeleteColumn(table, number) {
     for (let n = 0; n < table.rows.length; n++) {
         const row = table.rows[n];
         if (row.cells[number]) {
             row.deleteCell(number - 1);
         }
     }
-    DKTableUpdateIds(table);
+    DKTable_UpdateIds(table);
 }
 
-function DKTableUpdateIds(table) {
+function DKTable_UpdateIds(table) {
     for (let n = 0; n < table.rows.length; n++) {
         let row = table.rows[n];
         row.id = "row" + (n + 1);
@@ -153,13 +153,13 @@ function DKTableUpdateIds(table) {
     }
 }
 
-function DKTableGetCellByIndex(table, rowNum, columnNum) {
+function DKTable_GetCellByIndex(table, rowNum, columnNum) {
     const row = table.rows[rowNum];
     const cell = row.cells[columnNum];
     return cell;
 }
 
-function DKTableDeleteCell(table, rowNum, columnNum) {
+function DKTable_DeleteCell(table, rowNum, columnNum) {
     dkConsole.log("DKTableDeleteCell(table," + rowNum + "," + columnNum + ")")
     //FIXME: This doesn't seem to be working properly.
     //I'm using Brave browser which is a fork of chromium.
@@ -169,12 +169,12 @@ function DKTableDeleteCell(table, rowNum, columnNum) {
     document.removeElement(row.cells[columnNum]);
 }
 
-function DKTableGetIndex(cell) {
+function DKTable_GetIndex(cell) {
     return cell.cellIndex;
 }
 
-function DKTableGetRowByName(table, rowName) {
-    return DKTableGetCellByName(table, rowName);
+function DKTable_GetRowByName(table, rowName) {
+    return DKTable_GetCellByName(table, rowName);
     /*
     for (let n = 0; n < table.rows.length; n++) {
         if (!table.rows[n].getAttribute("name")) {
@@ -189,7 +189,7 @@ function DKTableGetRowByName(table, rowName) {
     */
 }
 
-function DKTableGetCellByName(table, rowName, columnName) {
+function DKTable_GetCellByName(table, rowName, columnName) {
     //TODO: We would like to retrieve a cell by names
     // Example:  DKGetCell("Peter", "Address");
     // This should return the cell that is on the Peter Row and the Address Column
@@ -235,7 +235,7 @@ function DKTableGetCellByName(table, rowName, columnName) {
     }
 }
 
-function DKSortTable(table_id, col, reverse) {
+function DKTable_Sort(table_id, col, reverse) {
     const table = document.getElementById(table_id);
     const tb = table.tBodies[0]; // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
     let tr = Array.prototype.slice.call(tb.rows, 1); // put rows into array, 1 to skip the header
@@ -251,7 +251,7 @@ function DKSortTable(table_id, col, reverse) {
 
 /*
 //TODO
-function DKSortRow(table_id, row, col, reverse) {
+function DKTable_SortRow(table_id, row, col, reverse) {
     const table = document.getElementById(table_id);
     const tb = table.tBodies[0]; // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
     let tr = Array.prototype.slice.call(tb.rows, 1); // put rows into array, 1 to skip the header

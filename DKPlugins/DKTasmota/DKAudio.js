@@ -1,9 +1,7 @@
 "use strict";
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
 
-
-
-function CreateSound(src) {
+function DKAudio_CreateSound(src) {
     const audio = document.createElement("audio");
     audio.id = src;
     audio.src = src;
@@ -13,13 +11,13 @@ function CreateSound(src) {
     document.body.appendChild(audio);
 }
 
-function PauseSound(src) {
+function DKAudio_PauseSound(src) {
     const ele = document.getElementById(src);
     ele.pause();
 }
 
 //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
-async function PlaySound(src) {
+async function DKAudio_PlaySound(src) {
     //try {
     const ele = document.getElementById(src);
     await ele.play();
@@ -28,17 +26,17 @@ async function PlaySound(src) {
     //}
 }
 
-function StopSound(src) {
+function DKAudio_StopSound(src) {
     const ele = document.getElementById(src);
     ele.stop();
 }
 
-function GetVolume(src) {
+function DKAudio_GetVolume(src) {
     const ele = document.getElementById(src);
     return ele.volume;
 }
 
-function SetVolume(src, volume) {
+function DKAudio_SetVolume(src, volume) {
     const ele = document.getElementById(src);
     ele.volume = volume;
 }

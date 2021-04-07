@@ -1,12 +1,12 @@
 "use strict";
 
-const PrettyJson = function(json) {
+const DKJson_PrettyJson = function(json) {
     if (typeof json !== 'string') { return; }
     const prettyJson = JSON.parse(json);
     return JSON.stringify(prettyJson, undefined, 4);
 }
 
-const HighlightJson = function(jsonString) {
+const DKJson_HighlightJson = function(jsonString) {
     let hightlightedJson = jsonString.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return hightlightedJson.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
         let cls = 'number';
@@ -30,7 +30,7 @@ const HighlightJson = function(jsonString) {
 }
 
 ///Takes care of circular refrences in objects
-function StringifyJson(object) {
+function DKJson_StringifyJson(object) {
     let simpleObject = {};
     for (let prop in object) {
         if (!object.hasOwnProperty(prop)) {
@@ -50,7 +50,7 @@ function StringifyJson(object) {
 
 /*
 //search the object for a keyName's value that matches value
-function FindObject(obj, keyToFind, valueToFind) {
+function DKJson_FindObject(obj, keyToFind, valueToFind) {
     if (obj.length) {
         //array of objects
         for (let n = 0; n < obj.length; n++) {
@@ -68,7 +68,7 @@ function FindObject(obj, keyToFind, valueToFind) {
 
 /*
 //search the object for a keyName's value that includes valueToFind
-function FindObjectValueIncludes(obj, keyToFind, valueToFind) {
+function DKJson_FindObjectValueIncludes(obj, keyToFind, valueToFind) {
     if (obj.length) {
         //array of objects
         for (let n = 0; n < obj.length; n++) {
@@ -90,7 +90,7 @@ function FindObjectValueIncludes(obj, keyToFind, valueToFind) {
 }
 */
 
-function FindObjectValueIncludes(obj, keyToFind, valToFind) {
+function DKJson_FindObjectValueIncludes(obj, keyToFind, valToFind) {
     let foundObj;
     JSON.stringify(obj, (_,nestedValue)=>{
         if (nestedValue && valToFind.includes(nestedValue[keyToFind])) {

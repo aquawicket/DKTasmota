@@ -17,22 +17,22 @@ window.onunhandledrejection = function(event) {
     return false;
 }
 
-function StackToConsoleString(arg, deleteTo) {
+function DKError_StackToConsoleString(arg, deleteTo) {
     let jsonStack;
     if (arg instanceof Error) {
         if (arg.stack) {
-            jsonStack = StackToJSON(arg.stack);
+            jsonStack = DKError_StackToJSON(arg.stack);
         } else if (arg instanceof DOMException) {
             const str = arg.name + " " + arg.message;
-            jsonStack = StackToJSON(GetStack(str));
+            jsonStack = DKError_StackToJSON(GetStack(str));
         } else {
             dkconsole.error("arg is an instance of Error, but it doesn't have a stack");
             return false;
         }
     } else if (arg instanceof PromiseRejectionEvent) {
-        jsonStack = StackToJSON(GetStack(arg.reason));
+        jsonStack = DKError_StackToJSON(DKError_GetStack(arg.reason));
     } else if (typeof arg === 'string') {
-        jsonStack = StackToJSON(GetStack(arg));
+        jsonStack = DKError_StackToJSON(DKError_GetStack(arg));
     } else {
         dkconsole.error("StackToConsoleString(): typeof arg invalid: " + typeof arg);
         return false;
@@ -64,7 +64,7 @@ function isStrict() {
     return false;
 }
 
-function GetStack(msg) {
+function DKError_GetStack(msg) {
     const e = new Error(msg);
     if (!e.stack) {
         try {
@@ -80,7 +80,7 @@ function GetStack(msg) {
     return e.stack;
 }
 
-function StackToJSON(stack) {
+function DKError_StackToJSON(stack) {
     if (!stack || typeof stack !== 'string') {
         dkconsole.error("StackToJSON(): invalid stack");
         return false;
@@ -132,7 +132,7 @@ function StackToJSON(stack) {
     return jsonStack;
 }
 
-function LastStackCall() {
+function DKError_LastStackCall() {
     const stack = StackToJSON(GetStack());
     let nn;
     for (let n = 1; n < stack.length; n++) {
@@ -151,7 +151,7 @@ function LastStackCall() {
     return str;
 }
 
-function GetArguments(func, getArgValues) {
+function DKError_GetArguments(func, getArgValues) {
     let argsString = "";
     let count = 0;
     const fn = window[func];
@@ -182,6 +182,6 @@ function GetArguments(func, getArgValues) {
     return argsString;
 }
 
-function GetCurrentFunctionName(n) {
+function DKError_GetCurrentFunctionName(n) {
     return new Error().stack.split('\n')[2 + n].trim().split(" ")[1];
 }

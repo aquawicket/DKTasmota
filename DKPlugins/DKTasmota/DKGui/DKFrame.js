@@ -58,7 +58,7 @@ function DKFrame_Html(id)
 		return false;
 	}
 	
-	var title = id;//DKFile_GetFilename(id);
+	var title = DKFile_GetFilename(id);
 	title = title.replace(".html", "");
 	
 	//stop if frame already exsists, multiple windows not ready yet.
@@ -147,9 +147,9 @@ function DKFrame_CreateFrame(title, width, height)
 	frame.style.height = newheight.toString()+"rem";
 	frame.style.backgroundColor = "rgb(150,150,150)";
 	frame.style.borderColor = "rgb(0,0,0)";
-	//if(DK_GetBrowser() !== "RML"){
+	if(DK_GetBrowser() !== "RML"){
 		frame.style.borderStyle = "solid";
-	//}
+	}
 	frame.style.borderWidth = "1rem";
 	frame.style.minWidth = "62rem";
 	frame.style.minHeight = "30rem";
@@ -172,7 +172,7 @@ function DKFrame_CreateFrame(title, width, height)
 	titlebartext.style.height = "100%";
 	titlebartext.style.color = "rgb(25,25,25)";
 	titlebartext.innerHTML = title;
-	DK_AddDragHandle(titlebartext, frame.id);
+	DK_AddDragHandle(titlebartext, frame);
 	titlebartext.addEventListener("dblclick", DKFrame_OnEvent);
 	
 	var reload = DK_CreateElement(frame, "img", "DKFrame_reload");
@@ -229,7 +229,7 @@ function DKFrame_CreateResize(frame)
 	resizeImage.style.position = "absolute";
 	resizeImage.style.top = "0rem";
 	resizeImage.style.right = "0rem";
-	DK_AddResizeHandle(resizeImage, frame.id);
+	DK_AddResizeHandle(resizeImage, frame);
 	
 	return resize;
 }

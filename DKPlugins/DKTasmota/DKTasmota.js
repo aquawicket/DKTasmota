@@ -104,7 +104,7 @@ function Device(str) {
 }
 
 //Load devices from local storage
-function LoadDevicesFromStorage() {
+function DKTasmota_LoadDevices() {
     let deviceIPs = [];
     const data = DKLoadFromLocalStorage("deviceIPs")
     if(!data){ return; }
@@ -127,7 +127,7 @@ function LoadDevicesFromStorage() {
 }
 
 
-function InitializeDevices(callback) {
+function DKTasmota_InitializeDevices(callback) {
     if (!callback) {
         dkconsole.error("callback invalid");
         return;
@@ -138,7 +138,7 @@ function InitializeDevices(callback) {
         DKSendRequest(url, function(success, url, data) {
             if (success && url && data) {
                 const device = JSON.parse(data);
-                const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+                const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);
 
                 //incoming data doesn't have user data, so copy them in
                 device.ip = deviceInstance.ip;
@@ -158,7 +158,7 @@ function InitializeDevices(callback) {
 }
 
 //return all local network device IPs that respond to /cm?cmnd=CORS 
-function GetTasmotaDevices(ipPrefix, callback) {
+function DKTasmota_GetDevices(ipPrefix, callback) {
     let tasmotaDeviceCount = 0;
     let devicesScanned = 0;
     //scan 192.168.1.1 thru 192.168.1.254

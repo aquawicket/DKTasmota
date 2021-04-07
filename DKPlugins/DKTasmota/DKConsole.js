@@ -30,7 +30,7 @@ const console_group = console.group;
 
     console.log = function() {
         dkconsole.log.apply(this, Array.prototype.slice.call(arguments));
-        console_log.apply(this, Array.prototype.slice.call(consoleSpanFilter(arguments)));
+        console_log.apply(this, Array.prototype.slice.call(DKConsole_SpanFilter(arguments)));
     }
     console.info = function() {
         dkconsole.info.apply(this, Array.prototype.slice.call(arguments));
@@ -62,7 +62,7 @@ const console_group = console.group;
     }
 }());
 
-function consoleSpanFilter(args) {
+function DKConsole_SpanFilter(args) {
     let argArray = [];
     if (args.length) {
         const startTagRe = /<span\s+style=(['"])([^'"]*)\1\s*>/gi;
@@ -81,7 +81,7 @@ function consoleSpanFilter(args) {
     return argArray;
 }
 
-function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
+function DKConsole_Create(parent, id, top, bottom, left, right, width, height) {
     DKLoadCSSFile("DKConsole.css");
     const dkconsoleFrame = document.createElement("div");
     dkconsoleFrame.style.padding = "0px";
@@ -225,7 +225,7 @@ function CreateDKConsole(parent, id, top, bottom, left, right, width, height) {
             dkconsole.warn("WARNING: dkconsole.error requires a valid argument");
             return false;
         }
-        const errMsg = StackToConsoleString(arg, "dkconsole.error");
+        const errMsg = DKError_StackToConsoleString(arg, "dkconsole.error");
         dkconsole.message(errMsg, "red");
     }
 

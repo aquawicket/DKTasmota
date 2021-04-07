@@ -37,15 +37,18 @@ function DKLoadFiles() {
 }
 
 function DKLoadApp() {
-    DKCreateErrorHandler();
-    CreateSound("PowerDown.mp3");
-    LoadDevicesFromStorage();
+    DKErrorHandler_Create();
+    DKAudio_CreateSound("PowerDown.mp3");
+    DKTasmota_LoadDevices();
 
     PHP_GetRemoteAddress(function(rval){
-        if(rval === "192.168.1.78"){
+        dkconsole.log(rval);
+        if(rval === "192.168.1.78" || rval === "192.168.1.1"){
+            app.server = true;
             app.automate = true;   
         }
         else{
+            app.client = true;
             app.automate = false;
         }
 
@@ -57,14 +60,14 @@ function DKLoadApp() {
 }
 
 function LoadGui() {
-    CreateDKConsole(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
+    DKConsole_Create(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
     document.body.style.backgroundColor = "rgb(100,100,100)";
     CreateButtons(document.body);
-    DKCreateClock(document.body, "clock", "2px", "", "200px");
+    DKClock_Create(document.body, "clock", "2px", "", "200px");
     CreateDeviceTable(document.body);
-    CreateChart(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
-    CreateDebugButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
+    DKChart_Create(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
+    DKDebug_CreateButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
 
     for (let n = 0; n < devices.length; n++) {
         AddDeviceToTable(devices[n].ip);
@@ -125,11 +128,11 @@ function CreateButtons(parent) {
     volume.style.cursor = "pointer";
     parent.appendChild(volume);
     volume.onclick = function() {
-        if (GetVolume("PowerDown.mp3") === 1.0) {
-            SetVolume("PowerDown.mp3", 0.0);
+        if (DKAudio_GetVolume("PowerDown.mp3") === 1.0) {
+            DKAudio_SetVolume("PowerDown.mp3", 0.0);
             volume.src = "volume_0.png";
         } else {
-            SetVolume("PowerDown.mp3", 1.0);
+            DKAudio_SetVolume("PowerDown.mp3", 1.0);
             volume.src = "volume_100.png";
         }
     }
@@ -146,60 +149,60 @@ function CreateDeviceTable(parent) {
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
 
-    const table = DKCreateTable(deviceDiv, "deviceTable", "0px", "", "0px");
+    const table = DKTable_Create(deviceDiv, "deviceTable", "0px", "", "0px");
 
     //Create Header Row as a normal <tr>
     //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
-    DKTableAddRow(table, "HEADER", "device");
-    DKTableGetRowByName(table, "HEADER").style.backgroundColor = "rgb(50,50,50)";
-    DKTableGetRowByName(table, "HEADER").style.fontWeight = "bold";
-    DKTableGetRowByName(table, "HEADER").style.cursor = "pointer";
-    DKTableGetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
-    DKTableGetCellByName(table, "HEADER", "device").style.width = "240px";
-    DKTableGetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick() {
-        DKSortTable("deviceTable", 0);
+    DKTable_AddRow(table, "HEADER", "device");
+    DKTable_GetRowByName(table, "HEADER").style.backgroundColor = "rgb(50,50,50)";
+    DKTable_GetRowByName(table, "HEADER").style.fontWeight = "bold";
+    DKTable_GetRowByName(table, "HEADER").style.cursor = "pointer";
+    DKTable_GetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
+    DKTable_GetCellByName(table, "HEADER", "device").style.width = "240px";
+    DKTable_GetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick() {
+        DKTable_Sort("deviceTable", 0);
         UpdateTableStyles();
     }
 
-    DKTableAddColumn(table, "power");
-    DKTableGetCellByName(table, "HEADER", "power").innerHTML = "power";
-    DKTableGetCellByName(table, "HEADER", "power").style.width = "50px";
-    DKTableGetCellByName(table, "HEADER", "power").style.textAlign = "center";
-    DKTableGetCellByName(table, "HEADER", "power").onclick = function powerHeaderOnClick() {
-        DKSortTable("deviceTable", 1);
+    DKTable_AddColumn(table, "power");
+    DKTable_GetCellByName(table, "HEADER", "power").innerHTML = "power";
+    DKTable_GetCellByName(table, "HEADER", "power").style.width = "50px";
+    DKTable_GetCellByName(table, "HEADER", "power").style.textAlign = "center";
+    DKTable_GetCellByName(table, "HEADER", "power").onclick = function powerHeaderOnClick() {
+        DKTable_Sort("deviceTable", 1);
         UpdateTableStyles();
     }
 
-    DKTableAddColumn(table, "data");
-    DKTableGetCellByName(table, "HEADER", "data").innerHTML = "data";
-    DKTableGetCellByName(table, "HEADER", "data").style.width = "140px";
-    DKTableGetCellByName(table, "HEADER", "data").style.textAlign = "center";
-    DKTableGetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick() {
-        DKSortTable("deviceTable", 2);
+    DKTable_AddColumn(table, "data");
+    DKTable_GetCellByName(table, "HEADER", "data").innerHTML = "data";
+    DKTable_GetCellByName(table, "HEADER", "data").style.width = "140px";
+    DKTable_GetCellByName(table, "HEADER", "data").style.textAlign = "center";
+    DKTable_GetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick() {
+        DKTable_Sort("deviceTable", 2);
         UpdateTableStyles();
     }
 
-    DKTableAddColumn(table, "wifi");
-    DKTableGetCellByName(table, "HEADER", "wifi").innerHTML = "wifi signal";
-    DKTableGetCellByName(table, "HEADER", "wifi").style.width = "70px";
-    DKTableGetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
-    DKTableGetCellByName(table, "HEADER", "wifi").onclick = function wifiHeaderOnClick() {
-        DKSortTable("deviceTable", 3);
+    DKTable_AddColumn(table, "wifi");
+    DKTable_GetCellByName(table, "HEADER", "wifi").innerHTML = "wifi signal";
+    DKTable_GetCellByName(table, "HEADER", "wifi").style.width = "70px";
+    DKTable_GetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
+    DKTable_GetCellByName(table, "HEADER", "wifi").onclick = function wifiHeaderOnClick() {
+        DKTable_Sort("deviceTable", 3);
         UpdateTableStyles();
     }
 
-    DKTableAddColumn(table, "options");
-    DKTableGetCellByName(table, "HEADER", "options").innerHTML = "options";
-    DKTableGetCellByName(table, "HEADER", "options").style.width = "80px";
-    DKTableGetCellByName(table, "HEADER", "options").style.textAlign = "center";
-    DKTableGetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick() {
+    DKTable_AddColumn(table, "options");
+    DKTable_GetCellByName(table, "HEADER", "options").innerHTML = "options";
+    DKTable_GetCellByName(table, "HEADER", "options").style.width = "80px";
+    DKTable_GetCellByName(table, "HEADER", "options").style.textAlign = "center";
+    DKTable_GetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick() {
         dkconsole.log("optionsHeaderOnClick");
     }
 }
 
 function AddDeviceToTable(ip) {
     const table = document.getElementById("deviceTable");
-    const row = DKTableAddRow(table, ip);
+    const row = DKTable_AddRow(table, ip);
     row.setAttribute("ip", ip);
     if (row.rowIndex % 2 == 0) {
         //even
@@ -209,14 +212,14 @@ function AddDeviceToTable(ip) {
         row.style.backgroundColor = "rgb(60,60,60)";
     }
 
-    const deviceCell = DKTableGetCellByName(table, ip, "device");
+    const deviceCell = DKTable_GetCellByName(table, ip, "device");
     deviceCell.innerHTML = "<a>" + ip + "</a>";
     deviceCell.style.cursor = "pointer";
     deviceCell.onclick = function CellOnClick() {
         const deviceWindow = window.open("http://" + ip, ip, "_blank, width=500, height=700");
     }
 
-    const powerCell = DKTableGetCellByName(table, ip, "power");
+    const powerCell = DKTable_GetCellByName(table, ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
     powerCell.onclick = function PowerOnClick(id) {
@@ -236,13 +239,13 @@ function AddDeviceToTable(ip) {
         DKSendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
 
-    const dataCell = DKTableGetCellByName(table, ip, "data");
+    const dataCell = DKTable_GetCellByName(table, ip, "data");
     dataCell.style.textAlign = "center";
 
-    const wifiCell = DKTableGetCellByName(table, ip, "wifi");
+    const wifiCell = DKTable_GetCellByName(table, ip, "wifi");
     wifiCell.style.textAlign = "center";
 
-    const optionsCell = DKTableGetCellByName(table, ip, "options");
+    const optionsCell = DKTable_GetCellByName(table, ip, "options");
     optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
@@ -302,10 +305,10 @@ function AddDeviceToTable(ip) {
     optionsCell.appendChild(dConsole);
 
     //Do some final processing
-    const deviceHeader = DKTableGetCellByName(table, "HEADER", "device");
+    const deviceHeader = DKTable_GetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DKSendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    DKSortTable("deviceTable", 0);
+    DKTable_Sort("deviceTable", 0);
     UpdateTableStyles();
 }
 
@@ -458,7 +461,7 @@ function ScanDevices() {
         deviceIPs = JSON.parse(data);
     }
 
-    GetTasmotaDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
+    DKTasmota_GetDevices("192.168.1.", function GetTasmotaDevicesCallback(ip, done) {
         if (ip && !deviceIPs.includes(ip)) {
             deviceIPs.push(ip);
             DKSaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
@@ -492,19 +495,19 @@ function UpdateScreen(success, url, data) {
         dkconsole.log("url invalid");
         return;
     }
-    const deviceInstance = FindObjectValueIncludes(devices, 'ip', url);
+    const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);
     if(!deviceInstance){
         dkconsole.error("device invalid");
         return;
     }
     const table = document.getElementById("deviceTable");
-    const row = DKTableGetRowByName(table, deviceInstance.ip);
+    const row = DKTable_GetRowByName(table, deviceInstance.ip);
     if(!row){
         doconsole.error("row invlid");
         return;
     }
     if (!success || !data){
-        PlaySound("PowerDown.mp3");
+        DKAudio_PlaySound("PowerDown.mp3");
         dkconsole.warn(deviceInstance.ip+" did not respond");
         row.style.backgroundColor = "red";
         return;
@@ -531,26 +534,26 @@ function UpdateScreen(success, url, data) {
     // UPDATE TABLE
     device.user.name = device.Status ? device.Status.DeviceName : device.DeviceName;
     if (device.user.name) {
-        const deviceCell = DKTableGetCellByName(table, device.ip, "device");
+        const deviceCell = DKTable_GetCellByName(table, device.ip, "device");
         deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.user.name + "</a>";
-        DKSortTable("deviceTable", 0);
+        DKTable_Sort("deviceTable", 0);
         UpdateTableStyles();
     }
 
     device.user.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
     if (device.user.power) {
-        const powerCell = DKTableGetCellByName(table, device.ip, "power");
+       const powerCell = DKTable_GetCellByName(table, device.ip, "power");
         powerCell.innerHTML = "<a>" + device.user.power + "</a>";
         if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            UpdateChartDevice(device.ip, "switch1", 100);
+            DKChart_UpdateChartDevice(device.ip, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            UpdateChartDevice(device.ip, "switch1", 0);
+            DKChart_UpdateChartDevice(device.ip, "switch1", 0);
         }
     }
 
-    const dataCell = DKTableGetCellByName(table, device.ip, "data");
+    const dataCell = DKTable_GetCellByName(table, device.ip, "data");
     dataCell.innerHTML = "";
     if (device.StatusSNS?.DS18B20?.Temperature)
         device.user.temperature = device.StatusSNS.DS18B20.Temperature
@@ -576,7 +579,7 @@ function UpdateScreen(success, url, data) {
         document.getElementById(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         document.getElementById(device.ip + "Temp").style.textAlign = "center";
 
-        UpdateChartDevice(device.ip, "sensor1", device.user.temperature);
+        DKChart_UpdateChartDevice(device.ip, "sensor1", device.user.temperature);
     }
 
     device.user.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
@@ -600,7 +603,7 @@ function UpdateScreen(success, url, data) {
         document.getElementById(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         document.getElementById(device.ip + "RH").style.textAlilgn = "center";
 
-        UpdateChartDevice(device.ip, "sensor2", device.user.humidity);
+        DKChart_UpdateChartDevice(device.ip, "sensor2", device.user.humidity);
     }
 
     device.user.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
@@ -610,7 +613,7 @@ function UpdateScreen(success, url, data) {
         document.getElementById(device.ip + "DewP").style.color = "rgb(40,40,40)";
         document.getElementById(device.ip + "DewP").style.textAlign = "center";
 
-        UpdateChartDevice(device.ip, "sensor3", device.user.dewpoint);
+        DKChart_UpdateChartDevice(device.ip, "sensor3", device.user.dewpoint);
     }
 
     device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
@@ -620,7 +623,7 @@ function UpdateScreen(success, url, data) {
         const num = (signal * scale / 100);
         const green = num.clamp(0, 255);
         const red = (510 - num).clamp(0, 255);
-        const wifiCell = DKTableGetCellByName(table, device.ip, "wifi");
+        const wifiCell = DKTable_GetCellByName(table, device.ip, "wifi");
         wifiCell.innerHTML = signal + "%";
         wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }

@@ -1,21 +1,28 @@
 "use strict";
 
-function PHP_GetRemoteAddress(callback){
-    CallPhpFunc(arguments);
+function PHP_GetRemoteAddress(callback) {
+    DKPhp_CallPhpFunc(arguments);
+}
+
+function PHP_GetRemoteUser(callback) {
+    DKPhp_CallPhpFunc(arguments);
 }
 
 function PHP_GetTime(callback) {
-    CallPhpFunc(arguments);
+    DKPhp_CallPhpFunc(arguments);
 }
 
 function PHP_StringToFile(file, data, mode, callback) {
-    CallPhpFunc(arguments);
+    DKPhp_CallPhpFunc(arguments);
 }
 
-function noCB(rVal) {}
+//function DKPhp_noCB(rVal) {}
 
-function CallPhpFunc(args) {
-    const funcName = GetCurrentFunctionName(1).replace("PHP_", "");
+function DKPhp_CallPhpFunc(args) {
+    let func = DKError_GetCurrentFunctionName(1);
+    const n = func.indexOf("_")+1;
+    func = func.substring(n, func.length);
+    const funcName = func.replace("PHP_", "");
     const jsonData = {
         func: funcName,
         args: []
@@ -28,19 +35,19 @@ function CallPhpFunc(args) {
         newArg[typeof (args[n])] = args[n];
         jsonData.args.push(newArg);
     }
-    //console.log(JSON.stringify(jsonData));
+    //dkconsole.log(JSON.stringify(jsonData));
     const data = "x=" + encodeURIComponent(JSON.stringify(jsonData));
     const url = "DK.php?" + data;
     DKSendRequest(url, function(success, url, rVal) {
         if (args && typeof (args[args.length - 1]) === "function") {
             args[args.length - 1](rVal);
-        } else {//console.log(rVal);
+        } else {//dkconsole.log(rVal);
         }
     });
 }
 
 /*
-function CallPhpFunction(str, callback) {
+function DKPhp_CallPhpFunction(str, callback) {
     const func = str.split("(").shift();
     str = str.replace(func, "");
     str = str.replace("(", "");

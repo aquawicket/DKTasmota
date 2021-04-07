@@ -2,9 +2,9 @@
 
 //A Convienient Debug Button Function
 const showDebugButton = 1;
-function DebugButtonOnClick() {
+function DKDebug_ButtonOnClick() {
 
-    PHP_GetRemoteAddress(function(rval){
+    PHP_GetRemoteUser(function(rval){
         dkconsole.log(rval);
     });
 
@@ -142,7 +142,7 @@ function DebugButtonOnClick() {
     */
 }
 
-function CreateDebugButton(parent, id, top, bottom, left, right, width, height) {
+function DKDebug_CreateButton(parent, id, top, bottom, left, right, width, height) {
     if (!showDebugButton) {
         return;
     }
@@ -155,7 +155,7 @@ function CreateDebugButton(parent, id, top, bottom, left, right, width, height) 
     debugButton.style.right = right;
     debugButton.style.width = width;
     debugButton.style.height = height;
-    debugButton.onclick = DebugButtonOnClick;
+    debugButton.onclick = DKDebug_ButtonOnClick;
     parent.appendChild(debugButton);
     return debugButton;
 }
