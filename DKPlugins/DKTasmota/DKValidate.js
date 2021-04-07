@@ -1,7 +1,7 @@
 "use strict";
 
 //https://stackoverflow.com/a/9337047/688352
-function IsValidVarName(name) {
+function DKValidate_IsValidVarName(name) {
     try {
         Function('var ' + var_name);
     } catch (e) {
@@ -10,8 +10,8 @@ function IsValidVarName(name) {
     return true;
 }
 
-function IsValidCallStack(stack) {//TODO
+function DKValidate_IsValidCallStack(stack) {//TODO
 }
 
-function IsValidEmail(email) {//TODO
+function DKValidate_IsValidEmail(email) {//TODO
 }
