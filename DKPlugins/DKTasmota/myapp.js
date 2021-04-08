@@ -34,6 +34,7 @@ function DKLoadFiles() {
     DK_Create("DKChart.js");
     DK_Create("Automation.js");
     DK_Create("VPDCalculator.js");
+    DK_Create("sun.js");
 
     DK_PreloadImage("loading.gif");
     DK_PreloadImage("restart.png");
@@ -73,7 +74,7 @@ function LoadGui() {
     DKClock_Create(document.body, "clock", "2px", "", "25%");
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
-    DKDebug_CreateButton(document.body, "debug_button", "23px", "", "", "5px", "63px", "20px");
+    DKDebug_CreateButton(document.body, "debug_button", "25px", "", "", "5px", "63px", "20px");
 
     for (let n = 0; n < devices.length; n++) {
         AddDeviceToTable(devices[n].ip);
@@ -129,9 +130,9 @@ function CreateButtons(parent) {
 
     const automation = document.createElement("button");
     if (app.automate === true) {
-        automation.innerHTML = "Automat ON";
+        automation.innerHTML = "Automate ON";
     } else {
-        automation.innerHTML = "Automat OFF";
+        automation.innerHTML = "Automate OFF";
     }
     automation.style.cursor = "pointer";
     automation.onclick = function() {
@@ -155,7 +156,7 @@ function CreateButtons(parent) {
     internet.style.position = "absolute";
     internet.style.height = "19px";
     internet.style.top = "2px";
-    internet.style.right = "28px";
+    internet.style.right = "58px";
     parent.appendChild(internet);
 
     const volume = document.createElement("img");
@@ -163,7 +164,7 @@ function CreateButtons(parent) {
     volume.style.position = "absolute";
     volume.style.height = "19px";
     volume.style.top = "2px";
-    volume.style.right = "2px";
+    volume.style.right = "28px";
     volume.style.cursor = "pointer";
     parent.appendChild(volume);
     volume.onclick = function() {
@@ -174,6 +175,18 @@ function CreateButtons(parent) {
             DKAudio_SetVolume("PowerDown.mp3", 1.0);
             volume.src = "volume_100.png";
         }
+    }
+
+    const preferences = document.createElement("img");
+    preferences.src = "options.png";
+    preferences.style.position = "absolute";
+    preferences.style.height = "17px";
+    preferences.style.top = "3px";
+    preferences.style.right = "3px";
+    preferences.style.cursor = "pointer";
+    parent.appendChild(preferences);
+    preferences.onclick = function(){
+        PreferencesWindow();
     }
 }
 
@@ -235,7 +248,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetCellByName(table, "HEADER", "options").style.width = "80px";
     DKTable_GetCellByName(table, "HEADER", "options").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick() {
-        dkconsole.log("optionsHeaderOnClick");
+        //dkconsole.log("optionsHeaderOnClick");
     }
 }
 
@@ -350,6 +363,31 @@ function AddDeviceToTable(ip) {
     DK_SendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     DKTable_Sort("deviceTable", 0);
     UpdateTableStyles();
+}
+
+function PreferencesWindow()
+{
+    const div = document.createElement("div");
+    div.id = "Preferences";
+    div.style.position = "absolute";
+    div.style.top = "20px";
+    div.style.width = "100%";
+    div.style.fontSize = "12px";
+    div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
+    div.style.whiteSpace = "pre-wrap";
+    div.style.boxSizing = "border-box";
+    div.style.padding = "2px";
+    div.style.paddingLeft = "20px";
+    div.style.borderStyle = "solid";
+    div.style.borderWidth = "1px";
+    div.style.borderTopWidth = "0px";
+    div.style.borderLeftWidth = "0px";
+    div.style.borderRightWidth = "0px";
+    div.style.backgroundColor = "rgb(36,36,36)";
+    div.style.overflow = "auto";
+
+    document.body.appendChild(div);
+    DKFrame_Html("Preferences");
 }
 
 function InfoWindow(ip) {
