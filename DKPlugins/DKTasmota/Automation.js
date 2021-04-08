@@ -1,13 +1,12 @@
 "use strict";
 
 function Automate() {
-    
-    if (Device("A Tent Co2"))
-        Device("A Tent Co2").user.automate = false;
-    if (Device("B Tent Co2"))
-        Device("B Tent Co2").user.automate = false;
-    if (Device("Veg Tent Co2"))
-        Device("Veg Tent Co2").user.automate = false;
+    //if (Device("A Tent Co2"))
+        //Device("A Tent Co2").user.automate = false;
+    //if (Device("B Tent Co2"))
+        //Device("B Tent Co2").user.automate = false;
+    //if (Device("Veg Tent Co2"))
+        //Device("Veg Tent Co2").user.automate = false;
 
     ////////////////////////////////////////////////////////////
     //A Tent Presets
@@ -167,13 +166,13 @@ function Automate() {
 
     ////////////////////////////////////////////////////////////
     //Veg Tent Presets
-    if (Device("Veg Tent Co2")?.user.automate && Device("Veg Tent Temp").user) {
+    if (Device("Veg Tent Co2")?.user?.automate) {
         //When using Co2, temperature should average 85 degrees
         Device("Veg Tent Temp").user.temperatureTarget = 85;
         Device("Veg Tent Temp").user.temperatureZone = 20;
         Device("Veg Tent Temp").user.humidityTarget = 55;
         Device("Veg Tent Temp").user.humidityZone = 20;
-    } else if(Device("Veg Tent Temp")){
+    } else{
         //When NOT using Co2, temperature should be 77 degrees
         Device("Veg Tent Temp").user.temperatureTarget = 77;
         Device("Veg Tent Temp").user.temperatureZone = 20;
@@ -200,7 +199,7 @@ function Automate() {
     //Veg Tent Co2
     if (Device("Veg Tent Co2")?.user?.automate) {
         if (/*(time > 8) && (time < 11) || (time > 14) && (time < 17) && */
-        Device("Veg Tent Temp").user.temperature < (Device("Veg Tent Temp").user.temperatureTarget - 5) && Device("Veg Tent Temp").user.humidity < (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone)) {
+        Device("Veg Tent Temp").user.temperature < (Device("Veg Tent Temp").user.temperatureTarget - 1) && Device("Veg Tent Temp").user.humidity < (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone)) {
             dkconsole.message("Veg Tent Co2 ON", "green");
             Device("Veg Tent Co2").user.power = "ON";
             DK_SendRequest("http://" + Device("Veg Tent Co2")?.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
