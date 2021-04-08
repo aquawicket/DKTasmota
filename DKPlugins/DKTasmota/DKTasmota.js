@@ -136,6 +136,23 @@ function DKTasmota_InitializeDevices(callback) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DK_SendRequest(url, function(success, url, data) {
             if (success && url && data) {
+                let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
+                if (!device) {
+                    dkconsole.error("device invalid");
+                    return;
+                }
+    
+                try {
+                    let deviceData = JSON.parse(data);
+                    deviceData.ip = device.ip;
+                    deviceData.user = device.user;
+                    devices[devices.indexOf(device)] = deviceData;
+                    device = deviceData;
+                } catch {
+                    dkconsole.error("data could not be parsed to json");
+                }
+
+                /*
                 const device = JSON.parse(data);
                 const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);
 
@@ -145,6 +162,7 @@ function DKTasmota_InitializeDevices(callback) {
 
                 //then update the stored device with the new data
                 devices[devices.indexOf(deviceInstance)] = device;
+                */
                 devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
             }
 

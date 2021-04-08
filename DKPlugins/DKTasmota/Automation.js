@@ -3,9 +3,9 @@
 function Automate() {
     
     if (Device("A Tent Co2"))
-        //Device("A Tent Co2").user.automate = false;
+        Device("A Tent Co2").user.automate = false;
     if (Device("B Tent Co2"))
-        //Device("B Tent Co2").user.automate = false;
+        Device("B Tent Co2").user.automate = false;
     if (Device("Veg Tent Co2"))
         Device("Veg Tent Co2").user.automate = false;
 
@@ -13,11 +13,11 @@ function Automate() {
     //A Tent Presets
     if (Device("A Tent Co2")?.user.automate && Device("A Tent Temp").user) {
         //When using Co2, temperature should average 85 degrees
-        Device("A Tent Temp").user.temperatureTarget = 82;
+        Device("A Tent Temp").user.temperatureTarget = 85;
         Device("A Tent Temp").user.temperatureZone = 20;
         Device("A Tent Temp").user.humidityTarget = 55;
         Device("A Tent Temp").user.humidityZone = 20;
-    } else if (Device("A Tent Temp").user) {
+    } else if (Device("A Tent Temp") && Device("A Tent Temp").user) {
         //When NOT using Co2, temperature should be 77 degrees
         Device("A Tent Temp").user.temperatureTarget = 77;
         Device("A Tent Temp").user.temperatureZone = 20;
@@ -91,7 +91,7 @@ function Automate() {
     //B Tent Presets
     if (Device("B Tent Co2")?.user.automate && Device("B Tent Temp").user) {
         //When using Co2, temperature should average 85 degrees
-        Device("B Tent Temp").user.temperatureTarget = 82;
+        Device("B Tent Temp").user.temperatureTarget = 85;
         Device("B Tent Temp").user.temperatureZone = 20;
         Device("B Tent Temp").user.humidityTarget = 55;
         Device("B Tent Temp").user.humidityZone = 20;
@@ -169,11 +169,11 @@ function Automate() {
     //Veg Tent Presets
     if (Device("Veg Tent Co2")?.user.automate && Device("Veg Tent Temp").user) {
         //When using Co2, temperature should average 85 degrees
-        Device("Veg Tent Temp").user.temperatureTarget = 82;
+        Device("Veg Tent Temp").user.temperatureTarget = 85;
         Device("Veg Tent Temp").user.temperatureZone = 20;
         Device("Veg Tent Temp").user.humidityTarget = 55;
         Device("Veg Tent Temp").user.humidityZone = 20;
-    } else {
+    } else if(Device("Veg Tent Temp")){
         //When NOT using Co2, temperature should be 77 degrees
         Device("Veg Tent Temp").user.temperatureTarget = 77;
         Device("Veg Tent Temp").user.temperatureZone = 20;
@@ -182,6 +182,7 @@ function Automate() {
     }
 
     //Veg Tent Alarms
+    if(Device("Veg Tent Temp")){
     if (Device("Veg Tent Temp").user.temperature < (Device("Veg Tent Temp").user.temperatureTarget - Device("Veg Tent Temp").user.temperatureZone)) {
         dkconsole.message("!!! Veg TENT TEMPERATURE BELOW MINIMUM " + Device("Veg Tent Temp").user.temperature + "&#176;F < " + (Device("Veg Tent Temp").user.temperatureTarget - Device("Veg Tent Temp").user.temperatureZone) + "&#176;F !!!", "red");
     }
@@ -196,6 +197,7 @@ function Automate() {
         dkconsole.message("!!! Veg TENT HUMUDITY ABOVE MAXIMUM " + Device("Veg Tent Temp").user.humidity + "% > " + (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone) + "% !!!", "red");
     }
     */
+    }
 
     //Veg Tent Co2
     if (Device("Veg Tent Co2")?.user?.automate) {
@@ -213,7 +215,7 @@ function Automate() {
     }
 
     //Veg Tent Exhaust fan
-    if (Device("Veg Tent Exhaust Fan")?.user?.automate) {
+    if (Device("Veg Tent Exhaust Fan")?.user?.automate && Device("Veg Tent Temp")) {
         if (Device("Veg Tent Co2")?.user?.power !== "ON" && Device("Veg Tent Temp")?.user?.temperature > (Device("Veg Tent Temp").user.temperatureTarget + 1) || Device("Veg Tent Temp").user.humidity > (Device("Veg Tent Temp").user.humidityTarget + Device("Veg Tent Temp").user.humidityZone) && Device("Veg Tent Temp").user.temperature > 60) {
             dkconsole.message("Veg Tent Exhaust Fan ON", "green");
             DK_SendRequest("http://" + Device("Veg Tent Exhaust Fan").ip + "/cm?cmnd=POWER%20ON", UpdateScreen);

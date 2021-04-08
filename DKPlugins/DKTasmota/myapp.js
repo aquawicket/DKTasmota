@@ -537,7 +537,7 @@ function UpdateScreen(success, url, data) {
     }
     let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
     if (!device) {
-        dkconsole.error("device invalid");
+        dkconsole.error("device invalid, didn't find ip in url:"+url);
         return;
     }
     const table = byId("deviceTable");
