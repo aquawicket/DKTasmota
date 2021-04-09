@@ -1,12 +1,12 @@
 "use strict";
 
 function Automate() {
-    //if (Device("A Tent Co2"))
-        //Device("A Tent Co2").user.automate = false;
-    //if (Device("B Tent Co2"))
-        //Device("B Tent Co2").user.automate = false;
-    //if (Device("Veg Tent Co2"))
-        //Device("Veg Tent Co2").user.automate = false;
+    if (Device("A Tent Co2"))
+        Device("A Tent Co2").user.automate = false;
+    if (Device("B Tent Co2"))
+        Device("B Tent Co2").user.automate = false;
+    if (Device("Veg Tent Co2"))
+        Device("Veg Tent Co2").user.automate = false;
 
     ////////////////////////////////////////////////////////////
     //A Tent Presets
