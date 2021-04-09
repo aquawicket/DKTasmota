@@ -42,6 +42,8 @@ function DKLoadFiles() {
     DK_PreloadImage("DKTasmota/settings.png");
     DK_PreloadImage("DKTasmota/online.png");
     DK_PreloadImage("DKTasmota/offline.png");
+    DK_PreloadImage("DKTasmota/automateOff.png");
+    DK_PreloadImage("DKTasmota/automateOn.png");
 }
 
 function DKLoadApp() {
@@ -51,8 +53,8 @@ function DKLoadApp() {
 
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
-        if (rval === "192.168.1.78"/* || rval === "192.168.1.1"*/
-        ) {
+        if (rval === "127.0.0.1" || rval === "localhost" || rval === "::1")
+        {
             app.server = true;
             app.automate = true;
         } else {
@@ -286,7 +288,7 @@ function AddDeviceToTable(ip) {
     powerCell.onclick = function PowerOnClick(id) {
         powerCell.innerHTML = "";
         const loading = document.createElement("img");
-        loading.src = "loading.gif";
+        loading.src = "DKTasmota/loading.gif";
         loading.style.width = "15px";
         loading.style.height = "15px";
         powerCell.appendChild(loading);

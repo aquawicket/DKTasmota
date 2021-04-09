@@ -85,7 +85,7 @@ function Automate() {
 
     //A Tent Exhaust fan
     if (ATentExhaust && ATentExhaust.user.automate) {
-        if (ATentCo2 && ATentCo2.user.power !== "ON" && ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget) || ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone) && ATentTemp.user.temperature > 60) {
+        if (/*ATentCo2 && ATentCo2.user.power !== "ON" && */ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget) || ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone) && ATentTemp.user.temperature > 60) {
             dkconsole.message("A Tent Exhaust Fan ON", "green");
             DK_SendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
@@ -163,7 +163,7 @@ function Automate() {
 
     //B Tent Exhaust fan
     if (BTentExhaust && BTentExhaust.user.automate) {
-        if (BTentCo2 && BTentCo2.user.power !== "ON" && BTentTemp.user.temperature > (BTentTemp.user.temperatureTarget + 1) || BTentTemp.user.humidity > (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone) && BTentTemp.user.temperature > 60) {
+        if (/*BTentCo2 && BTentCo2.user.power !== "ON" && */BTentTemp.user.temperature > (BTentTemp.user.temperatureTarget + 1) || BTentTemp.user.humidity > (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone) && BTentTemp.user.temperature > 60) {
             dkconsole.message("B Tent Exhaust Fan ON", "green");
             DK_SendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
@@ -233,7 +233,7 @@ function Automate() {
             dkconsole.message("Veg Tent Co2 ON", "green");
             VegTentCo2.user.power = "ON";
             DK_SendRequest("http://" + VegTentCo2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-            DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
+            //DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
         } else {
             dkconsole.message("Veg Tent Co2 OFF", "yellow");
             VegTentCo2.user.power = "OFF";
@@ -243,7 +243,7 @@ function Automate() {
 
     //Veg Tent Exhaust fan
     if (VegTentExhaust && VegTentExhaust.user.automate) {
-        if (VegTentCo2.user.power !== "ON" && VegTentTemp.user.temperature > (VegTentTemp.user.temperatureTarget + 1) || VegTentTemp.user.humidity > (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone) && VegTentTemp.user.temperature > 60) {
+        if (/*VegTentCo2.user.power !== "ON" && */VegTentTemp.user.temperature > (VegTentTemp.user.temperatureTarget + 1) || VegTentTemp.user.humidity > (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone) && VegTentTemp.user.temperature > 60) {
             dkconsole.message("Veg Tent Exhaust Fan ON", "green");
             DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
