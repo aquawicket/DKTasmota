@@ -22,31 +22,31 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
     DK_Create("DKAudio/DKAudio.js", function() {
-        DKAudio_PreLoadAudio("PowerDown.mp3");
+        DKAudio_PreLoadAudio("DKTasmota/PowerDown.mp3");
     });
 
-    DK_Create("superagent.js");
-    DK_Create("DKMqtt.js");
-    DK_Create("DKDebug.js");
-    DK_Create("DKNotifications.js");
-    DK_Create("DKTasmota.js");
-    DK_Create("DKClock.js");
-    DK_Create("DKChart.js");
-    DK_Create("Automation.js");
-    DK_Create("VPDCalculator.js");
-    DK_Create("sun.js");
+    DK_Create("DKTasmota/superagent.js");
+    DK_Create("DKTasmota/DKMqtt.js");
+    DK_Create("DKTasmota/DKDebug.js");
+    DK_Create("DKTasmota/DKNotifications.js");
+    DK_Create("DKTasmota/DKTasmota.js");
+    DK_Create("DKTasmota/DKClock.js");
+    DK_Create("DKTasmota/DKChart.js");
+    DK_Create("DKTasmota/Automation.js");
+    DK_Create("DKTasmota/VPDCalculator.js");
+    DK_Create("DKTasmota/sun.js");
 
-    DK_PreloadImage("loading.gif");
-    DK_PreloadImage("restart.png");
-    DK_PreloadImage("info.png");
-    DK_PreloadImage("settings.png");
-    DK_PreloadImage("online.png");
-    DK_PreloadImage("offline.png");
+    DK_PreloadImage("DKTasmota/loading.gif");
+    DK_PreloadImage("DKTasmota/restart.png");
+    DK_PreloadImage("DKTasmota/info.png");
+    DK_PreloadImage("DKTasmota/settings.png");
+    DK_PreloadImage("DKTasmota/online.png");
+    DK_PreloadImage("DKTasmota/offline.png");
 }
 
 function DKLoadApp() {
     DKErrorHandler_Create();
-    DKAudio_CreateSound("PowerDown.mp3");
+    DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
     DKTasmota_LoadDevices();
 
     PHP_GetRemoteAddress(function(rval) {
@@ -85,9 +85,9 @@ function MainAppLoop() {
     //Check internet connection
     const internet = byId("internet");
     if (DK_IsOnline()) {
-        internet.src = "online.png";
+        internet.src = "DKTasmota/online.png";
     } else {
-        internet.src = "offline.png";
+        internet.src = "DKTasmota/offline.png";
     }
 
     ProcessDevices();
@@ -149,9 +149,9 @@ function CreateButtons(parent) {
     const internet = document.createElement("img");
     internet.id = "internet";
     if (DK_IsOnline()) {
-        internet.src = "online.png";
+        internet.src = "DKTasmota/online.png";
     } else {
-        internet.src = "onffline.png";
+        internet.src = "DKTasmota/onffline.png";
     }
     internet.style.position = "absolute";
     internet.style.height = "19px";
@@ -160,7 +160,7 @@ function CreateButtons(parent) {
     parent.appendChild(internet);
 
     const volume = document.createElement("img");
-    volume.src = "volume_100.png";
+    volume.src = "DKTasmota/volume_100.png";
     volume.style.position = "absolute";
     volume.style.height = "19px";
     volume.style.top = "2px";
@@ -168,17 +168,17 @@ function CreateButtons(parent) {
     volume.style.cursor = "pointer";
     parent.appendChild(volume);
     volume.onclick = function() {
-        if (DKAudio_GetVolume("PowerDown.mp3") === 1.0) {
-            DKAudio_SetVolume("PowerDown.mp3", 0.0);
-            volume.src = "volume_0.png";
+        if (DKAudio_GetVolume("DKTasmota/PowerDown.mp3") === 1.0) {
+            DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 0.0);
+            volume.src = "DKTasmota/volume_0.png";
         } else {
             DKAudio_SetVolume("PowerDown.mp3", 1.0);
-            volume.src = "volume_100.png";
+            volume.src = "DKTasmota/volume_100.png";
         }
     }
 
     const preferences = document.createElement("img");
-    preferences.src = "options.png";
+    preferences.src = "DKTasmota/options.png";
     preferences.style.position = "absolute";
     preferences.style.height = "17px";
     preferences.style.top = "3px";
@@ -304,7 +304,7 @@ function AddDeviceToTable(ip) {
     //Device Restart
     const restart = document.createElement("img");
     restart.setAttribute("title", "Restart Device");
-    restart.src = "restart.png";
+    restart.src = "DKTasmota/restart.png";
     restart.style.width = "12px";
     restart.style.height = "12px";
     restart.style.cursor = "pointer";
@@ -313,7 +313,7 @@ function AddDeviceToTable(ip) {
     restart.onclick = function restartOnClick() {
         DKMessageBox_Confirm("Restart this device?", function() {
         //DKConfirm("Restart this device?", function() {
-            restart.src = "loading.gif";
+            restart.src = "DKTasmota/loading.gif";
             DK_SendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
         });
     }
@@ -322,7 +322,7 @@ function AddDeviceToTable(ip) {
     //Device Info
     const info = document.createElement("img");
     info.setAttribute("title", "Device Info");
-    info.src = "info.png";
+    info.src = "DKTasmota/info.png";
     info.style.width = "12px";
     info.style.height = "12px";
     info.style.cursor = "pointer";
@@ -336,7 +336,7 @@ function AddDeviceToTable(ip) {
     //Device Settings
     const settings = document.createElement("img");
     settings.setAttribute("title", "Device Settings");
-    settings.src = "settings.png";
+    settings.src = "DKTasmota/settings.png";
     settings.style.width = "15px";
     settings.style.height = "15px";
     settings.style.cursor = "pointer";
@@ -347,7 +347,7 @@ function AddDeviceToTable(ip) {
 
     const dConsole = document.createElement("img");
     dConsole.setAttribute("title", "Device Console");
-    dConsole.src = "console.png";
+    dConsole.src = "DKTasmota/console.png";
     dConsole.style.width = "15px";
     dConsole.style.height = "15px";
     dConsole.style.paddingLeft = "3px";
