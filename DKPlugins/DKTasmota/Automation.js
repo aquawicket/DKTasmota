@@ -185,7 +185,7 @@ function Automate() {
 
     //B Tent Heater
     if (BTentHeat && BTentHeat.user.automate) {
-        if (BTentCo2 && BTentCo2.user.power !== "ON" && BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) {
+        if (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) {
             dkconsole.message("B Tent Heater ON", "green");
             DK_SendRequest("http://" + BTentHeat.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
         } else {
