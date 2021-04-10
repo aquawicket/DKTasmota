@@ -105,6 +105,7 @@ function DKChart_AddDatasets() {
     DKChart_AddDataset("Veg Tent Humidity", "rgb(0, 0, 200)", Device("015")?.ip, "sensor2", false);
     DKChart_AddDataset("Veg Tent DewPoint", "rgb(0,150,150)", Device("015")?.ip, "sensor3", true);
     DKChart_AddDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", Device("012")?.ip, "switch1", true);
+    DKChart_AddDataset("Veg Tent Water Walls", "rgb(90,0,150)", Device("009")?.ip, "switch1", true);
     DKChart_AddDataset("Veg Tent Co2", "rgb(100,60,10)", Device("010")?.ip, "switch1", true);
 }
 
@@ -155,7 +156,7 @@ function DKChart_UpdateChartDevice(ip, identifier, data) {
         y: data
     });
     //if (`${window.location.protocol}` != "file:") {
-    PHP_StringToFile("data/" + stamp + "_" + ip + ".txt", entry, "FILE_APPEND");
+    //PHP_StringToFile("data/" + stamp + "_" + ip + ".txt", entry, "FILE_APPEND");
     //}
 }
 

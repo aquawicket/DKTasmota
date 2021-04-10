@@ -42,8 +42,8 @@ function DKLoadFiles() {
     DK_PreloadImage("DKTasmota/settings.png");
     DK_PreloadImage("DKTasmota/online.png");
     DK_PreloadImage("DKTasmota/offline.png");
-    DK_PreloadImage("DKTasmota/automateOff.png");
-    DK_PreloadImage("DKTasmota/automateOn.png");
+    DK_PreloadImage("DKTasmota/automateOFF.png");
+    DK_PreloadImage("DKTasmota/automateON.png");
 }
 
 function DKLoadApp() {
@@ -53,7 +53,7 @@ function DKLoadApp() {
 
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
-        if (rval === "127.0.0.1" || rval === "localhost" || rval === "::1")
+        if (rval === "127.0.0.1" || rval === "localhost")
         {
             app.server = true;
             app.automate = true;
@@ -303,13 +303,13 @@ function AddDeviceToTable(ip) {
     const auto = document.createElement("img");
     auto.id = ip+"automate";
     auto.setAttribute("title", "Automation");
-    auto.src = "DKTasmota/automateOn.png";
+    auto.src = "DKTasmota/automateON.png";
     for (let n = 0; n < devices.length; n++) {
         if (devices[n].ip === ip) {
             if (devices[n].user.automate) {
-                auto.src = "DKTasmota/automateOff.png";
+                auto.src = "DKTasmota/automateOFF.png";
             } else {
-                auto.src = "DKTasmota/automateOn.png";
+                auto.src = "DKTasmota/automateON.png";
             }
         }
     }
@@ -323,10 +323,10 @@ function AddDeviceToTable(ip) {
             if (devices[n].ip === ip) {
                 if (devices[n].user.automate) {
                     devices[n].user.automate = false;
-                    auto.src = "DKTasmota/automateOff.png";
+                    auto.src = "DKTasmota/automateOFF.png";
                 } else {
                     devices[n].user.automate = true;
-                    auto.src = "DKTasmota/automateOn.png";
+                    auto.src = "DKTasmota/automateON.png";
                 }
             }
         }
@@ -733,9 +733,9 @@ function UpdateScreen(success, url, data) {
     }
 
     if (device.user.automate) {
-        byId(device.ip+"automate").src = "DKTasmota/automateOn.png";
+        byId(device.ip+"automate").src = "DKTasmota/automateON.png";
     } else {
-        byId(device.ip+"automate").src = "DKTasmota/automateOff.png";
+        byId(device.ip+"automate").src = "DKTasmota/automateOFF.png";
     }
 
     device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
