@@ -165,14 +165,22 @@ function DKChart_UpdateChartDevice(ip, identifier, data) {
     //}
 }
 
-function DKChart_SelectChart(ip)
-{
+function DKChart_SelectChart(ip){
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             lineChart.data.datasets[n].hidden = false;
         }
         else{
             lineChart.data.datasets[n].hidden = true;
+        }
+    }
+    lineChart.update();
+}
+
+function DKChart_ShowChart(ip){
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        if (lineChart.data.datasets[n].ip === ip) {
+            lineChart.data.datasets[n].hidden = false;
         }
     }
     lineChart.update();

@@ -15,7 +15,7 @@ function DKLoadFiles() {
     DK_Create("DKFile/DKFile.js");
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
-    //DK_Create("DKGui/DKMessageBox.js");
+    DK_Create("DKGui/DKMessageBox.js");
     DK_Create("DKGui/DKDrag.js");
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
@@ -75,16 +75,16 @@ function LoadGui() {
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
-    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", DKDebug_Func); 
+    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", DKDebug_Func);
 
     for (let n = 0; n < devices.length; n++) {
         AddDeviceToTable(devices[n].ip);
     }
 }
 
-function PushAssets(){
-    PHP_PushDKAssets(function PHP_PushDKAssetsCallback(rval){
-      dkconsole.log(rval);  
+function PushAssets() {
+    PHP_PushDKAssets(function PHP_PushDKAssetsCallback(rval) {
+        dkconsole.log(rval);
     });
 }
 
@@ -117,41 +117,20 @@ function SendSuperRequest(url, callback) {
 }
 
 function CreateButtons(parent) {
-    const scanDevices = document.createElement("button");
-    scanDevices.innerHTML = "Scan Devices";
-    scanDevices.style.cursor = "pointer";
-    scanDevices.onclick = ScanDevices;
-    parent.appendChild(scanDevices);
-
-    const updateDevices = document.createElement("button");
-    updateDevices.innerHTML = "Update Devices";
-    updateDevices.style.cursor = "pointer";
-    updateDevices.onclick = MainAppLoop;
-    parent.appendChild(updateDevices);
-
-    const clearDevices = document.createElement("button");
-    clearDevices.innerHTML = "Clear Devices";
-    clearDevices.style.cursor = "pointer";
-    clearDevices.onclick = ClearDevices;
-    parent.appendChild(clearDevices);
-
-    const automation = document.createElement("button");
-    if (app.automate === true) {
-        automation.innerHTML = "Automate ON";
-    } else {
-        automation.innerHTML = "Automate OFF";
+    DKGui_CreateButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
+    DKGui_CreateButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
+    DKGui_CreateButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
+    
+    const automation = DKGui_CreateButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
+    automation.style.position = "";
+    automation_update();
+    function automation_onclick() {
+        app.automate ? app.automate = false : app.automate = true;
+        automation_update();
     }
-    automation.style.cursor = "pointer";
-    automation.onclick = function() {
-        if (app.automate === true) {
-            app.automate = false;
-            automation.innerHTML = "Automat OFF";
-        } else {
-            app.automate = true;
-            automation.innerHTML = "Automat ON";
-        }
+    function automation_update() {
+        app.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
     }
-    parent.appendChild(automation);
 
     const internet = document.createElement("img");
     internet.id = "internet";
@@ -179,7 +158,7 @@ function CreateButtons(parent) {
             DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 0.0);
             volume.src = "DKTasmota/volume_0.png";
         } else {
-            DKAudio_SetVolume("PowerDown.mp3", 1.0);
+            DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 1.0);
             volume.src = "DKTasmota/volume_100.png";
         }
     }
@@ -218,7 +197,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetRowByName(table, "HEADER").style.cursor = "pointer";
     DKTable_GetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
     DKTable_GetCellByName(table, "HEADER", "device").style.width = "230rem";
-    DKTable_GetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick() {
+    DKTable_GetCellByName(table, "HEADER", "device").onclick = function HEADER_device_onclick() {
         DKTable_Sort("deviceTable", "device");
         UpdateTableStyles();
     }
@@ -227,7 +206,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetCellByName(table, "HEADER", "power").innerHTML = "power";
     DKTable_GetCellByName(table, "HEADER", "power").style.width = "50rem";
     DKTable_GetCellByName(table, "HEADER", "power").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "power").onclick = function powerHeaderOnClick() {
+    DKTable_GetCellByName(table, "HEADER", "power").onclick = function HEADER_power_onclick() {
         DKTable_Sort("deviceTable", "power");
         UpdateTableStyles();
     }
@@ -236,7 +215,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetCellByName(table, "HEADER", "data").innerHTML = "data";
     DKTable_GetCellByName(table, "HEADER", "data").style.width = "150rem";
     DKTable_GetCellByName(table, "HEADER", "data").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick() {
+    DKTable_GetCellByName(table, "HEADER", "data").onclick = function HEADER_data_onclick() {
         DKTable_Sort("deviceTable", "data");
         UpdateTableStyles();
     }
@@ -245,7 +224,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetCellByName(table, "HEADER", "automate").innerHTML = "automate";
     DKTable_GetCellByName(table, "HEADER", "automate").style.width = "50rem";
     DKTable_GetCellByName(table, "HEADER", "automate").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "automate").onclick = function dataHeaderOnClick() {
+    DKTable_GetCellByName(table, "HEADER", "automate").onclick = function HEADER_automate_onclick() {
         DKTable_Sort("deviceTable", "automate");
         UpdateTableStyles();
     }
@@ -254,7 +233,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetCellByName(table, "HEADER", "wifi").innerHTML = "wifi signal";
     DKTable_GetCellByName(table, "HEADER", "wifi").style.width = "70rem";
     DKTable_GetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "wifi").onclick = function wifiHeaderOnClick() {
+    DKTable_GetCellByName(table, "HEADER", "wifi").onclick = function HEADER_wifi_onclick() {
         DKTable_Sort("deviceTable", "wifi");
         UpdateTableStyles();
     }
@@ -263,7 +242,7 @@ function CreateDeviceTable(parent) {
     DKTable_GetCellByName(table, "HEADER", "options").innerHTML = "options";
     DKTable_GetCellByName(table, "HEADER", "options").style.width = "120rem";
     DKTable_GetCellByName(table, "HEADER", "options").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick() {//dkconsole.log("optionsHeaderOnClick");
+    DKTable_GetCellByName(table, "HEADER", "options").onclick = function HEADER_options_onclick() {//dkconsole.log("HEADER_options_onclick");
     }
 }
 
@@ -352,11 +331,12 @@ function AddDeviceToTable(ip) {
     restart.style.cursor = "pointer";
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
-    restart.onclick = function restartOnClick() {
-        DKMessageBox_Confirm("Restart this device?", function() {
-            //DKConfirm("Restart this device?", function() {
-            restart.src = "DKTasmota/loading.gif";
-            DK_SendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
+    restart.onclick = function restart_onclick() {
+        DKMessageBox_Confirm("Restart this device?", function(rval) {
+            if (rval) {
+                //restart.src = "DKTasmota/loading.gif";
+                DK_SendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
+            }
         });
     }
     optionsCell.appendChild(restart);
@@ -370,7 +350,7 @@ function AddDeviceToTable(ip) {
     info.style.cursor = "pointer";
     info.style.paddingRight = "3rem";
     info.style.paddingBottom = "2rem";
-    info.onclick = function InfoOnClick() {
+    info.onclick = function info_onclick() {
         InfoWindow(ip);
     }
     optionsCell.appendChild(info);
@@ -382,7 +362,7 @@ function AddDeviceToTable(ip) {
     settings.style.width = "15rem";
     settings.style.height = "15rem";
     settings.style.cursor = "pointer";
-    settings.onclick = function SettingsOnClick() {
+    settings.onclick = function settings_onclick() {
         SettingsWindow(ip);
     }
     optionsCell.appendChild(settings);
@@ -394,7 +374,7 @@ function AddDeviceToTable(ip) {
     dConsole.style.height = "15rem";
     dConsole.style.paddingLeft = "3rem";
     dConsole.style.cursor = "pointer";
-    dConsole.onclick = function SettingsOnClick() {
+    dConsole.onclick = function dConsole_onclick() {
         DConsoleWindow(ip);
     }
     optionsCell.appendChild(dConsole);
@@ -406,8 +386,12 @@ function AddDeviceToTable(ip) {
     dChart.style.height = "15rem";
     dChart.style.paddingLeft = "3rem";
     dChart.style.cursor = "pointer";
-    dChart.onclick = function ChartOnClick() {
+    dChart.onclick = function dChart_onclick() {
         DKChart_SelectChart(ip);
+    }
+    dChart.oncontextmenu = function dChart_oncontextmenu(event) {
+        event.preventDefault();
+        DKChart_ShowChart(ip);
     }
     optionsCell.appendChild(dChart);
 
@@ -440,7 +424,7 @@ function PreferencesWindow() {
     div.style.overflow = "auto";
 
     document.body.appendChild(div);
-    DKFrame_Html("Preferences");
+    DKFrame_Create(div);
 }
 
 function InfoWindow(ip) {
@@ -470,7 +454,7 @@ function InfoWindow(ip) {
     //dkconsole.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
-    DKFrame_Html("Info");
+    DKFrame_Create(div);
 }
 
 function SettingsWindow(ip) {
@@ -494,7 +478,7 @@ function SettingsWindow(ip) {
     div.style.overflow = "auto";
 
     document.body.appendChild(div);
-    DKFrame_Html("Settings");
+    DKFrame_Create(div);
 }
 
 function DConsoleWindow(ip) {
@@ -567,7 +551,7 @@ function DConsoleWindow(ip) {
     div.appendChild(input);
 
     document.body.appendChild(div);
-    DKFrame_Html("Console");
+    DKFrame_Create(div);
 }
 
 function UpdateTableStyles() {
@@ -587,9 +571,7 @@ function UpdateTableStyles() {
 function ScanDevices() {
     let deviceIPs = [];
     const data = DK_LoadFromLocalStorage("deviceIPs");
-    if (data) {
-        deviceIPs = JSON.parse(data);
-    }
+    data && (deviceIPs = JSON.parse(data));
 
     DKTasmota_GetDevices("192.168.1.", function DKTasmota_GetDevicesCallback(ip, done) {
         if (ip && !deviceIPs.includes(ip)) {
@@ -641,7 +623,7 @@ function UpdateScreen(success, url, data) {
         return;
     }
     if (!success || !data) {
-        DKAudio_Play("PowerDown.mp3");
+        DKAudio_Play("DKTasmota/PowerDown.mp3");
         dkconsole.warn(device.ip + " did not respond");
         row.style.backgroundColor = "red";
         return;
