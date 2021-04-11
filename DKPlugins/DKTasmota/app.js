@@ -6,6 +6,7 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
+
     DK_Create("DK/DKErrorHandler.js");
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
@@ -20,7 +21,7 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
-    DK_Create("DKAudio/DKAudio.js", function() {
+    DK_Create("DKAudio/DKAudio.js", function DK_CreateCallback() {
         DKAudio_PreLoadAudio("DKTasmota/PowerDown.mp3");
     });
 
@@ -50,7 +51,7 @@ function DKLoadApp() {
     DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
     DKTasmota_LoadDevices();
 
-    PHP_GetRemoteAddress(function(rval) {
+    PHP_GetRemoteAddress(function PHP_GetRemoteAddressCallback(rval) {
         dkconsole.log(rval);
         if (rval === "127.0.0.1" || rval === "localhost") {
             app.server = true;
@@ -68,7 +69,7 @@ function DKLoadApp() {
 
 function LoadGui() {
     DKConsole_Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
-    dkconsole.debug("**** Tasmota device manager 0.1b ****");
+    dkconsole.message("**** Tasmota device manager 0.1b ****", "blue");
     document.body.style.backgroundColor = "rgb(100,100,100)";
     CreateButtons(document.body);
     DKClock_Create(document.body, "clock", "2rem", "", "25%");
@@ -90,17 +91,14 @@ function PushAssets() {
 
 function MainAppLoop() {
     //Check internet connection
-    const internet = byId("internet");
     if (DK_IsOnline()) {
-        internet.src = "DKTasmota/online.png";
+        byId("internet").src = "DKTasmota/online.png";
     } else {
-        internet.src = "DKTasmota/offline.png";
+        byId("internet").src = "DKTasmota/offline.png";
     }
 
     ProcessDevices();
-    if (app.automate) {
-        Automate();
-    }
+    app.automate && Automate();
 }
 
 function SendSuperRequest(url, callback) {
@@ -120,7 +118,7 @@ function CreateButtons(parent) {
     DKGui_CreateButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
     DKGui_CreateButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
     DKGui_CreateButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
-    
+
     const automation = DKGui_CreateButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
     automation.style.position = "";
     automation_update();
@@ -132,28 +130,11 @@ function CreateButtons(parent) {
         app.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
     }
 
-    const internet = document.createElement("img");
-    internet.id = "internet";
-    if (DK_IsOnline()) {
-        internet.src = "DKTasmota/online.png";
-    } else {
-        internet.src = "DKTasmota/onffline.png";
-    }
-    internet.style.position = "absolute";
-    internet.style.height = "19rem";
-    internet.style.top = "2rem";
-    internet.style.right = "58rem";
-    parent.appendChild(internet);
+    const net = DKGui_CreateImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
+    DK_IsOnline() ? net.src = "DKTasmota/online.png" : net.src = "DKTasmota/onffline.png";
 
-    const volume = document.createElement("img");
-    volume.src = "DKTasmota/volume_100.png";
-    volume.style.position = "absolute";
-    volume.style.height = "19rem";
-    volume.style.top = "2rem";
-    volume.style.right = "28rem";
-    volume.style.cursor = "pointer";
-    parent.appendChild(volume);
-    volume.onclick = function() {
+    const volume = DKGui_CreateImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
+    function volume_onclick() {
         if (DKAudio_GetVolume("DKTasmota/PowerDown.mp3") === 1.0) {
             DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 0.0);
             volume.src = "DKTasmota/volume_0.png";
@@ -163,17 +144,7 @@ function CreateButtons(parent) {
         }
     }
 
-    const preferences = document.createElement("img");
-    preferences.src = "DKTasmota/options.png";
-    preferences.style.position = "absolute";
-    preferences.style.height = "17rem";
-    preferences.style.top = "3rem";
-    preferences.style.right = "3rem";
-    preferences.style.cursor = "pointer";
-    parent.appendChild(preferences);
-    preferences.onclick = function() {
-        PreferencesWindow();
-    }
+    const preferences = DKGui_CreateImageButton(document.body, "", "DKTasmota/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
 }
 
 function CreateDeviceTable(parent) {
@@ -191,58 +162,64 @@ function CreateDeviceTable(parent) {
 
     //Create Header Row as a normal <tr>
     //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
-    DKTable_AddRow(table, "HEADER", "device");
-    DKTable_GetRowByName(table, "HEADER").style.backgroundColor = "rgb(50,50,50)";
-    DKTable_GetRowByName(table, "HEADER").style.fontWeight = "bold";
-    DKTable_GetRowByName(table, "HEADER").style.cursor = "pointer";
-    DKTable_GetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
-    DKTable_GetCellByName(table, "HEADER", "device").style.width = "230rem";
-    DKTable_GetCellByName(table, "HEADER", "device").onclick = function HEADER_device_onclick() {
+    const row = DKTable_AddRow(table, "HEADER", "device");
+    row.style.backgroundColor = "rgb(50,50,50)";
+    row.style.fontWeight = "bold";
+    row.style.cursor = "pointer";
+    const deviceCell = DKTable_GetCellByName(table, "HEADER", "device");
+    deviceCell.innerHTML = "Devices (0)";
+    deviceCell.style.width = "230rem";
+    deviceCell.onclick = function HEADER_device_onclick() {
         DKTable_Sort("deviceTable", "device");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "power");
-    DKTable_GetCellByName(table, "HEADER", "power").innerHTML = "power";
-    DKTable_GetCellByName(table, "HEADER", "power").style.width = "50rem";
-    DKTable_GetCellByName(table, "HEADER", "power").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "power").onclick = function HEADER_power_onclick() {
+    const powerCell = DKTable_GetCellByName(table, "HEADER", "power");
+    powerCell.innerHTML = "power";
+    powerCell.style.width = "50rem";
+    powerCell.style.textAlign = "center";
+    powerCell.onclick = function HEADER_power_onclick() {
         DKTable_Sort("deviceTable", "power");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "data");
-    DKTable_GetCellByName(table, "HEADER", "data").innerHTML = "data";
-    DKTable_GetCellByName(table, "HEADER", "data").style.width = "150rem";
-    DKTable_GetCellByName(table, "HEADER", "data").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "data").onclick = function HEADER_data_onclick() {
+    const dataCell = DKTable_GetCellByName(table, "HEADER", "data");
+    dataCell.innerHTML = "data";
+    dataCell.style.width = "150rem";
+    dataCell.style.textAlign = "center";
+    dataCell.onclick = function HEADER_data_onclick() {
         DKTable_Sort("deviceTable", "data");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "automate");
-    DKTable_GetCellByName(table, "HEADER", "automate").innerHTML = "automate";
-    DKTable_GetCellByName(table, "HEADER", "automate").style.width = "50rem";
-    DKTable_GetCellByName(table, "HEADER", "automate").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "automate").onclick = function HEADER_automate_onclick() {
+    const automateCell = DKTable_GetCellByName(table, "HEADER", "automate");
+    automateCell.innerHTML = "automate";
+    automateCell.style.width = "50rem";
+    automateCell.style.textAlign = "center";
+    automateCell.onclick = function HEADER_automate_onclick() {
         DKTable_Sort("deviceTable", "automate");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "wifi");
-    DKTable_GetCellByName(table, "HEADER", "wifi").innerHTML = "wifi signal";
-    DKTable_GetCellByName(table, "HEADER", "wifi").style.width = "70rem";
-    DKTable_GetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "wifi").onclick = function HEADER_wifi_onclick() {
+    const wifiCell = DKTable_GetCellByName(table, "HEADER", "wifi");
+    wifiCell.innerHTML = "wifi signal";
+    wifiCell.style.width = "70rem";
+    wifiCell.style.textAlign = "center";
+    wifiCell.onclick = function HEADER_wifi_onclick() {
         DKTable_Sort("deviceTable", "wifi");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "options");
-    DKTable_GetCellByName(table, "HEADER", "options").innerHTML = "options";
-    DKTable_GetCellByName(table, "HEADER", "options").style.width = "120rem";
-    DKTable_GetCellByName(table, "HEADER", "options").style.textAlign = "center";
-    DKTable_GetCellByName(table, "HEADER", "options").onclick = function HEADER_options_onclick() {//dkconsole.log("HEADER_options_onclick");
+    const optionsCell = DKTable_GetCellByName(table, "HEADER", "options");
+    optionsCell.innerHTML = "options";
+    optionsCell.style.width = "120rem";
+    optionsCell.style.textAlign = "center";
+    optionsCell.onclick = function HEADER_options_onclick() {//dkconsole.log("HEADER_options_onclick");
     }
 }
 
@@ -261,14 +238,14 @@ function AddDeviceToTable(ip) {
     const deviceCell = DKTable_GetCellByName(table, ip, "device");
     deviceCell.innerHTML = "<a>" + ip + "</a>";
     deviceCell.style.cursor = "pointer";
-    deviceCell.onclick = function CellOnClick() {
+    deviceCell.onclick = function deviceCell_onclick() {
         const deviceWindow = window.open("http://" + ip, ip, "_blank, width=500, height=700");
     }
 
     const powerCell = DKTable_GetCellByName(table, ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
-    powerCell.onclick = function PowerOnClick(id) {
+    powerCell.onclick = function powerCell_onclick() {
         powerCell.innerHTML = "";
         const loading = document.createElement("img");
         loading.src = "DKTasmota/loading.gif";
@@ -300,7 +277,7 @@ function AddDeviceToTable(ip) {
     auto.style.cursor = "pointer";
     auto.style.paddingRight = "3rem";
     auto.style.paddingBottom = "2rem";
-    auto.onclick = function AutomateOnClick() {
+    auto.onclick = function auto_onclick() {
         for (let n = 0; n < devices.length; n++) {
             if (devices[n].ip === ip) {
                 if (devices[n].user.automate) {
@@ -332,7 +309,7 @@ function AddDeviceToTable(ip) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        DKMessageBox_Confirm("Restart this device?", function(rval) {
+        DKMessageBox_Confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
             if (rval) {
                 //restart.src = "DKTasmota/loading.gif";
                 DK_SendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
@@ -512,15 +489,15 @@ function DConsoleWindow(ip) {
     input.style.bottom = "10rem";
     input.style.color = "rgb(255,255,255)";
     input.style.backgroundColor = "rgb(0,0,0)";
-    input.onkeydown = function() {
+    input.onkeydown = function input_onkeydown() {
         const key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter
             dkconsole.debug("Send command -> " + input.value);
             const cmnd = input.value;
             const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-            DK_SendRequest(url, function(success, url, data) {
-                //dkconsole.log("function("+success+","+url+","+data+")");
+            DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
+                //dkconsole.log("function DK_SendRequestCallback("+success+","+url+","+data+")");
                 if (data) {
                     const msgDiv = document.createElement("div");
                     msgDiv.style.width = "100%";

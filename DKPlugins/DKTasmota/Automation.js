@@ -59,16 +59,16 @@ function Automate() {
     }
 
     //A Tent Alarms
-    if (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) {
+    if (ATentTemp && ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) {
         dkconsole.message("!!! A TENT TEMPERATURE BELOW MINIMUM " + ATentTemp.user.temperature + "&#176;F < " + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone) + "&#176;F !!!", "red");
     }
-    if (ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone)) {
+    if (ATentTemp && ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone)) {
         dkconsole.message("!!! A TENT TEMPERATURE ABOVE MAXIMUM " + ATentTemp.user.temperature + "&#176;F > " + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone) + "&#176;F !!!", "red");
     }
-    if (ATentTemp.user.humidity < (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone)) {
+    if (ATentTemp && ATentTemp.user.humidity < (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone)) {
         dkconsole.message("!!! A TENT HUMUDITY BELOW MINIMUM " + ATentTemp.user.humidity + "% < " + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone) + "% !!!", "red");
     }
-    if (ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone)) {
+    if (ATentTemp && ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone)) {
         dkconsole.message("!!! A TENT HUMUDITY ABOVE MAXIMUM " + ATentTemp.user.humidity + "% > " + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone) + "% !!!", "red");
     }
 
