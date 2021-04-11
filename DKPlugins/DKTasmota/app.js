@@ -74,11 +74,18 @@ function LoadGui() {
     DKClock_Create(document.body, "clock", "2rem", "", "25%");
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    DKDebug_CreateButton(document.body, "debug_button", "25rem", "", "", "5rem", "63rem", "20rem");
+    DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
+    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", DKDebug_Func); 
 
     for (let n = 0; n < devices.length; n++) {
         AddDeviceToTable(devices[n].ip);
     }
+}
+
+function PushAssets(){
+    PHP_PushDKAssets(function PHP_PushDKAssetsCallback(rval){
+      dkconsole.log(rval);  
+    });
 }
 
 function MainAppLoop() {

@@ -1,13 +1,8 @@
 "use strict";
 
-//A Convienient Debug Button Function
-const showDebugButton = 1;
-function DKDebug_ButtonOnClick() {
-
-    PHP_PushDKAssets(function(rval){
-        dkconsole.log("PHP_PushDKAssets():rval = "+rval);  
-    });
-
+//A Convienient Debug Function
+function DKDebug_Func() {
+    dkconsole.log("DEBUG BUTTON");
     /*
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
@@ -143,22 +138,4 @@ function DKDebug_ButtonOnClick() {
         myData.push(input);
     }
     */
-}
-
-function DKDebug_CreateButton(parent, id, top, bottom, left, right, width, height) {
-    if (!showDebugButton) {
-        return;
-    }
-    const debugButton = document.createElement("button");
-    debugButton.innerHTML = "DEBUG";
-    debugButton.style.position = "absolute";
-    debugButton.style.top = top;
-    debugButton.style.bottom = bottom;
-    debugButton.style.left = left;
-    debugButton.style.right = right;
-    debugButton.style.width = width;
-    debugButton.style.height = height;
-    debugButton.onclick = DKDebug_ButtonOnClick;
-    parent.appendChild(debugButton);
-    return debugButton;
 }
