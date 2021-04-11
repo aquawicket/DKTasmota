@@ -6,7 +6,6 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
-    //DK_Create("https://cdn.jsdelivr.net/npm/superagent");
     DK_Create("DK/DKErrorHandler.js");
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
@@ -53,31 +52,29 @@ function DKLoadApp() {
 
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
-        if (rval === "127.0.0.1" || rval === "localhost")
-        {
+        if (rval === "127.0.0.1" || rval === "localhost") {
             app.server = true;
             app.automate = true;
         } else {
             app.client = true;
             app.automate = false;
         }
-
         LoadGui();
     });
 
-    //Run app main loop
-    window.setInterval(MainAppLoop, 40000);
+    //Run app main loop every 30 seconds
+    window.setInterval(MainAppLoop, 30000);
 }
 
 function LoadGui() {
-    DKConsole_Create(document.body, "dkconsole", "", "0px", "0px", "0px", "100%", "25%");
+    DKConsole_Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     dkconsole.debug("**** Tasmota device manager 0.1b ****");
     document.body.style.backgroundColor = "rgb(100,100,100)";
     CreateButtons(document.body);
-    DKClock_Create(document.body, "clock", "2px", "", "25%");
+    DKClock_Create(document.body, "clock", "2rem", "", "25%");
     CreateDeviceTable(document.body);
-    DKChart_Create(document.body, "chart", "50%", "75%", "0px", "0px", "100%", "25%");
-    DKDebug_CreateButton(document.body, "debug_button", "25px", "", "", "5px", "63px", "20px");
+    DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
+    DKDebug_CreateButton(document.body, "debug_button", "25rem", "", "", "5rem", "63rem", "20rem");
 
     for (let n = 0; n < devices.length; n++) {
         AddDeviceToTable(devices[n].ip);
@@ -157,17 +154,17 @@ function CreateButtons(parent) {
         internet.src = "DKTasmota/onffline.png";
     }
     internet.style.position = "absolute";
-    internet.style.height = "19px";
-    internet.style.top = "2px";
-    internet.style.right = "58px";
+    internet.style.height = "19rem";
+    internet.style.top = "2rem";
+    internet.style.right = "58rem";
     parent.appendChild(internet);
 
     const volume = document.createElement("img");
     volume.src = "DKTasmota/volume_100.png";
     volume.style.position = "absolute";
-    volume.style.height = "19px";
-    volume.style.top = "2px";
-    volume.style.right = "28px";
+    volume.style.height = "19rem";
+    volume.style.top = "2rem";
+    volume.style.right = "28rem";
     volume.style.cursor = "pointer";
     parent.appendChild(volume);
     volume.onclick = function() {
@@ -183,9 +180,9 @@ function CreateButtons(parent) {
     const preferences = document.createElement("img");
     preferences.src = "DKTasmota/options.png";
     preferences.style.position = "absolute";
-    preferences.style.height = "17px";
-    preferences.style.top = "3px";
-    preferences.style.right = "3px";
+    preferences.style.height = "17rem";
+    preferences.style.top = "3rem";
+    preferences.style.right = "3rem";
     preferences.style.cursor = "pointer";
     parent.appendChild(preferences);
     preferences.onclick = function() {
@@ -196,15 +193,15 @@ function CreateButtons(parent) {
 function CreateDeviceTable(parent) {
     const deviceDiv = document.createElement("div");
     deviceDiv.style.position = "absolute";
-    deviceDiv.style.top = "25px";
-    deviceDiv.style.left = "20px";
-    deviceDiv.style.width = "600px";
+    deviceDiv.style.top = "25rem";
+    deviceDiv.style.left = "20rem";
+    deviceDiv.style.width = "720rem";
     deviceDiv.style.height = "47.0%";
     //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
 
-    const table = DKTable_Create(deviceDiv, "deviceTable", "0px", "", "0px");
+    const table = DKTable_Create(deviceDiv, "deviceTable", "0rem", "", "0rem");
 
     //Create Header Row as a normal <tr>
     //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
@@ -213,51 +210,51 @@ function CreateDeviceTable(parent) {
     DKTable_GetRowByName(table, "HEADER").style.fontWeight = "bold";
     DKTable_GetRowByName(table, "HEADER").style.cursor = "pointer";
     DKTable_GetCellByName(table, "HEADER", "device").innerHTML = "Devices (0)";
-    DKTable_GetCellByName(table, "HEADER", "device").style.width = "250px";
+    DKTable_GetCellByName(table, "HEADER", "device").style.width = "230rem";
     DKTable_GetCellByName(table, "HEADER", "device").onclick = function deviceHeaderOnClick() {
-        DKTable_Sort("deviceTable", 0);
+        DKTable_Sort("deviceTable", "device");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "power");
     DKTable_GetCellByName(table, "HEADER", "power").innerHTML = "power";
-    DKTable_GetCellByName(table, "HEADER", "power").style.width = "50px";
+    DKTable_GetCellByName(table, "HEADER", "power").style.width = "50rem";
     DKTable_GetCellByName(table, "HEADER", "power").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "power").onclick = function powerHeaderOnClick() {
-        DKTable_Sort("deviceTable", 1);
+        DKTable_Sort("deviceTable", "power");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "data");
     DKTable_GetCellByName(table, "HEADER", "data").innerHTML = "data";
-    DKTable_GetCellByName(table, "HEADER", "data").style.width = "150px";
+    DKTable_GetCellByName(table, "HEADER", "data").style.width = "150rem";
     DKTable_GetCellByName(table, "HEADER", "data").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "data").onclick = function dataHeaderOnClick() {
-        DKTable_Sort("deviceTable", 2);
+        DKTable_Sort("deviceTable", "data");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "automate");
     DKTable_GetCellByName(table, "HEADER", "automate").innerHTML = "automate";
-    DKTable_GetCellByName(table, "HEADER", "automate").style.width = "50px";
+    DKTable_GetCellByName(table, "HEADER", "automate").style.width = "50rem";
     DKTable_GetCellByName(table, "HEADER", "automate").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "automate").onclick = function dataHeaderOnClick() {
-        DKTable_Sort("deviceTable", 3);
+        DKTable_Sort("deviceTable", "automate");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "wifi");
     DKTable_GetCellByName(table, "HEADER", "wifi").innerHTML = "wifi signal";
-    DKTable_GetCellByName(table, "HEADER", "wifi").style.width = "70px";
+    DKTable_GetCellByName(table, "HEADER", "wifi").style.width = "70rem";
     DKTable_GetCellByName(table, "HEADER", "wifi").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "wifi").onclick = function wifiHeaderOnClick() {
-        DKTable_Sort("deviceTable", 4);
+        DKTable_Sort("deviceTable", "wifi");
         UpdateTableStyles();
     }
 
     DKTable_AddColumn(table, "options");
     DKTable_GetCellByName(table, "HEADER", "options").innerHTML = "options";
-    DKTable_GetCellByName(table, "HEADER", "options").style.width = "80px";
+    DKTable_GetCellByName(table, "HEADER", "options").style.width = "120rem";
     DKTable_GetCellByName(table, "HEADER", "options").style.textAlign = "center";
     DKTable_GetCellByName(table, "HEADER", "options").onclick = function optionsHeaderOnClick() {//dkconsole.log("optionsHeaderOnClick");
     }
@@ -289,8 +286,8 @@ function AddDeviceToTable(ip) {
         powerCell.innerHTML = "";
         const loading = document.createElement("img");
         loading.src = "DKTasmota/loading.gif";
-        loading.style.width = "15px";
-        loading.style.height = "15px";
+        loading.style.width = "15rem";
+        loading.style.height = "15rem";
         powerCell.appendChild(loading);
         DK_SendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
@@ -301,7 +298,7 @@ function AddDeviceToTable(ip) {
     const automateCell = DKTable_GetCellByName(table, ip, "automate");
     automateCell.style.textAlign = "center";
     const auto = document.createElement("img");
-    auto.id = ip+"automate";
+    auto.id = ip + "automate";
     auto.setAttribute("title", "Automation");
     auto.src = "DKTasmota/automateON.png";
     for (let n = 0; n < devices.length; n++) {
@@ -313,11 +310,10 @@ function AddDeviceToTable(ip) {
             }
         }
     }
-    auto.style.width = "17px";
-    //auto.style.height = "12px";
+    auto.style.width = "17rem";
     auto.style.cursor = "pointer";
-    auto.style.paddingRight = "3px";
-    auto.style.paddingBottom = "2px";
+    auto.style.paddingRight = "3rem";
+    auto.style.paddingBottom = "2rem";
     auto.onclick = function AutomateOnClick() {
         for (let n = 0; n < devices.length; n++) {
             if (devices[n].ip === ip) {
@@ -344,11 +340,11 @@ function AddDeviceToTable(ip) {
     const restart = document.createElement("img");
     restart.setAttribute("title", "Restart Device");
     restart.src = "DKTasmota/restart.png";
-    restart.style.width = "12px";
-    restart.style.height = "12px";
+    restart.style.width = "12rem";
+    restart.style.height = "12rem";
     restart.style.cursor = "pointer";
-    restart.style.paddingRight = "3px";
-    restart.style.paddingBottom = "2px";
+    restart.style.paddingRight = "3rem";
+    restart.style.paddingBottom = "2rem";
     restart.onclick = function restartOnClick() {
         DKMessageBox_Confirm("Restart this device?", function() {
             //DKConfirm("Restart this device?", function() {
@@ -362,11 +358,11 @@ function AddDeviceToTable(ip) {
     const info = document.createElement("img");
     info.setAttribute("title", "Device Info");
     info.src = "DKTasmota/info.png";
-    info.style.width = "12px";
-    info.style.height = "12px";
+    info.style.width = "12rem";
+    info.style.height = "12rem";
     info.style.cursor = "pointer";
-    info.style.paddingRight = "3px";
-    info.style.paddingBottom = "2px";
+    info.style.paddingRight = "3rem";
+    info.style.paddingBottom = "2rem";
     info.onclick = function InfoOnClick() {
         InfoWindow(ip);
     }
@@ -376,8 +372,8 @@ function AddDeviceToTable(ip) {
     const settings = document.createElement("img");
     settings.setAttribute("title", "Device Settings");
     settings.src = "DKTasmota/settings.png";
-    settings.style.width = "15px";
-    settings.style.height = "15px";
+    settings.style.width = "15rem";
+    settings.style.height = "15rem";
     settings.style.cursor = "pointer";
     settings.onclick = function SettingsOnClick() {
         SettingsWindow(ip);
@@ -387,20 +383,32 @@ function AddDeviceToTable(ip) {
     const dConsole = document.createElement("img");
     dConsole.setAttribute("title", "Device Console");
     dConsole.src = "DKTasmota/console.png";
-    dConsole.style.width = "15px";
-    dConsole.style.height = "15px";
-    dConsole.style.paddingLeft = "3px";
+    dConsole.style.width = "15rem";
+    dConsole.style.height = "15rem";
+    dConsole.style.paddingLeft = "3rem";
     dConsole.style.cursor = "pointer";
     dConsole.onclick = function SettingsOnClick() {
         DConsoleWindow(ip);
     }
     optionsCell.appendChild(dConsole);
 
+    const dChart = document.createElement("img");
+    dChart.setAttribute("title", "Device Chart");
+    dChart.src = "DKTasmota/chart.png";
+    dChart.style.width = "15rem";
+    dChart.style.height = "15rem";
+    dChart.style.paddingLeft = "3rem";
+    dChart.style.cursor = "pointer";
+    dChart.onclick = function ChartOnClick() {
+        DKChart_SelectChart(ip);
+    }
+    optionsCell.appendChild(dChart);
+
     //Do some final processing
     const deviceHeader = DKTable_GetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     DK_SendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
-    DKTable_Sort("deviceTable", 0);
+    DKTable_Sort("deviceTable", "device");
     UpdateTableStyles();
 }
 
@@ -408,19 +416,19 @@ function PreferencesWindow() {
     const div = document.createElement("div");
     div.id = "Preferences";
     div.style.position = "absolute";
-    div.style.top = "20px";
+    div.style.top = "20rem";
     div.style.width = "100%";
-    div.style.fontSize = "12px";
+    div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
     div.style.boxSizing = "border-box";
-    div.style.padding = "2px";
-    div.style.paddingLeft = "20px";
+    div.style.padding = "2rem";
+    div.style.paddingLeft = "20rem";
     div.style.borderStyle = "solid";
-    div.style.borderWidth = "1px";
-    div.style.borderTopWidth = "0px";
-    div.style.borderLeftWidth = "0px";
-    div.style.borderRightWidth = "0px";
+    div.style.borderWidth = "1rem";
+    div.style.borderTopWidth = "0rem";
+    div.style.borderLeftWidth = "0rem";
+    div.style.borderRightWidth = "0rem";
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
@@ -432,19 +440,19 @@ function InfoWindow(ip) {
     const div = document.createElement("div");
     div.id = "Info";
     div.style.position = "absolute";
-    div.style.top = "20px";
+    div.style.top = "20rem";
     div.style.width = "100%";
-    div.style.fontSize = "12px";
+    div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
     div.style.boxSizing = "border-box";
-    div.style.padding = "2px";
-    div.style.paddingLeft = "20px";
+    div.style.padding = "2rem";
+    div.style.paddingLeft = "20rem";
     div.style.borderStyle = "solid";
-    div.style.borderWidth = "1px";
-    div.style.borderTopWidth = "0px";
-    div.style.borderLeftWidth = "0px";
-    div.style.borderRightWidth = "0px";
+    div.style.borderWidth = "1rem";
+    div.style.borderTopWidth = "0rem";
+    div.style.borderLeftWidth = "0rem";
+    div.style.borderRightWidth = "0rem";
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
@@ -462,19 +470,19 @@ function SettingsWindow(ip) {
     const div = document.createElement("div");
     div.id = "Settings";
     div.style.position = "absolute";
-    div.style.top = "20px";
+    div.style.top = "20rem";
     div.style.width = "100%";
-    div.style.fontSize = "12px";
+    div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
     div.style.boxSizing = "border-box";
-    div.style.padding = "2px";
-    div.style.paddingLeft = "20px";
+    div.style.padding = "2rem";
+    div.style.paddingLeft = "20rem";
     div.style.borderStyle = "solid";
-    div.style.borderWidth = "1px";
-    div.style.borderTopWidth = "0px";
-    div.style.borderLeftWidth = "0px";
-    div.style.borderRightWidth = "0px";
+    div.style.borderWidth = "1rem";
+    div.style.borderTopWidth = "0rem";
+    div.style.borderLeftWidth = "0rem";
+    div.style.borderRightWidth = "0rem";
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
@@ -492,12 +500,12 @@ function DConsoleWindow(ip) {
 
     const output = document.createElement("div");
     output.style.position = "absolute";
-    output.style.top = "10px";
-    output.style.left = "10px";
+    output.style.top = "10rem";
+    output.style.left = "10rem";
     //output.style.width = "";
     //output.style.height = "";
-    output.style.right = "10px";
-    output.style.bottom = "40px";
+    output.style.right = "10rem";
+    output.style.bottom = "40rem";
     output.style.backgroundColor = "rgb(0,0,0)";
     div.appendChild(output);
 
@@ -506,11 +514,11 @@ function DConsoleWindow(ip) {
     input.type = "text";
     input.style.position = "absolute";
     //input.style.top = "";
-    input.style.left = "10px";
+    input.style.left = "10rem";
     input.style.width = "90%";
-    input.style.height = "22px";
-    //input.style.right = "10px";
-    input.style.bottom = "10px";
+    input.style.height = "22rem";
+    //input.style.right = "10rem";
+    input.style.bottom = "10rem";
     input.style.color = "rgb(255,255,255)";
     input.style.backgroundColor = "rgb(0,0,0)";
     input.onkeydown = function() {
@@ -525,12 +533,12 @@ function DConsoleWindow(ip) {
                 if (data) {
                     const msgDiv = document.createElement("div");
                     msgDiv.style.width = "100%";
-                    msgDiv.style.fontSize = "12px";
+                    msgDiv.style.fontSize = "12rem";
                     msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
                     msgDiv.style.whiteSpace = "pre-wrap";
                     msgDiv.style.boxSizing = "border-box";
-                    msgDiv.style.padding = "2px";
-                    msgDiv.style.paddingLeft = "10px";
+                    msgDiv.style.padding = "2rem";
+                    msgDiv.style.paddingLeft = "10rem";
 
                     const msgText = document.createElement("span");
                     msgText.innerHTML = data;
@@ -547,7 +555,6 @@ function DConsoleWindow(ip) {
                     input.value = "";
                 }
             });
-
         }
     }
     div.appendChild(input);
@@ -652,7 +659,7 @@ function UpdateScreen(success, url, data) {
     if (device.user.name) {
         const deviceCell = DKTable_GetCellByName(table, device.ip, "device");
         deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.user.name + "</a>";
-        DKTable_Sort("deviceTable", 0);
+        DKTable_Sort("deviceTable", "device");
         UpdateTableStyles();
     }
 
@@ -733,9 +740,9 @@ function UpdateScreen(success, url, data) {
     }
 
     if (device.user.automate) {
-        byId(device.ip+"automate").src = "DKTasmota/automateON.png";
+        byId(device.ip + "automate").src = "DKTasmota/automateON.png";
     } else {
-        byId(device.ip+"automate").src = "DKTasmota/automateOFF.png";
+        byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
     }
 
     device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;

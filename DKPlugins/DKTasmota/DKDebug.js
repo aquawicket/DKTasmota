@@ -4,15 +4,21 @@
 const showDebugButton = 1;
 function DKDebug_ButtonOnClick() {
 
+    PHP_PushDKAssets(function(rval){
+        dkconsole.log("PHP_PushDKAssets():rval = "+rval);  
+    });
+
+    /*
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);
     });
+    */
 
     /*
     const test = document.createElement("div");
     test.id = "test";
-    test.style.width = "300px";
-    test.style.height = "300px";
+    test.style.width = "300rem";
+    test.style.height = "300rem";
     test.style.backgroundColor = "rgb(0,0,0)";
     document.body.appendChild(test);
     DKFrame_Html("test");
@@ -29,11 +35,11 @@ function DKDebug_ButtonOnClick() {
 
     /*
     const resizableDiv = document.createElement("div");
-    resizableDiv.style.width = "5px";
-    resizableDiv.style.height = "5px";
+    resizableDiv.style.width = "5rem";
+    resizableDiv.style.height = "5rem";
     resizableDiv.style.resize = "both";
     resizableDiv.style.overflow = "auto";
-    resizableDiv.style.border = "solid 2px blue";
+    resizableDiv.style.border = "solid 2rem blue";
     document.body.appendChild(resizableDiv);
     DKDrag_AddResizeHandler(resizableDiv, function(){
         dkconsole.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
