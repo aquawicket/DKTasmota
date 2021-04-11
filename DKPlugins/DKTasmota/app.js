@@ -49,11 +49,10 @@ function DKLoadFiles() {
 function DKLoadApp() {
     DKErrorHandler_Create();
     DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
-    DKTasmota_LoadDevices();
+    DKTasmota_LoadDevicesFromLocalStorage();
 
     PHP_GetRemoteAddress(function PHP_GetRemoteAddressCallback(rval) {
-        dkconsole.log(rval);
-        if (rval === "127.0.0.1" || rval === "localhost") {
+        if (rval === "127.0.0.1") {
             app.server = true;
             app.automate = true;
         } else {
@@ -70,7 +69,8 @@ function DKLoadApp() {
 function LoadGui() {
     DKConsole_Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     dkconsole.message("**** Tasmota device manager 0.1b ****", "blue");
-    document.body.style.backgroundColor = "rgb(100,100,100)";
+    app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
+    app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);
     DKClock_Create(document.body, "clock", "2rem", "", "25%");
     CreateDeviceTable(document.body);
@@ -78,19 +78,23 @@ function LoadGui() {
     DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
     DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", DKDebug_Func);
 
+    if (!devices || !devices.length) {
+        //dkconsole.error("devices array empty");
+        return;
+    }
     for (let n = 0; n < devices.length; n++) {
-        AddDeviceToTable(devices[n].ip);
+        AddDeviceToTable(devices[n]);
     }
 }
 
 function PushAssets() {
     PHP_PushDKAssets(function PHP_PushDKAssetsCallback(rval) {
         dkconsole.log(rval);
+        dkconsole.log("done copying assets");
     });
 }
 
 function MainAppLoop() {
-    //Check internet connection
     if (DK_IsOnline()) {
         byId("internet").src = "DKTasmota/online.png";
     } else {
@@ -118,6 +122,7 @@ function CreateButtons(parent) {
     DKGui_CreateButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
     DKGui_CreateButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
     DKGui_CreateButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
+    DKGui_CreateButton(document.body, "Save Devices", "", "", "", "", "", "", SaveDevices).style.position = "";
 
     const automation = DKGui_CreateButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
     automation.style.position = "";
@@ -130,8 +135,8 @@ function CreateButtons(parent) {
         app.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
     }
 
-    const net = DKGui_CreateImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
-    DK_IsOnline() ? net.src = "DKTasmota/online.png" : net.src = "DKTasmota/onffline.png";
+    const internet = DKGui_CreateImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
+    DK_IsOnline() ? internet.src = "DKTasmota/online.png" : internet.src = "DKTasmota/onffline.png";
 
     const volume = DKGui_CreateImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     function volume_onclick() {
@@ -223,10 +228,10 @@ function CreateDeviceTable(parent) {
     }
 }
 
-function AddDeviceToTable(ip) {
+function AddDeviceToTable(device) {
     const table = byId("deviceTable");
-    const row = DKTable_AddRow(table, ip);
-    row.setAttribute("ip", ip);
+    const row = DKTable_AddRow(table, device.ip);
+    row.setAttribute("ip", device.ip);
     if (row.rowIndex % 2 == 0) {
         //even
         row.style.backgroundColor = "rgb(90,90,90)";
@@ -235,14 +240,14 @@ function AddDeviceToTable(ip) {
         row.style.backgroundColor = "rgb(60,60,60)";
     }
 
-    const deviceCell = DKTable_GetCellByName(table, ip, "device");
-    deviceCell.innerHTML = "<a>" + ip + "</a>";
+    const deviceCell = DKTable_GetCellByName(table, device.ip, "device");
+    device.user.name ? deviceCell.innerHTML = "<a>" + device.user.name + "</a>" : deviceCell.innerHTML = "<a>" + device.ip + "</a>";
     deviceCell.style.cursor = "pointer";
     deviceCell.onclick = function deviceCell_onclick() {
-        const deviceWindow = window.open("http://" + ip, ip, "_blank, width=500, height=700");
+        const deviceWindow = window.open("http://" + device.ip, device.ip, "_blank, width=500, height=700");
     }
 
-    const powerCell = DKTable_GetCellByName(table, ip, "power");
+    const powerCell = DKTable_GetCellByName(table, device.ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
     powerCell.onclick = function powerCell_onclick() {
@@ -252,55 +257,39 @@ function AddDeviceToTable(ip) {
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
-        DK_SendRequest("http://" + ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        DK_SendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
 
-    const dataCell = DKTable_GetCellByName(table, ip, "data");
+    const dataCell = DKTable_GetCellByName(table, device.ip, "data");
     dataCell.style.textAlign = "center";
 
-    const automateCell = DKTable_GetCellByName(table, ip, "automate");
+    const automateCell = DKTable_GetCellByName(table, device.ip, "automate");
     automateCell.style.textAlign = "center";
     const auto = document.createElement("img");
-    auto.id = ip + "automate";
+    auto.id = device.ip + "automate";
     auto.setAttribute("title", "Automation");
-    auto.src = "DKTasmota/automateON.png";
-    for (let n = 0; n < devices.length; n++) {
-        if (devices[n].ip === ip) {
-            if (devices[n].user.automate) {
-                auto.src = "DKTasmota/automateOFF.png";
-            } else {
-                auto.src = "DKTasmota/automateON.png";
-            }
-        }
-    }
+    (device.user.automate === undefined) && (device.user.automate = true);
+    device.user.automate ? auto.src = "DKTasmota/automateOFF.png" : auto.src = "DKTasmota/automateON.png";
     auto.style.width = "17rem";
     auto.style.cursor = "pointer";
     auto.style.paddingRight = "3rem";
     auto.style.paddingBottom = "2rem";
     auto.onclick = function auto_onclick() {
-        for (let n = 0; n < devices.length; n++) {
-            if (devices[n].ip === ip) {
-                if (devices[n].user.automate) {
-                    devices[n].user.automate = false;
-                    auto.src = "DKTasmota/automateOFF.png";
-                } else {
-                    devices[n].user.automate = true;
-                    auto.src = "DKTasmota/automateON.png";
-                }
-            }
-        }
+        device.user.automate ? device.user.automate = false : device.user.automate = true;
+        device.user.automate ? auto.src = "DKTasmota/automateON.png" : auto.src = "DKTasmota/automateOFF.png";
     }
     automateCell.appendChild(auto);
 
-    const wifiCell = DKTable_GetCellByName(table, ip, "wifi");
+    const wifiCell = DKTable_GetCellByName(table, device.ip, "wifi");
     wifiCell.style.textAlign = "center";
 
-    const optionsCell = DKTable_GetCellByName(table, ip, "options");
+    const optionsCell = DKTable_GetCellByName(table, device.ip, "options");
     optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
     //Device Restart
     const restart = document.createElement("img");
+    restart.id = device.ip + "restart";
     restart.setAttribute("title", "Restart Device");
     restart.src = "DKTasmota/restart.png";
     restart.style.width = "12rem";
@@ -311,10 +300,11 @@ function AddDeviceToTable(ip) {
     restart.onclick = function restart_onclick() {
         DKMessageBox_Confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
             if (rval) {
-                //restart.src = "DKTasmota/loading.gif";
-                DK_SendRequest("http://" + ip + "/cm?cmnd=Restart%201", UpdateScreen);
+                restart.src = "DKTasmota/loading.gif";
+                DK_SendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
             }
         });
+        DKFrame_SetTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
     }
     optionsCell.appendChild(restart);
 
@@ -328,7 +318,7 @@ function AddDeviceToTable(ip) {
     info.style.paddingRight = "3rem";
     info.style.paddingBottom = "2rem";
     info.onclick = function info_onclick() {
-        InfoWindow(ip);
+        InfoWindow(device);
     }
     optionsCell.appendChild(info);
 
@@ -340,7 +330,7 @@ function AddDeviceToTable(ip) {
     settings.style.height = "15rem";
     settings.style.cursor = "pointer";
     settings.onclick = function settings_onclick() {
-        SettingsWindow(ip);
+        SettingsWindow(device);
     }
     optionsCell.appendChild(settings);
 
@@ -352,30 +342,47 @@ function AddDeviceToTable(ip) {
     dConsole.style.paddingLeft = "3rem";
     dConsole.style.cursor = "pointer";
     dConsole.onclick = function dConsole_onclick() {
-        DConsoleWindow(ip);
+        DConsoleWindow(device);
     }
     optionsCell.appendChild(dConsole);
 
     const dChart = document.createElement("img");
+    dChart.id = device.ip + "dChart";
     dChart.setAttribute("title", "Device Chart");
     dChart.src = "DKTasmota/chart.png";
     dChart.style.width = "15rem";
-    dChart.style.height = "15rem";
-    dChart.style.paddingLeft = "3rem";
+    dChart.style.marginLeft = "3rem";
     dChart.style.cursor = "pointer";
+    optionsCell.appendChild(dChart);
+
     dChart.onclick = function dChart_onclick() {
-        DKChart_SelectChart(ip);
+        for (let n = 1; n < devices.length; n++) {
+            if (devices[n].ip === device.ip) {
+                byId(device.ip + "dChart").style.backgroundColor = DKChart_SelectChart(device.ip);
+            } else {
+                byId(devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
+            }
+        }
     }
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
         event.preventDefault();
-        DKChart_ShowChart(ip);
+        const color = DKChart_ToggleChart(device.ip);
+        for (let n = 1; n < devices.length; n++) {
+            if (devices[n].ip === device.ip) {
+                if (color) {
+                    byId(devices[n].ip + "dChart").style.backgroundColor = color;
+                } else {
+                    byId(devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
+                }
+            }
+        }
     }
     optionsCell.appendChild(dChart);
 
     //Do some final processing
     const deviceHeader = DKTable_GetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-    DK_SendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+    DK_SendRequest("http://" + device.ip + "/cm?cmnd=Status%200", UpdateScreen);
     DKTable_Sort("deviceTable", "device");
     UpdateTableStyles();
 }
@@ -404,7 +411,7 @@ function PreferencesWindow() {
     DKFrame_Create(div);
 }
 
-function InfoWindow(ip) {
+function InfoWindow(device) {
     const div = document.createElement("div");
     div.id = "Info";
     div.style.position = "absolute";
@@ -424,17 +431,16 @@ function InfoWindow(ip) {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
-    const obj = DKJson_FindObjectValueIncludes(devices, "ip", ip);
-    const n = devices.indexOf(obj);
-    const jsonString = DKJson_PrettyJson(JSON.stringify(devices[n]));
+    const jsonString = DKJson_PrettyJson(JSON.stringify(device));
     const jsonSuper = DKJson_HighlightJson(jsonString);
     //dkconsole.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
     DKFrame_Create(div);
+    DKFrame_SetTitle(div, device.user.name + " Info");
 }
 
-function SettingsWindow(ip) {
+function SettingsWindow(device) {
     const div = document.createElement("div");
     div.id = "Settings";
     div.style.position = "absolute";
@@ -453,12 +459,12 @@ function SettingsWindow(ip) {
     div.style.borderRightWidth = "0rem";
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
-
     document.body.appendChild(div);
     DKFrame_Create(div);
+    DKFrame_SetTitle(div, device.user.name + " Settings");
 }
 
-function DConsoleWindow(ip) {
+function DConsoleWindow(device) {
     const div = document.createElement("div");
     div.id = "Console";
     div.style.position = "absolute";
@@ -495,7 +501,7 @@ function DConsoleWindow(ip) {
             //enter
             dkconsole.debug("Send command -> " + input.value);
             const cmnd = input.value;
-            const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
+            const url = "http://" + device.ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
             DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
                 //dkconsole.log("function DK_SendRequestCallback("+success+","+url+","+data+")");
                 if (data) {
@@ -529,6 +535,7 @@ function DConsoleWindow(ip) {
 
     document.body.appendChild(div);
     DKFrame_Create(div);
+    DKFrame_SetTitle(div, device.user.name + " Console");
 }
 
 function UpdateTableStyles() {
@@ -546,20 +553,16 @@ function UpdateTableStyles() {
 }
 
 function ScanDevices() {
-    let deviceIPs = [];
-    const data = DK_LoadFromLocalStorage("deviceIPs");
-    data && (deviceIPs = JSON.parse(data));
-
     DKTasmota_GetDevices("192.168.1.", function DKTasmota_GetDevicesCallback(ip, done) {
-        if (ip && !deviceIPs.includes(ip)) {
-            deviceIPs.push(ip);
-            DK_SaveToLocalStorage("deviceIPs", JSON.stringify(deviceIPs));
-            AddDeviceToTable(ip);
+        if (ip && !DKJson_FindObjectValueIncludes(devices, 'ip', ip)) {
+            const device = DKTasmota_CreateDevice(ip);
+            AddDeviceToTable(device);
+            DKTasmota_SaveDevicesToLocalStorage();
         }
         if (done) {
             dkconsole.log("\n");
             dkconsole.message("Scan Complete", "green");
-            dkconsole.message("(" + deviceIPs.length + ") Tasmota Devices found", "green");
+            dkconsole.message("(" + devices.length + ") Tasmota Devices found", "green");
         }
     });
 }
@@ -568,7 +571,12 @@ function ClearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
-    DK_RemoveFromLocalStorage("deviceIPs");
+    DK_RemoveFromLocalStorage("devices");
+    devices = [];
+}
+
+function SaveDevices() {
+    DKTasmota_SaveDevicesToLocalStorage();
 }
 
 function ProcessDevices() {
@@ -584,6 +592,10 @@ function UpdateScreen(success, url, data) {
         dkconsole.log("url invalid");
         return;
     }
+    if (!devices.length) {
+        dkconsole.error("devices array empty");
+        return
+    }
     let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
     if (!device) {
         dkconsole.error("device invalid, didn't find ip in url:" + url);
@@ -596,7 +608,7 @@ function UpdateScreen(success, url, data) {
     }
     const row = DKTable_GetRowByName(table, device.ip);
     if (!row) {
-        dkconsole.error("row invlid");
+        //dkconsole.error("row invlid");
         return;
     }
     if (!success || !data) {
@@ -621,7 +633,8 @@ function UpdateScreen(success, url, data) {
     }
 
     // UPDATE TABLE
-    device.user.name = device.Status ? device.Status.DeviceName : device.DeviceName;
+    device.DeviceName && (device.user.name = device.DeviceName);
+    device.Status && device.Status.DeviceName && (device.user.name = device.Status.DeviceName);
     if (device.user.name) {
         const deviceCell = DKTable_GetCellByName(table, device.ip, "device");
         deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.user.name + "</a>";
@@ -650,6 +663,8 @@ function UpdateScreen(success, url, data) {
         device.user.temperature = device.StatusSNS.SI7021.Temperature;
     if (device.user.temperature) {
         let tempDirection = " ";
+        !device.user.temperatureTarget && (device.user.temperatureTarget = 77);
+        !device.user.temperatureZone && (device.user.temperatureZone = 20);
         if (device.user.temperature > device.user.temperatureTarget) {
             tempDirection = "&#8593;"
         }
@@ -674,6 +689,8 @@ function UpdateScreen(success, url, data) {
     device.user.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
     if (device.user.humidity) {
         let humDirection = " ";
+        !device.user.humidityTarget && (device.user.humidityTarget = 50);
+        !device.user.humidityZone && (device.user.humidityZone = 20);
         if (device.user.humidity > device.user.humidityTarget) {
             humDirection = "&#8593;"
         }
@@ -705,10 +722,10 @@ function UpdateScreen(success, url, data) {
         DKChart_UpdateChartDevice(device.ip, "sensor3", device.user.dewpoint);
     }
 
-    if (device.user.automate) {
-        byId(device.ip + "automate").src = "DKTasmota/automateON.png";
-    } else {
-        byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
+    if(device.user.automate){
+         byId(device.ip + "automate").src = "DKTasmota/automateON.png";
+    } else{
+         byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
     }
 
     device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
@@ -722,4 +739,6 @@ function UpdateScreen(success, url, data) {
         wifiCell.innerHTML = signal + "%";
         wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }
+
+    (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKTasmota/restart.png");
 }

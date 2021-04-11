@@ -7,6 +7,10 @@ let devices = [];
 /*
 let theDevice = {
     "ip": "192.168.1.0",
+    "user": {
+        name: "Bedroom Light",
+        automate: true    
+    },
     "Status": {
         "Module": 1,
         "FriendlyName": "XXX",
@@ -94,6 +98,10 @@ let theDevice = {
 
 //return a Device by partial matching name
 function Device(str) {
+    if(!devices || !devices.length){
+        //dkconsole.error("devices invalid");
+        return false;
+    }
     for (let n = 0; n < devices.length; n++) {
         if (devices[n]?.Status?.DeviceName?.includes(str)) {
             return devices[n];
@@ -101,35 +109,57 @@ function Device(str) {
     }
 }
 
-//Load devices from local storage
-function DKTasmota_LoadDevices() {
-    let deviceIPs = [];
-    const data = DK_LoadFromLocalStorage("deviceIPs")
-    if (!data) {
-        return;
+function DKTasmota_LoadDevicesFromLocalStorage() {
+    const data = DK_LoadFromLocalStorage("devices");
+    if(data){
+        devices = JSON.parse(data);
+        return devices;
     }
+    return false;
+}
 
-    deviceIPs = JSON.parse(data);
-    dkconsole.log("Loading (" + deviceIPs.length + ") Devices");
-    for (let n = 0; n < deviceIPs.length; n++) {
-        const dev = {
-            'ip': deviceIPs[n],
-            'user': {
-                'automate': true,
-                'temperatureTarget': 77,
-                'temperatureZone': 20,
-                'humidityTarget': 50,
-                'humidityZone': 20
-            }
-        }
-        devices.push(dev);
+function DKTasmota_SaveDevicesToLocalStorage(){
+    const devicesString = JSON.stringify(devices);
+    DK_SaveToLocalStorage("devices", devicesString);
+    
+    const dest = online_assets+"\\devices.txt";
+    for(let n=0; n<devices.length; n++){
+        devices[n].Status = [];
+        devices[n].StatusFWR = [];
+        devices[n].StatusLOG = [];
+        devices[n].StatusMEM = [];
+        devices[n].StatusMQT = [];
+        devices[n].StatusNET = [];
+        devices[n].StatusPRM = [];  
+        devices[n].StatusSNS = [];
+        devices[n].StatusSTS = [];
+        devices[n].StatusTIM = [];  
     }
+    const data = JSON.stringify(devices);
+    //console.log(dest);
+    //console.log(data);
+    PHP_StringToFile(dest, data, "OVERWRITE", function(rVal) {
+        console.log("characters written: " + rVal);
+    });
+}
+
+function DKTasmota_CreateDevice(ip){
+    const dev = {
+        'ip': ip,
+        'user': {}
+    }
+    devices.push(dev);
+    return devices[devices.length-1];
 }
 
 function DKTasmota_InitializeDevices(callback) {
     if (!callback) {
         dkconsole.error("callback invalid");
-        return;
+        return false;
+    }
+    if(!devices || !devices.length){
+        //dkconsole.error("devices array empty");
+        return false;
     }
     let deviceCount = 0;
     for (let n = 0; n < devices.length; n++) {
@@ -139,30 +169,18 @@ function DKTasmota_InitializeDevices(callback) {
                 let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
                 if (!device) {
                     dkconsole.error("device invalid");
-                    return;
+                    return false;
                 }
     
                 try {
                     let deviceData = JSON.parse(data);
                     deviceData.ip = device.ip;
                     deviceData.user = device.user;
-                    devices[devices.indexOf(device)] = deviceData;
+                    //devices[devices.indexOf(device)] = deviceData;
                     device = deviceData;
                 } catch {
                     dkconsole.error("data could not be parsed to json");
                 }
-
-                /*
-                const device = JSON.parse(data);
-                const deviceInstance = DKJson_FindObjectValueIncludes(devices, 'ip', url);
-
-                //incoming data doesn't have user data, so copy them in
-                device.ip = deviceInstance.ip;
-                device.user = deviceInstance.user;
-
-                //then update the stored device with the new data
-                devices[devices.indexOf(deviceInstance)] = device;
-                */
                 devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
             }
 
@@ -174,7 +192,7 @@ function DKTasmota_InitializeDevices(callback) {
     }
 }
 
-//return all local network device IPs that respond to /cm?cmnd=CORS 
+//return all local network device ip addresses that respond to /cm?cmnd=CORS 
 function DKTasmota_GetDevices(ipPrefix, callback) {
     let tasmotaDeviceCount = 0;
     let devicesScanned = 0;
@@ -197,7 +215,6 @@ function DKTasmota_GetDevices(ipPrefix, callback) {
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         dkconsole.debug(url);
         SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
-            //send request using superAgent
             dkconsole.log("pinged " + ip);
             if (success) {
                 devicesScanned += 1;
@@ -210,8 +227,8 @@ function DKTasmota_GetDevices(ipPrefix, callback) {
             } else {
                 devicesScanned += 1;
                 if (devicesScanned >= 254) {
-                    ip = false;
-                    callback(ip, true);
+                    //ip = false;
+                    callback(false, true);
                 }
             }
         });

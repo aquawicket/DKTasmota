@@ -46,6 +46,9 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
             datasets: []
         },
         options: {
+            legend: {
+                display: false,
+            },
             scales: {
                 xAxes: [{
                     type: 'time',
@@ -84,8 +87,8 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
 }
 
 function DKChart_AddDatasets() {
-    DKChart_AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("014")?.ip, "sensor1", false);
-    DKChart_AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("014")?.ip, "sensor2", false);
+    DKChart_AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("014")?.ip, "sensor1", true);
+    DKChart_AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("014")?.ip, "sensor2", true);
     DKChart_AddDataset("A Tent DewPoint", "rgb(0,150,150)", Device("014")?.ip, "sensor3", true);
     DKChart_AddDataset("A Tent Exhaust Fan", "rgb(10,30,90)", Device("011")?.ip, "switch1", true);
     DKChart_AddDataset("A Tent Water Walls", "rgb(10,30,50)", Device("003")?.ip, "switch1", true);
@@ -93,8 +96,8 @@ function DKChart_AddDatasets() {
     //DKChart_AddDataset("A Tent Co2", "rgb(10,60,10)", Device("???")?.ip, "switch1", true);
     //DKChart_AddDataset("A Tent Lights", "rgb(100,60,10)", Device("???")?.ip, "switch1", true);
 
-    DKChart_AddDataset("B Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", false);
-    DKChart_AddDataset("B Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", false);
+    DKChart_AddDataset("B Tent Temperature", "rgb(200, 0, 0)", Device("013")?.ip, "sensor1", true);
+    DKChart_AddDataset("B Tent Humidity", "rgb(0, 0, 200)", Device("013")?.ip, "sensor2", true);
     DKChart_AddDataset("B Tent DewPoint", "rgb(0,150,150)", Device("013")?.ip, "sensor3", true);
     DKChart_AddDataset("B Tent Exhaust Fan", "rgb(150,0,150)", Device("005")?.ip, "switch1", true);
     DKChart_AddDataset("B Tent Water Walls", "rgb(90,0,150)", Device("007")?.ip, "switch1", true);
@@ -102,11 +105,11 @@ function DKChart_AddDatasets() {
     DKChart_AddDataset("B Tent Co2", "rgb(10,60,10)", Device("008")?.ip, "switch1", true);
     //DKChart_AddDataset("B Tent Lights", "rgb(100,60,10)", Device("???")?.ip, "switch1", true);
 
-    DKChart_AddDataset("Shed Water A", "rgb(150,40,40)", Device("002")?.ip, "switch1", true);
-    DKChart_AddDataset("Shed Water B", "rgb(30,0,90)", Device("001")?.ip, "switch1", true);
+    DKChart_AddDataset("Shed Water A", "rgb(150,40,40)", Device("Shed Water A")?.ip, "switch1", true);
+    DKChart_AddDataset("Shed Water B", "rgb(30,0,90)", Device("Shed Water B")?.ip, "switch1", true);
 
-    DKChart_AddDataset("Veg Tent Temperature", "rgb(200, 20, 20)", Device("015")?.ip, "sensor1", false);
-    DKChart_AddDataset("Veg Tent Humidity", "rgb(0, 0, 200)", Device("015")?.ip, "sensor2", false);
+    DKChart_AddDataset("Veg Tent Temperature", "rgb(200, 20, 20)", Device("015")?.ip, "sensor1", true);
+    DKChart_AddDataset("Veg Tent Humidity", "rgb(0, 0, 200)", Device("015")?.ip, "sensor2", true);
     DKChart_AddDataset("Veg Tent DewPoint", "rgb(0,150,150)", Device("015")?.ip, "sensor3", true);
     DKChart_AddDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", Device("012")?.ip, "switch1", true);
     DKChart_AddDataset("Veg Tent Water Walls", "rgb(90,0,150)", Device("009")?.ip, "switch1", true);
@@ -166,24 +169,30 @@ function DKChart_UpdateChartDevice(ip, identifier, data) {
 }
 
 function DKChart_SelectChart(ip){
+    let borderColor;
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             lineChart.data.datasets[n].hidden = false;
+            !borderColor && (borderColor = lineChart.data.datasets[n].borderColor);
         }
         else{
-            lineChart.data.datasets[n].hidden = true;
+            lineChart.data.datasets[n].hidden = true; 
         }
     }
     lineChart.update();
+    return borderColor;
 }
 
-function DKChart_ShowChart(ip){
+function DKChart_ToggleChart(ip){
+    let borderColor;
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
-            lineChart.data.datasets[n].hidden = false;
+            lineChart.data.datasets[n].hidden ? lineChart.data.datasets[n].hidden = false : lineChart.data.datasets[n].hidden = true;
+            !lineChart.data.datasets[n].hidden && !borderColor && (borderColor = lineChart.data.datasets[n].borderColor);
         }
     }
     lineChart.update();
+    return borderColor;
 }
 
 function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
