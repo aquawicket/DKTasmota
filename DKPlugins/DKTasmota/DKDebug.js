@@ -3,6 +3,12 @@
 //A Convienient Debug Function
 function DKDebug_Func() {
     dkconsole.log("DEBUG BUTTON");
+
+    PHP_Debug_Func("one", "two", "three", function(rval) {
+        console.log(rval);
+    });
+    
+
     /*
     PHP_GetRemoteAddress(function(rval) {
         dkconsole.log(rval);

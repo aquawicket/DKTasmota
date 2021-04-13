@@ -124,7 +124,7 @@ function DKTasmota_SaveDevicesToLocalStorage() {
 }
 
 function DKTasmota_LoadDevicesFromServer() {
-    const src = online_assets + "\\devices.txt";
+    const src = online_assets + "\\devices.js";
     PHP_FileToString(src, function(rVal) {
         if (rVal)
             devices = JSON.parse(rVal);
@@ -133,18 +133,18 @@ function DKTasmota_LoadDevicesFromServer() {
 }
 
 function DKTasmota_SaveDevicesToServer() {
-    const dest = online_assets + "\\devices.txt";
+    const dest = online_assets + "\\devices.js";
     for (let n = 0; n < devices.length; n++) {
-        devices[n].Status = [];
-        devices[n].StatusFWR = [];
-        devices[n].StatusLOG = [];
-        devices[n].StatusMEM = [];
-        devices[n].StatusMQT = [];
-        devices[n].StatusNET = [];
-        devices[n].StatusPRM = [];
-        devices[n].StatusSNS = [];
-        devices[n].StatusSTS = [];
-        devices[n].StatusTIM = [];
+        delete devices[n].Status;
+        delete devices[n].StatusFWR;
+        delete devices[n].StatusLOG;
+        delete devices[n].StatusMEM;
+        delete devices[n].StatusMQT;
+        delete devices[n].StatusNET;
+        delete devices[n].StatusPRM;
+        delete devices[n].StatusSNS;
+        delete devices[n].StatusSTS;
+        delete devices[n].StatusTIM;
     }
     const data = JSON.stringify(devices);
     PHP_StringToFile(dest, data, "", function(rVal) {

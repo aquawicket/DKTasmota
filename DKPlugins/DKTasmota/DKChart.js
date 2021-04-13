@@ -119,14 +119,14 @@ function DKChart_AddDatasets() {
     Device("004") && DKChart_AddDataset("Veg Tent Lights", "rgb(100,60,10)", Device("004").ip, "switch1", true);
 }
 
-function DKChart_UpdateChartDevice(ip, identifier, data) {
-    if (!ip) {
-        dkconsole.error("ip invalid");
+function DKChart_UpdateDevice(device, identifier, data) {
+    if (!device) {
+        dkconsole.error("device invalid");
         return;
     }
 
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
+        if (device.ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
             if (identifier.includes("switch")) {
                 const ex = lineChart.data.datasets[n].data;
                 if (ex.length && data === ex[ex.length - 1].y) {
@@ -156,18 +156,8 @@ function DKChart_UpdateChartDevice(ip, identifier, data) {
     }
 
     lineChart.update();
-    DKChart_SaveDatasets(ip);
-
-    //agressive file saving. Saving every minute of every device
-    const currentdate = new Date();
-    const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
-    const entry = JSON.stringify({
-        t: currentdate,
-        y: data
-    });
-    //if (`${window.location.protocol}` != "file:") {
-    //PHP_StringToFile("data/" + stamp + "_" + ip + ".txt", entry, "FILE_APPEND");
-    //}
+    DKChart_SaveDatasets(device.ip);
+    DKChart_AppendDatasetToServer(device.user.name, data);
 }
 
 function DKChart_SelectChart(ip){
@@ -232,6 +222,35 @@ function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
     */
  
     lineChart.data.datasets.push(dataset);
+    lineChart.update();
+}
+
+function DKChart_AppendDatasetToServer(label, data) {
+    const currentdate = new Date();
+    const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
+    const entry = JSON.stringify({
+        t: currentdate,
+        y: data
+    });
+    PHP_StringToFile(online_assets+"\\"+stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval){
+        if(rval) console.log(rval);
+    });
+}
+
+function DKChart_SaveDatasetToServer(ip) {
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        if (lineChart.data.datasets[n].ip === ip) {
+            const data = JSON.stringify(lineChart.data.datasets[n].data);
+            //DK_SaveToLocalStorage(lineChart.data.datasets[n].label, data);
+        }
+    }
+}
+
+function DKChart_LoadDatasetsFromServer() {
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        const data = DK_LoadFromLocalStorage(lineChart.data.datasets[n].label);
+        lineChart.data.datasets[n].data = JSON.parse(data);
+    }
     lineChart.update();
 }
 

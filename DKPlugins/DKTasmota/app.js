@@ -6,7 +6,6 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
-    DK_PreloadFile("DK/DK.js");
     DK_Create("DK/DKErrorHandler.js");
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
@@ -37,7 +36,7 @@ function DKLoadFiles() {
     DK_Create("DKTasmota/VPDCalculator.js");
     DK_Create("DKTasmota/sun.js");
 
-    DK_PreloadFile("Devices.txt");
+    
     DK_PreloadImage("DKTasmota/loading.gif");
     DK_PreloadImage("DKTasmota/restart.png");
     DK_PreloadImage("DKTasmota/info.png");
@@ -649,10 +648,10 @@ function UpdateScreen(success, url, data) {
         powerCell.innerHTML = "<a>" + device.user.power + "</a>";
         if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            DKChart_UpdateChartDevice(device.ip, "switch1", 100);
+            DKChart_UpdateDevice(device, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            DKChart_UpdateChartDevice(device.ip, "switch1", 0);
+            DKChart_UpdateDevice(device, "switch1", 0);
         }
     }
 
@@ -684,7 +683,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         byId(device.ip + "Temp").style.textAlign = "center";
 
-        DKChart_UpdateChartDevice(device.ip, "sensor1", device.user.temperature);
+        DKChart_UpdateDevice(device, "sensor1", device.user.temperature);
     }
 
     device.user.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
@@ -710,7 +709,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         byId(device.ip + "RH").style.textAlilgn = "center";
 
-        DKChart_UpdateChartDevice(device.ip, "sensor2", device.user.humidity);
+        DKChart_UpdateDevice(device, "sensor2", device.user.humidity);
     }
 
     device.user.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
@@ -720,13 +719,13 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
 
-        DKChart_UpdateChartDevice(device.ip, "sensor3", device.user.dewpoint);
+        DKChart_UpdateDevice(device, "sensor3", device.user.dewpoint);
     }
 
-    if(device.user.automate){
-         byId(device.ip + "automate").src = "DKTasmota/automateON.png";
-    } else{
-         byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
+    if (device.user.automate) {
+        byId(device.ip + "automate").src = "DKTasmota/automateON.png";
+    } else {
+        byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
     }
 
     device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
