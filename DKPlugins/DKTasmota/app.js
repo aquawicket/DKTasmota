@@ -6,7 +6,7 @@ function DKLoadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
-
+    DK_PreloadFile("DK/DK.js");
     DK_Create("DK/DKErrorHandler.js");
     DK_Create("DK/DK.css");
     DK_Create("DK/DKPhp.js");
@@ -16,6 +16,7 @@ function DKLoadFiles() {
     DK_Create("DKFile/DKFile.js");
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
+    DK_Create("DKGui/DKMenu.js");
     DK_Create("DKGui/DKMessageBox.js");
     DK_Create("DKGui/DKDrag.js");
     DK_Create("DKGui/DKClipboard.js");
@@ -36,6 +37,7 @@ function DKLoadFiles() {
     DK_Create("DKTasmota/VPDCalculator.js");
     DK_Create("DKTasmota/sun.js");
 
+    DK_PreloadFile("Devices.txt");
     DK_PreloadImage("DKTasmota/loading.gif");
     DK_PreloadImage("DKTasmota/restart.png");
     DK_PreloadImage("DKTasmota/info.png");
@@ -49,7 +51,8 @@ function DKLoadFiles() {
 function DKLoadApp() {
     DKErrorHandler_Create();
     DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
-    DKTasmota_LoadDevicesFromLocalStorage();
+    DKTasmota_LoadDevicesFromServer();
+    //DKTasmota_LoadDevicesFromLocalStorage();
 
     PHP_GetRemoteAddress(function PHP_GetRemoteAddressCallback(rval) {
         if (rval === "127.0.0.1") {
@@ -67,6 +70,7 @@ function DKLoadApp() {
 }
 
 function LoadGui() {
+    //document.body.style.margin = "0rem;" 
     DKConsole_Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     dkconsole.message("**** Tasmota device manager 0.1b ****", "blue");
     app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
@@ -95,12 +99,7 @@ function PushAssets() {
 }
 
 function MainAppLoop() {
-    if (DK_IsOnline()) {
-        byId("internet").src = "DKTasmota/online.png";
-    } else {
-        byId("internet").src = "DKTasmota/offline.png";
-    }
-
+    DK_IsOnline() ? byId("internet").src = "DKTasmota/online.png" : byId("internet").src = "DKTasmota/offline.png";
     ProcessDevices();
     app.automate && Automate();
 }
@@ -356,7 +355,7 @@ function AddDeviceToTable(device) {
     optionsCell.appendChild(dChart);
 
     dChart.onclick = function dChart_onclick() {
-        for (let n = 1; n < devices.length; n++) {
+        for (let n = 0; n < devices.length; n++) {
             if (devices[n].ip === device.ip) {
                 byId(device.ip + "dChart").style.backgroundColor = DKChart_SelectChart(device.ip);
             } else {
@@ -367,7 +366,7 @@ function AddDeviceToTable(device) {
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
         event.preventDefault();
         const color = DKChart_ToggleChart(device.ip);
-        for (let n = 1; n < devices.length; n++) {
+        for (let n = 0; n < devices.length; n++) {
             if (devices[n].ip === device.ip) {
                 if (color) {
                     byId(devices[n].ip + "dChart").style.backgroundColor = color;
@@ -557,6 +556,7 @@ function ScanDevices() {
         if (ip && !DKJson_FindObjectValueIncludes(devices, 'ip', ip)) {
             const device = DKTasmota_CreateDevice(ip);
             AddDeviceToTable(device);
+            DKTasmota_SaveDevicesToServer();
             DKTasmota_SaveDevicesToLocalStorage();
         }
         if (done) {
@@ -576,6 +576,7 @@ function ClearDevices() {
 }
 
 function SaveDevices() {
+    DKTasmota_SaveDevicesToServer();
     DKTasmota_SaveDevicesToLocalStorage();
 }
 

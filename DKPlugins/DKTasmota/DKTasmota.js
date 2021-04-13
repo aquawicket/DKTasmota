@@ -98,7 +98,7 @@ let theDevice = {
 
 //return a Device by partial matching name
 function Device(str) {
-    if(!devices || !devices.length){
+    if (!devices || !devices.length) {
         //dkconsole.error("devices invalid");
         return false;
     }
@@ -111,45 +111,55 @@ function Device(str) {
 
 function DKTasmota_LoadDevicesFromLocalStorage() {
     const data = DK_LoadFromLocalStorage("devices");
-    if(data){
-        devices = JSON.parse(data);
-        return devices;
-    }
-    return false;
+    if (!data)
+        return false;
+    devices = JSON.parse(data);
+    return devices;
+
 }
 
-function DKTasmota_SaveDevicesToLocalStorage(){
+function DKTasmota_SaveDevicesToLocalStorage() {
     const devicesString = JSON.stringify(devices);
     DK_SaveToLocalStorage("devices", devicesString);
-    
-    const dest = online_assets+"\\devices.txt";
-    for(let n=0; n<devices.length; n++){
+}
+
+function DKTasmota_LoadDevicesFromServer() {
+    const src = online_assets + "\\devices.txt";
+    PHP_FileToString(src, function(rVal) {
+        if (rVal)
+            devices = JSON.parse(rVal);
+        return devices;
+    });
+}
+
+function DKTasmota_SaveDevicesToServer() {
+    const dest = online_assets + "\\devices.txt";
+    for (let n = 0; n < devices.length; n++) {
         devices[n].Status = [];
         devices[n].StatusFWR = [];
         devices[n].StatusLOG = [];
         devices[n].StatusMEM = [];
         devices[n].StatusMQT = [];
         devices[n].StatusNET = [];
-        devices[n].StatusPRM = [];  
+        devices[n].StatusPRM = [];
         devices[n].StatusSNS = [];
         devices[n].StatusSTS = [];
-        devices[n].StatusTIM = [];  
+        devices[n].StatusTIM = [];
     }
     const data = JSON.stringify(devices);
-    //console.log(dest);
-    //console.log(data);
-    PHP_StringToFile(dest, data, "OVERWRITE", function(rVal) {
-        console.log("characters written: " + rVal);
+    PHP_StringToFile(dest, data, "", function(rVal) {
+        if (rVal)
+            console.log(rVal);
     });
 }
 
-function DKTasmota_CreateDevice(ip){
+function DKTasmota_CreateDevice(ip) {
     const dev = {
         'ip': ip,
         'user': {}
     }
     devices.push(dev);
-    return devices[devices.length-1];
+    return devices[devices.length - 1];
 }
 
 function DKTasmota_InitializeDevices(callback) {
@@ -157,7 +167,7 @@ function DKTasmota_InitializeDevices(callback) {
         dkconsole.error("callback invalid");
         return false;
     }
-    if(!devices || !devices.length){
+    if (!devices || !devices.length) {
         //dkconsole.error("devices array empty");
         return false;
     }
@@ -171,7 +181,7 @@ function DKTasmota_InitializeDevices(callback) {
                     dkconsole.error("device invalid");
                     return false;
                 }
-    
+
                 try {
                     let deviceData = JSON.parse(data);
                     deviceData.ip = device.ip;
