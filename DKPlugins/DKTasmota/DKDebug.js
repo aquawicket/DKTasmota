@@ -4,9 +4,13 @@
 function DKDebug_Func() {
     dkconsole.log("DEBUG BUTTON");
 
-    PHP_Debug_Func("one", "two", "three", function(rval) {
+    DKPhp_Call("Debug_Func", "one", "two", "three", function(rval){
         console.log(rval);
     });
+
+    //HP_Debug_Func("one", "two", "three", function(rval) {
+    //    console.log(rval);
+    //});
     
 
     /*
