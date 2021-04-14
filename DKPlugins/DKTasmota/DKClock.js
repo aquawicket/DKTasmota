@@ -10,7 +10,22 @@ const date = dateEvent.toJSON();
 const utcDate = dateEvent.toUTCString();
 //format: Tue, 19 Aug 1975 23:15:30 GMT
 */
-let time;
+
+const dkClock = new Object;
+
+function DKClock_GetSunrise(latitude, longitude, zenith){
+    const date = new Date().sunrise(latitude, longitude, zenith);
+    dkClock.sunrize = date.getHours() + (date.getMinutes() * .01);
+    console.log("Sunrise "+dkClock.sunrize);
+    return dkClock.sunrize;
+}
+
+function DKClock_GetSunset(latitude, longitude, zenith){
+    const date = new Date().sunset(latitude, longitude, zenith);
+    dkClock.sunset = date.getHours() + (date.getMinutes() * .01);
+    console.log("Sunset "+dkClock.sunset);
+    return dkClock.sunset
+}
 
 function DKClock_GetDateInMilliseconds() {
     const date = new Date();
@@ -29,7 +44,7 @@ function DKClock_Create(parent, id, top, bottom, left, right, width, weight) {
 
 function DKClock_Update() {
     const currentdate = new Date();
-    time = currentdate.getHours() + (currentdate.getMinutes() * .01);
+    dkClock.time = currentdate.getHours() + (currentdate.getMinutes() * .01);
     let dayOfWeek;
     switch (currentdate.getDay()) {
     case 0:

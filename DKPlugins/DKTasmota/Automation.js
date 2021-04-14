@@ -89,15 +89,15 @@ function Automate() {
 
         //A Tent Exhaust fan
         if (ATentExhaust && ATentExhaust.user.automate) {
-            //dkconsole.log(ATentExhaust.user.power);
             let power = false;
             if (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget)
-                //ATentExhaust.user.power = "ON";
                 power = true;
             if (ATentTemp.user.humidity > ATentTemp.user.humidityTarget)
                 power = true;
-            if (time < 7 || time > 19)
+            if (dkClock.time < dkClock.sunrise || dkClock.time >dkClock.sunset )
                 power = false;
+            if (ATentTemp.user.humidity > 80)
+                power = true;
             if (power) {
                 dkconsole.message("A Tent Exhaust Fan ON", "green");
                 DK_SendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
@@ -179,8 +179,10 @@ function Automate() {
                 power = true;
             if (BTentTemp.user.humidity > BTentTemp.user.humidityTarget)
                 power = true;
-            if (time < 7 || time > 19)
+            if (dkClock.time < dkClock.sunrise || dkClock.time >dkClock.sunset)
                 power = false;
+            if (BTentTemp.user.humidity > 80)
+                power = true;
             if (power) {
                 DK_SendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
                 dkconsole.message("B Tent Exhaust Fan ON", "green");
@@ -263,8 +265,10 @@ function Automate() {
                 power = true;
             if (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget)
                 power = true;
-            if (time < 7 || time > 19)
+            if (dkClock.time < dkClock.sunrise || dkClock.time >dkClock.sunset)
                 power = false;
+            if (VegTentTemp.user.humidity > 80)
+                power = true;
             if (power) {
                 DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
                 dkconsole.message("Veg Tent Exhaust Fan ON", "green");

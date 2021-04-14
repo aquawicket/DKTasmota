@@ -76,6 +76,8 @@ function LoadGui() {
     app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);
     DKClock_Create(document.body, "clock", "2rem", "", "25%");
+    DKClock_GetSunrise(33.7312525,-117.3028688);//, 15);
+    DKClock_GetSunset(33.7312525,-117.3028688);//, 15);
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
