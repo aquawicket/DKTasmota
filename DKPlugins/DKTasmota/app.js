@@ -12,6 +12,8 @@ function DKLoadFiles() {
     DK_Create("DK/DKTrace.js");
     DK_Create("DK/DKJson.js");
     DK_Create("DK/DKValidate.js");
+    DK_Create("DK/sun.js");
+    DK_Create("DK/DKClock.js");
     DK_Create("DKFile/DKFile.js");
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
@@ -30,14 +32,12 @@ function DKLoadFiles() {
     DK_Create("DKTasmota/DKDebug.js");
     DK_Create("DKTasmota/DKNotifications.js");
     DK_Create("DKTasmota/DKTasmota.js");
-    DK_Create("DKTasmota/DKClock.js");
     DK_Create("DKTasmota/DKChart.js");
     DK_Create("DKTasmota/moment.min.js");
     DK_Create("DKTasmota/Chart.min.js");
     DK_Create("DKTasmota/Automation.js");
     DK_Create("DKTasmota/VPDCalculator.js");
-    DK_Create("DKTasmota/sun.js");
-
+   
     DK_PreloadImage("DKTasmota/loading.gif");
     DK_PreloadImage("DKTasmota/restart.png");
     DK_PreloadImage("DKTasmota/info.png");
