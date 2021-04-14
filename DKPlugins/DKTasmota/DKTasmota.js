@@ -163,12 +163,10 @@ function DKTasmota_CreateDevice(ip) {
 }
 
 function DKTasmota_InitializeDevices(callback) {
-    if (!callback) {
-        dkconsole.error("callback invalid");
-        return false;
-    }
+    if (!callback)
+        return error("callback invalid");
     if (!devices || !devices.length) {
-        //dkconsole.error("devices array empty");
+        //dkconsole.warn("devices array empty");
         return false;
     }
     let deviceCount = 0;
@@ -176,12 +174,10 @@ function DKTasmota_InitializeDevices(callback) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
         DK_SendRequest(url, function(success, url, data) {
             if (success && url && data) {
-                let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
-                if (!device) {
-                    dkconsole.error("device invalid");
-                    return false;
-                }
-
+                let device = DKJson_FindPartialMatch(devices, 'ip', url);
+                if (!device) 
+                    return error("device invalid");
+               
                 try {
                     let deviceData = JSON.parse(data);
                     deviceData.ip = device.ip;

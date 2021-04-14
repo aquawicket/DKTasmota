@@ -588,34 +588,24 @@ function ProcessDevices() {
 }
 
 function UpdateScreen(success, url, data) {
-    if (!url) {
-        dkconsole.log("url invalid");
-        return;
-    }
-    if (!devices.length) {
-        dkconsole.error("devices array empty");
-        return
-    }
-    let device = DKJson_FindObjectValueIncludes(devices, 'ip', url);
-    if (!device) {
-        dkconsole.error("device invalid, didn't find ip in url:" + url);
-        return;
-    }
+    if (!url)
+        return error ("url invalid");
+    if (!devices.length)
+        return error("devices array empty");
+    let device = DKJson_FindPartialMatch(devices, 'ip', url);
+    if (!device) 
+        return error("device invalid, didn't find ip in url:" + url);    
     const table = byId("deviceTable");
-    if (!table) {
-        dkconsole.error("table invlid");
-        return;
-    }
+    if (!table) 
+        return error("table invlid");
     const row = DKTable_GetRowByName(table, device.ip);
-    if (!row) {
-        //dkconsole.error("row invlid");
-        return;
-    }
+    if (!row)
+        return warn("row invalid");
+   
     if (!success || !data) {
         DKAudio_Play("DKTasmota/PowerDown.mp3");
-        dkconsole.warn(device.ip + " did not respond");
         row.style.backgroundColor = "red";
-        return;
+        return warn(device.ip + " did not respond");
     }
 
     //const jsonString = DKJson_PrettyJson(data);
@@ -629,7 +619,7 @@ function UpdateScreen(success, url, data) {
         devices[devices.indexOf(device)] = deviceData;
         device = deviceData;
     } catch {
-        dkconsole.error("data could not be parsed to json");
+        return error("data could not be parsed to json");
     }
 
     // UPDATE TABLE

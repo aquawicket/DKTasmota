@@ -120,10 +120,8 @@ function DKChart_AddDatasets() {
 }
 
 function DKChart_UpdateDevice(device, identifier, data) {
-    if (!device) {
-        dkconsole.error("device invalid");
-        return;
-    }
+    if (!device)
+        return error("device invalid");
 
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (device.ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
@@ -160,22 +158,23 @@ function DKChart_UpdateDevice(device, identifier, data) {
     DKChart_AppendDatasetToServer(device.user.name, data);
 }
 
-function DKChart_SelectChart(ip){
+function DKChart_SelectChart(ip) {
     let borderColor;
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             lineChart.data.datasets[n].hidden = false;
-            /*!borderColor && (*/borderColor = lineChart.data.datasets[n].borderColor//);
-        }
-        else{
-            lineChart.data.datasets[n].hidden = true; 
+            /*!borderColor && (*/
+            borderColor = lineChart.data.datasets[n].borderColor
+            //);
+        } else {
+            lineChart.data.datasets[n].hidden = true;
         }
     }
     lineChart.update();
     return borderColor;
 }
 
-function DKChart_ToggleChart(ip){
+function DKChart_ToggleChart(ip) {
     let borderColor;
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
@@ -188,12 +187,9 @@ function DKChart_ToggleChart(ip){
 }
 
 function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
-    if(!ip){
-        console.error("ip invalid");
-        return;
-    };
+    if (!ip)
+        return error("ip invalid");
 
-    
     const dataset = {};
     dataset.ip = ip;
     dataset.label = label;
@@ -203,7 +199,7 @@ function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
     dataset.fill = false;
     dataset.borderColor = borderColor;
     dataset.hidden = hidden;
-    
+
     /*
     for(let n=0; n<devices.length; n++){
         if(devices[n].ip === ip){
@@ -220,7 +216,7 @@ function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
         }
     }
     */
- 
+
     lineChart.data.datasets.push(dataset);
     lineChart.update();
 }
@@ -232,8 +228,9 @@ function DKChart_AppendDatasetToServer(label, data) {
         t: currentdate,
         y: data
     });
-    PHP_StringToFile(online_assets+"\\"+stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval){
-        if(rval) console.log(rval);
+    PHP_StringToFile(online_assets + "\\" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {
+        if (rval)
+            console.log(rval);
     });
 }
 

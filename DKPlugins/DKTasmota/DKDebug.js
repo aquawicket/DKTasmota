@@ -4,6 +4,10 @@
 function DKDebug_Func() {
     dkconsole.log("DEBUG BUTTON");
 
+    if(1){
+        return error("testing errors");
+    }
+
     DKPhp_Call("Debug_Func", "one", "two", "three", function(rval){
         console.log(rval);
     });

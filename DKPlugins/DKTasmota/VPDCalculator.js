@@ -2,10 +2,9 @@
 
 function CreateVPDCalculator(parent, top, bottom, left, right, width, height) {
     DKLoadHtmlFile("VPDCalculator.html", function(success, url, data) {
-        if (!success) {
-            dkconsole.error("!success");
-            return;
-        }
+        if (!success)
+            return error("!success");
+        
         const vpdDiv = document.createElement("div");
         vpdDiv.innerHTML = data;
         vpdDiv.position = "absolute";
