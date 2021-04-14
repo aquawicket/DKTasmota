@@ -2,7 +2,7 @@
 
 //A Convienient Debug Function
 function DKDebug_Func() {
-    dkconsole.log("DEBUG BUTTON");
+    console.log("DEBUG BUTTON");
 
     if(1){
         return error("testing errors");
@@ -19,7 +19,7 @@ function DKDebug_Func() {
 
     /*
     PHP_GetRemoteAddress(function(rval) {
-        dkconsole.log(rval);
+        console.log(rval);
     });
     */
 
@@ -38,7 +38,7 @@ function DKDebug_Func() {
 
     /*
     DKGui_ConfirmBox("do this?", function(){
-        dkconsole.log("confirm callback");
+        console.log("confirm callback");
     });
     */
 
@@ -51,11 +51,11 @@ function DKDebug_Func() {
     resizableDiv.style.border = "solid 2rem blue";
     document.body.appendChild(resizableDiv);
     DKDrag_AddResizeHandler(resizableDiv, function(){
-        dkconsole.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
+        console.info("resized: x:"+resizableDiv.style.width+" y:"+resizableDiv.style.height);
     });
     //only works on window object
     //resizableDiv.onresize = function() {
-    //    dkconsole.info("resized: x:" + resizableDiv.style.width + " y:" + resizableDiv.style.height);
+    //    console.info("resized: x:" + resizableDiv.style.width + " y:" + resizableDiv.style.height);
     //}
     */
 
@@ -91,8 +91,8 @@ function DKDebug_Func() {
     //DKCreateFramedWindow("testWindow", 300, 300);
 
     /*
-    // Test DKConsole
-    dkconsole.log("dkconsole.log Test");
+    // Test console
+    console.log("console.log Test");
     console.log("console.log Test");
     console_log("console_log Test");
     */
@@ -100,10 +100,10 @@ function DKDebug_Func() {
     /*
     //Test PHP functions
     PHP_StringToFile("test.txt", "Appended string\n", "FILE_APPEND", function(rVal) {
-        dkconsole.log("characters written: " + rVal);
+        console.log("characters written: " + rVal);
     });
     PHP_GetTime(function(rVal) {
-        dkconsole.log(rVal);
+        console.log(rVal);
     });
     */
 

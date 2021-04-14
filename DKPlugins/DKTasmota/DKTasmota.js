@@ -99,7 +99,7 @@ let theDevice = {
 //return a Device by partial matching name
 function Device(str) {
     if (!devices || !devices.length) {
-        //dkconsole.warn("devices invalid");
+        //console.warn("devices invalid");
         return false;
     }
 
@@ -189,7 +189,7 @@ function DKTasmota_InitializeDevices(callback) {
                     //devices[devices.indexOf(device)] = deviceData;
                     device = deviceData;
                 } catch {
-                    dkconsole.error("data could not be parsed to json");
+                    console.error("data could not be parsed to json");
                 }
                 devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
             }
@@ -223,9 +223,9 @@ function DKTasmota_GetDevices(ipPrefix, callback) {
             //}
         }
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-        dkconsole.debug(url);
+        console.debug(url);
         SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
-            dkconsole.log("pinged " + ip);
+            console.log("pinged " + ip);
             if (success) {
                 devicesScanned += 1;
                 tasmotaDeviceCount += 1;

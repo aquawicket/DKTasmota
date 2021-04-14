@@ -19,7 +19,7 @@ function DKMqtt_OnMqttConnect() {
 }
 
 function DKMqtt_Connect() {
-    dkconsole.log("connecting to " + host + " " + port);
+    console.log("connecting to " + host + " " + port);
     var x = Math.floor(Math.random() * 10000);
     var cname = "orderform-" + x;
     mqtt = new Paho.MQTT.Client(host,port,cname);

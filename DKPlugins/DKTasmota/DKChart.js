@@ -36,7 +36,7 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
 
     //FIXME - do proper refreshing on resize    
     DKGui_AddResizeHandler(chartCanvas, function() {
-        //dkconsole.info("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
+        //console.debug("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
         chartCanvas.style.height = "100%";
         //lineChart.resize("100%","100%");
     });

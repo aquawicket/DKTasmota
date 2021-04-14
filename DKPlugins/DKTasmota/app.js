@@ -71,7 +71,7 @@ function DKLoadApp() {
 function LoadGui() {
     //document.body.style.margin = "0rem;" 
     DKConsole_Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
-    dkconsole.message("**** Tasmota device manager 0.1b ****", "blue");
+    console.message("**** Tasmota device manager 0.1b ****", "blue");
     app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);
@@ -84,7 +84,7 @@ function LoadGui() {
     DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", DKDebug_Func);
 
     if (!devices || !devices.length) {
-        //dkconsole.error("devices array empty");
+        //console.error("devices array empty");
         return;
     }
     for (let n = 0; n < devices.length; n++) {
@@ -94,8 +94,8 @@ function LoadGui() {
 
 function PushAssets() {
     PHP_PushDKAssets(function PHP_PushDKAssetsCallback(rval) {
-        dkconsole.log(rval);
-        dkconsole.log("done copying assets");
+        console.log(rval);
+        console.log("done copying assets");
     });
 }
 
@@ -224,7 +224,7 @@ function CreateDeviceTable(parent) {
     optionsCell.innerHTML = "options";
     optionsCell.style.width = "120rem";
     optionsCell.style.textAlign = "center";
-    optionsCell.onclick = function HEADER_options_onclick() {//dkconsole.log("HEADER_options_onclick");
+    optionsCell.onclick = function HEADER_options_onclick() {//console.log("HEADER_options_onclick");
     }
 }
 
@@ -433,7 +433,7 @@ function InfoWindow(device) {
 
     const jsonString = DKJson_PrettyJson(JSON.stringify(device));
     const jsonSuper = DKJson_HighlightJson(jsonString);
-    //dkconsole.log(jsonSuper);
+    //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
     DKFrame_Create(div);
@@ -499,11 +499,11 @@ function DConsoleWindow(device) {
         const key = event.charCode || event.keyCode;
         if (key === 13) {
             //enter
-            dkconsole.debug("Send command -> " + input.value);
+            console.debug("Send command -> " + input.value);
             const cmnd = input.value;
             const url = "http://" + device.ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
             DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
-                //dkconsole.log("function DK_SendRequestCallback("+success+","+url+","+data+")");
+                //console.log("function DK_SendRequestCallback("+success+","+url+","+data+")");
                 if (data) {
                     const msgDiv = document.createElement("div");
                     msgDiv.style.width = "100%";
@@ -561,9 +561,9 @@ function ScanDevices() {
             DKTasmota_SaveDevicesToLocalStorage();
         }
         if (done) {
-            dkconsole.log("\n");
-            dkconsole.message("Scan Complete", "green");
-            dkconsole.message("(" + devices.length + ") Tasmota Devices found", "green");
+            console.log("\n");
+            console.message("Scan Complete", "green");
+            console.message("(" + devices.length + ") Tasmota Devices found", "green");
         }
     });
 }
@@ -612,7 +612,7 @@ function UpdateScreen(success, url, data) {
 
     //const jsonString = DKJson_PrettyJson(data);
     //const jsonSuper = DKJson_HighlightJson(jsonString);
-    //dkconsole.log(jsonSuper);
+    //console.log(jsonSuper);
 
     try {
         let deviceData = JSON.parse(data);
