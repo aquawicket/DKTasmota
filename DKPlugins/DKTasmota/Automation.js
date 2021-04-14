@@ -61,16 +61,16 @@ function Automate() {
 
         //A Tent Alarms
         if (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) {
-            dkconsole.message("!!! A TENT TEMPERATURE BELOW MINIMUM " + ATentTemp.user.temperature + "&#176;F < " + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone) + "&#176;F !!!", "red");
+            console.message("!!! A TENT TEMPERATURE BELOW MINIMUM " + ATentTemp.user.temperature + "&#176;F < " + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone) + "&#176;F !!!", "red");
         }
         if (ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone)) {
-            dkconsole.message("!!! A TENT TEMPERATURE ABOVE MAXIMUM " + ATentTemp.user.temperature + "&#176;F > " + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone) + "&#176;F !!!", "red");
+            console.message("!!! A TENT TEMPERATURE ABOVE MAXIMUM " + ATentTemp.user.temperature + "&#176;F > " + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone) + "&#176;F !!!", "red");
         }
         if (ATentTemp.user.humidity < (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone)) {
-            dkconsole.message("!!! A TENT HUMUDITY BELOW MINIMUM " + ATentTemp.user.humidity + "% < " + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone) + "% !!!", "red");
+            console.message("!!! A TENT HUMUDITY BELOW MINIMUM " + ATentTemp.user.humidity + "% < " + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone) + "% !!!", "red");
         }
         if (ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone)) {
-            dkconsole.message("!!! A TENT HUMUDITY ABOVE MAXIMUM " + ATentTemp.user.humidity + "% > " + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone) + "% !!!", "red");
+            console.message("!!! A TENT HUMUDITY ABOVE MAXIMUM " + ATentTemp.user.humidity + "% > " + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone) + "% !!!", "red");
         }
 
         //A Tent Co2
@@ -79,10 +79,10 @@ function Automate() {
             if (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget)
                 power = true;
             if (power) {
-                dkconsole.message("A Tent Co2 Fan ON", "green");
+                console.message("A Tent Co2 Fan ON", "green");
                 DK_SendRequest("http://" + ATentCo2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("A Tent Co2 Fan OFF", "yellow");
+                console.message("A Tent Co2 Fan OFF", "yellow");
                 DK_SendRequest("http://" + ATentCo2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -99,10 +99,10 @@ function Automate() {
             if (ATentTemp.user.humidity > 80)
                 power = true;
             if (power) {
-                dkconsole.message("A Tent Exhaust Fan ON", "green");
+                console.message("A Tent Exhaust Fan ON", "green");
                 DK_SendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("A Tent Exhaust Fan OFF", "yellow");
+                console.message("A Tent Exhaust Fan OFF", "yellow");
                 DK_SendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -110,10 +110,10 @@ function Automate() {
         //A Tent Water walls
         if (ATentWater && ATentWater.user.automate) {
             if (ATentTemp.user.humidity < ATentTemp.user.humidityTarget) {
-                dkconsole.message("A Tent Water walls ON", "green");
+                console.message("A Tent Water walls ON", "green");
                 DK_SendRequest("http://" + ATentWater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("A Tent Water walls OFF", "yellow");
+                console.message("A Tent Water walls OFF", "yellow");
                 DK_SendRequest("http://" + ATentWater.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -121,10 +121,10 @@ function Automate() {
         //A Tent Heater
         if (ATentHeat && ATentHeat.user.automate) {
             if (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget) {
-                dkconsole.message("A Tent Heater ON", "green");
+                console.message("A Tent Heater ON", "green");
                 DK_SendRequest("http://" + ATentHeat.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("A Tent Heater OFF", "yellow");
+                console.message("A Tent Heater OFF", "yellow");
                 DK_SendRequest("http://" + ATentHeat.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -149,25 +149,25 @@ function Automate() {
 
         //B Tent Alarms
         if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone)) {
-            dkconsole.message("!!! B TENT TEMPERATURE BELOW MINIMUM " + BTentTemp.user.temperature + "&#176;F < " + (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
+            console.message("!!! B TENT TEMPERATURE BELOW MINIMUM " + BTentTemp.user.temperature + "&#176;F < " + (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
         }
         if (BTentTemp.user.temperature > (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureZone)) {
-            dkconsole.message("!!! B TENT TEMPERATURE ABOVE MAXIMUM " + BTentTemp.user.temperature + "&#176;F > " + (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
+            console.message("!!! B TENT TEMPERATURE ABOVE MAXIMUM " + BTentTemp.user.temperature + "&#176;F > " + (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
         }
         if (BTentTemp.user.humidity < (BTentTemp.user.humidityTarget - BTentTemp.user.humidityZone)) {
-            dkconsole.message("!!! B TENT HUMUDITY BELOW MINIMUM " + BTentTemp.user.humidity + "% < " + (BTentTemp.user.humidityTarget - BTentTemp.user.humidityZone) + "% !!!", "red");
+            console.message("!!! B TENT HUMUDITY BELOW MINIMUM " + BTentTemp.user.humidity + "% < " + (BTentTemp.user.humidityTarget - BTentTemp.user.humidityZone) + "% !!!", "red");
         }
         if (BTentTemp.user.humidity > (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone)) {
-            dkconsole.message("!!! B TENT HUMUDITY ABOVE MAXIMUM " + BTentTemp.user.humidity + "% > " + (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone) + "% !!!", "red");
+            console.message("!!! B TENT HUMUDITY ABOVE MAXIMUM " + BTentTemp.user.humidity + "% > " + (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone) + "% !!!", "red");
         }
 
         //B Tent Co2
         if (BTentCo2 && BTentCo2.user.automate) {
             if (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) {
-                dkconsole.message("B Tent Co2 ON", "green");
+                console.message("B Tent Co2 ON", "green");
                 DK_SendRequest("http://" + BTentCo2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("B Tent Co2 OFF", "yellow");
+                console.message("B Tent Co2 OFF", "yellow");
                 DK_SendRequest("http://" + BTentCo2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -185,20 +185,20 @@ function Automate() {
                 power = true;
             if (power) {
                 DK_SendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-                dkconsole.message("B Tent Exhaust Fan ON", "green");
+                console.message("B Tent Exhaust Fan ON", "green");
             } else {
                 DK_SendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
-                dkconsole.message("B Tent Exhaust Fan OFF", "yellow");
+                console.message("B Tent Exhaust Fan OFF", "yellow");
             }
         }
 
         //B Tent Water walls
         if (BTentWater && BTentWater.user.automate) {
             if (BTentTemp.user.humidity < BTentTemp.user.humidityTarget) {
-                dkconsole.message("B Tent Water walls ON", "green");
+                console.message("B Tent Water walls ON", "green");
                 DK_SendRequest("http://" + BTentWater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("B Tent Water walls OFF", "yellow");
+                console.message("B Tent Water walls OFF", "yellow");
                 DK_SendRequest("http://" + BTentWater.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -206,10 +206,10 @@ function Automate() {
         //B Tent Heater
         if (BTentHeat && BTentHeat.user.automate) {
             if (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) {
-                dkconsole.message("B Tent Heater ON", "green");
+                console.message("B Tent Heater ON", "green");
                 DK_SendRequest("http://" + BTentHeat.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("B Tent Heater OFF", "yellow");
+                console.message("B Tent Heater OFF", "yellow");
                 DK_SendRequest("http://" + BTentHeat.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -235,25 +235,25 @@ function Automate() {
         //Veg Tent Alarms
 
         if (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone)) {
-            dkconsole.message("!!! Veg TENT TEMPERATURE BELOW MINIMUM " + VegTentTemp.user.temperature + "&#176;F < " + (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
+            console.message("!!! Veg TENT TEMPERATURE BELOW MINIMUM " + VegTentTemp.user.temperature + "&#176;F < " + (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
         }
         if (VegTentTemp.user.temperature > (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureZone)) {
-            dkconsole.message("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM " + VegTentTemp.user.temperature + "&#176;F > " + (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
+            console.message("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM " + VegTentTemp.user.temperature + "&#176;F > " + (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureZone) + "&#176;F !!!", "red");
         }
         if (VegTentTemp.user.humidity < (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityZone)) {
-            dkconsole.message("!!! Veg TENT HUMUDITY BELOW MINIMUM " + VegTentTemp.user.humidity + "% < " + (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityZone) + "% !!!", "red");
+            console.message("!!! Veg TENT HUMUDITY BELOW MINIMUM " + VegTentTemp.user.humidity + "% < " + (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityZone) + "% !!!", "red");
         }
         if (VegTentTemp.user.humidity > (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone)) {
-            dkconsole.message("!!! Veg TENT HUMUDITY ABOVE MAXIMUM " + VegTentTemp.user.humidity + "% > " + (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone) + "% !!!", "red");
+            console.message("!!! Veg TENT HUMUDITY ABOVE MAXIMUM " + VegTentTemp.user.humidity + "% > " + (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone) + "% !!!", "red");
         }
 
         //Veg Tent Co2
         if (VegTentCo2 && VegTentCo2.user.automate) {
             if (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) {
-                dkconsole.message("Veg Tent Co2 ON", "green");
+                console.message("Veg Tent Co2 ON", "green");
                 DK_SendRequest("http://" + VegTentCo2.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("Veg Tent Co2 OFF", "yellow");
+                console.message("Veg Tent Co2 OFF", "yellow");
                 DK_SendRequest("http://" + VegTentCo2.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -271,20 +271,20 @@ function Automate() {
                 power = true;
             if (power) {
                 DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
-                dkconsole.message("Veg Tent Exhaust Fan ON", "green");
+                console.message("Veg Tent Exhaust Fan ON", "green");
             } else {
                 DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
-                dkconsole.message("Veg Tent Exhaust Fan OFF", "yellow");
+                console.message("Veg Tent Exhaust Fan OFF", "yellow");
             }
         }
 
         //Veg Tent Water walls
         if (VegTentWater && VegTentWater.user.automate) {
             if (VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) {
-                dkconsole.message("Veg Tent Water Walls ON", "green");
+                console.message("Veg Tent Water Walls ON", "green");
                 DK_SendRequest("http://" + VegTentWater.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("Veg Tent Water Walls OFF", "yellow");
+                console.message("Veg Tent Water Walls OFF", "yellow");
                 DK_SendRequest("http://" + VegTentWater.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
@@ -292,10 +292,10 @@ function Automate() {
         //Veg Tent Heater
         if (VegTentHeat && VegTentHeat.user.automate) {
             if (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) {
-                dkconsole.message("Veg Tent Heater ON", "green");
+                console.message("Veg Tent Heater ON", "green");
                 DK_SendRequest("http://" + VegTentHeat.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
             } else {
-                dkconsole.message("Veg Tent Heater OFF", "yellow");
+                console.message("Veg Tent Heater OFF", "yellow");
                 DK_SendRequest("http://" + VegTentHeat.ip + "/cm?cmnd=POWER%20OFF", UpdateScreen);
             }
         }
