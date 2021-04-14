@@ -5,9 +5,9 @@
 //DK_Create("https://momentjs.com/downloads/moment.min.js", function() {
 //    DK_Create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
 //});
-DK_Create("DKTasmota/moment.min.js", function() {
-    DK_Create("DKTasmota/Chart.min.js");
-});
+//DK_Create("DKTasmota/moment.min.js", function() {
+//    DK_Create("DKTasmota/Chart.min.js");
+//});
 
 let lineChart;
 

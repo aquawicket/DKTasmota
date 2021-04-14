@@ -267,8 +267,6 @@ function Automate() {
                 power = true;
             if (dkClock.time < dkClock.sunrise || dkClock.time >dkClock.sunset)
                 power = false;
-            if (VegTentTemp.user.humidity > 80)
-                power = true;
             if (power) {
                 DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
                 console.message("Veg Tent Exhaust Fan ON", "green");
