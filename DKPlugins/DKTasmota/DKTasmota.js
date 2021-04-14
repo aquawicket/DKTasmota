@@ -99,11 +99,16 @@ let theDevice = {
 //return a Device by partial matching name
 function Device(str) {
     if (!devices || !devices.length) {
-        //dkconsole.error("devices invalid");
+        //dkconsole.warn("devices invalid");
         return false;
     }
+
+    //const device = DKJson_FindPartialMatch(devices, "DeviceName", str);
+    //if(device)
+    //    return device;
+
     for (let n = 0; n < devices.length; n++) {
-        if (devices[n]?.Status?.DeviceName?.includes(str)) {
+        if (devices[n].Status && devices[n].Status.DeviceName.includes(str)) {
             return devices[n];
         }
     }
@@ -166,8 +171,7 @@ function DKTasmota_InitializeDevices(callback) {
     if (!callback)
         return error("callback invalid");
     if (!devices || !devices.length) {
-        //dkconsole.warn("devices array empty");
-        return false;
+        return warn("devices array empty");
     }
     let deviceCount = 0;
     for (let n = 0; n < devices.length; n++) {
@@ -175,9 +179,9 @@ function DKTasmota_InitializeDevices(callback) {
         DK_SendRequest(url, function(success, url, data) {
             if (success && url && data) {
                 let device = DKJson_FindPartialMatch(devices, 'ip', url);
-                if (!device) 
+                if (!device)
                     return error("device invalid");
-               
+
                 try {
                     let deviceData = JSON.parse(data);
                     deviceData.ip = device.ip;
