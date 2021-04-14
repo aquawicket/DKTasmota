@@ -131,7 +131,7 @@ function DKTasmota_SaveDevicesToLocalStorage() {
 function DKTasmota_LoadDevicesFromServer() {
     const src = online_assets + "\\devices.js";
     PHP_FileToString(src, function(rVal) {
-        if (rVal)
+        //if (rVal)
             devices = JSON.parse(rVal);
         return devices;
     });

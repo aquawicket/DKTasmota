@@ -229,8 +229,8 @@ function DKChart_AppendDatasetToServer(label, data) {
         y: data
     });
     PHP_StringToFile(online_assets + "\\" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {
-        if (rval)
-            console.log(rval);
+        //if (rval)
+            //console.log(rval);
     });
 }
 

@@ -5,16 +5,17 @@ function DKDebug_Func() {
     console.log("DEBUG BUTTON");
 
 
-    throw new Error( 'No worries. Just testing...' );
+    //throw new Error( 'No worries. Just testing...' );
     /*
     if(1){
         return error("testing errors");
     }
-
+    */
+    
     DKPhp_Call("Debug_Func", "one", "two", "three", function(rval){
         console.log(rval);
     });
-    */
+    
 
     //HP_Debug_Func("one", "two", "three", function(rval) {
     //    console.log(rval);
