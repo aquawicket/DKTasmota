@@ -1,1 +1,3 @@
+DKDEPEND(codemirror)
+
 DKASSETS(DKTasmota)
