@@ -190,6 +190,13 @@ function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
     if (!ip)
         return error("ip invalid");
 
+    for (let n = 0; n < lineChart.data.datasets.length; n++) {
+        if (lineChart.data.datasets[n].label === label) {
+            //no duplicates
+            return false;
+        }
+    }
+
     const dataset = {};
     dataset.ip = ip;
     dataset.label = label;
