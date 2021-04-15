@@ -5,9 +5,8 @@
 //DK_Create("https://momentjs.com/downloads/moment.min.js", function() {
 //    DK_Create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
 //});
-//DK_Create("DKTasmota/moment.min.js", function() {
-//    DK_Create("DKTasmota/Chart.min.js");
-//});
+DK_Create("DKTasmota/moment.min.js");
+DK_Create("DKTasmota/Chart.min.js");
 
 let lineChart;
 
@@ -190,9 +189,9 @@ function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
     if (!ip)
         return error("ip invalid");
 
+    //no duplicates
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].label === label) {
-            //no duplicates
             return false;
         }
     }
@@ -236,26 +235,31 @@ function DKChart_AppendDatasetToServer(label, data) {
         y: data
     });
     PHP_StringToFile(online_assets + "\\" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {
-        //if (rval)
-            //console.log(rval);
+        //rval && console.log(rval);
     });
 }
 
 function DKChart_SaveDatasetToServer(ip) {
+    //TODO
+    /*
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             const data = JSON.stringify(lineChart.data.datasets[n].data);
             //DK_SaveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
+    */
 }
 
 function DKChart_LoadDatasetsFromServer() {
+    //TODO
+    /*
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         const data = DK_LoadFromLocalStorage(lineChart.data.datasets[n].label);
         lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();
+    */
 }
 
 function DKChart_SaveDatasets(ip) {

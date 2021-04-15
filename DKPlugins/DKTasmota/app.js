@@ -71,8 +71,8 @@ function DKLoadApp() {
 
 function LoadGui() {
     //document.body.style.margin = "0rem;" 
-    DKConsole_Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
-    console.message("**** Tasmota device manager 0.1b ****", "blue");
+    dkconsole.Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
+    console.debug("**** Tasmota device manager 0.1b ****");
     app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);

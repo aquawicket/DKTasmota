@@ -5,6 +5,8 @@ function DKDebug_Func() {
     console.log("DEBUG BUTTON");
 
 
+    console.log("Multiple styles: %cred %corange", "color: red", "color: orange", "Additional unformatted message");
+
     //throw new Error( 'No worries. Just testing...' );
     /*
     if(1){
@@ -12,9 +14,11 @@ function DKDebug_Func() {
     }
     */
     
+    /*
     DKPhp_Call("Debug_Func", "one", "two", "three", function(rval){
         console.log(rval);
     });
+    */
     
 
     //HP_Debug_Func("one", "two", "three", function(rval) {
