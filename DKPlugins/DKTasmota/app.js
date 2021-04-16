@@ -37,7 +37,7 @@ function DKLoadFiles() {
     DK_Create("DKTasmota/Chart.min.js");
     DK_Create("DKTasmota/Automation.js");
     DK_Create("DKTasmota/VPDCalculator.js");
-   
+
     DK_PreloadImage("DKTasmota/loading.gif");
     DK_PreloadImage("DKTasmota/restart.png");
     DK_PreloadImage("DKTasmota/info.png");
@@ -51,11 +51,8 @@ function DKLoadFiles() {
 function DKLoadApp() {
     DKErrorHandler_Create();
     DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
-    DKTasmota_LoadDevicesFromServer();
-    //DKTasmota_LoadDevicesFromLocalStorage();
-
-    PHP_GetRemoteAddress(function PHP_GetRemoteAddressCallback(rval) {
-        if (rval === "127.0.0.1") {
+    DKTasmota_LoadDevicesFromServer(function() {
+        if (location.protocol === "file:") {
             app.server = true;
             app.automate = true;
         } else {
@@ -63,10 +60,10 @@ function DKLoadApp() {
             app.automate = false;
         }
         LoadGui();
+        
+        //Run app main loop every 30 seconds
+        window.setInterval(MainAppLoop, 30000);
     });
-
-    //Run app main loop every 30 seconds
-    window.setInterval(MainAppLoop, 30000);
 }
 
 function LoadGui() {

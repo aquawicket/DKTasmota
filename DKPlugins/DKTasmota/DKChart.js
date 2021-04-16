@@ -234,9 +234,11 @@ function DKChart_AppendDatasetToServer(label, data) {
         t: currentdate,
         y: data
     });
-    PHP_StringToFile(online_assets + "\\" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {
-        //rval && console.log(rval);
-    });
+    if(PHP){
+        PHP_StringToFile(online_assets + "\\" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {
+            //rval && console.log(rval);
+        });
+    }
 }
 
 function DKChart_SaveDatasetToServer(ip) {

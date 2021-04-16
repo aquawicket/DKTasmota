@@ -128,11 +128,10 @@ function DKTasmota_SaveDevicesToLocalStorage() {
     DK_SaveToLocalStorage("devices", devicesString);
 }
 
-function DKTasmota_LoadDevicesFromServer() {
-    const src = online_assets + "\\devices.js";
-    PHP_FileToString(src, function(rVal) {
-        //if (rVal)
-            devices = JSON.parse(rVal);
+function DKTasmota_LoadDevicesFromServer(callback) {
+    DK_FileToStringAsync("devices.js", function(data){
+        data && (devices = JSON.parse(data));
+        callback && callback(devices);
         return devices;
     });
 }
