@@ -80,10 +80,10 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
     chartDiv.appendChild(clearButton);
     */
 
-    DKTasmota_InitializeDevices(function() {
-        DKChart_AddDatasets();
-        DKChart_LoadDatasets();
-    });
+    //DKTasmota_InitializeDevices(function() {
+    //    DKChart_AddDatasets();
+    //    DKChart_LoadDatasets();
+    //});
 }
 
 function DKChart_AddDatasets() {
@@ -122,6 +122,9 @@ function DKChart_UpdateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
 
+    DKChart_AddDatasets();
+    DKChart_LoadDatasets();
+        
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (device.ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
             if (identifier.includes("switch")) {
