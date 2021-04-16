@@ -268,8 +268,8 @@ function AddDeviceToTable(device) {
     const auto = document.createElement("img");
     auto.id = device.ip + "automate";
     auto.setAttribute("title", "Automation");
-    (device.user.automate === undefined) && (device.user.automate = true);
-    device.user.automate ? auto.src = "DKTasmota/automateOFF.png" : auto.src = "DKTasmota/automateON.png";
+    (device.user.automate === undefined) && (device.user.automate = false);
+    device.user.automate ? auto.src = "DKTasmota/automateON.png" : auto.src = "DKTasmota/automateOFF.png";
     auto.style.width = "17rem";
     auto.style.cursor = "pointer";
     auto.style.paddingRight = "3rem";
@@ -714,7 +714,7 @@ function UpdateScreen(success, url, data) {
         DKChart_UpdateDevice(device, "sensor3", device.user.dewpoint);
     }
 
-    if (device.user.automate) {
+    if (device.user.automate === true) {
         byId(device.ip + "automate").src = "DKTasmota/automateON.png";
     } else {
         byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
