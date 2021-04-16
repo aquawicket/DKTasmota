@@ -1,6 +1,6 @@
 DKSET(USE_DKCef OFF)
 
-#DKDEPEND(php-7.4.10-nts-Win32-vc15-x64)
+DKDEPEND(php-Win32-vs16-x64)
 
 DKDEPEND(DK)
 DKDEPEND(DKArchive)
