@@ -91,7 +91,7 @@ function Automate() {
                 power = true;
             if (ATentTemp.user.humidity > ATentTemp.user.humidityTarget)
                 power = true;
-            if (dkClock.time < dkClock.sunrise || dkClock.time >dkClock.sunset )
+            if (dkClock.time < dkClock.sunrise || dkClock.time > dkClock.sunset )
                 power = false;
             if (power) {
                 console.log("A Tent Exhaust Fan ON", "green");
