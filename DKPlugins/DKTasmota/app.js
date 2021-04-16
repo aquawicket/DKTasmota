@@ -554,7 +554,7 @@ function UpdateTableStyles() {
 
 function ScanDevices() {
     DKTasmota_GetDevices("192.168.1.", function DKTasmota_GetDevicesCallback(ip, done) {
-        if (ip && !DKJson_FindObjectValueIncludes(devices, 'ip', ip)) {
+        if (ip && !DKJson_FindPartialMatch(devices, 'ip', ip)) {
             const device = DKTasmota_CreateDevice(ip);
             AddDeviceToTable(device);
             DKTasmota_SaveDevicesToServer();
@@ -562,8 +562,8 @@ function ScanDevices() {
         }
         if (done) {
             console.log("\n");
-            console.message("Scan Complete", "green");
-            console.message("(" + devices.length + ") Tasmota Devices found", "green");
+            console.log("Scan Complete", "green");
+            console.log("(" + devices.length + ") Tasmota Devices found", "green");
         }
     });
 }
