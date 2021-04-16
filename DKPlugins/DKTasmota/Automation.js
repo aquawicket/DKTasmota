@@ -93,8 +93,6 @@ function Automate() {
                 power = true;
             if (dkClock.time < dkClock.sunrise || dkClock.time >dkClock.sunset )
                 power = false;
-            if (ATentTemp.user.humidity > 80)
-                power = true;
             if (power) {
                 console.log("A Tent Exhaust Fan ON", "green");
                 DK_SendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20ON", UpdateScreen);
