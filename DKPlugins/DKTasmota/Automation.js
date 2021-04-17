@@ -142,6 +142,12 @@ function Automate() {
             BTentTemp.user.humidityZone = 20;
         }
 
+        //drying room
+        BTentTemp.user.temperatureTarget = 65;
+        BTentTemp.user.temperatureZone = 10;
+        BTentTemp.user.humidityTarget = 45;
+        BTentTemp.user.humidityZone = 10;
+        
         //B Tent Alarms
         if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone))
             console.log("!!! B TENT TEMPERATURE BELOW MINIMUM("+(BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");

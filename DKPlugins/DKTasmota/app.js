@@ -23,6 +23,7 @@ function DKLoadFiles() {
     DK_Create("DKGui/DKClipboard.js");
     DK_Create("DKGui/DKTable.js");
     DK_Create("DKGui/DKConsole.js");
+    DK_Create("DKCodeMirror/DKCodeMirror.js");
     DK_Create("DKAudio/DKAudio.js", function DK_CreateCallback() {
         DKAudio_PreLoadAudio("DKTasmota/PowerDown.mp3");
     });
@@ -298,13 +299,13 @@ function AddDeviceToTable(device) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        DKMessageBox_Confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
+        dkmessagebox.confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
             if (rval) {
                 restart.src = "DKTasmota/loading.gif";
                 DK_SendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
             }
         });
-        DKFrame_SetTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
+        //DKFrame_SetTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
     }
     optionsCell.appendChild(restart);
 
@@ -436,7 +437,7 @@ function InfoWindow(device) {
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
-    DKFrame_Create(div);
+    dkframe.create(div);
     DKFrame_SetTitle(div, device.user.name + " Info");
 }
 
@@ -593,7 +594,7 @@ function UpdateScreen(success, url, data) {
     if (!url)
         return error("url invalid");
     if (!devices.length)
-        return error("devices array empty");
+        return warn("devices array empty");
     let device = DKJson_FindPartialMatch(devices, 'ip', url);
     if (!device)
         return error("device invalid, didn't find ip in url:" + url);

@@ -3,10 +3,10 @@
 //A Convienient Debug Function
 function DKDebug_Func() {
     console.log("DEBUG BUTTON");
-
-
     console.log("Multiple styles: %cred %corange", "color: red", "color: orange", "Additional unformatted message");
 
+    dkcodemirror.Create();
+    
     //throw new Error( 'No worries. Just testing...' );
     /*
     if(1){
