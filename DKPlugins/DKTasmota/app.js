@@ -6,45 +6,45 @@ app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
-    DK_Create("DK/DKErrorHandler.js");
-    DK_Create("DK/DK.css");
-    DK_Create("DK/DKPhp.js");
-    DK_Create("DK/DKTrace.js");
-    DK_Create("DK/DKJson.js");
-    DK_Create("DK/DKValidate.js");
-    DK_Create("DK/sun.js");
-    DK_Create("DK/DKClock.js");
-    DK_Create("DKDebug/DKDebug.js");
-    DK_Create("DKFile/DKFile.js");
-    DK_Create("DKGui/DKGui.js");
-    DK_Create("DKGui/DKFrame.js");
-    DK_Create("DKGui/DKMenu.js");
-    DK_Create("DKGui/DKMessageBox.js");
-    DK_Create("DKGui/DKDrag.js");
-    DK_Create("DKGui/DKClipboard.js");
-    DK_Create("DKGui/DKTable.js");
-    DK_Create("DKGui/DKConsole.js");
-    DK_Create("DKCodeMirror/DKCodeMirror.js");
-    DK_Create("DKAudio/DKAudio.js", function DK_CreateCallback() {
+    dk.create("DK/DKErrorHandler.js");
+    dk.create("DK/DK.css");
+    dk.create("DK/DKPhp.js");
+    dk.create("DK/DKTrace.js");
+    dk.create("DK/DKJson.js");
+    dk.create("DK/DKValidate.js");
+    dk.create("DK/sun.js");
+    dk.create("DK/DKClock.js");
+    dk.create("DKDebug/DKDebug.js");
+    dk.create("DKFile/DKFile.js");
+    dk.create("DKGui/DKGui.js");
+    dk.create("DKGui/DKFrame.js");
+    dk.create("DKGui/DKMenu.js");
+    dk.create("DKGui/DKMessageBox.js");
+    dk.create("DKGui/DKDrag.js");
+    dk.create("DKGui/DKClipboard.js");
+    dk.create("DKGui/DKTable.js");
+    dk.create("DKGui/DKConsole.js");
+    dk.create("DKCodeMirror/DKCodeMirror.js");
+    dk.create("DKAudio/DKAudio.js", function dk_createCallback() {
         DKAudio_PreLoadAudio("DKTasmota/PowerDown.mp3");
     });
 
-    DK_Create("DKTasmota/superagent.js");
-    DK_Create("DKTasmota/DKMqtt.js");
-    DK_Create("DKTasmota/DKNotifications.js");
-    DK_Create("DKTasmota/DKTasmota.js");
-    DK_Create("DKTasmota/DKChart.js");
-    DK_Create("DKTasmota/Automation.js");
-    DK_Create("DKTasmota/VPDCalculator.js");
+    dk.create("DKTasmota/superagent.js");
+    dk.create("DKTasmota/DKMqtt.js");
+    dk.create("DKTasmota/DKNotifications.js");
+    dk.create("DKTasmota/DKTasmota.js");
+    dk.create("DKTasmota/DKChart.js");
+    dk.create("DKTasmota/Automation.js");
+    dk.create("DKTasmota/VPDCalculator.js");
 
-    DK_PreloadImage("DKTasmota/loading.gif");
-    DK_PreloadImage("DKTasmota/restart.png");
-    DK_PreloadImage("DKTasmota/info.png");
-    DK_PreloadImage("DKTasmota/settings.png");
-    DK_PreloadImage("DKTasmota/online.png");
-    DK_PreloadImage("DKTasmota/offline.png");
-    DK_PreloadImage("DKTasmota/automateOFF.png");
-    DK_PreloadImage("DKTasmota/automateON.png");
+    dk.preloadImage("DKTasmota/loading.gif");
+    dk.preloadImage("DKTasmota/restart.png");
+    dk.preloadImage("DKTasmota/info.png");
+    dk.preloadImage("DKTasmota/settings.png");
+    dk.preloadImage("DKTasmota/online.png");
+    dk.preloadImage("DKTasmota/offline.png");
+    dk.preloadImage("DKTasmota/automateOFF.png");
+    dk.preloadImage("DKTasmota/automateON.png");
 }
 
 function DKLoadApp() {
@@ -99,7 +99,7 @@ function PushAssets() {
 }
 
 function MainAppLoop() {
-    DK_IsOnline() ? byId("internet").src = "DKTasmota/online.png" : byId("internet").src = "DKTasmota/offline.png";
+    dk.isOnline() ? byId("internet").src = "DKTasmota/online.png" : byId("internet").src = "DKTasmota/offline.png";
     ProcessDevices();
     app.automate && Automate();
 }
@@ -136,7 +136,7 @@ function CreateButtons(parent) {
     }
 
     const internet = DKGui_CreateImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
-    DK_IsOnline() ? internet.src = "DKTasmota/online.png" : internet.src = "DKTasmota/onffline.png";
+    dk.isOnline() ? internet.src = "DKTasmota/online.png" : internet.src = "DKTasmota/onffline.png";
 
     const volume = DKGui_CreateImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     function volume_onclick() {
@@ -257,7 +257,7 @@ function AddDeviceToTable(device) {
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
-        DK_SendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
     }
 
     const dataCell = DKTable_GetCellByName(table, device.ip, "data");
@@ -301,7 +301,7 @@ function AddDeviceToTable(device) {
         dk.messagebox.confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
             if (rval) {
                 restart.src = "DKTasmota/loading.gif";
-                DK_SendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
+                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
             }
         });
         //dk.frame.setTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
@@ -382,7 +382,7 @@ function AddDeviceToTable(device) {
     //Do some final processing
     const deviceHeader = DKTable_GetCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-    DK_SendRequest("http://" + device.ip + "/cm?cmnd=Status%200", UpdateScreen);
+    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", UpdateScreen);
     DKTable_Sort("deviceTable", "device");
     UpdateTableStyles();
 }
@@ -502,7 +502,7 @@ function DConsoleWindow(device) {
             console.debug("Send command -> " + input.value);
             const cmnd = input.value;
             const url = "http://" + device.ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-            DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
+            dk.sendRequest(url, function DK_SendRequestCallback(success, url, data) {
                 //console.log("function DK_SendRequestCallback("+success+","+url+","+data+")");
                 if (data) {
                     const msgDiv = document.createElement("div");
@@ -572,7 +572,7 @@ function ClearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
-    DK_RemoveFromLocalStorage("devices");
+    dk.removeFromLocalStorage("devices");
     devices = [];
 }
 
@@ -585,7 +585,7 @@ function ProcessDevices() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const ip = table.rows[n].getAttribute("ip");
-        DK_SendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
     }
 }
 

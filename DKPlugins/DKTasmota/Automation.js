@@ -75,7 +75,7 @@ function Automate() {
             (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget-1)) && (power = true);
             power && (ATentCo2.user.power === "OFF") && console.log("A Tent Co2 Fan ON", "green");
             !power && (ATentCo2.user.power === "ON") && console.log("A Tent Co2 Fan OFF", "yellow");
-            DK_SendRequest("http://" + ATentCo2.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + ATentCo2.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //A Tent Exhaust fan
@@ -88,7 +88,7 @@ function Automate() {
             (dkClock.time > (dkClock.sunset+1)) && (power = false);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
             !power && (ATentExhaust.user.power === "ON") && console.log("A Tent Exhaust Fan OFF", "yellow");
-            DK_SendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //A Tent Water walls
@@ -98,7 +98,7 @@ function Automate() {
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             power && (ATentWater.user.power === "OFF") && console.log("A Tent Water walls ON", "green");
             !power && (ATentWater.user.power === "ON") && console.log("A Tent Water walls OFF", "yellow");
-            DK_SendRequest("http://" + ATentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + ATentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //A Tent Heater
@@ -107,7 +107,7 @@ function Automate() {
             (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget) && (power = true);
             power && (ATentHeat.user.power === "OFF") && console.log("A Tent Heater ON", "green");
             !power && (ATentHeat.user.power === "ON") && console.log("A Tent Heater OFF", "yellow");
-            DK_SendRequest("http://" + ATentHeat.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + ATentHeat.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
     }
 
@@ -150,7 +150,7 @@ function Automate() {
             (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget-1)) && (power = true);
             power && (BTentCo2.user.power === "OFF") && console.log("B Tent Co2 ON", "green");
             !power && (BTentCo2.user.power === "ON") && console.log("B Tent Co2 OFF", "yellow");
-            DK_SendRequest("http://" + BTentCo2.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + BTentCo2.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //B Tent Exhaust fan
@@ -163,7 +163,7 @@ function Automate() {
             (dkClock.time > (dkClock.sunset+1)) && (power = false);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
             !power && (BTentExhaust.user.power === "ON") && console.log("B Tent Exhaust Fan OFF", "yellow");
-            DK_SendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //B Tent Water walls
@@ -173,7 +173,7 @@ function Automate() {
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = false);
             power && (BTentWater.user.power === "OFF") && console.log("B Tent Water walls ON", "green");
             !power && (BTentWater.user.power === "ON") && console.log("B Tent Water walls OFF", "yellow");
-            DK_SendRequest("http://" + BTentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + BTentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //B Tent Heater
@@ -182,7 +182,7 @@ function Automate() {
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = true);
             power && (BTentHeat.user.power === "OFF") && console.log("B Tent Heater ON", "green");
             !power && (BTentHeat.user.power === "ON") && console.log("B Tent Heater OFF", "yellow");
-            DK_SendRequest("http://" + BTentHeat.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + BTentHeat.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
     }
 
@@ -238,7 +238,7 @@ function Automate() {
             (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget-1)) && (power = true);
             power && (VegTentCo2.user.power === "OFF") && console.log("Veg Tent Co2 ON", "green");
             !power && (VegTentCo2.user.power === "ON") && console.log("Veg Tent Co2 OFF", "yellow");
-            DK_SendRequest("http://" + VegTentCo2.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + VegTentCo2.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //Veg Tent Exhaust fan
@@ -252,7 +252,7 @@ function Automate() {
             (dkClock.time > (dkClock.sunset+1)) && (power = false);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
             !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
-            DK_SendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //Veg Tent Water walls
@@ -264,7 +264,7 @@ function Automate() {
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = false);
             power && (VegTentWater.user.power === "OFF") && console.log("Veg Tent Water Walls ON", "green");
             !power && (VegTentWater.user.power === "ON") && console.log("Veg Tent Water Walls OFF", "yellow");
-            DK_SendRequest("http://" + VegTentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + VegTentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
         //Veg Tent Heater
@@ -273,7 +273,7 @@ function Automate() {
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = true);
             power && (VegTentHeat.user.power === "OFF") && console.log("Veg Tent Heater ON", "green");
             !power && (VegTentHeat.user.power === "ON") && console.log("Veg Tent Heater OFF", "yellow");
-            DK_SendRequest("http://" + VegTentHeat.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
+            dk.sendRequest("http://" + VegTentHeat.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
         }
 
     }

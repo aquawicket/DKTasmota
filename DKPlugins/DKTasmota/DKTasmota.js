@@ -115,7 +115,7 @@ function Device(str) {
 }
 
 function DKTasmota_LoadDevicesFromLocalStorage() {
-    const data = DK_LoadFromLocalStorage("devices");
+    const data = dk.loadFromLocalStorage("devices");
     if (!data)
         return false;
     devices = JSON.parse(data);
@@ -125,11 +125,11 @@ function DKTasmota_LoadDevicesFromLocalStorage() {
 
 function DKTasmota_SaveDevicesToLocalStorage() {
     const devicesString = JSON.stringify(devices);
-    DK_SaveToLocalStorage("devices", devicesString);
+    dk.saveToLocalStorage("devices", devicesString);
 }
 
 function DKTasmota_LoadDevicesFromServer(callback) {
-    DK_FileToStringAsync("devices.js", function(data){
+    dk.fileToStringAsync("devices.js", function(data){
         data && (devices = JSON.parse(data));
         callback && callback(devices);
         return devices;

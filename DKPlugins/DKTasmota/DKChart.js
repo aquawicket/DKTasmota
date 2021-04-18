@@ -2,11 +2,11 @@
 
 //https://www.chartjs.org/
 //https://www.chartjs.org/docs/latest/axes/cartesian/time.html
-//DK_Create("https://momentjs.com/downloads/moment.min.js", function() {
-//    DK_Create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+//dk.create("https://momentjs.com/downloads/moment.min.js", function() {
+//    dk.create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
 //});
-DK_Create("DKTasmota/moment.min.js");
-DK_Create("DKTasmota/Chart.min.js");
+dk.create("DKTasmota/moment.min.js");
+dk.create("DKTasmota/Chart.min.js");
 
 let lineChart;
 
@@ -124,7 +124,7 @@ function DKChart_UpdateDevice(device, identifier, data) {
 
     DKChart_AddDatasets();
     DKChart_LoadDatasets();
-        
+
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (device.ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
             if (identifier.includes("switch")) {
@@ -237,29 +237,28 @@ function DKChart_AppendDatasetToServer(label, data) {
         t: currentdate,
         y: data
     });
-    
-    PHP_StringToFile(online_assets + "\\" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {
-        //rval && console.log(rval);
+
+    var prefix = "";
+    prefix == (online_assets + "\\");
+    PHP_StringToFile(prefix + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {//rval && console.log(rval);
     });
 }
 
-function DKChart_SaveDatasetToServer(ip) {
-    //TODO
-    /*
+function DKChart_SaveDatasetToServer(ip) {//TODO
+/*
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             const data = JSON.stringify(lineChart.data.datasets[n].data);
-            //DK_SaveToLocalStorage(lineChart.data.datasets[n].label, data);
+            //dk.saveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
     */
 }
 
-function DKChart_LoadDatasetsFromServer() {
-    //TODO
-    /*
+function DKChart_LoadDatasetsFromServer() {//TODO
+/*
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        const data = DK_LoadFromLocalStorage(lineChart.data.datasets[n].label);
+        const data = dk.loadFromLocalStorage(lineChart.data.datasets[n].label);
         lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();
@@ -270,14 +269,14 @@ function DKChart_SaveDatasets(ip) {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         if (lineChart.data.datasets[n].ip === ip) {
             const data = JSON.stringify(lineChart.data.datasets[n].data);
-            DK_SaveToLocalStorage(lineChart.data.datasets[n].label, data);
+            dk.saveToLocalStorage(lineChart.data.datasets[n].label, data);
         }
     }
 }
 
 function DKChart_LoadDatasets() {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        const data = DK_LoadFromLocalStorage(lineChart.data.datasets[n].label);
+        const data = dk.loadFromLocalStorage(lineChart.data.datasets[n].label);
         lineChart.data.datasets[n].data = JSON.parse(data);
     }
     lineChart.update();

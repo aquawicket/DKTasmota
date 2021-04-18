@@ -2,7 +2,7 @@
 
 "use strict";
 
-DK_Create("DKTasmota/mqttws31.min.js");
+dk.create("DKTasmota/mqttws31.min.js");
 
 var mqtt;
 var reconnectTimeout = 2000;
