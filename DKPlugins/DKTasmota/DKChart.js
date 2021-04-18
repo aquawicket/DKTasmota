@@ -239,7 +239,7 @@ function DKChart_AppendDatasetToServer(label, data) {
     });
 
     var prefix = "";
-    prefix = online_assets;
+    prefix = dk.file.online_assets;
     dk.php.stringToFile(prefix + "/"+stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {//rval && console.log(rval);
     });
 }
