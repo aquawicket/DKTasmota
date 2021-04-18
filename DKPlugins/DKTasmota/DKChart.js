@@ -239,8 +239,8 @@ function DKChart_AppendDatasetToServer(label, data) {
     });
 
     var prefix = "";
-    prefix == (online_assets + "\\");
-    PHP_StringToFile(prefix + stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {//rval && console.log(rval);
+    prefix = online_assets;
+    dk.php.stringToFile(prefix + "/"+stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {//rval && console.log(rval);
     });
 }
 
@@ -286,4 +286,5 @@ function DKChart_ClearDatasets() {
     for (let n = 0; n < lineChart.data.datasets.length; n++) {
         lineChart.data.datasets[n].data = [];
     }
+    lineChart.update();
 }

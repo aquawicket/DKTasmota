@@ -137,7 +137,6 @@ function DKTasmota_LoadDevicesFromServer(callback) {
 }
 
 function DKTasmota_SaveDevicesToServer() {
-    const dest = online_assets + "\\devices.js";
     for (let n = 0; n < devices.length; n++) {
         delete devices[n].Status;
         delete devices[n].StatusFWR;
@@ -151,6 +150,9 @@ function DKTasmota_SaveDevicesToServer() {
         delete devices[n].StatusTIM;
     }
     const data = JSON.stringify(devices);
+    let prefix = "";
+    prefix = online_assets;
+    const dest = prefix + "/devices.js";
     PHP_StringToFile(dest, data, "", function(rVal) {
         if (rVal)
             console.log(rVal);

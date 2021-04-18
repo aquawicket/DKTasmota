@@ -48,7 +48,7 @@ app.loadFiles = function app_loadFiles() {
 }
 
 function DKLoadApp() {
-    DKErrorHandler_Create();
+    dk.errorhandler.create();
     DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
     DKTasmota_LoadDevicesFromServer(function() {
         if (location.protocol === "file:") {
@@ -92,7 +92,7 @@ function LoadGui() {
 }
 
 function PushAssets() {
-    PHP_PushDKAssets(function PHP_PushDKAssetsCallback(rval) {
+    dk.php.pushDKAssets(function dk_php_pushDKAssetsCallback(rval) {
         console.log(rval);
         console.log("done copying assets");
     });
