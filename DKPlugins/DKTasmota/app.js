@@ -80,7 +80,7 @@ function LoadGui() {
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
-    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dkdebug.debug);
+    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
     if (!devices || !devices.length) {
         //console.error("devices array empty");
@@ -594,7 +594,7 @@ function UpdateScreen(success, url, data) {
         return error("url invalid");
     if (!devices.length)
         return warn("devices array empty");
-    let device = DKJson_FindPartialMatch(devices, 'ip', url);
+    let device = dk.json.findPartialMatch(devices, 'ip', url);
     if (!device)
         return error("device invalid, didn't find ip in url:" + url);
     const table = byId("deviceTable");
@@ -610,8 +610,8 @@ function UpdateScreen(success, url, data) {
         return warn(device.ip + " did not respond");
     }
 
-    //const jsonString = DKJson_PrettyJson(data);
-    //const jsonSuper = DKJson_HighlightJson(jsonString);
+    //const jsonString = dk.json.prettyJson(data);
+    //const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
 
     try {
