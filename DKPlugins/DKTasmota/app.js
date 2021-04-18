@@ -2,7 +2,7 @@
 
 const app = [];
 
-function DKLoadFiles() {
+app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKLoadPage() will be call after this loads everything.
@@ -14,6 +14,7 @@ function DKLoadFiles() {
     DK_Create("DK/DKValidate.js");
     DK_Create("DK/sun.js");
     DK_Create("DK/DKClock.js");
+    DK_Create("DKDebug/DKDebug.js");
     DK_Create("DKFile/DKFile.js");
     DK_Create("DKGui/DKGui.js");
     DK_Create("DKGui/DKFrame.js");
@@ -30,12 +31,9 @@ function DKLoadFiles() {
 
     DK_Create("DKTasmota/superagent.js");
     DK_Create("DKTasmota/DKMqtt.js");
-    DK_Create("DKTasmota/DKDebug.js");
     DK_Create("DKTasmota/DKNotifications.js");
     DK_Create("DKTasmota/DKTasmota.js");
     DK_Create("DKTasmota/DKChart.js");
-    DK_Create("DKTasmota/moment.min.js");
-    DK_Create("DKTasmota/Chart.min.js");
     DK_Create("DKTasmota/Automation.js");
     DK_Create("DKTasmota/VPDCalculator.js");
 
@@ -82,7 +80,7 @@ function LoadGui() {
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
-    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", DKDebug_Func);
+    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dkdebug.debug);
 
     if (!devices || !devices.length) {
         //console.error("devices array empty");
@@ -118,6 +116,7 @@ function SendSuperRequest(url, callback) {
         callback(false, res);
     });
 }
+
 
 function CreateButtons(parent) {
     DKGui_CreateButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
@@ -299,13 +298,13 @@ function AddDeviceToTable(device) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        dkmessagebox.confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
+        dk.messagebox.confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
             if (rval) {
                 restart.src = "DKTasmota/loading.gif";
                 DK_SendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
             }
         });
-        //DKFrame_SetTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
+        //dk.frame.setTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
     }
     optionsCell.appendChild(restart);
 
@@ -409,7 +408,7 @@ function PreferencesWindow() {
     div.style.overflow = "auto";
 
     document.body.appendChild(div);
-    DKFrame_Create(div);
+    dk.frame.create(div);
 }
 
 function InfoWindow(device) {
@@ -437,8 +436,8 @@ function InfoWindow(device) {
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
-    dkframe.create(div);
-    DKFrame_SetTitle(div, device.user.name + " Info");
+    dk.frame.create(div);
+    dk.frame.setTitle(div, device.user.name + " Info");
 }
 
 function SettingsWindow(device) {
@@ -461,8 +460,8 @@ function SettingsWindow(device) {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
     document.body.appendChild(div);
-    DKFrame_Create(div);
-    DKFrame_SetTitle(div, device.user.name + " Settings");
+    dk.frame.create(div);
+    dk.frame.setTitle(div, device.user.name + " Settings");
 }
 
 function DConsoleWindow(device) {
@@ -535,8 +534,8 @@ function DConsoleWindow(device) {
     div.appendChild(input);
 
     document.body.appendChild(div);
-    DKFrame_Create(div);
-    DKFrame_SetTitle(div, device.user.name + " Console");
+    dk.frame.create(div);
+    dk.frame.setTitle(div, device.user.name + " Console");
 }
 
 function UpdateTableStyles() {

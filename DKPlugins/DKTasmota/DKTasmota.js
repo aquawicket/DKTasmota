@@ -222,8 +222,9 @@ function DKTasmota_GetDevices(ipPrefix, callback) {
             //}
         }
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-        console.debug(url);
+        //console.debug(url);
         SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
+        //DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
             console.log("pinged " + ip);
             if (success) {
                 devicesScanned += 1;
