@@ -5,7 +5,7 @@ const app = [];
 app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
-    //app.loadApp()) will be call after this loads everything.
+    //DKloadApp()) will be call after this loads everything.
     dk.create("DK/DKErrorHandler.js");
     dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
