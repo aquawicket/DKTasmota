@@ -243,7 +243,7 @@ function Automate() {
 
         //Veg Tent Exhaust fan
         if (VegTentExhaust && VegTentExhaust.user.automate) {
-            let power;
+            let power = false;
             (VegTentTemp.user.temperature > VegTentTemp.user.temperatureTarget) && (power = true);
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = true);
             //(VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 10)) && (power = false);
