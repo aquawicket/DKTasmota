@@ -5,7 +5,7 @@ const app = [];
 app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
-    //DKLoadPage() will be call after this loads everything.
+    //app.loadApp()) will be call after this loads everything.
     dk.create("DK/DKErrorHandler.js");
     dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
@@ -26,7 +26,7 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKConsole.js");
     dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_createCallback() {
-        DKAudio_PreLoadAudio("DKTasmota/PowerDown.mp3");
+        dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
 
     dk.create("DKTasmota/superagent.js");
@@ -87,7 +87,7 @@ function LoadGui() {
 }
 
 function PushAssets() {
-    dk.php.pushDKAssets(function dk_php_pushDKAssetsCallback(rval) {
+    dk.php.pushDKAssets(function dk_php_pushDKAssets_callback(rval) {
         console.log(rval);
         console.log("done copying assets");
     });
@@ -134,11 +134,11 @@ function CreateButtons(parent) {
 
     const volume = dk.gui.createImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     function volume_onclick() {
-        if (DKAudio_GetVolume("DKTasmota/PowerDown.mp3") === 1.0) {
-            DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 0.0);
+        if (dk.audio.getVolume("DKTasmota/PowerDown.mp3") === 1.0) {
+            dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.0);
             volume.src = "DKTasmota/volume_0.png";
         } else {
-            DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 1.0);
+            dk.audio.setVolume("DKTasmota/PowerDown.mp3", 1.0);
             volume.src = "DKTasmota/volume_100.png";
         }
     }
@@ -160,7 +160,7 @@ function CreateDeviceTable(parent) {
     const table = dk.table.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
 
     //Create Header Row as a normal <tr>
-    //const deviceHeader = DKTableAddColumn(table, "HEADER", "device"); //FIXME
+    //const deviceHeader = dk.table.addColumn(table, "HEADER", "device"); //FIXME
     const row = dk.table.addRow(table, "HEADER", "device");
     row.style.backgroundColor = "rgb(50,50,50)";
     row.style.fontWeight = "bold";
@@ -292,7 +292,7 @@ function AddDeviceToTable(device) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        dk.messagebox.confirm("Restart this device?", function DKMessageBox_ConfirmCallback(rval) {
+        dk.messagebox.confirm("Restart this device?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
                 restart.src = "DKTasmota/loading.gif";
                 dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
@@ -352,7 +352,7 @@ function AddDeviceToTable(device) {
     dChart.onclick = function dChart_onclick() {
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
-                byId(device.ip + "dChart").style.backgroundColor = dk.chart.SelectChart(device.ip);
+                byId(device.ip + "dChart").style.backgroundColor = dk.chart.selectChart(device.ip);
             } else {
                 byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
             }
@@ -360,7 +360,7 @@ function AddDeviceToTable(device) {
     }
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
         event.preventDefault();
-        const color = dk.chart.ToggleChart(device.ip);
+        const color = dk.chart.toggleChart(device.ip);
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
                 if (color) {
@@ -425,8 +425,8 @@ function InfoWindow(device) {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
-    const jsonString = DKJson_PrettyJson(JSON.stringify(device));
-    const jsonSuper = DKJson_HighlightJson(jsonString);
+    const jsonString = dk.json.prettyJson(JSON.stringify(device));
+    const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
@@ -496,8 +496,8 @@ function DConsoleWindow(device) {
             console.debug("Send command -> " + input.value);
             const cmnd = input.value;
             const url = "http://" + device.ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-            dk.sendRequest(url, function DK_SendRequestCallback(success, url, data) {
-                //console.log("function DK_SendRequestCallback("+success+","+url+","+data+")");
+            dk.sendRequest(url, function dk_sendRequest_callback(success, url, data) {
+                //console.log("function dk_sendRequest_callback("+success+","+url+","+data+")");
                 if (data) {
                     const msgDiv = document.createElement("div");
                     msgDiv.style.width = "100%";
@@ -547,12 +547,12 @@ function UpdateTableStyles() {
 }
 
 function ScanDevices() {
-    DKTasmota_GetDevices("192.168.1.", function DKTasmota_GetDevicesCallback(ip, done) {
-        if (ip && !DKJson_FindPartialMatch(dk.tasmota.devices, 'ip', ip)) {
-            const device = DKTasmota_CreateDevice(ip);
+    dk.tasmota.getDevices("192.168.1.", function dk_tasmote_getDevices_callback(ip, done) {
+        if (ip && !dk.json.findPartialMatch(dk.tasmota.devices, 'ip', ip)) {
+            const device = dk.tasmote.createDevice(ip);
             AddDeviceToTable(device);
-            DKTasmota_SaveDevicesToServer();
-            DKTasmota_SaveDevicesToLocalStorage();
+            dk.tasmota.saveDevicesToServer();
+            dk.tasmota.saveDevicesToLocalStorage();
         }
         if (done) {
             console.log("\n");
@@ -571,8 +571,8 @@ function ClearDevices() {
 }
 
 function SaveDevices() {
-    DKTasmota_SaveDevicesToServer();
-    DKTasmota_SaveDevicesToLocalStorage();
+    dk.tasmota.saveDevicesToServer();
+    dk.tasmota.saveDevicesToLocalStorage();
 }
 
 function ProcessDevices() {
@@ -599,7 +599,7 @@ function UpdateScreen(success, url, data) {
         return warn("row invalid");
 
     if (!success || !data) {
-        DKAudio_Play("DKTasmota/PowerDown.mp3");
+        dk.audio.play("DKTasmota/PowerDown.mp3");
         row.style.backgroundColor = "red";
         return warn(device.ip + " did not respond");
     }
