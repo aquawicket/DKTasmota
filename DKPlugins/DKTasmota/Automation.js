@@ -22,25 +22,25 @@ let VegTentHeat;
 
 function Automate() {
 
-    !ATentCo2 && (ATentCo2 = Device("A Tent Co2"));
-    !ATentTemp && (ATentTemp = Device("A Tent Temp"));
-    !ATentExhaust && (ATentExhaust = Device("A Tent Exhaust Fan"));
-    !ATentWater && (ATentWater = Device("A Tent Water Walls"));
-    !ATentHeat && (ATentHeat = Device("A Tent Heater"));
+    !ATentCo2 && (ATentCo2 = dk.tasmota.device("A Tent Co2"));
+    !ATentTemp && (ATentTemp = dk.tasmota.device("A Tent Temp"));
+    !ATentExhaust && (ATentExhaust = dk.tasmota.device("A Tent Exhaust Fan"));
+    !ATentWater && (ATentWater = dk.tasmota.device("A Tent Water Walls"));
+    !ATentHeat && (ATentHeat = dk.tasmota.device("A Tent Heater"));
 
-    !BTentCo2 && (BTentCo2 = Device("B Tent Co2"));
-    !BTentTemp && (BTentTemp = Device("B Tent Temp"));
-    !BTentExhaust && (BTentExhaust = Device("B Tent Exhaust Fan"));
-    !BTentWater && (BTentWater = Device("B Tent Water Walls"));
-    !BTentHeat && (BTentHeat = Device("B Tent Heater"));
+    !BTentCo2 && (BTentCo2 = dk.tasmota.device("B Tent Co2"));
+    !BTentTemp && (BTentTemp = dk.tasmota.device("B Tent Temp"));
+    !BTentExhaust && (BTentExhaust = dk.tasmota.device("B Tent Exhaust Fan"));
+    !BTentWater && (BTentWater = dk.tasmota.device("B Tent Water Walls"));
+    !BTentHeat && (BTentHeat = dk.tasmota.device("B Tent Heater"));
 
-    !ShedTemp && (ShedTemp = Device("Shed Temp"));
+    !ShedTemp && (ShedTemp = dk.tasmota.device("Shed Temp"));
 
-    !VegTentCo2 && (VegTentCo2 = Device("Veg Tent Co2"));
-    !VegTentTemp && (VegTentTemp = Device("Veg Tent Temp"));
-    !VegTentExhaust && (VegTentExhaust = Device("Veg Tent Exhaust Fan"));
-    !VegTentWater && (VegTentWater = Device("Veg Tent Water Walls"));
-    !VegTentHeat && (VegTentHeat = Device("Veg Tent Heater"));
+    !VegTentCo2 && (VegTentCo2 = dk.tasmota.device("Veg Tent Co2"));
+    !VegTentTemp && (VegTentTemp = dk.tasmota.device("Veg Tent Temp"));
+    !VegTentExhaust && (VegTentExhaust = dk.tasmota.device("Veg Tent Exhaust Fan"));
+    !VegTentWater && (VegTentWater = dk.tasmota.device("Veg Tent Water Walls"));
+    !VegTentHeat && (VegTentHeat = dk.tasmota.device("Veg Tent Heater"));
 
     ////////////////////////////////////////////////////////////
     //A Tent Presets

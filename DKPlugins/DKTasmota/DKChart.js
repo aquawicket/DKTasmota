@@ -1,16 +1,20 @@
 "use strict";
-
 //https://www.chartjs.org/
 //https://www.chartjs.org/docs/latest/axes/cartesian/time.html
 //dk.create("https://momentjs.com/downloads/moment.min.js", function() {
 //    dk.create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
 //});
-dk.create("DKTasmota/moment.min.js");
-dk.create("DKTasmota/Chart.min.js");
 
-let lineChart;
+dk.chart = new Object;
 
-function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
+dk.chart.init = function dk_chart_init(){
+    dk.create("DKTasmota/moment.min.js");
+    dk.create("DKTasmota/Chart.min.js");
+    this.lineChart;
+}
+
+
+dk.chart.create = function dk_chart_create(parent, id, top, bottom, left, right, width, height) {
     const chartDiv = document.createElement("div");
     chartDiv.id = id;
     chartDiv.style.position = "absolute";
@@ -37,10 +41,10 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
     dk.gui.addResizeHandler(chartCanvas, function() {
         //console.debug("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
         chartCanvas.style.height = "100%";
-        //lineChart.resize("100%","100%");
+        //this.lineChart.resize("100%","100%");
     });
 
-    lineChart = new Chart(ctx,{
+    this.lineChart = new Chart(ctx,{
         type: "line",
         data: {
             datasets: []
@@ -81,54 +85,54 @@ function DKChart_Create(parent, id, top, bottom, left, right, width, height) {
     */
 
     //DKTasmota_InitializeDevices(function() {
-    //    DKChart_AddDatasets();
-    //    DKChart_LoadDatasets();
+    //    dk.chart.addDatasets();
+    //    dk.chart.loadDatasets();
     //});
 }
 
-function DKChart_AddDatasets() {
-    Device("014") && DKChart_AddDataset("A Tent Temperature", "rgb(200, 0, 0)", Device("014").ip, "sensor1", true);
-    Device("014") && DKChart_AddDataset("A Tent Humidity", "rgb(0, 0, 200)", Device("014").ip, "sensor2", true);
-    Device("014") && DKChart_AddDataset("A Tent DewPoint", "rgb(0,150,150)", Device("014").ip, "sensor3", true);
-    Device("011") && DKChart_AddDataset("A Tent Exhaust Fan", "rgb(10,30,90)", Device("011").ip, "switch1", true);
-    Device("003") && DKChart_AddDataset("A Tent Water Walls", "rgb(10,30,50)", Device("003").ip, "switch1", true);
-    //DKChart_AddDataset("A Tent Heater", "rgb(150,0,50)", Device("???").ip, "switch1", true);
-    //DKChart_AddDataset("A Tent Co2", "rgb(10,60,10)", Device("???").ip, "switch1", true);
-    //DKChart_AddDataset("A Tent Lights", "rgb(100,60,10)", Device("???").ip, "switch1", true);
+dk.chart.addDatasets = function dk_chart_addDatasets() {
+    dk.tasmota.device("014") && dk.chart.addDataset("A Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("014").ip, "sensor1", true);
+    dk.tasmota.device("014") && dk.chart.addDataset("A Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("014").ip, "sensor2", true);
+    dk.tasmota.device("014") && dk.chart.addDataset("A Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("014").ip, "sensor3", true);
+    dk.tasmota.device("011") && dk.chart.addDataset("A Tent Exhaust Fan", "rgb(10,30,90)", dk.tasmota.device("011").ip, "switch1", true);
+    dk.tasmota.device("003") && dk.chart.addDataset("A Tent Water Walls", "rgb(10,30,50)", dk.tasmota.device("003").ip, "switch1", true);
+    //dk.chart.addDataset("A Tent Heater", "rgb(150,0,50)", dk.tasmota.device("???").ip, "switch1", true);
+    //dk.chart.addDataset("A Tent Co2", "rgb(10,60,10)", dk.tasmota.device("???").ip, "switch1", true);
+    //dk.chart.addDataset("A Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
 
-    Device("013") && DKChart_AddDataset("B Tent Temperature", "rgb(200, 0, 0)", Device("013").ip, "sensor1", true);
-    Device("013") && DKChart_AddDataset("B Tent Humidity", "rgb(0, 0, 200)", Device("013").ip, "sensor2", true);
-    Device("013") && DKChart_AddDataset("B Tent DewPoint", "rgb(0,150,150)", Device("013").ip, "sensor3", true);
-    Device("005") && DKChart_AddDataset("B Tent Exhaust Fan", "rgb(150,0,150)", Device("005").ip, "switch1", true);
-    Device("007") && DKChart_AddDataset("B Tent Water Walls", "rgb(90,0,150)", Device("007").ip, "switch1", true);
-    Device("006") && DKChart_AddDataset("B Tent Heater", "rgb(150,0,50)", Device("006").ip, "switch1", true);
-    Device("008") && DKChart_AddDataset("B Tent Co2", "rgb(10,60,10)", Device("008").ip, "switch1", true);
-    //Device("0") && DKChart_AddDataset("B Tent Lights", "rgb(100,60,10)", Device("???").ip, "switch1", true);
+    dk.tasmota.device("013") && dk.chart.addDataset("B Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("013").ip, "sensor1", true);
+    dk.tasmota.device("013") && dk.chart.addDataset("B Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("013").ip, "sensor2", true);
+    dk.tasmota.device("013") && dk.chart.addDataset("B Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("013").ip, "sensor3", true);
+    dk.tasmota.device("005") && dk.chart.addDataset("B Tent Exhaust Fan", "rgb(150,0,150)", dk.tasmota.device("005").ip, "switch1", true);
+    dk.tasmota.device("007") && dk.chart.addDataset("B Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("007").ip, "switch1", true);
+    dk.tasmota.device("006") && dk.chart.addDataset("B Tent Heater", "rgb(150,0,50)", dk.tasmota.device("006").ip, "switch1", true);
+    dk.tasmota.device("008") && dk.chart.addDataset("B Tent Co2", "rgb(10,60,10)", dk.tasmota.device("008").ip, "switch1", true);
+    //dk.tasmota.device("0") && dk.chart.addDataset("B Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
 
-    Device("002") && DKChart_AddDataset("Shed Water A", "rgb(150,40,40)", Device("Shed Water A").ip, "switch1", true);
-    Device("001") && DKChart_AddDataset("Shed Water B", "rgb(30,0,90)", Device("Shed Water B").ip, "switch1", true);
-    Device("016") && DKChart_AddDataset("Shed Temp", "rgb(30,0,90)", Device("Shed Temp").ip, "sensor1", true);
+    dk.tasmota.device("002") && dk.chart.addDataset("Shed Water A", "rgb(150,40,40)", dk.tasmota.device("Shed Water A").ip, "switch1", true);
+    dk.tasmota.device("001") && dk.chart.addDataset("Shed Water B", "rgb(30,0,90)", dk.tasmota.device("Shed Water B").ip, "switch1", true);
+    dk.tasmota.device("016") && dk.chart.addDataset("Shed Temp", "rgb(30,0,90)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
 
-    Device("015") && DKChart_AddDataset("Veg Tent Temperature", "rgb(200, 20, 20)", Device("015").ip, "sensor1", true);
-    Device("015") && DKChart_AddDataset("Veg Tent Humidity", "rgb(0, 0, 200)", Device("015").ip, "sensor2", true);
-    Device("015") && DKChart_AddDataset("Veg Tent DewPoint", "rgb(0,150,150)", Device("015").ip, "sensor3", true);
-    Device("012") && DKChart_AddDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", Device("012").ip, "switch1", true);
-    Device("009") && DKChart_AddDataset("Veg Tent Water Walls", "rgb(90,0,150)", Device("009").ip, "switch1", true);
-    Device("010") && DKChart_AddDataset("Veg Tent Co2", "rgb(100,60,10)", Device("Veg Tent Co2").ip, "switch1", true);
-    Device("004") && DKChart_AddDataset("Veg Tent Lights", "rgb(100,60,10)", Device("004").ip, "switch1", true);
+    dk.tasmota.device("015") && dk.chart.addDataset("Veg Tent Temperature", "rgb(200, 20, 20)", dk.tasmota.device("015").ip, "sensor1", true);
+    dk.tasmota.device("015") && dk.chart.addDataset("Veg Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("015").ip, "sensor2", true);
+    dk.tasmota.device("015") && dk.chart.addDataset("Veg Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("015").ip, "sensor3", true);
+    dk.tasmota.device("012") && dk.chart.addDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", dk.tasmota.device("012").ip, "switch1", true);
+    dk.tasmota.device("009") && dk.chart.addDataset("Veg Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("009").ip, "switch1", true);
+    dk.tasmota.device("010") && dk.chart.addDataset("Veg Tent Co2", "rgb(100,60,10)", dk.tasmota.device("Veg Tent Co2").ip, "switch1", true);
+    dk.tasmota.device("004") && dk.chart.addDataset("Veg Tent Lights", "rgb(100,60,10)", dk.tasmota.device("004").ip, "switch1", true);
 }
 
-function DKChart_UpdateDevice(device, identifier, data) {
+dk.chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
 
-    DKChart_AddDatasets();
-    DKChart_LoadDatasets();
+    dk.chart.addDatasets();
+    dk.chart.loadDatasets();
 
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (device.ip === lineChart.data.datasets[n].ip && identifier === lineChart.data.datasets[n].identifier) {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (device.ip === this.lineChart.data.datasets[n].ip && identifier === this.lineChart.data.datasets[n].identifier) {
             if (identifier.includes("switch")) {
-                const ex = lineChart.data.datasets[n].data;
+                const ex = this.lineChart.data.datasets[n].data;
                 if (ex.length && data === ex[ex.length - 1].y) {
                     ex.pop();
                 } else {
@@ -143,7 +147,7 @@ function DKChart_UpdateDevice(device, identifier, data) {
                 });
             }
             if (identifier.includes("sensor")) {
-                const tData = lineChart.data.datasets[n].data;
+                const tData = this.lineChart.data.datasets[n].data;
                 if (tData.length && parseFloat(data) === tData[tData.length - 1].y) {
                     tData.pop();
                 }
@@ -155,46 +159,46 @@ function DKChart_UpdateDevice(device, identifier, data) {
         }
     }
 
-    lineChart.update();
-    DKChart_SaveDatasets(device.ip);
-    DKChart_AppendDatasetToServer(device.user.name, data);
+    this.lineChart.update();
+    dk.chart.saveDatasets(device.ip);
+    dk.chart.appendDatasetToServer(device.user.name, data);
 }
 
-function DKChart_SelectChart(ip) {
+dk.chart.selectChart = function dk_chart_selectChart(ip) {
     let borderColor;
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (lineChart.data.datasets[n].ip === ip) {
-            lineChart.data.datasets[n].hidden = false;
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip) {
+            this.lineChart.data.datasets[n].hidden = false;
             /*!borderColor && (*/
-            borderColor = lineChart.data.datasets[n].borderColor
+            borderColor = this.lineChart.data.datasets[n].borderColor
             //);
         } else {
-            lineChart.data.datasets[n].hidden = true;
+            this.lineChart.data.datasets[n].hidden = true;
         }
     }
-    lineChart.update();
+    this.lineChart.update();
     return borderColor;
 }
 
-function DKChart_ToggleChart(ip) {
+dk.chart.toggleChart = function dk_chart_toggleChart(ip) {
     let borderColor;
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (lineChart.data.datasets[n].ip === ip) {
-            lineChart.data.datasets[n].hidden ? lineChart.data.datasets[n].hidden = false : lineChart.data.datasets[n].hidden = true;
-            !lineChart.data.datasets[n].hidden && !borderColor && (borderColor = lineChart.data.datasets[n].borderColor);
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip) {
+            this.lineChart.data.datasets[n].hidden ? this.lineChart.data.datasets[n].hidden = false : this.lineChart.data.datasets[n].hidden = true;
+            !this.lineChart.data.datasets[n].hidden && !borderColor && (borderColor = this.lineChart.data.datasets[n].borderColor);
         }
     }
-    lineChart.update();
+    this.lineChart.update();
     return borderColor;
 }
 
-function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
+dk.chart.addDataset = function dk_chart_addDataset(label, borderColor, ip, identifier, hidden) {
     if (!ip)
         return error("ip invalid");
 
     //no duplicates
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (lineChart.data.datasets[n].label === label) {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].label === label) {
             return false;
         }
     }
@@ -221,16 +225,16 @@ function DKChart_AddDataset(label, borderColor, ip, identifier, hidden) {
             devices[n].dataset.fill = false;
             devices[n].dataset.borderColor = borderColor;
             devices[n].dataset.hidden = hidden;
-            lineChart.data.datasets.push(devices[n].dataset);
+            this.lineChart.data.datasets.push(devices[n].dataset);
         }
     }
     */
 
-    lineChart.data.datasets.push(dataset);
-    lineChart.update();
+    this.lineChart.data.datasets.push(dataset);
+    this.lineChart.update();
 }
 
-function DKChart_AppendDatasetToServer(label, data) {
+dk.chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, data) {
     const currentdate = new Date();
     const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
     const entry = JSON.stringify({
@@ -244,47 +248,47 @@ function DKChart_AppendDatasetToServer(label, data) {
     });
 }
 
-function DKChart_SaveDatasetToServer(ip) {//TODO
+dk.chart.saveDatasetToServer = function dk_chart_saveDatasetToServer(ip) {//TODO
 /*
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (lineChart.data.datasets[n].ip === ip) {
-            const data = JSON.stringify(lineChart.data.datasets[n].data);
-            //dk.saveToLocalStorage(lineChart.data.datasets[n].label, data);
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip) {
+            const data = JSON.stringify(this.lineChart.data.datasets[n].data);
+            //dk.saveToLocalStorage(this.lineChart.data.datasets[n].label, data);
         }
     }
     */
 }
 
-function DKChart_LoadDatasetsFromServer() {//TODO
+dk.chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer() {//TODO
 /*
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        const data = dk.loadFromLocalStorage(lineChart.data.datasets[n].label);
-        lineChart.data.datasets[n].data = JSON.parse(data);
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        const data = dk.loadFromLocalStorage(this.lineChart.data.datasets[n].label);
+        this.lineChart.data.datasets[n].data = JSON.parse(data);
     }
-    lineChart.update();
+    this.lineChart.update();
     */
 }
 
-function DKChart_SaveDatasets(ip) {
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        if (lineChart.data.datasets[n].ip === ip) {
-            const data = JSON.stringify(lineChart.data.datasets[n].data);
-            dk.saveToLocalStorage(lineChart.data.datasets[n].label, data);
+dk.chart.saveDatasets = function dk_chart_saveDatasets(ip) {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip) {
+            const data = JSON.stringify(this.lineChart.data.datasets[n].data);
+            dk.saveToLocalStorage(this.lineChart.data.datasets[n].label, data);
         }
     }
 }
 
-function DKChart_LoadDatasets() {
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        const data = dk.loadFromLocalStorage(lineChart.data.datasets[n].label);
-        lineChart.data.datasets[n].data = JSON.parse(data);
+dk.chart.loadDatasets = function dk_chart_loadDatasets() {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        const data = dk.loadFromLocalStorage(this.lineChart.data.datasets[n].label);
+        this.lineChart.data.datasets[n].data = JSON.parse(data);
     }
-    lineChart.update();
+    this.lineChart.update();
 }
 
-function DKChart_ClearDatasets() {
-    for (let n = 0; n < lineChart.data.datasets.length; n++) {
-        lineChart.data.datasets[n].data = [];
+dk.chart.clearDatasets = function dk_chart_clearDatasets() {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        this.lineChart.data.datasets[n].data = [];
     }
-    lineChart.update();
+    this.lineChart.update();
 }

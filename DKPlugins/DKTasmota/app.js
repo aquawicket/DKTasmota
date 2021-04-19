@@ -50,7 +50,7 @@ app.loadFiles = function app_loadFiles() {
 function DKLoadApp() {
     dk.errorhandler.create();
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
-    DKTasmota_LoadDevicesFromServer(function() {
+    dk.tasmota.loadDevicesFromServer(function() {
         if (location.protocol === "file:") {
             app.server = true;
             app.automate = true;
@@ -75,14 +75,14 @@ function LoadGui() {
     dk.clock.getSunrise(33.7312525, -117.3028688);
     dk.clock.getSunset(33.7312525, -117.3028688);
     CreateDeviceTable(document.body);
-    DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
+    dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
     dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
-    if (!devices || !devices.length)
-        return warn("devices empty");
-    for (let n = 0; n < devices.length; n++) {
-        AddDeviceToTable(devices[n]);
+    if (!dk.tasmota.devices || !dk.tasmota.devices.length)
+        return warn("dk.tasmota.devices empty");
+    for (let n = 0; n < dk.tasmota.devices.length; n++) {
+        AddDeviceToTable(dk.tasmota.devices[n]);
     }
 }
 
@@ -350,23 +350,23 @@ function AddDeviceToTable(device) {
     optionsCell.appendChild(dChart);
 
     dChart.onclick = function dChart_onclick() {
-        for (let n = 0; n < devices.length; n++) {
-            if (devices[n].ip === device.ip) {
-                byId(device.ip + "dChart").style.backgroundColor = DKChart_SelectChart(device.ip);
+        for (let n = 0; n < dk.tasmota.devices.length; n++) {
+            if (dk.tasmota.devices[n].ip === device.ip) {
+                byId(device.ip + "dChart").style.backgroundColor = dk.chart.SelectChart(device.ip);
             } else {
-                byId(devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
+                byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
             }
         }
     }
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
         event.preventDefault();
-        const color = DKChart_ToggleChart(device.ip);
-        for (let n = 0; n < devices.length; n++) {
-            if (devices[n].ip === device.ip) {
+        const color = dk.chart.ToggleChart(device.ip);
+        for (let n = 0; n < dk.tasmota.devices.length; n++) {
+            if (dk.tasmota.devices[n].ip === device.ip) {
                 if (color) {
-                    byId(devices[n].ip + "dChart").style.backgroundColor = color;
+                    byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color;
                 } else {
-                    byId(devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
+                    byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
                 }
             }
         }
@@ -548,7 +548,7 @@ function UpdateTableStyles() {
 
 function ScanDevices() {
     DKTasmota_GetDevices("192.168.1.", function DKTasmota_GetDevicesCallback(ip, done) {
-        if (ip && !DKJson_FindPartialMatch(devices, 'ip', ip)) {
+        if (ip && !DKJson_FindPartialMatch(dk.tasmota.devices, 'ip', ip)) {
             const device = DKTasmota_CreateDevice(ip);
             AddDeviceToTable(device);
             DKTasmota_SaveDevicesToServer();
@@ -557,7 +557,7 @@ function ScanDevices() {
         if (done) {
             console.log("\n");
             console.log("Scan Complete", "green");
-            console.log("(" + devices.length + ") Tasmota Devices found", "green");
+            console.log("(" + dk.tasmota.devices.length + ") Tasmota Devices found", "green");
         }
     });
 }
@@ -566,8 +566,8 @@ function ClearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
-    dk.removeFromLocalStorage("devices");
-    devices = [];
+    dk.removeFromLocalStorage("dk.tasmota.devices");
+    dk.tasmota.devices = [];
 }
 
 function SaveDevices() {
@@ -586,9 +586,9 @@ function ProcessDevices() {
 function UpdateScreen(success, url, data) {
     if (!url)
         return error("url invalid");
-    if (!devices.length)
-        return warn("devices array empty");
-    let device = dk.json.findPartialMatch(devices, 'ip', url);
+    if (!dk.tasmota.devices.length)
+        return warn("dk.tasmota.devices array empty");
+    let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
     if (!device)
         return error("device invalid, didn't find ip in url:" + url);
     const table = byId("deviceTable");
@@ -612,7 +612,7 @@ function UpdateScreen(success, url, data) {
         let deviceData = JSON.parse(data);
         deviceData.ip = device.ip;
         deviceData.user = device.user;
-        devices[devices.indexOf(device)] = deviceData;
+        dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
         device = deviceData;
     } catch {
         return error("data could not be parsed to json");
@@ -634,10 +634,10 @@ function UpdateScreen(success, url, data) {
         powerCell.innerHTML = "<a>" + device.user.power + "</a>";
         if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            DKChart_UpdateDevice(device, "switch1", 100);
+            dk.chart.updateDevice(device, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            DKChart_UpdateDevice(device, "switch1", 0);
+            dk.chart.updateDevice(device, "switch1", 0);
         }
     }
 
@@ -669,7 +669,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         byId(device.ip + "Temp").style.textAlign = "center";
 
-        DKChart_UpdateDevice(device, "sensor1", device.user.temperature);
+        dk.chart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
     device.user.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
@@ -695,7 +695,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         byId(device.ip + "RH").style.textAlilgn = "center";
 
-        DKChart_UpdateDevice(device, "sensor2", device.user.humidity);
+        dk.chart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
     device.user.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
@@ -705,7 +705,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
 
-        DKChart_UpdateDevice(device, "sensor3", device.user.dewpoint);
+        dk.chart.updateDevice(device, "sensor3", device.user.dewpoint);
     }
 
     if (device.user.automate === true) {
