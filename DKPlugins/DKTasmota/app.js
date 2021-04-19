@@ -49,7 +49,7 @@ app.loadFiles = function app_loadFiles() {
 
 function DKLoadApp() {
     dk.errorhandler.create();
-    DKAudio_CreateSound("DKTasmota/PowerDown.mp3");
+    dk.audio.createSound("DKTasmota/PowerDown.mp3");
     DKTasmota_LoadDevicesFromServer(function() {
         if (location.protocol === "file:") {
             app.server = true;
@@ -66,7 +66,7 @@ function DKLoadApp() {
 }
 
 function LoadGui() {
-    dkconsole.Create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
+    dk.console.create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
     app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
