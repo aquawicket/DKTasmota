@@ -156,8 +156,11 @@ dk.tasmota.saveDevicesToServer = function dk_tasmote_saveDevicesToServer() {
         delete dk.tasmota.devices[n].StatusTIM;
     }
     const data = JSON.stringify(dk.tasmota.devices);
-    let prefix = "";
-    prefix = dk.file.onlineAssets;
+    let prefix;
+    if(!dk.file.onlineAssets)
+        prefix = "127.0.0.1:8000";
+    else
+        prefix = dk.file.onlineAssets;
     const dest = prefix + "/devices.js";
     dk.php.stringToFile(dest, data, "", function(rval) {
         if (rval)
