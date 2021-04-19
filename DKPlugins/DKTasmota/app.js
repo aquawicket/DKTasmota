@@ -1,3 +1,7 @@
+/*
+THIS IS NOT LOCATED IN THE ASSETS FOLDER UNDER myapp.js
+
+
 "use strict";
 
 const app = [];
@@ -51,7 +55,7 @@ function DKLoadApp() {
     dk.errorhandler.create();
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function() {
-        if (location.protocol === "file:") {
+        if (location.protocol === "file:" || location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
             app.server = true;
             app.automate = true;
         } else {
@@ -728,3 +732,4 @@ function UpdateScreen(success, url, data) {
 
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKTasmota/restart.png");
 }
+*/

@@ -83,7 +83,7 @@ function Automate() {
             let power = false;
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
-            (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 10)) && (power = false);
+            //(ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 10)) && (power = false);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
@@ -158,7 +158,7 @@ function Automate() {
             let power = false;
             (BTentTemp.user.temperature > BTentTemp.user.temperatureTarget) && (power = true);
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
-            (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 10)) && (power = false);
+            //(BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 10)) && (power = false);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
@@ -246,7 +246,7 @@ function Automate() {
             let power;
             (VegTentTemp.user.temperature > VegTentTemp.user.temperatureTarget) && (power = true);
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = true);
-            (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 10)) && (power = false);
+            //(VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 10)) && (power = false);
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);

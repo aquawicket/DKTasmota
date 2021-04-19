@@ -289,6 +289,7 @@ dk.chart.loadDatasets = function dk_chart_loadDatasets() {
 dk.chart.clearDatasets = function dk_chart_clearDatasets() {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         this.lineChart.data.datasets[n].data = [];
+        dk.removeFromLocalStorage(this.lineChart.data.datasets[n].label)
     }
     this.lineChart.update();
 }
