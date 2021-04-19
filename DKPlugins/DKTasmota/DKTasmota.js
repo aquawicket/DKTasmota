@@ -151,11 +151,11 @@ function DKTasmota_SaveDevicesToServer() {
     }
     const data = JSON.stringify(devices);
     let prefix = "";
-    prefix = online_assets;
+    prefix = dk.file.onlineAssets;
     const dest = prefix + "/devices.js";
-    PHP_StringToFile(dest, data, "", function(rVal) {
-        if (rVal)
-            console.log(rVal);
+    dk.php.stringToFile(dest, data, "", function(rval) {
+        if (rval)
+            console.log(rval);
     });
 }
 
@@ -177,7 +177,7 @@ function DKTasmota_InitializeDevices(callback) {
     let deviceCount = 0;
     for (let n = 0; n < devices.length; n++) {
         const url = "http://" + devices[n].ip + "/cm?cmnd=Status%200";
-        DK_SendRequest(url, function(success, url, data) {
+        dk.sendRequest(url, function dk_sendRequest_callback(success, url, data) {
             if (success && url && data) {
                 let device = DKJson_FindPartialMatch(devices, 'ip', url);
                 if (!device)
