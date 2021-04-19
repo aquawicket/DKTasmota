@@ -1,3 +1,4 @@
+DKDEPEND(Chart.js)
 DKDEPEND(DKCodeMirror)
 
 DKASSETS(DKTasmota)
