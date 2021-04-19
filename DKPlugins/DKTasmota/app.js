@@ -79,8 +79,8 @@ function LoadGui() {
     //, 15);
     CreateDeviceTable(document.body);
     DKChart_Create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    DKGui_CreateButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
-    DKGui_CreateButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
+    dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
+    dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
     if (!devices || !devices.length) {
         //console.error("devices array empty");
@@ -119,12 +119,12 @@ function SendSuperRequest(url, callback) {
 
 
 function CreateButtons(parent) {
-    DKGui_CreateButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
-    DKGui_CreateButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
-    DKGui_CreateButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
-    DKGui_CreateButton(document.body, "Save Devices", "", "", "", "", "", "", SaveDevices).style.position = "";
+    dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
+    dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
+    dk.gui.createButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
+    dk.gui.createButton(document.body, "Save Devices", "", "", "", "", "", "", SaveDevices).style.position = "";
 
-    const automation = DKGui_CreateButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
+    const automation = dk.gui.createButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
     automation.style.position = "";
     automation_update();
     function automation_onclick() {
@@ -135,10 +135,10 @@ function CreateButtons(parent) {
         app.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
     }
 
-    const internet = DKGui_CreateImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
+    const internet = dk.gui.createImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
     dk.isOnline() ? internet.src = "DKTasmota/online.png" : internet.src = "DKTasmota/onffline.png";
 
-    const volume = DKGui_CreateImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
+    const volume = dk.gui.createImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     function volume_onclick() {
         if (DKAudio_GetVolume("DKTasmota/PowerDown.mp3") === 1.0) {
             DKAudio_SetVolume("DKTasmota/PowerDown.mp3", 0.0);
@@ -149,7 +149,7 @@ function CreateButtons(parent) {
         }
     }
 
-    const preferences = DKGui_CreateImageButton(document.body, "", "DKTasmota/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
+    const preferences = dk.gui.createImageButton(document.body, "", "DKTasmota/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
 }
 
 function CreateDeviceTable(parent) {
