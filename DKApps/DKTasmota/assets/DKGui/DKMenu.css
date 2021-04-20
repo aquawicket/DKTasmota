@@ -1,0 +1,9 @@
+[target="dkmenu"] {
+    box-sizing: border-box;
+    border-color: rgb(60,60,60);
+    background-color: #766a6a;
+}
+
+[target="dkmenuItem"] {
+    background-color: #3d1855;
+}
