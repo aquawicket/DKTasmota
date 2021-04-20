@@ -96,6 +96,8 @@ function Automate() {
             let power = false;
             (ATentTemp.user.humidity < ATentTemp.user.humidityTarget) && (power = true);
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
+            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time > (dk.clock.sunset-1)) && (power = false);
             power && (ATentWater.user.power === "OFF") && console.log("A Tent Water walls ON", "green");
             !power && (ATentWater.user.power === "ON") && console.log("A Tent Water walls OFF", "yellow");
             dk.sendRequest("http://" + ATentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
@@ -171,6 +173,8 @@ function Automate() {
             let power = false;
             (BTentTemp.user.humidity < BTentTemp.user.humidityTarget) && (power = true);
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = false);
+            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time > (dk.clock.sunset-1)) && (power = false);
             power && (BTentWater.user.power === "OFF") && console.log("B Tent Water walls ON", "green");
             !power && (BTentWater.user.power === "ON") && console.log("B Tent Water walls OFF", "yellow");
             dk.sendRequest("http://" + BTentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
@@ -262,6 +266,8 @@ function Automate() {
             (VegTentTemp.user.temperature > VegTentTemp.user.temperatureTarget) && (power = true);
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = false);
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = false);
+            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time > (dk.clock.sunset-1)) && (power = false);
             power && (VegTentWater.user.power === "OFF") && console.log("Veg Tent Water Walls ON", "green");
             !power && (VegTentWater.user.power === "ON") && console.log("Veg Tent Water Walls OFF", "yellow");
             dk.sendRequest("http://" + VegTentWater.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
