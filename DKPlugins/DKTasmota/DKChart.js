@@ -7,12 +7,13 @@
 
 dk.chart = new Object;
 
-dk.chart.init = function dk_chart_init(){
+dk.chart.init = function dk_chart_init() {
     dk.create("DKTasmota/moment.min.js");
     dk.create("DKTasmota/Chart.min.js");
     this.lineChart;
+    dk.chart.settings = new Object; 
+    dk.chart.settings.logToFile = false;
 }
-
 
 dk.chart.create = function dk_chart_create(parent, id, top, bottom, left, right, width, height) {
     const chartDiv = document.createElement("div");
@@ -30,18 +31,21 @@ dk.chart.create = function dk_chart_create(parent, id, top, bottom, left, right,
     const chartCanvas = document.createElement("canvas");
     chartCanvas.id = "chartCanvas";
     chartCanvas.style.position = "absolute";
-    chartCanvas.style.left = "0rem";
     chartCanvas.style.top = "0rem";
+    chartCanvas.style.left = "0rem";
+    //chartCanvas.style.bottom = "0rem";
+    //chartCanvas.style.right = "0rem";
     chartCanvas.style.width = "100%";
     chartCanvas.style.height = "100%";
     const ctx = chartCanvas.getContext('2d');
     chartDiv.appendChild(chartCanvas);
 
+    dk.gui.createImageButton(chartDiv, "chartSettings", "DKTasmota/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
+
     //FIXME - do proper refreshing on resize    
-    dk.gui.addResizeHandler(chartCanvas, function() {
-        //console.debug("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
-        chartCanvas.style.height = "100%";
-        //this.lineChart.resize("100%","100%");
+    dk.gui.addResizeHandler(chartCanvas, function() {//console.debug("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
+    //chartCanvas.style.height = "100%";
+    //this.lineChart.resize("100%","100%");
     });
 
     this.lineChart = new Chart(ctx,{
@@ -88,6 +92,22 @@ dk.chart.create = function dk_chart_create(parent, id, top, bottom, left, right,
     //    dk.chart.addDatasets();
     //    dk.chart.loadDatasets();
     //});
+}
+
+function ChartSettings() {
+    const chartSettings = dk.frame.createNewWindow("Chart Settings", "200rem", "150rem");
+    const logToFile = document.createElement("input");
+    logToFile.type = "checkbox";
+    logToFile.id = "logToFile";
+    logToFile.checked = dk.chart.settings.logToFile;
+    logToFile.onchange = function(event){
+        dk.chart.settings.logToFile = logToFile.checked;
+    }
+    chartSettings.appendChild(logToFile);
+    const logToFileLabel = document.createElement("label")
+    logToFileLabel.for = logToFile.id;
+    logToFileLabel.innerHTML = "Log Devices to file";
+    chartSettings.appendChild(logToFileLabel);
 }
 
 dk.chart.addDatasets = function dk_chart_addDatasets() {
@@ -161,7 +181,7 @@ dk.chart.updateDevice = function dk_chart_updateDevice(device, identifier, data)
 
     this.lineChart.update();
     dk.chart.saveDatasets(device.ip);
-    dk.chart.appendDatasetToServer(device.user.name, data);
+    dk.chart.settings.logToFile && dk.chart.appendDatasetToServer(device.user.name, data);
 }
 
 dk.chart.selectChart = function dk_chart_selectChart(ip) {
@@ -242,10 +262,8 @@ dk.chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, 
         y: data
     });
 
-    var prefix = "";
-    prefix = dk.file.online_assets;
-    dk.php.stringToFile(prefix + "/"+stamp + "_" + label + ".txt", entry, "FILE_APPEND", function(rval) {//rval && console.log(rval);
-    });
+    var prefix = dk.file.online_assets;
+    prefix && dk.php.stringToFile(prefix + "/" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", console.log);
 }
 
 dk.chart.saveDatasetToServer = function dk_chart_saveDatasetToServer(ip) {//TODO

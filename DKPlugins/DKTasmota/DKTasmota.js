@@ -103,7 +103,7 @@ dk.tasmota.init = function dk_tasmota_init(){
 }
 
 //return a Device by partial matching name
-dk.tasmota.device = function dk_tasmote_device(str) {
+dk.tasmota.device = function dk_tasmota_device(str) {
     if (!dk.tasmota.devices || !dk.tasmota.devices.length) {
         //console.warn("dk.tasmota.devices invalid");
         return false;
@@ -120,7 +120,7 @@ dk.tasmota.device = function dk_tasmote_device(str) {
     }
 }
 
-dk.tasmota.device.loadDevicesFromLocalStorage = function dk_tasmote_loadDevicesFromLocalStorage() {
+dk.tasmota.device.loadDevicesFromLocalStorage = function dk_tasmota_loadDevicesFromLocalStorage() {
     const data = dk.loadFromLocalStorage("devices");
     if (!data)
         return false;
@@ -129,7 +129,7 @@ dk.tasmota.device.loadDevicesFromLocalStorage = function dk_tasmote_loadDevicesF
 
 }
 
-dk.tasmota.saveDevicesToLocalStorage = function dk_tasmote_saveDevicesToLocalStorage() {
+dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalStorage() {
     const devicesString = JSON.stringify(dk.tasmota.devices);
     dk.saveToLocalStorage("devices", devicesString);
 }
@@ -142,7 +142,7 @@ dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(cal
     });
 }
 
-dk.tasmota.saveDevicesToServer = function dk_tasmote_saveDevicesToServer() {
+dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         delete dk.tasmota.devices[n].Status;
         delete dk.tasmota.devices[n].StatusFWR;
@@ -177,7 +177,7 @@ dk.tasmota.createDevice = function dk_tasmota_createDevice(ip) {
     return dk.tasmota.devices[dk.tasmota.devices.length - 1];
 }
 
-dk.tasmota.initializeDevices = function dk_tasmote_initializeDevices(callback) {
+dk.tasmota.initializeDevices = function dk_tasmota_initializeDevices(callback) {
     if (!callback)
         return error("callback invalid");
     if (!dk.tasmota.devices || !dk.tasmota.devices.length) {
@@ -213,7 +213,7 @@ dk.tasmota.initializeDevices = function dk_tasmote_initializeDevices(callback) {
 }
 
 //return all local network device ip addresses that respond to /cm?cmnd=CORS 
-dk.tasmota.getDevices = function dk_tasmote_getDevices(ipPrefix, callback) {
+dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
     let tasmotaDeviceCount = 0;
     let devicesScanned = 0;
     //scan 192.168.1.1 thru 192.168.1.254
@@ -237,21 +237,11 @@ dk.tasmota.getDevices = function dk_tasmote_getDevices(ipPrefix, callback) {
         SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
         //DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
             console.log("pinged " + ip);
-            if (success) {
-                devicesScanned += 1;
-                tasmotaDeviceCount += 1;
-                if (devicesScanned >= 254) {
-                    callback(ip, true);
-                } else {
-                    callback(ip, false);
-                }
-            } else {
-                devicesScanned += 1;
-                if (devicesScanned >= 254) {
-                    //ip = false;
-                    callback(false, true);
-                }
-            }
+            let done = false;
+            devicesScanned += 1;
+            (devicesScanned >= 254) && (done = true);
+            success && (tasmotaDeviceCount += 1) && callback(ip, done);
+            !success && callback(false, done);
         });
     }
 }
