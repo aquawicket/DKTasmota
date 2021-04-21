@@ -9,7 +9,7 @@ dk.chart = new Object;
 
 dk.chart.init = function dk_chart_init() {
     dk.create("DKTasmota/moment.min.js");
-    dk.create("DKTasmota/Chart.min.js");
+    dk.create("DKChart/Chart.min.js");
     this.lineChart;
     dk.chart.settings = new Object; 
     dk.chart.settings.logToFile = false;

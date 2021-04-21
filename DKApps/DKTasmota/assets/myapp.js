@@ -29,7 +29,7 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKConsole.js");
 
     dk.create("DKCodeMirror/DKCodeMirror.js");
-    dk.create("DKAudio/DKAudio.js", function dk_createCallback() {
+    dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
         dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
 
@@ -44,7 +44,7 @@ app.loadFiles = function app_loadFiles() {
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");
     dk.preloadImage("DKGui/settings.png");
-    dk.preloadImage("DKGui/conole.png");
+    dk.preloadImage("DKGui/console.png");
     dk.preloadImage("DKGui/chart.png");
     dk.preloadImage("DKGui/online.png");
     dk.preloadImage("DKGui/offline.png");
