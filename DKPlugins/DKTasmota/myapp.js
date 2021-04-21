@@ -1,7 +1,3 @@
-/*
-THIS IS NOT LOCATED IN THE ASSETS FOLDER UNDER myapp.js
-
-
 "use strict";
 
 const app = [];
@@ -18,9 +14,12 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
     dk.create("DK/DKClock.js");
+    dk.create("DK/DKMqtt.js");
+    dk.create("DK/DKNotifications.js");
     dk.create("DKDebug/DKDebug.js");
     dk.create("DKFile/DKFile.js");
     dk.create("DKGui/DKGui.js");
+    dk.create("DKGui/DKFrame.css");
     dk.create("DKGui/DKFrame.js");
     dk.create("DKGui/DKMenu.js");
     dk.create("DKGui/DKMessageBox.js");
@@ -28,25 +27,27 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.js");
+
     dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_createCallback() {
         dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
 
     dk.create("DKTasmota/superagent.js");
-    dk.create("DKTasmota/DKMqtt.js");
-    dk.create("DKTasmota/DKNotifications.js");
+    
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/DKChart.js");
     dk.create("DKTasmota/Automation.js");
     dk.create("DKTasmota/VPDCalculator.js");
 
-    dk.preloadImage("DKTasmota/loading.gif");
-    dk.preloadImage("DKTasmota/restart.png");
-    dk.preloadImage("DKTasmota/info.png");
-    dk.preloadImage("DKTasmota/settings.png");
-    dk.preloadImage("DKTasmota/online.png");
-    dk.preloadImage("DKTasmota/offline.png");
+    dk.preloadImage("DKGui/loading.gif");
+    dk.preloadImage("DKGui/restart.png");
+    dk.preloadImage("DKGui/info.png");
+    dk.preloadImage("DKGui/settings.png");
+    dk.preloadImage("DKGui/conole.png");
+    dk.preloadImage("DKGui/chart.png");
+    dk.preloadImage("DKGui/online.png");
+    dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
 }
@@ -80,7 +81,7 @@ function LoadGui() {
     dk.clock.getSunset(33.7312525, -117.3028688);
     CreateDeviceTable(document.body);
     dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", PushAssets);
+    dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", dk.file.pushDKAssets);
     dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
@@ -90,15 +91,8 @@ function LoadGui() {
     }
 }
 
-function PushAssets() {
-    dk.php.pushDKAssets(function dk_php_pushDKAssets_callback(rval) {
-        console.log(rval);
-        console.log("done copying assets");
-    });
-}
-
 function MainAppLoop() {
-    dk.isOnline() ? byId("internet").src = "DKTasmota/online.png" : byId("internet").src = "DKTasmota/offline.png";
+    dk.isOnline() ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
     ProcessDevices();
     app.automate && Automate();
 }
@@ -134,20 +128,20 @@ function CreateButtons(parent) {
     }
 
     const internet = dk.gui.createImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
-    dk.isOnline() ? internet.src = "DKTasmota/online.png" : internet.src = "DKTasmota/onffline.png";
+    dk.isOnline() ? internet.src = "DKGui/online.png" : internet.src = "DKGui/offline.png";
 
-    const volume = dk.gui.createImageButton(document.body, "", "DKTasmota/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
+    const volume = dk.gui.createImageButton(document.body, "", "DKAudio/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     function volume_onclick() {
         if (dk.audio.getVolume("DKTasmota/PowerDown.mp3") === 1.0) {
             dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.0);
-            volume.src = "DKTasmota/volume_0.png";
+            volume.src = "DKAudio/volume_0.png";
         } else {
             dk.audio.setVolume("DKTasmota/PowerDown.mp3", 1.0);
-            volume.src = "DKTasmota/volume_100.png";
+            volume.src = "DKAudio/volume_100.png";
         }
     }
 
-    const preferences = dk.gui.createImageButton(document.body, "", "DKTasmota/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
+    const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
 }
 
 function CreateDeviceTable(parent) {
@@ -289,7 +283,7 @@ function AddDeviceToTable(device) {
     const restart = document.createElement("img");
     restart.id = device.ip + "restart";
     restart.setAttribute("title", "Restart Device");
-    restart.src = "DKTasmota/restart.png";
+    restart.src = "DKGui/restart.png";
     restart.style.width = "12rem";
     restart.style.height = "12rem";
     restart.style.cursor = "pointer";
@@ -298,7 +292,7 @@ function AddDeviceToTable(device) {
     restart.onclick = function restart_onclick() {
         dk.messagebox.confirm("Restart this device?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
-                restart.src = "DKTasmota/loading.gif";
+                restart.src = "DKGui/loading.gif";
                 dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
             }
         });
@@ -309,7 +303,7 @@ function AddDeviceToTable(device) {
     //Device Info
     const info = document.createElement("img");
     info.setAttribute("title", "Device Info");
-    info.src = "DKTasmota/info.png";
+    info.src = "DKGui/info.png";
     info.style.width = "12rem";
     info.style.height = "12rem";
     info.style.cursor = "pointer";
@@ -323,7 +317,7 @@ function AddDeviceToTable(device) {
     //Device Settings
     const settings = document.createElement("img");
     settings.setAttribute("title", "Device Settings");
-    settings.src = "DKTasmota/settings.png";
+    settings.src = "DKGui/settings.png";
     settings.style.width = "15rem";
     settings.style.height = "15rem";
     settings.style.cursor = "pointer";
@@ -334,7 +328,7 @@ function AddDeviceToTable(device) {
 
     const dConsole = document.createElement("img");
     dConsole.setAttribute("title", "Device Console");
-    dConsole.src = "DKTasmota/console.png";
+    dConsole.src = "DKGui/console.png";
     dConsole.style.width = "15rem";
     dConsole.style.height = "15rem";
     dConsole.style.paddingLeft = "3rem";
@@ -347,7 +341,7 @@ function AddDeviceToTable(device) {
     const dChart = document.createElement("img");
     dChart.id = device.ip + "dChart";
     dChart.setAttribute("title", "Device Chart");
-    dChart.src = "DKTasmota/chart.png";
+    dChart.src = "DKGui/chart.png";
     dChart.style.width = "15rem";
     dChart.style.marginLeft = "3rem";
     dChart.style.cursor = "pointer";
@@ -551,9 +545,9 @@ function UpdateTableStyles() {
 }
 
 function ScanDevices() {
-    dk.tasmota.getDevices("192.168.1.", function dk_tasmote_getDevices_callback(ip, done) {
+    dk.tasmota.getDevices("192.168.1.", function dk_tasmota_getDevices_callback(ip, done) {
         if (ip && !dk.json.findPartialMatch(dk.tasmota.devices, 'ip', ip)) {
-            const device = dk.tasmote.createDevice(ip);
+            const device = dk.tasmota.createDevice(ip);
             AddDeviceToTable(device);
             dk.tasmota.saveDevicesToServer();
             dk.tasmota.saveDevicesToLocalStorage();
@@ -676,7 +670,8 @@ function UpdateScreen(success, url, data) {
         dk.chart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
-    device.user.humidity = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.Humidity : false;
+    if (device.StatusSNS?.SI7021?.Humidity)
+        device.user.humidity = device.StatusSNS.SI7021.Humidity;
     if (device.user.humidity) {
         let humDirection = " ";
         !device.user.humidityTarget && (device.user.humidityTarget = 50);
@@ -702,13 +697,13 @@ function UpdateScreen(success, url, data) {
         dk.chart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
-    device.user.dewpoint = device.StatusSNS?.SI7021 ? device.StatusSNS.SI7021.DewPoint : false;
+    if (device.StatusSNS?.SI7021?.DewPoint)
+        device.user.dewpoint = device.StatusSNS.SI7021.DewPoint;
     if (device.user.dewpoint) {
         const dewPointText = "<a id='" + device.ip + "DewP'>" + device.user.dewpoint + " DP &#176;F</a>";
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
-
         dk.chart.updateDevice(device, "sensor3", device.user.dewpoint);
     }
 
@@ -730,6 +725,5 @@ function UpdateScreen(success, url, data) {
         wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }
 
-    (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKTasmota/restart.png");
+    (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
-*/

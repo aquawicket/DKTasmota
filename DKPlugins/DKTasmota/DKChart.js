@@ -40,7 +40,7 @@ dk.chart.create = function dk_chart_create(parent, id, top, bottom, left, right,
     const ctx = chartCanvas.getContext('2d');
     chartDiv.appendChild(chartCanvas);
 
-    dk.gui.createImageButton(chartDiv, "chartSettings", "DKTasmota/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
+    dk.gui.createImageButton(chartDiv, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
 
     //FIXME - do proper refreshing on resize    
     dk.gui.addResizeHandler(chartCanvas, function() {//console.debug("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
