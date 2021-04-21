@@ -1,17 +1,15 @@
 "use strict";
 //https://www.chartjs.org/
-//https://www.chartjs.org/docs/latest/axes/cartesian/time.html
-//dk.create("https://momentjs.com/downloads/moment.min.js", function() {
-//    dk.create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
-//});
 
 dk.chart = new Object;
 
 dk.chart.init = function dk_chart_init() {
+    //dk.create("https://momentjs.com/downloads/moment.min.js");
     dk.create("DKTasmota/moment.min.js");
-    dk.create("DKChart/Chart.min.js");
+    //dk.create("https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js");
+    dk.create("DKChart/chart.min.js");
     this.lineChart;
-    dk.chart.settings = new Object; 
+    dk.chart.settings = new Object;
     dk.chart.settings.logToFile = false;
 }
 
@@ -54,8 +52,10 @@ dk.chart.create = function dk_chart_create(parent, id, top, bottom, left, right,
             datasets: []
         },
         options: {
-            legend: {
-                display: false,
+            //plugins: {
+                legend: {
+                    display: false,
+                //}
             },
             scales: {
                 xAxes: [{
@@ -100,7 +100,7 @@ function ChartSettings() {
     logToFile.type = "checkbox";
     logToFile.id = "logToFile";
     logToFile.checked = dk.chart.settings.logToFile;
-    logToFile.onchange = function(event){
+    logToFile.onchange = function(event) {
         dk.chart.settings.logToFile = logToFile.checked;
     }
     chartSettings.appendChild(logToFile);
