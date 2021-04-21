@@ -162,10 +162,7 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
     else
         prefix = dk.file.onlineAssets;
     const dest = prefix + "/devices.js";
-    dk.php.stringToFile(dest, data, "", function(rval) {
-        if (rval)
-            console.log(rval);
-    });
+    dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, data, "", console.log);
 }
 
 dk.tasmota.createDevice = function dk_tasmota_createDevice(ip) {

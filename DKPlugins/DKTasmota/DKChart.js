@@ -263,7 +263,9 @@ dk.chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, 
     });
 
     var prefix = dk.file.online_assets;
-    prefix && dk.php.stringToFile(prefix + "/" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", console.log);
+    const dest = prefix + "/" + stamp + "_" + label + ".txt";
+    //prefix && dk.php.stringToFile(prefix + "/" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", console.log);
+    prefix && dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, entry, "FILE_APPEND", console.log);
 }
 
 dk.chart.saveDatasetToServer = function dk_chart_saveDatasetToServer(ip) {//TODO
