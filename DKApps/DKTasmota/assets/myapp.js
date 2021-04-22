@@ -1,19 +1,21 @@
 "use strict";
-console.debug("myapp.js");
 
 const app = new Object;
 
-app.loadFiles = function app_loadFiles() {
+app.loadFiles = function app_loadFiles(){
+    
 
-    if(dk.hasCPP())
-        return;
-    //return;
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKloadApp()) will be call after this loads everything.
-    dk.create("DK/DKErrorHandler.js");
-    dk.create("DK/DK.css");
+    !dk.hasCPP() && dk.create("DK/DKErrorHandler.js");
+    !dk.hasCPP() && dk.create("DK/DK.css");
+
+
     dk.create("DK/DKPhp.js");
+
+    if(dk.hasCPP())
+        return;
     dk.create("DK/DKTrace.js");
     dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
