@@ -1,8 +1,13 @@
 "use strict";
+console.debug("myapp.js");
 
-const app = [];
+const app = new Object;
 
 app.loadFiles = function app_loadFiles() {
+
+    if(dk.hasCPP())
+        return;
+    //return;
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKloadApp()) will be call after this loads everything.
@@ -35,7 +40,7 @@ app.loadFiles = function app_loadFiles() {
     });
 
     dk.create("DKTasmota/superagent.js");
-    
+
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/Chart.js");
     dk.create("DKTasmota/Automation.js");
@@ -608,15 +613,16 @@ function UpdateScreen(success, url, data) {
     //const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
 
-    try {
-        let deviceData = JSON.parse(data);
-        deviceData.ip = device.ip;
-        deviceData.user = device.user;
-        dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
-        device = deviceData;
-    } catch {
-        return error("data could not be parsed to json");
-    }
+    //try {
+    let deviceData = JSON.parse(data);
+    deviceData.ip = device.ip;
+    deviceData.user = device.user;
+    dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
+    device = deviceData;
+    //} 
+    //catch{
+    //    return error("data could not be parsed to json");
+    //}
 
     // UPDATE TABLE
     device.DeviceName && (device.user.name = device.DeviceName);
@@ -643,9 +649,9 @@ function UpdateScreen(success, url, data) {
 
     const dataCell = dk.table.getCellByName(table, device.ip, "data");
     dataCell.innerHTML = "";
-    if (device.StatusSNS?.DS18B20?.Temperature)
+    if (device.StatusSNS && device.StatusSNS.DS18B20 && device.StatusSNS.DS18B20.Temperature)
         device.user.temperature = device.StatusSNS.DS18B20.Temperature
-    if (device.StatusSNS?.SI7021?.Temperature)
+    if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Temperature)
         device.user.temperature = device.StatusSNS.SI7021.Temperature;
     if (device.user.temperature) {
         let tempDirection = " ";
@@ -672,7 +678,7 @@ function UpdateScreen(success, url, data) {
         chart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
-    if (device.StatusSNS?.SI7021?.Humidity)
+    if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Humidity)
         device.user.humidity = device.StatusSNS.SI7021.Humidity;
     if (device.user.humidity) {
         let humDirection = " ";
@@ -699,7 +705,7 @@ function UpdateScreen(success, url, data) {
         chart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
-    if (device.StatusSNS?.SI7021?.DewPoint)
+    if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.DewPoint)
         device.user.dewpoint = device.StatusSNS.SI7021.DewPoint;
     if (device.user.dewpoint) {
         const dewPointText = "<a id='" + device.ip + "DewP'>" + device.user.dewpoint + " DP &#176;F</a>";
@@ -715,7 +721,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
     }
 
-    device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
+    device.user.rssi = device.StatusSTS && device.StatusSTS.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi && device.Wifi.RSSI;
     if (device.user.rssi) {
         const signal = device.user.rssi;
         const scale = 510;
@@ -729,3 +735,5 @@ function UpdateScreen(success, url, data) {
 
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
+
+dk.hasCPP() && app.loadFiles();
