@@ -245,7 +245,7 @@ function AddDeviceToTable(device) {
     powerCell.onclick = function powerCell_onclick() {
         powerCell.innerHTML = "";
         const loading = document.createElement("img");
-        loading.src = "DKTasmota/loading.gif";
+        loading.src = "DKGui/loading.gif";
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
