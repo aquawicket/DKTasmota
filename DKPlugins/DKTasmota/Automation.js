@@ -84,7 +84,7 @@ function Automate() {
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
             //(ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 10)) && (power = false);
-            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
             !power && (ATentExhaust.user.power === "ON") && console.log("A Tent Exhaust Fan OFF", "yellow");
@@ -161,7 +161,7 @@ function Automate() {
             (BTentTemp.user.temperature > BTentTemp.user.temperatureTarget) && (power = true);
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
             //(BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 10)) && (power = false);
-            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
             !power && (BTentExhaust.user.power === "ON") && console.log("B Tent Exhaust Fan OFF", "yellow");
@@ -252,7 +252,7 @@ function Automate() {
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = true);
             //(VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 10)) && (power = false);
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
-            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
             !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
