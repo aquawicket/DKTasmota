@@ -27,6 +27,7 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.js");
+    dk.create("DKChart/DKChart.js");
 
     dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
@@ -36,7 +37,7 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKTasmota/superagent.js");
     
     dk.create("DKTasmota/DKTasmota.js");
-    dk.create("DKTasmota/DKChart.js");
+    dk.create("DKTasmota/Chart.js");
     dk.create("DKTasmota/Automation.js");
     dk.create("DKTasmota/VPDCalculator.js");
 
@@ -80,7 +81,8 @@ function LoadGui() {
     dk.clock.getSunrise(33.7312525, -117.3028688);
     dk.clock.getSunset(33.7312525, -117.3028688);
     CreateDeviceTable(document.body);
-    dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
+    const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
+    chart.create(ctx);
     dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", dk.file.pushDKAssets);
     dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
@@ -350,7 +352,7 @@ function AddDeviceToTable(device) {
     dChart.onclick = function dChart_onclick() {
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
-                byId(device.ip + "dChart").style.backgroundColor = dk.chart.selectChart(device.ip);
+                byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
             } else {
                 byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
             }
@@ -358,7 +360,7 @@ function AddDeviceToTable(device) {
     }
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
         event.preventDefault();
-        const color = dk.chart.toggleChart(device.ip);
+        const color = chart.toggleChart(device.ip);
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
                 if (color) {
@@ -632,10 +634,10 @@ function UpdateScreen(success, url, data) {
         powerCell.innerHTML = "<a>" + device.user.power + "</a>";
         if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            dk.chart.updateDevice(device, "switch1", 100);
+            chart.updateDevice(device, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            dk.chart.updateDevice(device, "switch1", 0);
+            chart.updateDevice(device, "switch1", 0);
         }
     }
 
@@ -667,7 +669,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         byId(device.ip + "Temp").style.textAlign = "center";
 
-        dk.chart.updateDevice(device, "sensor1", device.user.temperature);
+        chart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
     if (device.StatusSNS?.SI7021?.Humidity)
@@ -694,7 +696,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         byId(device.ip + "RH").style.textAlilgn = "center";
 
-        dk.chart.updateDevice(device, "sensor2", device.user.humidity);
+        chart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
     if (device.StatusSNS?.SI7021?.DewPoint)
@@ -704,7 +706,7 @@ function UpdateScreen(success, url, data) {
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
-        dk.chart.updateDevice(device, "sensor3", device.user.dewpoint);
+        chart.updateDevice(device, "sensor3", device.user.dewpoint);
     }
 
     if (device.user.automate === true) {
