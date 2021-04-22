@@ -1,27 +1,21 @@
 "use strict";
 
 const app = new Object;
+console.log(duktape);
 
 app.loadFiles = function app_loadFiles(){
-    
-
     //If you initiate anything here, it may fail.
     //This function should only load files, Not initiate variables
     //DKloadApp()) will be call after this loads everything.
-    !dk.hasCPP() && dk.create("DK/DKErrorHandler.js");
-    !dk.hasCPP() && dk.create("DK/DK.css");
-
-
+    !duktape && dk.create("DK/DKErrorHandler.js");
+    !duktape && dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
-
-    if(dk.hasCPP())
-        return;
-    dk.create("DK/DKTrace.js");
-    dk.create("DK/DKJson.js");
+    !duktape && dk.create("DK/DKTrace.js");
+    !duktape && dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
     dk.create("DK/DKClock.js");
-    dk.create("DK/DKMqtt.js");
+    !duktape && dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
     dk.create("DKDebug/DKDebug.js");
     dk.create("DKFile/DKFile.js");
@@ -615,16 +609,16 @@ function UpdateScreen(success, url, data) {
     //const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
 
-    //try {
+    try {
     let deviceData = JSON.parse(data);
     deviceData.ip = device.ip;
     deviceData.user = device.user;
     dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
     device = deviceData;
-    //} 
-    //catch{
-    //    return error("data could not be parsed to json");
-    //}
+    } 
+    catch(e){
+        return error("data could not be parsed to json");
+    }
 
     // UPDATE TABLE
     device.DeviceName && (device.user.name = device.DeviceName);
@@ -738,4 +732,4 @@ function UpdateScreen(success, url, data) {
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
 
-dk.hasCPP() && app.loadFiles();
+duktape && app.loadFiles();
