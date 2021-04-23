@@ -5,8 +5,8 @@ console.log(duktape);
 
 app.loadFiles = function app_loadFiles(){
     //If you initiate anything here, it may fail.
-    //This function should only load files, Not initiate variables
-    //DKloadApp()) will be call after this loads everything.
+    //This function should only load files, and make declarations, Not initiate variable values are make assignments.
+    //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
     !duktape && dk.create("DK/DKErrorHandler.js");
     !duktape && dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");

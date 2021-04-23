@@ -3,41 +3,11 @@
 
 const chart = new Object;
 
-chart.create = function chart_create(ctx) {
-    /*
-    const chartDiv = document.createElement("div");
-    chartDiv.id = id;
-    chartDiv.style.position = "absolute";
-    chartDiv.style.backgroundColor = "rgb(70,70,70)";
-    chartDiv.style.top = top;
-    chartDiv.style.bottom = bottom;
-    chartDiv.style.left = left;
-    chartDiv.style.right = right;
-    chartDiv.style.width = width;
-    chartDiv.style.height = height;
-    parent.appendChild(chartDiv);
-
-    const chartCanvas = document.createElement("canvas");
-    chartCanvas.id = "chartCanvas";
-    chartCanvas.style.position = "absolute";
-    chartCanvas.style.top = "0rem";
-    chartCanvas.style.left = "0rem";
-    //chartCanvas.style.bottom = "0rem";
-    //chartCanvas.style.right = "0rem";
-    chartCanvas.style.width = "100%";
-    chartCanvas.style.height = "100%";
+chart.create = function chart_create(chartCanvas) {
+  
+    dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
+    
     const ctx = chartCanvas.getContext('2d');
-    chartDiv.appendChild(chartCanvas);
-
-    dk.gui.createImageButton(chartDiv, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
-
-    //FIXME - do proper refreshing on resize    
-    dk.gui.addResizeHandler(chartCanvas, function() {//console.debug("chartCanvas resized: x:"+chartCanvas.style.width+" y:"+chartCanvas.style.height);
-    //chartCanvas.style.height = "100%";
-    //this.lineChart.resize("100%","100%");
-    });
-    */
-
     this.lineChart = new Chart(ctx,{
         type: "line",
         data: {
