@@ -53,6 +53,9 @@ app.loadFiles = function app_loadFiles(){
     dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
+
+    dk.create("DKGui/DKWidget.js");
+    dk.create("DKGui/TestWidget.js");
 }
 
 function DKLoadApp() {
@@ -93,6 +96,8 @@ function LoadGui() {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         AddDeviceToTable(dk.tasmota.devices[n]);
     }
+
+    dk.testWidget.create();
 }
 
 function MainAppLoop() {
@@ -294,7 +299,7 @@ function AddDeviceToTable(device) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        dk.messagebox.confirm("Restart this device?", function dk_messagebox_confirm_callback(rval) {
+        dk.messagebox.confirm("Restart "+device.user.name+"?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
                 restart.src = "DKGui/loading.gif";
                 dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);

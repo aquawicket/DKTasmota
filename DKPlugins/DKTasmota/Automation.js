@@ -86,6 +86,7 @@ function Automate() {
             //(ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 10)) && (power = false);
             (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
+            (ATentTemp.user.humidity > 90) && (power = true);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
             !power && (ATentExhaust.user.power === "ON") && console.log("A Tent Exhaust Fan OFF", "yellow");
             dk.sendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
@@ -163,6 +164,7 @@ function Automate() {
             //(BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 10)) && (power = false);
             (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
+            (BTentTemp.user.humidity > 90) && (power = true);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
             !power && (BTentExhaust.user.power === "ON") && console.log("B Tent Exhaust Fan OFF", "yellow");
             dk.sendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
@@ -254,6 +256,7 @@ function Automate() {
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
+            (VegTentTemp.user.humidity > 90) && (power = true);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
             !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
             dk.sendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);
