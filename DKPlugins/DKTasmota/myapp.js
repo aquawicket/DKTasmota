@@ -1,22 +1,21 @@
 "use strict";
 
-const app = [];
+const app = new Object;
 
-app.loadFiles = function app_loadFiles() {
+app.loadFiles = function app_loadFiles(){
     //If you initiate anything here, it may fail.
-    //This function should only load files, Not initiate variables
-    //DKloadApp()) will be call after this loads everything.
-    dk.create("DK/DKErrorHandler.js");
-    dk.create("DK/DK.css");
+    //This function should only load files, and make declarations, Not initiate variable values are make assignments.
+    //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
+    !duktape && dk.create("DK/DKErrorHandler.js");
+    !duktape && dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
-    dk.create("DK/DKTrace.js");
-    dk.create("DK/DKJson.js");
+    !duktape && dk.create("DK/DKTrace.js");
+    !duktape && dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
     dk.create("DK/DKClock.js");
-    dk.create("DK/DKMqtt.js");
+    !duktape && dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
-    dk.create("DKDebug/DKDebug.js");
     dk.create("DKFile/DKFile.js");
     dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.css");
@@ -24,19 +23,23 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKMenu.js");
     dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
+    dk.create("DKGui/DKResize.js");
+    dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.js");
+    dk.create("DKChart/DKChart.js");
+    dk.create("DKDevTools/DKDevTools.js");
 
     dk.create("DKCodeMirror/DKCodeMirror.js");
-    dk.create("DKAudio/DKAudio.js", function dk_createCallback() {
+    dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
         dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
 
     dk.create("DKTasmota/superagent.js");
-    
+
     dk.create("DKTasmota/DKTasmota.js");
-    dk.create("DKTasmota/DKChart.js");
+    dk.create("DKTasmota/Chart.js");
     dk.create("DKTasmota/Automation.js");
     dk.create("DKTasmota/VPDCalculator.js");
 
@@ -44,12 +47,15 @@ app.loadFiles = function app_loadFiles() {
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");
     dk.preloadImage("DKGui/settings.png");
-    dk.preloadImage("DKGui/conole.png");
+    dk.preloadImage("DKGui/console.png");
     dk.preloadImage("DKGui/chart.png");
     dk.preloadImage("DKGui/online.png");
     dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
+
+    //dk.create("DKGui/DKWidget.js");
+    //dk.create("DKGui/DKWidgetTest.js");
 }
 
 function DKLoadApp() {
@@ -80,15 +86,17 @@ function LoadGui() {
     dk.clock.getSunrise(33.7312525, -117.3028688);
     dk.clock.getSunset(33.7312525, -117.3028688);
     CreateDeviceTable(document.body);
-    dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    //dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", dk.file.pushDKAssets);
-    //dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
+    const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
+    chart.create(ctx);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         return warn("dk.tasmota.devices empty");
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         AddDeviceToTable(dk.tasmota.devices[n]);
     }
+
+    //dk.testWidget.create();
+    dk.devtools.create();
 }
 
 function MainAppLoop() {
@@ -245,7 +253,7 @@ function AddDeviceToTable(device) {
     powerCell.onclick = function powerCell_onclick() {
         powerCell.innerHTML = "";
         const loading = document.createElement("img");
-        loading.src = "DKTasmota/loading.gif";
+        loading.src = "DKGui/loading.gif";
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
@@ -290,7 +298,7 @@ function AddDeviceToTable(device) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        dk.messagebox.confirm("Restart this device?", function dk_messagebox_confirm_callback(rval) {
+        dk.messagebox.confirm("Restart "+device.user.name+"?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
                 restart.src = "DKGui/loading.gif";
                 dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
@@ -350,7 +358,7 @@ function AddDeviceToTable(device) {
     dChart.onclick = function dChart_onclick() {
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
-                byId(device.ip + "dChart").style.backgroundColor = dk.chart.selectChart(device.ip);
+                byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
             } else {
                 byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
             }
@@ -358,7 +366,7 @@ function AddDeviceToTable(device) {
     }
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
         event.preventDefault();
-        const color = dk.chart.toggleChart(device.ip);
+        const color = chart.toggleChart(device.ip);
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
                 if (color) {
@@ -607,12 +615,13 @@ function UpdateScreen(success, url, data) {
     //console.log(jsonSuper);
 
     try {
-        let deviceData = JSON.parse(data);
-        deviceData.ip = device.ip;
-        deviceData.user = device.user;
-        dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
-        device = deviceData;
-    } catch {
+    let deviceData = JSON.parse(data);
+    deviceData.ip = device.ip;
+    deviceData.user = device.user;
+    dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
+    device = deviceData;
+    } 
+    catch(e){
         return error("data could not be parsed to json");
     }
 
@@ -632,18 +641,18 @@ function UpdateScreen(success, url, data) {
         powerCell.innerHTML = "<a>" + device.user.power + "</a>";
         if (device.user.power === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            dk.chart.updateDevice(device, "switch1", 100);
+            chart.updateDevice(device, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            dk.chart.updateDevice(device, "switch1", 0);
+            chart.updateDevice(device, "switch1", 0);
         }
     }
 
     const dataCell = dk.table.getCellByName(table, device.ip, "data");
     dataCell.innerHTML = "";
-    if (device.StatusSNS?.DS18B20?.Temperature)
+    if (device.StatusSNS && device.StatusSNS.DS18B20 && device.StatusSNS.DS18B20.Temperature)
         device.user.temperature = device.StatusSNS.DS18B20.Temperature
-    if (device.StatusSNS?.SI7021?.Temperature)
+    if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Temperature)
         device.user.temperature = device.StatusSNS.SI7021.Temperature;
     if (device.user.temperature) {
         let tempDirection = " ";
@@ -667,10 +676,10 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         byId(device.ip + "Temp").style.textAlign = "center";
 
-        dk.chart.updateDevice(device, "sensor1", device.user.temperature);
+        chart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
-    if (device.StatusSNS?.SI7021?.Humidity)
+    if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Humidity)
         device.user.humidity = device.StatusSNS.SI7021.Humidity;
     if (device.user.humidity) {
         let humDirection = " ";
@@ -694,17 +703,17 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         byId(device.ip + "RH").style.textAlilgn = "center";
 
-        dk.chart.updateDevice(device, "sensor2", device.user.humidity);
+        chart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
-    if (device.StatusSNS?.SI7021?.DewPoint)
+    if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.DewPoint)
         device.user.dewpoint = device.StatusSNS.SI7021.DewPoint;
     if (device.user.dewpoint) {
         const dewPointText = "<a id='" + device.ip + "DewP'>" + device.user.dewpoint + " DP &#176;F</a>";
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
-        dk.chart.updateDevice(device, "sensor3", device.user.dewpoint);
+        chart.updateDevice(device, "sensor3", device.user.dewpoint);
     }
 
     if (device.user.automate === true) {
@@ -713,7 +722,7 @@ function UpdateScreen(success, url, data) {
         byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
     }
 
-    device.user.rssi = device.StatusSTS?.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi?.RSSI;
+    device.user.rssi = device.StatusSTS && device.StatusSTS.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi && device.Wifi.RSSI;
     if (device.user.rssi) {
         const signal = device.user.rssi;
         const scale = 510;
@@ -727,3 +736,5 @@ function UpdateScreen(success, url, data) {
 
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
+
+duktape && app.loadFiles();
