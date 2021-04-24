@@ -1,7 +1,6 @@
 "use strict";
 
 const app = new Object;
-console.log(duktape);
 
 app.loadFiles = function app_loadFiles(){
     //If you initiate anything here, it may fail.
@@ -17,7 +16,6 @@ app.loadFiles = function app_loadFiles(){
     dk.create("DK/DKClock.js");
     !duktape && dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
-    dk.create("DKDebug/DKDebug.js");
     dk.create("DKFile/DKFile.js");
     dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.css");
@@ -30,6 +28,7 @@ app.loadFiles = function app_loadFiles(){
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.js");
     dk.create("DKChart/DKChart.js");
+    dk.create("DKDevTools/DKDevTools.js");
 
     dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
@@ -54,8 +53,8 @@ app.loadFiles = function app_loadFiles(){
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
 
-    dk.create("DKGui/DKWidget.js");
-    dk.create("DKGui/DKWidgetTest.js");
+    //dk.create("DKGui/DKWidget.js");
+    //dk.create("DKGui/DKWidgetTest.js");
 }
 
 function DKLoadApp() {
@@ -88,8 +87,6 @@ function LoadGui() {
     CreateDeviceTable(document.body);
     const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     chart.create(ctx);
-    dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", dk.file.pushDKAssets);
-    dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         return warn("dk.tasmota.devices empty");
@@ -97,7 +94,8 @@ function LoadGui() {
         AddDeviceToTable(dk.tasmota.devices[n]);
     }
 
-    dk.testWidget.create();
+    //dk.testWidget.create();
+    dk.devtools.create();
 }
 
 function MainAppLoop() {

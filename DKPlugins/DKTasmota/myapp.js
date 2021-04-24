@@ -81,8 +81,8 @@ function LoadGui() {
     dk.clock.getSunset(33.7312525, -117.3028688);
     CreateDeviceTable(document.body);
     dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", dk.file.pushDKAssets);
-    dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
+    //dk.gui.createButton(document.body, "Push Assets", "45rem", "", "", "5rem", "63rem", "34rem", dk.file.pushDKAssets);
+    //dk.gui.createButton(document.body, "DEBUG", "25rem", "", "", "5rem", "63rem", "20rem", dk.debug.debugFunc);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         return warn("dk.tasmota.devices empty");
