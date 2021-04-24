@@ -24,6 +24,7 @@ app.loadFiles = function app_loadFiles(){
     dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
     dk.create("DKGui/DKResize.js");
+    dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.js");

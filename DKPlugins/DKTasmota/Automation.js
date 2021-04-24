@@ -216,7 +216,7 @@ function Automate() {
     if (VegTentTemp && VegTentTemp.user) {
         if (VegTentCo2 && VegTentCo2.user.automate) {
             //When using Co2, temperature should average 85 degrees
-            VegTentTemp.user.temperatureTarget = 85;
+            VegTentTemp.user.temperatureTarget = 80;
             VegTentTemp.user.temperatureZone = 20;
             VegTentTemp.user.humidityTarget = 50;
             VegTentTemp.user.humidityZone = 20;
