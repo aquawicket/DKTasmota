@@ -55,7 +55,7 @@ app.loadFiles = function app_loadFiles(){
     dk.preloadImage("DKTasmota/automateON.png");
 
     dk.create("DKGui/DKWidget.js");
-    dk.create("DKGui/TestWidget.js");
+    dk.create("DKGui/DKWidgetTest.js");
 }
 
 function DKLoadApp() {

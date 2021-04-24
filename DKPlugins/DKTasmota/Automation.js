@@ -256,7 +256,7 @@ function Automate() {
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise+.30) && (power = false);
             (dk.clock.time > (dk.clock.sunset+1)) && (power = false);
-            (VegTentTemp.user.humidity > 90) && (power = true);
+            //(VegTentTemp.user.humidity > 91) && (power = true);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
             !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
             dk.sendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20" + power, UpdateScreen);

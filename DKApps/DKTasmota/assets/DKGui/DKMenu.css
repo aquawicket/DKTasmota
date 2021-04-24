@@ -1,15 +1,15 @@
-[target="dkmenu"] {
+[dk_menu="dkmenu"] {
     border-color: rgb(22 20 20);
     background-color: #332f2f;
 }
 
-[target="dkmenuItem"] {
+[dk_menu="dkmenuItem"] {
     /*backgroundColor: rgb(109 7 7);*/
     color: rgb(187 170 170);
     border-color: rgb(17 17 17);
 }
 
-[target="dkmenuItem"]:hover {
+[dk_menu="dkmenuItem"]:hover {
     background-color: rgb(40,40,40);
     color = rgb(255,255,255);
 }
