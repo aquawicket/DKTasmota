@@ -4,9 +4,9 @@
 const chart = new Object;
 
 chart.create = function chart_create(chartCanvas) {
-  
+
     dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
-    
+
     const ctx = chartCanvas.getContext('2d');
     this.lineChart = new Chart(ctx,{
         type: "line",
@@ -15,8 +15,8 @@ chart.create = function chart_create(chartCanvas) {
         },
         options: {
             //plugins: {
-                legend: {
-                    display: false,
+            legend: {
+                display: false,
                 //}
             },
             scales: {
@@ -56,6 +56,9 @@ chart.create = function chart_create(chartCanvas) {
     //});
 
     chart.settings = new Object;
+    dk.json.loadJsonFromFile("chart_settings.js", function(json){
+        chart.settings = json;
+    });
 }
 
 function ChartSettings() {
@@ -66,6 +69,7 @@ function ChartSettings() {
     logToFile.checked = chart.settings.logToFile;
     logToFile.onchange = function(event) {
         chart.settings.logToFile = logToFile.checked;
+        dk.json.saveJsonToFile(chart.settings, "chart_settings.js");
     }
     chartSettings.appendChild(logToFile);
     const logToFileLabel = document.createElement("label")
@@ -109,11 +113,13 @@ chart.addDatasets = function dk_chart_addDatasets() {
 chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
-    if(!this.lineChart)
-        return;// error("this lineChart invalid");
+    if (!this.lineChart)
+        return;
+    // error("this lineChart invalid");
 
     chart.addDatasets();
-    chart.loadDatasets();
+    //chart.loadDatasets();
+    //chart.loadDatasetsFromServer(device.ip);
 
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (device.ip === this.lineChart.data.datasets[n].ip && identifier === this.lineChart.data.datasets[n].identifier) {
@@ -146,8 +152,10 @@ chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
     }
 
     this.lineChart.update();
-    chart.saveDatasets(device.ip);
+    chart.saveDatasetsToLocalStorage(device.ip, console.log);
+    //chart.saveDatasetsToServer(device.ip);
     chart.settings.logToFile && chart.appendDatasetToServer(device.user.name, data);
+    //chart.settings.logToFile && chart.appendDatasetToServer(device.ip);
 }
 
 chart.selectChart = function dk_chart_selectChart(ip) {
@@ -155,9 +163,7 @@ chart.selectChart = function dk_chart_selectChart(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip) {
             this.lineChart.data.datasets[n].hidden = false;
-            /*!borderColor && (*/
             borderColor = this.lineChart.data.datasets[n].borderColor
-            //);
         } else {
             this.lineChart.data.datasets[n].hidden = true;
         }
@@ -184,7 +190,6 @@ chart.addDataset = function dk_chart_addDataset(label, borderColor, ip, identifi
     if (!this.lineChart)
         return error("this.lineChart invalid");
 
-    
     //no duplicates
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].label === label) {
@@ -226,63 +231,63 @@ chart.addDataset = function dk_chart_addDataset(label, borderColor, ip, identifi
 chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, data) {
     const currentdate = new Date();
     const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
-    const entry = JSON.stringify({
+    const json = ({
         t: currentdate,
         y: data
     });
 
-    var prefix = dk.file.onlineAssets;
-    const dest = prefix + "/" + stamp + "_" + label + ".txt";
-    //prefix && dk.php.stringToFile(prefix + "/" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", console.log);
-    prefix && dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, entry, "FILE_APPEND", console.log);
+    const file = label + ".js";
+    dk.json.appendJsonToFile(json, file/*, console.debug*/);
 }
 
-chart.saveDatasetToServer = function dk_chart_saveDatasetToServer(ip) {
+chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
-        if (this.lineChart.data.datasets[n].ip === ip) {
-            
-            let prefix = dk.file.onlineAssets;
-            const dest = prefix + "/" + stamp + "_" + label + ".txt";
+        if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
+            const json = this.lineChart.data.datasets[n].data;
+            let file = this.lineChart.data.datasets[n].label + ".js";
+            dk.json.saveJsonToFile(json, file, console.debug);
+        }
+    }
+}
+
+chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer(ip) {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
+            let file = this.lineChart.data.datasets[n].label + ".js";
+            dk.json.loadJsonFromFile(file, function(json) {
+                this.lineChart.data.datasets[n].data = json;
+                this.lineChart.update();
+            })
+        }
+    }
+}
+
+chart.saveDatasetsToLocalStorage = function chart_saveDatasetsToLoaclStorage(ip) {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const data = JSON.stringify(this.lineChart.data.datasets[n].data);
+            dk.json.saveToLocalStorage(this.lineChart.data.datasets[n].label, data);
+        }
+    }
+}
+
+chart.loadDatasetsFromLocalStorage = function chart_loadDatasetsFromLocalStorage(ip) {
+    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
+        if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const label = this.lineChart.data.datasets[n].label;
-            prefix && dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, entry, "FILE_APPEND", console.log);
+            const json = dk.json.loadJsonFromLocalStorage(label);
+            this.lineChart.data.datasets[n].data = json;
         }
-    }
-}
-
-chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer() {//TODO
-/*
-    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
-        const data = dk.loadFromLocalStorage(this.lineChart.data.datasets[n].label);
-        this.lineChart.data.datasets[n].data = JSON.parse(data);
-    }
-    this.lineChart.update();
-    */
-}
-
-chart.saveDatasets = function dk_chart_saveDatasets(ip) {
-    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
-        if (this.lineChart.data.datasets[n].ip === ip) {
-            const data = JSON.stringify(this.lineChart.data.datasets[n].data);
-            dk.saveToLocalStorage(this.lineChart.data.datasets[n].label, data);
-        }
-    }
-}
-
-chart.loadDatasets = function dk_chart_loadDatasets() {
-    if(!this.lineChart)
-        return error("this lineChart invalid");
-    for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
-        const data = dk.loadFromLocalStorage(this.lineChart.data.datasets[n].label);
-        this.lineChart.data.datasets[n].data = JSON.parse(data);
     }
     this.lineChart.update();
 }
 
-chart.clearDatasets = function dk_chart_clearDatasets() {
+chart.clearDatasets = function dk_chart_clearDatasets(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
-        this.lineChart.data.datasets[n].data = [];
-        dk.removeFromLocalStorage(this.lineChart.data.datasets[n].label)
+        if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
+            this.lineChart.data.datasets[n].data = [];
+            dk.removeFromLocalStorage(this.lineChart.data.datasets[n].label)
+        }
     }
     this.lineChart.update();
 }
