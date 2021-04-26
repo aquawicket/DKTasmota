@@ -235,17 +235,17 @@ chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, dat
         t: currentdate,
         y: data
     });
-
-    const file = label + ".js";
-    dk.json.appendJsonToFile(json, file/*, console.debug*/);
+    const path = label + ".js";
+    dk.json.saveJsonToFile(json, path, "FILE_APPEND"/*, console.debug*/);
 }
 
 chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const json = this.lineChart.data.datasets[n].data;
-            let file = this.lineChart.data.datasets[n].label + ".js";
-            dk.json.saveJsonToFile(json, file, console.debug);
+            const path = this.lineChart.data.datasets[n].label + ".js";
+            const flags = 0;
+            dk.json.saveJsonToFile(json, path, flags/*, console.debug*/);
         }
     }
 }
