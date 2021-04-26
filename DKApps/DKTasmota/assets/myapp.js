@@ -26,17 +26,16 @@ app.loadFiles = function app_loadFiles(){
     dk.create("DKGui/DKResize.js");
     dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
+    dk.create("DKGui/DKTable.css");
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.css");
     dk.create("DKGui/DKConsole.js");
     dk.create("DKChart/DKChart.js");
     dk.create("DKDevTools/DKDevTools.js");
-
     dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
         dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
-
     dk.create("DKTasmota/superagent.js");
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/Automation.js");
@@ -53,7 +52,6 @@ app.loadFiles = function app_loadFiles(){
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
 
-    //dk.create("DKGui/DKWidget.js");
     //dk.create("DKGui/DKWidgetTest.js");
 }
 
