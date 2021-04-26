@@ -27,6 +27,7 @@ app.loadFiles = function app_loadFiles(){
     dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.js");
+    dk.create("DKGui/DKConsole.css");
     dk.create("DKGui/DKConsole.js");
     dk.create("DKChart/DKChart.js");
     dk.create("DKDevTools/DKDevTools.js");
