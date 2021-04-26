@@ -134,7 +134,7 @@ function Automate() {
         //drying room
         BTentTemp.user.temperatureTarget = 65;
         BTentTemp.user.temperatureZone = 10;
-        BTentTemp.user.humidityTarget = 45;
+        BTentTemp.user.humidityTarget = 40;
         BTentTemp.user.humidityZone = 10;
 
         //B Tent Alarms
@@ -216,7 +216,7 @@ function Automate() {
     if (VegTentTemp && VegTentTemp.user) {
         if (VegTentCo2 && VegTentCo2.user.automate) {
             //When using Co2, temperature should average 85 degrees
-            VegTentTemp.user.temperatureTarget = 80;
+            VegTentTemp.user.temperatureTarget = 85;
             VegTentTemp.user.temperatureZone = 20;
             VegTentTemp.user.humidityTarget = 50;
             VegTentTemp.user.humidityZone = 20;

@@ -37,12 +37,10 @@ app.loadFiles = function app_loadFiles(){
     });
 
     dk.create("DKTasmota/superagent.js");
-
     dk.create("DKTasmota/DKTasmota.js");
-    dk.create("DKTasmota/Chart.js");
     dk.create("DKTasmota/Automation.js");
     dk.create("DKTasmota/VPDCalculator.js");
-
+    dk.create("DKTasmota/Chart.js");
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");

@@ -55,7 +55,7 @@ chart.create = function chart_create(chartCanvas) {
     //    chart.loadDatasets();
     //});
 
-    chart.settings = ""
+    chart.settings = new Object;
 }
 
 function ChartSettings() {
@@ -109,6 +109,8 @@ chart.addDatasets = function dk_chart_addDatasets() {
 chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
+    if(!this.lineChart)
+        return;// error("this lineChart invalid");
 
     chart.addDatasets();
     chart.loadDatasets();
@@ -179,7 +181,10 @@ chart.toggleChart = function dk_chart_toggleChart(ip) {
 chart.addDataset = function dk_chart_addDataset(label, borderColor, ip, identifier, hidden) {
     if (!ip)
         return error("ip invalid");
+    if (!this.lineChart)
+        return error("this.lineChart invalid");
 
+    
     //no duplicates
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].label === label) {
@@ -226,21 +231,23 @@ chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, dat
         y: data
     });
 
-    var prefix = dk.file.online_assets;
+    var prefix = dk.file.onlineAssets;
     const dest = prefix + "/" + stamp + "_" + label + ".txt";
     //prefix && dk.php.stringToFile(prefix + "/" + stamp + "_" + label + ".txt", entry, "FILE_APPEND", console.log);
     prefix && dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, entry, "FILE_APPEND", console.log);
 }
 
-chart.saveDatasetToServer = function dk_chart_saveDatasetToServer(ip) {//TODO
-/*
+chart.saveDatasetToServer = function dk_chart_saveDatasetToServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip) {
+            
+            let prefix = dk.file.onlineAssets;
+            const dest = prefix + "/" + stamp + "_" + label + ".txt";
             const data = JSON.stringify(this.lineChart.data.datasets[n].data);
-            //dk.saveToLocalStorage(this.lineChart.data.datasets[n].label, data);
+            const label = this.lineChart.data.datasets[n].label;
+            prefix && dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, entry, "FILE_APPEND", console.log);
         }
     }
-    */
 }
 
 chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer() {//TODO
@@ -263,6 +270,8 @@ chart.saveDatasets = function dk_chart_saveDatasets(ip) {
 }
 
 chart.loadDatasets = function dk_chart_loadDatasets() {
+    if(!this.lineChart)
+        return error("this lineChart invalid");
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         const data = dk.loadFromLocalStorage(this.lineChart.data.datasets[n].label);
         this.lineChart.data.datasets[n].data = JSON.parse(data);
