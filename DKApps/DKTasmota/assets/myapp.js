@@ -385,6 +385,10 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
+    const preferences = new DKWidget("singleton");
+    if(!preferences.ok)
+        return;
+        
     const div = document.createElement("div");
     div.id = "Preferences";
     div.style.position = "absolute";
@@ -404,14 +408,15 @@ function PreferencesWindow() {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
-    const preferences = new DKWidget("singleton");
-    if(!preferences.ok)
-        return;
     preferences.setElement(div);    
     dk.frame.create(preferences);
 }
 
 function InfoWindow(device) {
+    const info = new DKWidget(device);
+    if(!info.ok)
+        return;
+
     const div = document.createElement("div");
     div.id = "Info";
     div.style.position = "absolute";
@@ -435,15 +440,16 @@ function InfoWindow(device) {
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
 
-    const info = new DKWidget(device);
-    if(!info.ok)
-        return;
     info.setElement(div);    
     dk.frame.create(info);
     dk.frame.setTitle(info, device.user.name + " Info");
 }
 
 function SettingsWindow(device) {
+    const settingsWin = new DKWidget(device);
+    if(!settingsWin.ok)
+        return;
+
     const div = document.createElement("div");
     div.id = "Settings";
     div.style.position = "absolute";
@@ -463,15 +469,16 @@ function SettingsWindow(device) {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
     
-    const settingsWin = new DKWidget(device);
-    if(!settingsWin.ok)
-        return;
     settingsWin.setElement(div);    
     dk.frame.create(settingsWin);
     dk.frame.setTitle(settingsWin, device.user.name + " Settings");
 }
 
 function DConsoleWindow(device) {
+    const consoleWin = new DKWidget(device);
+    if(!consoleWin.ok)
+        return;
+
     const div = document.createElement("div");
     div.id = "Console";
     div.style.position = "absolute";
@@ -540,9 +547,6 @@ function DConsoleWindow(device) {
     }
     div.appendChild(input);
 
-    const consoleWin = new DKWidget(device);
-    if(!consoleWin.ok)
-        return;
     consoleWin.setElement(div);    
     dk.frame.create(consoleWin);
     dk.frame.setTitle(consoleWin, device.user.name + " Console");

@@ -63,6 +63,8 @@ chart.create = function chart_create(chartCanvas) {
 
 function ChartSettings() {
     const chartSettings = dk.frame.createNewWindow("Chart Settings", "200rem", "150rem");
+    if(!chartSettings)
+        return;
     const logToFile = document.createElement("input");
     logToFile.type = "checkbox";
     logToFile.id = "logToFile";
