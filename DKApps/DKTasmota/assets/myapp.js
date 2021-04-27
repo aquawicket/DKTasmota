@@ -388,6 +388,7 @@ function PreferencesWindow() {
     const preferences = new DKWidget(this);
     if(!preferences.ok)
         return;
+
     const div = document.createElement("div");
     preferences.setElement(div);
     div.id = "Preferences";
@@ -413,7 +414,12 @@ function PreferencesWindow() {
 }
 
 function InfoWindow(device) {
+    const info = new DKWidget(device);
+    if(!info.ok)
+        return;
+
     const div = document.createElement("div");
+    info.setElement(div);
     div.id = "Info";
     div.style.position = "absolute";
     div.style.top = "20rem";
@@ -437,8 +443,8 @@ function InfoWindow(device) {
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
     document.body.appendChild(div);
-    dk.frame.create(div);
-    dk.frame.setTitle(div, device.user.name + " Info");
+    dk.frame.create(info);
+    dk.frame.setTitle(info, device.user.name + " Info");
 }
 
 function SettingsWindow(device) {
