@@ -155,14 +155,8 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
         delete dk.tasmota.devices[n].StatusSTS;
         delete dk.tasmota.devices[n].StatusTIM;
     }
-    const data = JSON.stringify(dk.tasmota.devices);
-    let prefix;
-    if(!dk.file.onlineAssets)
-        prefix = "127.0.0.1:8000";
-    else
-        prefix = dk.file.onlineAssets;
-    const dest = prefix + "/devices.js";
-    dk.php.call('POST', "/DKFile/DKFile.php", "stringToFile", dest, data, "", console.log);
+    const path = "/devices.js";
+    dk.json.saveJsonToFile(dk.tasmota.devices, path, 0, console.log);
 }
 
 dk.tasmota.createDevice = function dk_tasmota_createDevice(ip) {
@@ -195,7 +189,7 @@ dk.tasmota.initializeDevices = function dk_tasmota_initializeDevices(callback) {
                     deviceData.user = device.user;
                     //dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
                     device = deviceData;
-                } catch {
+                } catch(e) {
                     console.error("data could not be parsed to json");
                 }
                 dk.tasmota.devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)

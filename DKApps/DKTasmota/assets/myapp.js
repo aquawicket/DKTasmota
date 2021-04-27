@@ -385,12 +385,7 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
-    const preferences = new DKWidget(this);
-    if(!preferences.ok)
-        return;
-
     const div = document.createElement("div");
-    preferences.setElement(div);
     div.id = "Preferences";
     div.style.position = "absolute";
     div.style.top = "20rem";
@@ -409,17 +404,15 @@ function PreferencesWindow() {
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
 
-    document.body.appendChild(div);
+    const preferences = new DKWidget("singleton");
+    if(!preferences.ok)
+        return;
+    preferences.setElement(div);    
     dk.frame.create(preferences);
 }
 
 function InfoWindow(device) {
-    const info = new DKWidget(device);
-    if(!info.ok)
-        return;
-
     const div = document.createElement("div");
-    info.setElement(div);
     div.id = "Info";
     div.style.position = "absolute";
     div.style.top = "20rem";
@@ -437,12 +430,15 @@ function InfoWindow(device) {
     div.style.borderRightWidth = "0rem";
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
-
     const jsonString = dk.json.prettyJson(JSON.stringify(device));
     const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
-    document.body.appendChild(div);
+
+    const info = new DKWidget(device);
+    if(!info.ok)
+        return;
+    info.setElement(div);    
     dk.frame.create(info);
     dk.frame.setTitle(info, device.user.name + " Info");
 }
@@ -466,9 +462,13 @@ function SettingsWindow(device) {
     div.style.borderRightWidth = "0rem";
     div.style.backgroundColor = "rgb(36,36,36)";
     div.style.overflow = "auto";
-    document.body.appendChild(div);
-    dk.frame.create(div);
-    dk.frame.setTitle(div, device.user.name + " Settings");
+    
+    const settingsWin = new DKWidget(device);
+    if(!settingsWin.ok)
+        return;
+    settingsWin.setElement(div);    
+    dk.frame.create(settingsWin);
+    dk.frame.setTitle(settingsWin, device.user.name + " Settings");
 }
 
 function DConsoleWindow(device) {
@@ -540,9 +540,12 @@ function DConsoleWindow(device) {
     }
     div.appendChild(input);
 
-    document.body.appendChild(div);
-    dk.frame.create(div);
-    dk.frame.setTitle(div, device.user.name + " Console");
+    const consoleWin = new DKWidget(device);
+    if(!consoleWin.ok)
+        return;
+    consoleWin.setElement(div);    
+    dk.frame.create(consoleWin);
+    dk.frame.setTitle(consoleWin, device.user.name + " Console");
 }
 
 function UpdateTableStyles() {
