@@ -155,7 +155,8 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
         delete dk.tasmota.devices[n].StatusSTS;
         delete dk.tasmota.devices[n].StatusTIM;
     }
-    const path = "/devices.js";
+    dk.file.makeDir("USER");
+    const path = "/USER/devices.js";
     dk.json.saveJsonToFile(dk.tasmota.devices, path, 0, console.log);
 }
 
