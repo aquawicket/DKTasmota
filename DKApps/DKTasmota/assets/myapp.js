@@ -385,7 +385,11 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
+    const preferences = new DKWidget(true);
+    if(!preferences.ok)
+        return;
     const div = document.createElement("div");
+    preferences.setElement(div);
     div.id = "Preferences";
     div.style.position = "absolute";
     div.style.top = "20rem";
@@ -405,7 +409,7 @@ function PreferencesWindow() {
     div.style.overflow = "auto";
 
     document.body.appendChild(div);
-    dk.frame.create(div);
+    dk.frame.create(preferences);
 }
 
 function InfoWindow(device) {

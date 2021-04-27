@@ -388,7 +388,6 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
-    const div = document.createElement("div");
     div.id = "Preferences";
     div.style.position = "absolute";
     div.style.top = "20rem";
