@@ -385,7 +385,7 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
-    const preferences = new DKWidget("singleton");
+    const preferences = new DKWidget("PreferencesWindow");
     if(!preferences.ok)
         return;
         
@@ -413,7 +413,7 @@ function PreferencesWindow() {
 }
 
 function InfoWindow(device) {
-    const info = new DKWidget(device);
+    const info = new DKWidget(device.user.name+"Info");
     if(!info.ok)
         return;
 
@@ -446,7 +446,7 @@ function InfoWindow(device) {
 }
 
 function SettingsWindow(device) {
-    const settingsWin = new DKWidget(device);
+    const settingsWin = new DKWidget(device.user.name+"Settings");
     if(!settingsWin.ok)
         return;
 
@@ -475,7 +475,7 @@ function SettingsWindow(device) {
 }
 
 function DConsoleWindow(device) {
-    const consoleWin = new DKWidget(device);
+    const consoleWin = new DKWidget(device.user.name+"Console");
     if(!consoleWin.ok)
         return;
 
