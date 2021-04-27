@@ -385,7 +385,7 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
-    const preferences = new DKWidget(true);
+    const preferences = new DKWidget(this);
     if(!preferences.ok)
         return;
     const div = document.createElement("div");
