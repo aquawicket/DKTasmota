@@ -136,6 +136,7 @@ function CreateButtons(parent) {
     dk.isOnline() ? internet.src = "DKGui/online.png" : internet.src = "DKGui/offline.png";
 
     const volume = dk.gui.createImageButton(document.body, "", "DKAudio/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
+    dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.5);
     function volume_onclick() {
         if (dk.audio.getVolume("DKTasmota/PowerDown.mp3") === 1.0) {
             dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.0);
