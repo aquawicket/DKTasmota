@@ -56,7 +56,7 @@ chart.create = function chart_create(chartCanvas) {
     //});
 
     chart.settings = new Object;
-    dk.json.loadJsonFromFile("chart_settings.js", function(json){
+    dk.json.loadJsonFromFile("/USER/chart_settings.js", function(json){
         chart.settings = json;
     });
 }
@@ -71,7 +71,7 @@ function ChartSettings() {
     logToFile.checked = chart.settings.logToFile;
     logToFile.onchange = function(event) {
         chart.settings.logToFile = logToFile.checked;
-        dk.json.saveJsonToFile(chart.settings, "chart_settings.js");
+        dk.json.saveJsonToFile(chart.settings, "/USER/chart_settings.js");
     }
     chartSettings.appendChild(logToFile);
     const logToFileLabel = document.createElement("label")
