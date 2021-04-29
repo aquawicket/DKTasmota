@@ -135,10 +135,10 @@ dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalSto
 }
 
 dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(callback) {
-    dk.fileToStringAsync("devices.js", function(data){
-        data && (dk.tasmota.devices = JSON.parse(data));
-        callback && callback(dk.tasmota.devices);
-        return dk.tasmota.devices;
+    const path = "/USER/devices.js";
+    dk.json.loadJsonFromFile(path, function(json){
+        dk.tasmota.devices = json;
+        return callback && callback(dk.tasmota.devices);
     });
 }
 
