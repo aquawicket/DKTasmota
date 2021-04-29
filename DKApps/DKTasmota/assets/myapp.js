@@ -2,7 +2,7 @@
 
 const app = new Object;
 
-app.loadFiles = function app_loadFiles(){
+app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, and make declarations, Not initiate variable values are make assignments.
     //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
@@ -32,7 +32,7 @@ app.loadFiles = function app_loadFiles(){
     dk.create("DKGui/DKConsole.js");
     dk.create("DKChart/DKChart.js");
     dk.create("DKDevTools/DKDevTools.js");
-    dk.create("DKCodeMirror/DKCodeMirror.js");
+    //dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
         dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
@@ -296,7 +296,7 @@ function AddDeviceToTable(device) {
     restart.style.paddingRight = "3rem";
     restart.style.paddingBottom = "2rem";
     restart.onclick = function restart_onclick() {
-        dk.messagebox.confirm("Restart "+device.user.name+"?", function dk_messagebox_confirm_callback(rval) {
+        dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
                 restart.src = "DKGui/loading.gif";
                 dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
@@ -386,43 +386,18 @@ function AddDeviceToTable(device) {
 }
 
 function PreferencesWindow() {
-    const preferences = new DKWidget("PreferencesWindow");
-    if(!preferences.ok)
+    const div = dk.frame.createNewWindow("Preferenes", "500rem", "400rem");
+    if (!div)
         return;
-        
-    const div = document.createElement("div");
-    div.id = "Preferences";
-    div.style.position = "absolute";
-    div.style.top = "20rem";
-    div.style.width = "100%";
-    div.style.fontSize = "12rem";
-    div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
-    div.style.whiteSpace = "pre-wrap";
-    div.style.boxSizing = "border-box";
-    div.style.padding = "2rem";
-    div.style.paddingLeft = "20rem";
-    div.style.borderStyle = "solid";
-    div.style.borderWidth = "1rem";
-    div.style.borderTopWidth = "0rem";
-    div.style.borderLeftWidth = "0rem";
-    div.style.borderRightWidth = "0rem";
-    div.style.backgroundColor = "rgb(36,36,36)";
-    div.style.overflow = "auto";
 
-    preferences.setElement(div);    
-    dk.frame.create(preferences);
+    div.style.backgroundColor = "rgb(36,36,36)";
 }
 
 function InfoWindow(device) {
-    const info = new DKWidget(device.user.name+"Info");
-    if(!info.ok)
+    const div = dk.frame.createNewWindow(device.user.name + " Info", "500rem", "400rem");
+    if (!div)
         return;
 
-    const div = document.createElement("div");
-    div.id = "Info";
-    div.style.position = "absolute";
-    div.style.top = "20rem";
-    div.style.width = "100%";
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
@@ -434,65 +409,33 @@ function InfoWindow(device) {
     div.style.borderTopWidth = "0rem";
     div.style.borderLeftWidth = "0rem";
     div.style.borderRightWidth = "0rem";
-    div.style.backgroundColor = "rgb(36,36,36)";
+    div.style.backgroundColor = "rgb(50,50,50)";
     div.style.overflow = "auto";
     const jsonString = dk.json.prettyJson(JSON.stringify(device));
     const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
-
-    info.setElement(div);    
-    dk.frame.create(info);
-    dk.frame.setTitle(info, device.user.name + " Info");
 }
 
 function SettingsWindow(device) {
-    const settingsWin = new DKWidget(device.user.name+"Settings");
-    if(!settingsWin.ok)
+    const div = dk.frame.createNewWindow(device.user.name + " Settings", "500rem", "400rem");
+    if (!div)
         return;
-
-    const div = document.createElement("div");
-    div.id = "Settings";
-    div.style.position = "absolute";
-    div.style.top = "20rem";
-    div.style.width = "100%";
-    div.style.fontSize = "12rem";
-    div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
-    div.style.whiteSpace = "pre-wrap";
-    div.style.boxSizing = "border-box";
-    div.style.padding = "2rem";
-    div.style.paddingLeft = "20rem";
-    div.style.borderStyle = "solid";
-    div.style.borderWidth = "1rem";
-    div.style.borderTopWidth = "0rem";
-    div.style.borderLeftWidth = "0rem";
-    div.style.borderRightWidth = "0rem";
-    div.style.backgroundColor = "rgb(36,36,36)";
-    div.style.overflow = "auto";
-    
-    settingsWin.setElement(div);    
-    dk.frame.create(settingsWin);
-    dk.frame.setTitle(settingsWin, device.user.name + " Settings");
+    //TODO
 }
 
 function DConsoleWindow(device) {
-    const consoleWin = new DKWidget(device.user.name+"Console");
-    if(!consoleWin.ok)
+    const div = dk.frame.createNewWindow(device.user.name + " Console", "500rem", "400rem");
+    if (!div)
         return;
 
-    const div = document.createElement("div");
-    div.id = "Console";
-    div.style.position = "absolute";
-    div.style.width = "100%";
-    //div.style.backgroundColor = "rgb(36,36,36)";
+    div.style.backgroundColor = "rgb(50,50,50)";
     div.style.overflow = "auto";
 
     const output = document.createElement("div");
     output.style.position = "absolute";
     output.style.top = "10rem";
     output.style.left = "10rem";
-    //output.style.width = "";
-    //output.style.height = "";
     output.style.right = "10rem";
     output.style.bottom = "40rem";
     output.style.backgroundColor = "rgb(0,0,0)";
@@ -502,7 +445,6 @@ function DConsoleWindow(device) {
     const input = document.createElement("input");
     input.type = "text";
     input.style.position = "absolute";
-    //input.style.top = "";
     input.style.left = "10rem";
     input.style.width = "90%";
     input.style.height = "22rem";
@@ -547,10 +489,6 @@ function DConsoleWindow(device) {
         }
     }
     div.appendChild(input);
-
-    consoleWin.setElement(div);    
-    dk.frame.create(consoleWin);
-    dk.frame.setTitle(consoleWin, device.user.name + " Console");
 }
 
 function UpdateTableStyles() {
@@ -630,13 +568,12 @@ function UpdateScreen(success, url, data) {
     //console.log(jsonSuper);
 
     try {
-    let deviceData = JSON.parse(data);
-    deviceData.ip = device.ip;
-    deviceData.user = device.user;
-    dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
-    device = deviceData;
-    } 
-    catch(e){
+        let deviceData = JSON.parse(data);
+        deviceData.ip = device.ip;
+        deviceData.user = device.user;
+        dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
+        device = deviceData;
+    } catch (e) {
         return error("data could not be parsed to json");
     }
 
