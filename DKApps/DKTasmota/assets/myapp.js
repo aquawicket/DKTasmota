@@ -34,7 +34,7 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKDevTools/DKDevTools.js");
     //dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
-        dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
+        //dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
     dk.create("DKTasmota/superagent.js");
     dk.create("DKTasmota/DKTasmota.js");

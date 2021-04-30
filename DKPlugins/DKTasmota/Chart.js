@@ -5,7 +5,7 @@ const chart = new Object;
 
 chart.create = function chart_create(chartCanvas) {
 
-    dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", ChartSettings);
+    dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", openChartSettings);
 
     const ctx = chartCanvas.getContext('2d');
     this.lineChart = new Chart(ctx,{
@@ -55,27 +55,36 @@ chart.create = function chart_create(chartCanvas) {
     //    chart.loadDatasets();
     //});
 
-    chart.settings = new Object;
-    dk.json.loadJsonFromFile("/USER/chart_settings.js", function(json){
+    chart.settings = {};//new Object;
+    dk.json.loadJsonFromFile("/USER/chart_settings.js", function(json) {
+        if(!json)
+            return error("settings file empty");
         chart.settings = json;
     });
 }
 
-function ChartSettings() {
+function openChartSettings() {
     const chartSettings = dk.frame.createNewWindow("Chart Settings", "200rem", "150rem");
-    if(!chartSettings)
+    if (!chartSettings)
         return;
-    const logToFile = document.createElement("input");
-    logToFile.type = "checkbox";
-    logToFile.id = "logToFile";
-    logToFile.checked = chart.settings.logToFile;
-    logToFile.onchange = function(event) {
-        chart.settings.logToFile = logToFile.checked;
+    chart.logToFile = document.createElement("input");
+    //chart.settings.logToFile = false;
+    chart.logToFile.type = "checkbox";
+    chart.logToFile.id = "logToFile";
+    if (chart.settings.logToFile === true)
+        chart.logToFile.checked = true;
+    else
+        chart.logToFile.checked = false;
+    chart.logToFile.onchange = function(event) {
+        if (chart.logToFile.checked)
+            chart.settings.logToFile = true;
+        else
+            chart.settings.logToFile = false;
         dk.json.saveJsonToFile(chart.settings, "/USER/chart_settings.js");
     }
-    chartSettings.appendChild(logToFile);
+    chartSettings.appendChild(chart.logToFile);
     const logToFileLabel = document.createElement("label")
-    logToFileLabel.for = logToFile.id;
+    logToFileLabel.for = chart.logToFile.id;
     logToFileLabel.innerHTML = "Log Devices to file";
     chartSettings.appendChild(logToFileLabel);
 }
@@ -116,8 +125,7 @@ chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
     if (!this.lineChart)
-        return;
-    // error("this lineChart invalid");
+        return warn("this.lineChart invalid");
 
     chart.addDatasets();
     //chart.loadDatasets();
@@ -238,7 +246,8 @@ chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, dat
         y: data
     });
     const path = label + ".js";
-    dk.json.saveJsonToFile(json, path, "FILE_APPEND"/*, console.debug*/);
+    dk.json.saveJsonToFile(json, path, "FILE_APPEND"/*, console.debug*/
+    );
 }
 
 chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
@@ -247,7 +256,8 @@ chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
             const json = this.lineChart.data.datasets[n].data;
             const path = this.lineChart.data.datasets[n].label + ".js";
             const flags = 0;
-            dk.json.saveJsonToFile(json, path, flags/*, console.debug*/);
+            dk.json.saveJsonToFile(json, path, flags /*, console.debug*/
+            );
         }
     }
 }

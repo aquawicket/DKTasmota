@@ -1,3 +1,4 @@
+/*
 "use strict";
 
 const app = new Object;
@@ -690,3 +691,4 @@ function UpdateScreen(success, url, data) {
 }
 
 duktape && app.loadFiles();
+*/

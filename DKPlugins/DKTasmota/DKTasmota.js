@@ -2,6 +2,7 @@
 // https://tasmota.github.io/docs/Commands/
 
 dk.tasmota = new Object;
+dk.tasmota.devices = new Array;;
 
 // Device Array
 //let devices = [];
@@ -137,6 +138,10 @@ dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalSto
 dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(callback) {
     const path = "/USER/devices.js";
     dk.json.loadJsonFromFile(path, function(json){
+        if(!json){
+            callback && callback(false);
+            return error("json invalid");
+        }
         dk.tasmota.devices = json;
         return callback && callback(dk.tasmota.devices);
     });
