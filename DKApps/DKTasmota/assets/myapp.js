@@ -51,8 +51,6 @@ app.loadFiles = function app_loadFiles() {
     dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
-
-    //dk.create("DKGui/DKWidgetTest.js");
 }
 
 function DKLoadApp() {
@@ -92,7 +90,6 @@ function LoadGui() {
         AddDeviceToTable(dk.tasmota.devices[n]);
     }
 
-    //dk.testWidget.create();
     dk.devtools.create();
 }
 
