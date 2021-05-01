@@ -16,8 +16,17 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DK/DKClock.js");
     !duktape && dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
+	
     dk.create("DKFile/DKFile.js");
-    dk.create("DKGui/DKGui.js");
+    
+	dk.create("DKDebug/DKDebug.js");
+	
+	dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
+        //dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
+    });
+	
+	
+	dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.css");
     dk.create("DKGui/DKFrame.js");
     dk.create("DKGui/DKMenu.js");
@@ -30,12 +39,12 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.css");
     dk.create("DKGui/DKConsole.js");
-    dk.create("DKChart/DKChart.js");
-    dk.create("DKDevTools/DKDevTools.js");
-    //dk.create("DKCodeMirror/DKCodeMirror.js");
-    dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
-        //dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
-    });
+    
+	dk.create("DKDevTools/DKDevTools.js");
+	
+	dk.create("DKChart/DKChart.js");
+        //dk.create("DKCodeMirror/DKCodeMirror.js");
+    
     dk.create("DKTasmota/superagent.js");
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/Automation.js");
