@@ -85,9 +85,11 @@ function LoadGui() {
     chart.create(ctx);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
-        return warn("dk.tasmota.devices empty");
-    for (let n = 0; n < dk.tasmota.devices.length; n++) {
-        AddDeviceToTable(dk.tasmota.devices[n]);
+        console.warn("dk.tasmota.devices empty");
+    else{
+        for (let n = 0; n < dk.tasmota.devices.length; n++) {
+            AddDeviceToTable(dk.tasmota.devices[n]);
+        }
     }
 
     dk.devtools.create();
