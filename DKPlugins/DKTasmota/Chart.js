@@ -110,8 +110,10 @@ chart.addDatasets = function dk_chart_addDatasets() {
 
     dk.tasmota.device("002") && chart.addDataset("Shed Water A", "rgb(150,40,40)", dk.tasmota.device("Shed Water A").ip, "switch1", true);
     dk.tasmota.device("001") && chart.addDataset("Shed Water B", "rgb(30,0,90)", dk.tasmota.device("Shed Water B").ip, "switch1", true);
-    dk.tasmota.device("016") && chart.addDataset("Shed Temp", "rgb(30,0,90)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
-
+    dk.tasmota.device("016") && chart.addDataset("Shed Temperature", "rgb(200,0,0)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
+    dk.tasmota.device("016") && chart.addDataset("Shed Humidity", "rgb(0, 0, 200)", dk.tasmota.device("Shed Temp").ip, "sensor2", true);
+    dk.tasmota.device("016") && chart.addDataset("Shed DewPoint", "rgb(0,150,150)", dk.tasmota.device("Shed Temp").ip, "sensor3", true);
+    
     dk.tasmota.device("015") && chart.addDataset("Veg Tent Temperature", "rgb(200, 20, 20)", dk.tasmota.device("015").ip, "sensor1", true);
     dk.tasmota.device("015") && chart.addDataset("Veg Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("015").ip, "sensor2", true);
     dk.tasmota.device("015") && chart.addDataset("Veg Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("015").ip, "sensor3", true);
