@@ -29,7 +29,7 @@ chart.create = function chart_create(chartCanvas) {
             },
             elements: {
                 point: {
-                    radius: 0.6
+                    radius: 1.6
                 }
             }
         }

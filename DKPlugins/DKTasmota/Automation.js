@@ -53,9 +53,9 @@ function Automate() {
             ATentTemp.user.humidityZone = 20;
         } else {
             //When NOT using Co2, temperature should be 77 degrees
-            ATentTemp.user.temperatureTarget = 77;
+            ATentTemp.user.temperatureTarget = 75;
             ATentTemp.user.temperatureZone = 20;
-            ATentTemp.user.humidityTarget = 50;
+            ATentTemp.user.humidityTarget = 49;
             ATentTemp.user.humidityZone = 20;
         }
 
@@ -131,12 +131,12 @@ function Automate() {
             BTentTemp.user.humidityZone = 20;
         }
         //drying room
-        /*
+        
         BTentTemp.user.temperatureTarget = 65;
         BTentTemp.user.temperatureZone = 10;
         BTentTemp.user.humidityTarget = 40;
         BTentTemp.user.humidityZone = 10;
-        */
+       
         
         //B Tent Alarms
         if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone))

@@ -445,9 +445,21 @@ function DConsoleWindow(device) {
     output.style.top = "10rem";
     output.style.left = "10rem";
     output.style.right = "10rem";
-    output.style.bottom = "40rem";
+    output.style.bottom = "60rem";
     output.style.backgroundColor = "rgb(0,0,0)";
     div.appendChild(output);
+
+    const link = document.createElement("a");
+    link.innerHTML = "https://tasmota.github.io/docs/Commands/";
+    link.style.position = "absolute";
+    link.style.left = "10rem";
+    link.style.bottom = "35rem";
+    link.style.color = "rgb(200,200,200)";
+    link.style.cursor = "pointer";
+    link.onclick = function link_onclick() {
+        const commandsWindow = window.open("https://tasmota.github.io/docs/Commands/", "_blank, width=500, height=700");
+    }
+    div.appendChild(link);
 
     //command box
     const input = document.createElement("input");
