@@ -99,7 +99,7 @@ let theDevice = {
 }
 */
 
-dk.tasmota.init = function dk_tasmota_init(){
+dk.tasmota.init = function dk_tasmota_init() {
     dk.tasmota.devices = [];
 }
 
@@ -137,8 +137,8 @@ dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalSto
 
 dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(callback) {
     const path = "/USER/devices.js";
-    dk.json.loadJsonFromFile(path, function(json){
-        if(!json){
+    dk.json.loadJsonFromFile(path, function(json) {
+        if (!json) {
             callback && callback(false);
             return error("json invalid");
         }
@@ -195,7 +195,7 @@ dk.tasmota.initializeDevices = function dk_tasmota_initializeDevices(callback) {
                     deviceData.user = device.user;
                     //dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
                     device = deviceData;
-                } catch(e) {
+                } catch (e) {
                     console.error("data could not be parsed to json");
                 }
                 dk.tasmota.devices.sort((a,b)=>(a.name > b.name) ? 1 : -1)
@@ -232,13 +232,41 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         //console.debug(url);
         SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
-        //DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
+            //DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
             console.log("pinged " + ip);
             let done = false;
             devicesScanned += 1;
             (devicesScanned >= 254) && (done = true);
             success && (tasmotaDeviceCount += 1) && callback(ip, done);
             !success && callback(false, done);
+        });
+    }
+}
+
+dk.tasmota.updateDevices = function dk_tasmote_updateDevices(callback) {
+    for (n = 0; n < dk.tasmota.devices.length; n++) {
+        const ip = dk.tasmota.devices[n].ip;
+        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", function(success, url, data) {
+            if (!url)
+                return error("url invalid");
+            let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
+            if (!device)
+                return error("device invalid, didn't find ip in url:" + url);
+            if (!success || !data) {
+                //dk.audio.play("DKTasmota/PowerDown.mp3");
+                //row.style.backgroundColor = "red";
+                console.warn(ip + " did not respond");
+                return callback & callback(false, device);
+            }
+            try {
+                let deviceData = JSON.parse(data);
+                Object.assign(device, deviceData);
+            } catch (e) {
+                console.error("data could not be parsed to json");
+                return callback & callback(false, device);
+            }
+
+            return callback & callback(true, device);
         });
     }
 }

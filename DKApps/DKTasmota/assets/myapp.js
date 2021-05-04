@@ -589,10 +589,11 @@ function UpdateScreen(success, url, data) {
 
     try {
         let deviceData = JSON.parse(data);
-        deviceData.ip = device.ip;
-        deviceData.user = device.user;
-        dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
-        device = deviceData;
+        Object.assign(device, deviceData);
+        //deviceData.ip = device.ip;
+        //deviceData.user = device.user;
+        //dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
+        //device = deviceData;
     } catch (e) {
         return error("data could not be parsed to json");
     }
