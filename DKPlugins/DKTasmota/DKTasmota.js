@@ -2,7 +2,7 @@
 // https://tasmota.github.io/docs/Commands/
 
 dk.tasmota = new Object;
-dk.tasmota.devices = new Array;;
+dk.tasmota.devices = new Array;
 
 // Device Array
 //let devices = [];
