@@ -244,7 +244,7 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
 }
 
 dk.tasmota.updateDevices = function dk_tasmote_updateDevices(callback) {
-    for (n = 0; n < dk.tasmota.devices.length; n++) {
+    for (let n = 0; n < dk.tasmota.devices.length; n++) {
         const ip = dk.tasmota.devices[n].ip;
         dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", function(success, url, data) {
             if (!url)
