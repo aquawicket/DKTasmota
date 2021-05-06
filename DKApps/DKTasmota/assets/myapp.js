@@ -66,14 +66,14 @@ myapp.loadApp = function myapp_loadApp() {
             myapp.client = true;
             myapp.automate = false;
         }
-        LoadGui();
+        myapp.loadGui();
 
         //Run app main loop every 30 seconds
-        window.setInterval(MainAppLoop, 30000);
+        window.setInterval(myapp.mainAppLoop, 30000);
     });
 }
 
-function LoadGui() {
+myapp.loadGui = function myapp_loadGui() {
     dk.console.create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
@@ -97,7 +97,7 @@ function LoadGui() {
     dk.devtoolsbutton.create();
 }
 
-function MainAppLoop() {
+myapp.mainAppLoop = function myapp_mainAppLoop() {
     navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
     ProcessDevices();
     myapp.automate && Automate();
@@ -118,7 +118,7 @@ function SendSuperRequest(url, callback) {
 
 function CreateButtons(parent) {
     dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
-    dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
+    dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", myapp.mainAppLoop).style.position = "";
     dk.gui.createButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
     dk.gui.createButton(document.body, "Save Devices", "", "", "", "", "", "", SaveDevices).style.position = "";
 
