@@ -78,11 +78,11 @@ myapp.loadGui = function myapp_loadGui() {
     console.debug("**** Tasmota device manager 0.1b ****");
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
-    CreateButtons(document.body);
+    myapp.createButtons(document.body);
     dk.clock.create(document.body, "clock", "2rem", "", "25%");
     dk.clock.getSunrise(33.7312525, -117.3028688);
     dk.clock.getSunset(33.7312525, -117.3028688);
-    CreateDeviceTable(document.body);
+    myapp.createDeviceTable(document.body);
     const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     chart.create(ctx);
 
@@ -90,7 +90,7 @@ myapp.loadGui = function myapp_loadGui() {
         console.warn("dk.tasmota.devices empty");
     else{
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            AddDeviceToTable(dk.tasmota.devices[n]);
+            myapp.addDeviceToTable(dk.tasmota.devices[n]);
         }
     }
 
@@ -99,7 +99,7 @@ myapp.loadGui = function myapp_loadGui() {
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
     navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
-    ProcessDevices();
+    myapp.processDevices();
     myapp.automate && Automate();
 }
 
@@ -116,11 +116,11 @@ function SendSuperRequest(url, callback) {
     });
 }
 
-function CreateButtons(parent) {
-    dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
+myapp.createButtons = function myapp_createButtons(parent) {
+    dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", myapp.scanDevices).style.position = "";
     dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", myapp.mainAppLoop).style.position = "";
-    dk.gui.createButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
-    dk.gui.createButton(document.body, "Save Devices", "", "", "", "", "", "", SaveDevices).style.position = "";
+    dk.gui.createButton(document.body, "Clear Devices", "", "", "", "", "", "", myapp.clearDevices).style.position = "";
+    dk.gui.createButton(document.body, "Save Devices", "", "", "", "", "", "", myapp.saveDevices).style.position = "";
 
     const automation = dk.gui.createButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
     automation.style.position = "";
@@ -148,10 +148,10 @@ function CreateButtons(parent) {
         }
     }
 
-    const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
+    const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", myapp.preferencesWindow);
 }
 
-function CreateDeviceTable(parent) {
+myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     const deviceDiv = document.createElement("div");
     deviceDiv.style.position = "absolute";
     deviceDiv.style.top = "25rem";
@@ -227,7 +227,7 @@ function CreateDeviceTable(parent) {
     }
 }
 
-function AddDeviceToTable(device) {
+myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     const table = byId("deviceTable");
     const row = dk.table.addRow(table, device.ip);
     row.setAttribute("ip", device.ip);
@@ -317,7 +317,7 @@ function AddDeviceToTable(device) {
     info.style.paddingRight = "3rem";
     info.style.paddingBottom = "2rem";
     info.onclick = function info_onclick() {
-        InfoWindow(device);
+        myapp.infoWindow(device);
     }
     optionsCell.appendChild(info);
 
@@ -329,7 +329,7 @@ function AddDeviceToTable(device) {
     settings.style.height = "15rem";
     settings.style.cursor = "pointer";
     settings.onclick = function settings_onclick() {
-        SettingsWindow(device);
+        myapp.settingsWindow(device);
     }
     optionsCell.appendChild(settings);
 
@@ -341,7 +341,7 @@ function AddDeviceToTable(device) {
     dConsole.style.paddingLeft = "3rem";
     dConsole.style.cursor = "pointer";
     dConsole.onclick = function dConsole_onclick() {
-        DConsoleWindow(device);
+        myapp.consoleWindow(device);
     }
     optionsCell.appendChild(dConsole);
 
@@ -386,7 +386,7 @@ function AddDeviceToTable(device) {
     UpdateTableStyles();
 }
 
-function PreferencesWindow() {
+myapp.preferencesWindow = function myapp_preferencesWindow() {
     const div = dk.frame.createNewWindow("Preferenes", "500rem", "400rem");
     if (!div)
         return;
@@ -394,7 +394,7 @@ function PreferencesWindow() {
     div.style.backgroundColor = "rgb(36,36,36)";
 }
 
-function InfoWindow(device) {
+myapp.infoWindow = function myapp_infoWindow(device) {
     const div = dk.frame.createNewWindow(device.user.name + " Info", "500rem", "400rem");
     if (!div)
         return;
@@ -418,14 +418,14 @@ function InfoWindow(device) {
     div.innerHTML = jsonSuper;
 }
 
-function SettingsWindow(device) {
+myapp.settingsWindow = function settingsWindow(device) {
     const div = dk.frame.createNewWindow(device.user.name + " Settings", "500rem", "400rem");
     if (!div)
         return;
     //TODO
 }
 
-function DConsoleWindow(device) {
+myapp.consoleWindow = function myapp_consoleWindow(device) {
     const div = dk.frame.createNewWindow(device.user.name + " Console", "500rem", "400rem");
     if (!div)
         return;
@@ -518,7 +518,7 @@ function UpdateTableStyles() {
     }
 }
 
-function ScanDevices() {
+myapp.scanDevices = function myapp_scanDevices() {
     dk.tasmota.getDevices("192.168.1.", function dk_tasmota_getDevices_callback(ip, done) {
         if (ip && !dk.json.findPartialMatch(dk.tasmota.devices, 'ip', ip)) {
             const device = dk.tasmota.createDevice(ip);
@@ -534,7 +534,7 @@ function ScanDevices() {
     });
 }
 
-function ClearDevices() {
+myapp.clearDevices = function myapp_clearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
     CreateDeviceTable(document.body);
@@ -542,12 +542,12 @@ function ClearDevices() {
     dk.tasmota.devices = [];
 }
 
-function SaveDevices() {
+myapp.saveDevices = function myapp_saveDevices() {
     dk.tasmota.saveDevicesToServer();
     dk.tasmota.saveDevicesToLocalStorage();
 }
 
-function ProcessDevices() {
+myapp.processDevices = function myapp_processDevices() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const ip = table.rows[n].getAttribute("ip");
