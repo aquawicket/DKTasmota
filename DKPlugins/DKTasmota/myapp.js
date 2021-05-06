@@ -1,7 +1,7 @@
 /*
 "use strict";
 
-const app = new Object;
+const app = new DKPlugin("app");
 
 app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.

@@ -1,7 +1,7 @@
 "use strict";
 //https://www.chartjs.org/
 
-const chart = new Object;
+const chart = new DKPlugin("chart");
 
 chart.create = function chart_create(chartCanvas) {
 

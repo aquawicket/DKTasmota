@@ -1,6 +1,6 @@
 "use strict";
 
-dk.vpdcalc = new Object;
+dk.vpdcalc = new DKPlugin("dk_vpdcalc");
 
 dk.vpdcalc.create = function dk_vpdcalc_create(parent, top, bottom, left, right, width, height) {
     //DKLoadHtmlFile("VPDCalculator.html", function(success, url, data) {

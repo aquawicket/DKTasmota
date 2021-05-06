@@ -1,7 +1,7 @@
 "use strict";
 // https://tasmota.github.io/docs/Commands/
 
-dk.tasmota = new Object;
+dk.tasmota = new DKPlugin("dk_tasmota");
 dk.tasmota.devices = new Array;
 
 // Device Array
@@ -231,7 +231,7 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
         }
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         //console.debug(url);
-        SendSuperRequest(url, function SendSuperRequestCallback(success, data) {
+        myapp.sendSuperRequest(url, function myapp_sendSuperRequest_callback(success, data) {
             //DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
             console.log("pinged " + ip);
             let done = false;
