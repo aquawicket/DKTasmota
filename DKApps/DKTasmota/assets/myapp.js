@@ -28,7 +28,6 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
     dk.create("DKGui/DKResize.js");
-    //dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.css");
     dk.create("DKGui/DKTable.js");
@@ -133,7 +132,7 @@ myapp.createButtons = function myapp_createButtons(parent) {
     }
 
     const internet = dk.gui.createImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
-    dk.isOnline() ? internet.src = "DKGui/online.png" : internet.src = "DKGui/offline.png";
+    navigator.onLine ? internet.src = "DKGui/online.png" : internet.src = "DKGui/offline.png";
 
     const volume = dk.gui.createImageButton(document.body, "", "DKAudio/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.5);
@@ -146,19 +145,20 @@ myapp.createButtons = function myapp_createButtons(parent) {
             volume.src = "DKAudio/volume_100.png";
         }
     }
-
     const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", myapp.preferencesWindow);
 }
 
 myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     const deviceDiv = document.createElement("div");
-    deviceDiv.style.position = "absolute";
-    deviceDiv.style.top = "25rem";
-    deviceDiv.style.left = "20rem";
-    deviceDiv.style.width = "720rem";
-    deviceDiv.style.height = "47.0%";
-    //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
-    deviceDiv.style.overflow = "auto";
+    deviceDiv.style = {
+        position: "absolute",
+        top: "25rem",
+        left: "20rem",
+        width: "720rem",
+        height: "47.0%",
+        backgroundColor: "rgb(0,0,0)",
+        overflow: "auto"
+    }
     parent.appendChild(deviceDiv);
 
     const table = dk.table.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
@@ -316,7 +316,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     info.style.paddingRight = "3rem";
     info.style.paddingBottom = "2rem";
     info.onclick = function info_onclick() {
-        InfoWindow(device);
+        myapp.infoWindow(device);
     }
     optionsCell.appendChild(info);
 
@@ -328,7 +328,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     settings.style.height = "15rem";
     settings.style.cursor = "pointer";
     settings.onclick = function settings_onclick() {
-        SettingsWindow(device);
+        myapp.settingsWindow(device);
     }
     optionsCell.appendChild(settings);
 
@@ -340,7 +340,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     dConsole.style.paddingLeft = "3rem";
     dConsole.style.cursor = "pointer";
     dConsole.onclick = function dConsole_onclick() {
-        DConsoleWindow(device);
+        myapp.consoleWindow(device);
     }
     optionsCell.appendChild(dConsole);
 
@@ -355,11 +355,10 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
 
     dChart.onclick = function dChart_onclick() {
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            if (dk.tasmota.devices[n].ip === device.ip) {
+            if (dk.tasmota.devices[n].ip === device.ip)
                 byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
-            } else {
+            else
                 byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
-            }
         }
     }
     dChart.oncontextmenu = function dChart_oncontextmenu(event) {
@@ -367,11 +366,10 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         const color = chart.toggleChart(device.ip);
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             if (dk.tasmota.devices[n].ip === device.ip) {
-                if (color) {
+                if (color)
                     byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color;
-                } else {
+                else
                     byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
-                }
             }
         }
     }
@@ -389,7 +387,6 @@ myapp.preferencesWindow = function myapp_preferencesWindow() {
     const div = dk.frame.createNewWindow("Preferenes", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.backgroundColor = "rgb(36,36,36)";
 }
 
@@ -397,7 +394,6 @@ myapp.infoWindow = function myapp_infoWindow(device) {
     const div = dk.frame.createNewWindow(device.user.name + " Info", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
@@ -428,26 +424,28 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
     const div = dk.frame.createNewWindow(device.user.name + " Console", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.backgroundColor = "rgb(50,50,50)";
     div.style.overflow = "auto";
-
     const output = document.createElement("div");
-    output.style.position = "absolute";
-    output.style.top = "10rem";
-    output.style.left = "10rem";
-    output.style.right = "10rem";
-    output.style.bottom = "60rem";
-    output.style.backgroundColor = "rgb(0,0,0)";
+    output.style = {
+        position: "absolute",
+        top: "10rem",
+        left: "10rem",
+        right: "10rem",
+        bottom: "60rem",
+        backgroundColor: "rgb(0,0,0)"
+    }
     div.appendChild(output);
 
     const link = document.createElement("a");
     link.innerHTML = "https://tasmota.github.io/docs/Commands/";
-    link.style.position = "absolute";
-    link.style.left = "10rem";
-    link.style.bottom = "35rem";
-    link.style.color = "rgb(200,200,200)";
-    link.style.cursor = "pointer";
+    link.style = {
+        position: "absolute",
+        left: "10rem",
+        bottom: "35rem",
+        color: "rgb(200,200,200)",
+        cursor: "pointer"
+    }
     link.onclick = function link_onclick() {
         const commandsWindow = window.open("https://tasmota.github.io/docs/Commands/", "_blank, width=500, height=700");
     }
@@ -456,14 +454,16 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
     //command box
     const input = document.createElement("input");
     input.type = "text";
-    input.style.position = "absolute";
-    input.style.left = "10rem";
-    input.style.width = "90%";
-    input.style.height = "22rem";
-    //input.style.right = "10rem";
-    input.style.bottom = "10rem";
-    input.style.color = "rgb(255,255,255)";
-    input.style.backgroundColor = "rgb(0,0,0)";
+    input.style = {
+        position: "absolute",
+        left: "10rem",
+        width: "90%",
+        height: "22rem",
+        right: "10rem",
+        bottom: "10rem",
+        color: "rgb(255,255,255)",
+        backgroundColor: "rgb(0,0,0)"
+    }
     input.onkeydown = function input_onkeydown() {
         const key = event.charCode || event.keyCode;
         if (key === 13) {
