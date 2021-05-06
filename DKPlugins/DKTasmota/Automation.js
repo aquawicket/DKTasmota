@@ -125,16 +125,16 @@ function Automate() {
             BTentTemp.user.humidityZone = 20;
         } else {
             //When NOT using Co2, temperature should be 77 degrees
-            BTentTemp.user.temperatureTarget = 77;
+            BTentTemp.user.temperatureTarget = 70;
             BTentTemp.user.temperatureZone = 20;
-            BTentTemp.user.humidityTarget = 50;
+            BTentTemp.user.humidityTarget = 65;
             BTentTemp.user.humidityZone = 20;
         }
         //drying room
         
-        BTentTemp.user.temperatureTarget = 65;
+        BTentTemp.user.temperatureTarget = 77;
         BTentTemp.user.temperatureZone = 10;
-        BTentTemp.user.humidityTarget = 40;
+        BTentTemp.user.humidityTarget = 60;
         BTentTemp.user.humidityZone = 10;
        
         
