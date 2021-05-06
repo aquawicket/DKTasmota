@@ -175,7 +175,7 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     deviceCell.style.width = "230rem";
     deviceCell.onclick = function HEADER_device_onclick() {
         dk.table.sort("deviceTable", "device");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
     dk.table.addColumn(table, "power");
@@ -185,7 +185,7 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     powerCell.style.textAlign = "center";
     powerCell.onclick = function HEADER_power_onclick() {
         dk.table.sort("deviceTable", "power");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
     dk.table.addColumn(table, "data");
@@ -195,7 +195,7 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     dataCell.style.textAlign = "center";
     dataCell.onclick = function HEADER_data_onclick() {
         dk.table.sort("deviceTable", "data");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
     dk.table.addColumn(table, "automate");
@@ -205,7 +205,7 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     automateCell.style.textAlign = "center";
     automateCell.onclick = function HEADER_automate_onclick() {
         dk.table.sort("deviceTable", "automate");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
     dk.table.addColumn(table, "wifi");
@@ -215,7 +215,7 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     wifiCell.style.textAlign = "center";
     wifiCell.onclick = function HEADER_wifi_onclick() {
         dk.table.sort("deviceTable", "wifi");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
     dk.table.addColumn(table, "options");
@@ -383,7 +383,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", myapp.updateScreen);
     dk.table.sort("deviceTable", "device");
-    UpdateTableStyles();
+    myapp.updateTableStyles();
 }
 
 myapp.preferencesWindow = function myapp_preferencesWindow() {
@@ -504,7 +504,7 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
     div.appendChild(input);
 }
 
-function UpdateTableStyles() {
+myapp.updateTableStyles = function myapp_updateTableStyles() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const row = table.rows[n];
@@ -598,7 +598,7 @@ myapp.updateScreen = function myapp_updateScreen(success, url, data) {
         const deviceCell = dk.table.getCellByName(table, device.ip, "device");
         deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.user.name + "</a>";
         dk.table.sort("deviceTable", "device");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
     device.user.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
