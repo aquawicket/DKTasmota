@@ -103,7 +103,7 @@ myapp.mainAppLoop = function myapp_mainAppLoop() {
     myapp.automate && Automate();
 }
 
-function SendSuperRequest(url, callback) {
+myapp.sendSuperRequest = function myapp_sendSuperRequest(url, callback) {
     superagent.get(url).timeout({
         response: 18000,
         // Wait 18 seconds for the server to start sending,
@@ -537,7 +537,7 @@ myapp.scanDevices = function myapp_scanDevices() {
 myapp.clearDevices = function myapp_clearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
-    CreateDeviceTable(document.body);
+    myapp.createDeviceTable(document.body);
     dk.removeFromLocalStorage("dk.tasmota.devices");
     dk.tasmota.devices = [];
 }
