@@ -1,24 +1,29 @@
 /*
 "use strict";
 
-const app = new DKPlugin("app");
+const myapp = new Object;
 
-app.loadFiles = function app_loadFiles() {
+myapp.loadFiles = function myapp_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, and make declarations, Not initiate variable values are make assignments.
     //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
-    !duktape && dk.create("DK/DKErrorHandler.js");
-    !duktape && dk.create("DK/DK.css");
+    dk.create("DK/DKPlugin.js");
+    dk.create("DK/DKErrorHandler.js");
+    dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
-    !duktape && dk.create("DK/DKTrace.js");
-    !duktape && dk.create("DK/DKJson.js");
+    dk.create("DK/DKTrace.js");
+    dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
     dk.create("DK/DKClock.js");
-    !duktape && dk.create("DK/DKMqtt.js");
+    dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
     dk.create("DKFile/DKFile.js");
-    dk.create("DKGui/DKGui.js");
+	dk.create("DKDebug/DKDebug.js");
+	dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
+        //dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
+    });
+	dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.css");
     dk.create("DKGui/DKFrame.js");
     dk.create("DKGui/DKMenu.js");
@@ -31,12 +36,9 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.css");
     dk.create("DKGui/DKConsole.js");
-    dk.create("DKChart/DKChart.js");
-    dk.create("DKDevTools/DKDevTools.js");
+	dk.create("DKDevTools/DKDevToolsButton.js");
+	dk.create("DKChart/DKChart.js");
     //dk.create("DKCodeMirror/DKCodeMirror.js");
-    dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
-        dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
-    });
     dk.create("DKTasmota/superagent.js");
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/Automation.js");
@@ -52,20 +54,18 @@ app.loadFiles = function app_loadFiles() {
     dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
-
-    //dk.create("DKGui/DKWidgetTest.js");
 }
 
-function DKLoadApp() {
+myapp.loadApp = function myapp_loadApp() {
     dk.errorhandler.create();
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function() {
         if (location.protocol === "file:" || location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
-            app.server = true;
-            app.automate = true;
+            myapp.server = true;
+            myapp.automate = true;
         } else {
-            app.client = true;
-            app.automate = false;
+            myapp.client = true;
+            myapp.automate = false;
         }
         LoadGui();
 
@@ -77,8 +77,8 @@ function DKLoadApp() {
 function LoadGui() {
     dk.console.create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
-    app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
-    app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
+    myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
+    myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);
     dk.clock.create(document.body, "clock", "2rem", "", "25%");
     dk.clock.getSunrise(33.7312525, -117.3028688);
@@ -88,19 +88,20 @@ function LoadGui() {
     chart.create(ctx);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
-        return warn("dk.tasmota.devices empty");
-    for (let n = 0; n < dk.tasmota.devices.length; n++) {
-        AddDeviceToTable(dk.tasmota.devices[n]);
+        console.warn("dk.tasmota.devices empty");
+    else{
+        for (let n = 0; n < dk.tasmota.devices.length; n++) {
+            AddDeviceToTable(dk.tasmota.devices[n]);
+        }
     }
 
-    //dk.testWidget.create();
-    dk.devtools.create();
+    dk.devtoolsbutton.create();
 }
 
 function MainAppLoop() {
-    dk.isOnline() ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
+    navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
     ProcessDevices();
-    app.automate && Automate();
+    myapp.automate && Automate();
 }
 
 function SendSuperRequest(url, callback) {
@@ -126,15 +127,15 @@ function CreateButtons(parent) {
     automation.style.position = "";
     automation_update();
     function automation_onclick() {
-        app.automate ? app.automate = false : app.automate = true;
+        myapp.automate ? myapp.automate = false : myapp.automate = true;
         automation_update();
     }
     function automation_update() {
-        app.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
+        myapp.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
     }
 
     const internet = dk.gui.createImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
-    dk.isOnline() ? internet.src = "DKGui/online.png" : internet.src = "DKGui/offline.png";
+    navigator.onLine ? internet.src = "DKGui/online.png" : internet.src = "DKGui/offline.png";
 
     const volume = dk.gui.createImageButton(document.body, "", "DKAudio/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.5);
@@ -256,7 +257,7 @@ function AddDeviceToTable(device) {
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
-        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", myapp.updateScreen);
     }
 
     const dataCell = dk.table.getCellByName(table, device.ip, "data");
@@ -300,7 +301,7 @@ function AddDeviceToTable(device) {
         dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
                 restart.src = "DKGui/loading.gif";
-                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
+                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", myapp.updateScreen);
             }
         });
         //dk.frame.setTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
@@ -381,7 +382,7 @@ function AddDeviceToTable(device) {
     //Do some final processing
     const deviceHeader = dk.table.getCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", UpdateScreen);
+    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", myapp.updateScreen);
     dk.table.sort("deviceTable", "device");
     UpdateTableStyles();
 }
@@ -438,9 +439,21 @@ function DConsoleWindow(device) {
     output.style.top = "10rem";
     output.style.left = "10rem";
     output.style.right = "10rem";
-    output.style.bottom = "40rem";
+    output.style.bottom = "60rem";
     output.style.backgroundColor = "rgb(0,0,0)";
     div.appendChild(output);
+
+    const link = document.createElement("a");
+    link.innerHTML = "https://tasmota.github.io/docs/Commands/";
+    link.style.position = "absolute";
+    link.style.left = "10rem";
+    link.style.bottom = "35rem";
+    link.style.color = "rgb(200,200,200)";
+    link.style.cursor = "pointer";
+    link.onclick = function link_onclick() {
+        const commandsWindow = window.open("https://tasmota.github.io/docs/Commands/", "_blank, width=500, height=700");
+    }
+    div.appendChild(link);
 
     //command box
     const input = document.createElement("input");
@@ -539,11 +552,11 @@ function ProcessDevices() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const ip = table.rows[n].getAttribute("ip");
-        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", myapp.updateScreen);
     }
 }
 
-function UpdateScreen(success, url, data) {
+myapp.updateScreen = function myapp_updateScreen(success, url, data) {
     if (!url)
         return error("url invalid");
     if (!dk.tasmota.devices.length)
@@ -570,10 +583,11 @@ function UpdateScreen(success, url, data) {
 
     try {
         let deviceData = JSON.parse(data);
-        deviceData.ip = device.ip;
-        deviceData.user = device.user;
-        dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
-        device = deviceData;
+        Object.assign(device, deviceData);
+        //deviceData.ip = device.ip;
+        //deviceData.user = device.user;
+        //dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
+        //device = deviceData;
     } catch (e) {
         return error("data could not be parsed to json");
     }
@@ -690,5 +704,6 @@ function UpdateScreen(success, url, data) {
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
 
-duktape && app.loadFiles();
+duktape && myapp.loadFiles();
+
 */
