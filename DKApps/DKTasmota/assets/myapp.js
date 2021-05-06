@@ -1,8 +1,8 @@
 "use strict";
 
-const app = new Object;
+const myapp = new Object;
 
-app.loadFiles = function app_loadFiles() {
+myapp.loadFiles = function myapp_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, and make declarations, Not initiate variable values are make assignments.
     //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
@@ -55,16 +55,16 @@ app.loadFiles = function app_loadFiles() {
     dk.preloadImage("DKTasmota/automateON.png");
 }
 
-app.loadApp = function app_loadApp() {
+myapp.loadApp = function myapp_loadApp() {
     dk.errorhandler.create();
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function() {
         if (location.protocol === "file:" || location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
-            app.server = true;
-            app.automate = true;
+            myapp.server = true;
+            myapp.automate = true;
         } else {
-            app.client = true;
-            app.automate = false;
+            myapp.client = true;
+            myapp.automate = false;
         }
         LoadGui();
 
@@ -76,8 +76,8 @@ app.loadApp = function app_loadApp() {
 function LoadGui() {
     dk.console.create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
-    app.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
-    app.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
+    myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
+    myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);
     dk.clock.create(document.body, "clock", "2rem", "", "25%");
     dk.clock.getSunrise(33.7312525, -117.3028688);
@@ -100,7 +100,7 @@ function LoadGui() {
 function MainAppLoop() {
     navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
     ProcessDevices();
-    app.automate && Automate();
+    myapp.automate && Automate();
 }
 
 function SendSuperRequest(url, callback) {
@@ -126,11 +126,11 @@ function CreateButtons(parent) {
     automation.style.position = "";
     automation_update();
     function automation_onclick() {
-        app.automate ? app.automate = false : app.automate = true;
+        myapp.automate ? myapp.automate = false : myapp.automate = true;
         automation_update();
     }
     function automation_update() {
-        app.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
+        myapp.automate ? automation.innerHTML = "Automate ON" : automation.innerHTML = "Automate OFF";
     }
 
     const internet = dk.gui.createImageButton(document.body, "internet", "", "2rem", "", "", "58rem", "", "19rem");
@@ -256,7 +256,7 @@ function AddDeviceToTable(device) {
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
-        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", UpdateScreen);
+        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", myapp.updateScreen);
     }
 
     const dataCell = dk.table.getCellByName(table, device.ip, "data");
@@ -300,7 +300,7 @@ function AddDeviceToTable(device) {
         dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
             if (rval) {
                 restart.src = "DKGui/loading.gif";
-                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", UpdateScreen);
+                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", myapp.updateScreen);
             }
         });
         //dk.frame.setTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
@@ -381,7 +381,7 @@ function AddDeviceToTable(device) {
     //Do some final processing
     const deviceHeader = dk.table.getCellByName(table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", UpdateScreen);
+    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", myapp.updateScreen);
     dk.table.sort("deviceTable", "device");
     UpdateTableStyles();
 }
@@ -551,11 +551,11 @@ function ProcessDevices() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const ip = table.rows[n].getAttribute("ip");
-        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", UpdateScreen);
+        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", myapp.updateScreen);
     }
 }
 
-function UpdateScreen(success, url, data) {
+myapp.updateScreen = function myapp_updateScreen(success, url, data) {
     if (!url)
         return error("url invalid");
     if (!dk.tasmota.devices.length)
@@ -703,4 +703,4 @@ function UpdateScreen(success, url, data) {
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
 
-duktape && app.loadFiles();
+duktape && myapp.loadFiles();
