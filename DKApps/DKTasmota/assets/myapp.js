@@ -96,7 +96,7 @@ myapp.loadGui = function myapp_loadGui() {
 }
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
-    dk.isOnline() ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
+    navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
     myapp.processDevices();
     myapp.automate && Automate();
 }
