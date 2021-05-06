@@ -6,26 +6,22 @@ app.loadFiles = function app_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, and make declarations, Not initiate variable values are make assignments.
     //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
-    !duktape && dk.create("DK/DKErrorHandler.js");
-    !duktape && dk.create("DK/DK.css");
+    dk.create("DK/DKPlugin.js");
+    dk.create("DK/DKErrorHandler.js");
+    dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
-    !duktape && dk.create("DK/DKTrace.js");
-    !duktape && dk.create("DK/DKJson.js");
+    dk.create("DK/DKTrace.js");
+    dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
     dk.create("DK/DKClock.js");
-    !duktape && dk.create("DK/DKMqtt.js");
+    dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
-	
-    dk.create("DKFile/DKFile.js");
-    
-	dk.create("DKDebug/DKDebug.js");
-	
+	dk.create("DKFile/DKFile.js");
+    dk.create("DKDebug/DKDebug.js");
 	dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
         //dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
     });
-	
-	
 	dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.css");
     dk.create("DKGui/DKFrame.js");
@@ -33,18 +29,15 @@ app.loadFiles = function app_loadFiles() {
     dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
     dk.create("DKGui/DKResize.js");
-    dk.create("DKGui/DKWidget.js");
+    //dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.css");
     dk.create("DKGui/DKTable.js");
     dk.create("DKGui/DKConsole.css");
     dk.create("DKGui/DKConsole.js");
-    
-	dk.create("DKDevTools/DKDevTools.js");
-	
+	dk.create("DKDevTools/DKDevToolsButton.js");
 	dk.create("DKChart/DKChart.js");
-        //dk.create("DKCodeMirror/DKCodeMirror.js");
-    
+    //dk.create("DKCodeMirror/DKCodeMirror.js");
     dk.create("DKTasmota/superagent.js");
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/Automation.js");
@@ -101,7 +94,7 @@ function LoadGui() {
         }
     }
 
-    dk.devtools.create();
+    dk.devtoolsbutton.create();
 }
 
 function MainAppLoop() {
