@@ -1,5 +1,7 @@
 "use strict";
 
+//test2
+
 const app = new Object;
 
 app.loadFiles = function app_loadFiles() {
