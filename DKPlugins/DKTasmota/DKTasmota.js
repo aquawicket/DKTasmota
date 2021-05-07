@@ -246,7 +246,7 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
 dk.tasmota.updateDevices = function dk_tasmote_updateDevices(callback) {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         const ip = dk.tasmota.devices[n].ip;
-        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", function(success, url, data) {
+        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", function dk_sendRequest_callback(success, url, data) {
             if (!url)
                 return error("url invalid");
             let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
