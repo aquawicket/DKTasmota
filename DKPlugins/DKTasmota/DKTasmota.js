@@ -137,7 +137,7 @@ dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalSto
 
 dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(callback) {
     const path = "/USER/devices.js";
-    dk.json.loadJsonFromFile(path, function(json) {
+    dk.json.loadJsonFromFile(path, function dk_json_loadJsonFromFile_callback(json) {
         if (!json) {
             callback && callback(false);
             return error("json invalid");

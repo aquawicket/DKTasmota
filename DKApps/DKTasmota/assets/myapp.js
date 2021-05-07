@@ -470,7 +470,7 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
             //enter
             console.debug("Send command -> " + input.value);
             const command = encodeURIComponent(input.value).replace(";", "%3B");
-            dk.tasmota.sendCommand(device.ip, command, function(success, device, data) {
+            dk.tasmota.sendCommand(device.ip, command, function dk_tasmota_sendCommand_callback(success, device, data) {
                 if (!success)
                     return error("success invalid");
                 if (!device)
@@ -499,7 +499,6 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
                 if (output.childElementCount > 500)
                     output.removeChild(output.firstChild);  
                 input.value = "";
-
             });
         }
     }
