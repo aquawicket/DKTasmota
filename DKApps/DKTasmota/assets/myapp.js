@@ -98,7 +98,7 @@ myapp.loadGui = function myapp_loadGui() {
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
     navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
-    myapp.processDevices();
+    dk.tasmota.updateDevices("ALL", myapp.updateScreen);
     myapp.automate && Automate();
 }
 
@@ -549,18 +549,7 @@ myapp.saveDevices = function myapp_saveDevices() {
     dk.tasmota.saveDevicesToLocalStorage();
 }
 
-myapp.processDevices = function myapp_processDevices() {
-    dk.tasmota.updateDevices("ALL", myapp.updateScreen);
-    /*
-    const table = byId("deviceTable");
-    for (let n = 1; n < table.rows.length; n++) {
-        const ip = table.rows[n].getAttribute("ip");
-        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", myapp.updateScreen);
-    }
-    */
-}
-
-myapp.updateScreen = function myapp_updateScreen(success, device/*, data*/) {
+myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     if (!device)
         return error("device invalid");
     const table = byId("deviceTable");
@@ -689,7 +678,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device/*, data*/) {
         wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }
 
-    //(data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
+    (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
 
 duktape && myapp.loadFiles();
