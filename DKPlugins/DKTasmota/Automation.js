@@ -69,7 +69,7 @@ function Automate() {
         humidityZone: 40
     }
     const empty_preset = {
-        temperatureTarget: 100,
+        temperatureTarget: 95,
         temperatureZone: 20,
         humidityTarget: 50,
         humidityZone: 40
@@ -99,7 +99,7 @@ function Automate() {
             (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 1)) && (power = true);
             power && (ATentCo2.user.power === "OFF") && console.log("A Tent Co2 Fan ON", "green");
             !power && (ATentCo2.user.power === "ON") && console.log("A Tent Co2 Fan OFF", "yellow");
-            dk.sendRequest("http://" + ATentCo2.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(ATentCo2.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //A Tent Exhaust fan
@@ -113,7 +113,7 @@ function Automate() {
             (ATentTemp.user.humidity > 90) && (power = true);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
             !power && (ATentExhaust.user.power === "ON") && console.log("A Tent Exhaust Fan OFF", "yellow");
-            dk.sendRequest("http://" + ATentExhaust.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(ATentExhaust.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //A Tent Water walls
@@ -125,7 +125,7 @@ function Automate() {
             (dk.clock.time > (dk.clock.sunset - 1)) && (power = false);
             power && (ATentWater.user.power === "OFF") && console.log("A Tent Water walls ON", "green");
             !power && (ATentWater.user.power === "ON") && console.log("A Tent Water walls OFF", "yellow");
-            dk.sendRequest("http://" + ATentWater.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(ATentWater.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //A Tent Heater
@@ -134,7 +134,7 @@ function Automate() {
             (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget) && (power = true);
             power && (ATentHeat.user.power === "OFF") && console.log("A Tent Heater ON", "green");
             !power && (ATentHeat.user.power === "ON") && console.log("A Tent Heater OFF", "yellow");
-            dk.sendRequest("http://" + ATentHeat.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(ATentHeat.ip, "POWER "+power, myapp.updateScreen);
         }
     }
 
@@ -163,7 +163,7 @@ function Automate() {
             (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 1)) && (power = true);
             power && (BTentCo2.user.power === "OFF") && console.log("B Tent Co2 ON", "green");
             !power && (BTentCo2.user.power === "ON") && console.log("B Tent Co2 OFF", "yellow");
-            dk.sendRequest("http://" + BTentCo2.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(BTentCo2.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //B Tent Exhaust fan
@@ -177,7 +177,7 @@ function Automate() {
             (BTentTemp.user.humidity > 90) && (power = true);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
             !power && (BTentExhaust.user.power === "ON") && console.log("B Tent Exhaust Fan OFF", "yellow");
-            dk.sendRequest("http://" + BTentExhaust.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(BTentExhaust.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //B Tent Water walls
@@ -189,7 +189,7 @@ function Automate() {
             (dk.clock.time > (dk.clock.sunset - 1)) && (power = false);
             power && (BTentWater.user.power === "OFF") && console.log("B Tent Water walls ON", "green");
             !power && (BTentWater.user.power === "ON") && console.log("B Tent Water walls OFF", "yellow");
-            dk.sendRequest("http://" + BTentWater.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(BTentWater.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //B Tent Heater
@@ -198,7 +198,7 @@ function Automate() {
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = true);
             power && (BTentHeat.user.power === "OFF") && console.log("B Tent Heater ON", "green");
             !power && (BTentHeat.user.power === "ON") && console.log("B Tent Heater OFF", "yellow");
-            dk.sendRequest("http://" + BTentHeat.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(BTentHeat.ip, "POWER "+power, myapp.updateScreen);
         }
     }
 
@@ -243,7 +243,7 @@ function Automate() {
             (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 1)) && (power = true);
             power && (VegTentCo2.user.power === "OFF") && console.log("Veg Tent Co2 ON", "green");
             !power && (VegTentCo2.user.power === "ON") && console.log("Veg Tent Co2 OFF", "yellow");
-            dk.sendRequest("http://" + VegTentCo2.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(VegTentCo2.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //Veg Tent Exhaust fan
@@ -258,7 +258,7 @@ function Automate() {
             //(VegTentTemp.user.humidity > 91) && (power = true);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
             !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
-            dk.sendRequest("http://" + VegTentExhaust.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(VegTentExhaust.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //Veg Tent Water walls
@@ -272,7 +272,7 @@ function Automate() {
             (dk.clock.time > (dk.clock.sunset - 1)) && (power = false);
             power && (VegTentWater.user.power === "OFF") && console.log("Veg Tent Water Walls ON", "green");
             !power && (VegTentWater.user.power === "ON") && console.log("Veg Tent Water Walls OFF", "yellow");
-            dk.sendRequest("http://" + VegTentWater.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(VegTentWater.ip, "POWER "+power, myapp.updateScreen);
         }
 
         //Veg Tent Heater
@@ -281,7 +281,7 @@ function Automate() {
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = true);
             power && (VegTentHeat.user.power === "OFF") && console.log("Veg Tent Heater ON", "green");
             !power && (VegTentHeat.user.power === "ON") && console.log("Veg Tent Heater OFF", "yellow");
-            dk.sendRequest("http://" + VegTentHeat.ip + "/cm?cmnd=POWER%20" + power, myapp.updateScreen);
+            dk.tasmota.sendCommand(VegTentHeat.ip, "POWER "+power, myapp.updateScreen);
         }
 
     }

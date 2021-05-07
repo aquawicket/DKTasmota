@@ -243,9 +243,11 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
     }
 }
 
-dk.tasmota.updateDevices = function dk_tasmote_updateDevices(callback) {
+dk.tasmota.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback) {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         const ip = dk.tasmota.devices[n].ip;
+        if (ip !== ipAddress && ipAddress !== "ALL")
+            continue;
         dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", function dk_sendRequest_callback(success, url, data) {
             if (!url)
                 return error("url invalid");
@@ -253,20 +255,41 @@ dk.tasmota.updateDevices = function dk_tasmote_updateDevices(callback) {
             if (!device)
                 return error("device invalid, didn't find ip in url:" + url);
             if (!success || !data) {
-                //dk.audio.play("DKTasmota/PowerDown.mp3");
-                //row.style.backgroundColor = "red";
                 console.warn(ip + " did not respond");
-                return callback & callback(false, device);
+                return callback & callback(false, device, data);
             }
             try {
                 let deviceData = JSON.parse(data);
                 Object.assign(device, deviceData);
             } catch (e) {
                 console.error("data could not be parsed to json");
-                return callback & callback(false, device);
+                return callback & callback(false, device, data);
             }
 
-            return callback & callback(true, device);
+            return callback & callback(true, device, data);
         });
     }
+}
+
+dk.tasmota.sendCommand = function dk_tasmota_sendCommand(ipAddress, command, callback) {
+    command = encodeURIComponent(command).replace(";", "%3B");
+    dk.sendRequest("http://" + ipAddress + "/cm?cmnd=" + command, function dk_sendRequest_callback(success, url, data) {
+        if (!url)
+            return error("url invalid");
+        let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
+        if (!device)
+            return error("device invalid, didn't find ip in url:" + url);
+        if (!success || !data) {
+            console.warn(ip + " did not respond");
+            return callback & callback(false, device, data);
+        }
+        try {
+            let deviceData = JSON.parse(data);
+            Object.assign(device, deviceData);
+        } catch (e) {
+            console.error("data could not be parsed to json");
+            return callback & callback(false, device, data);
+        }
+        return callback & callback(true, device, data);
+    });
 }
