@@ -134,7 +134,7 @@ function Automate() {
         
         BTentTemp.user.temperatureTarget = 77;
         BTentTemp.user.temperatureZone = 10;
-        BTentTemp.user.humidityTarget = 60;
+        BTentTemp.user.humidityTarget = 45;
         BTentTemp.user.humidityZone = 10;
        
         
