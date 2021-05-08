@@ -255,7 +255,7 @@ dk.tasmota.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback
             if (!device)
                 return error("device invalid, didn't find ip in url:" + url);
             if (!success || !data) {
-                console.warn(ip + " did not respond");
+                console.log(ip + " did not respond");
                 return callback & callback(false, device, data);
             }
             try {

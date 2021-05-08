@@ -71,7 +71,7 @@ function Automate() {
     const empty_preset = {
         temperatureTarget: 95,
         temperatureZone: 20,
-        humidityTarget: 50,
+        humidityTarget: 80,
         humidityZone: 40
     }
 

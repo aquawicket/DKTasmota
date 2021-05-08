@@ -561,7 +561,8 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     if (!success) {
         dk.audio.play("DKTasmota/PowerDown.mp3");
         row.style.backgroundColor = "red";
-        return warn(device.ip + " did not respond");
+        console.log(device.ip + " did not respond");
+        return false;
     }
 
     //const jsonString = dk.json.prettyJson(data);
