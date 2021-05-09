@@ -28,7 +28,6 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
     dk.create("DKGui/DKResize.js");
-    dk.create("DKGui/DKWidget.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.css");
     dk.create("DKGui/DKTable.js");
@@ -523,7 +522,7 @@ myapp.scanDevices = function myapp_scanDevices() {
     dk.tasmota.getDevices("192.168.1.", function dk_tasmota_getDevices_callback(ip, done) {
         if (ip && !dk.json.findPartialMatch(dk.tasmota.devices, 'ip', ip)) {
             const device = dk.tasmota.createDevice(ip);
-            AddDeviceToTable(device);
+            myapp.addDeviceToTable(device);
             dk.tasmota.saveDevicesToServer();
             dk.tasmota.saveDevicesToLocalStorage();
         }
