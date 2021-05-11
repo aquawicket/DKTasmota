@@ -23,9 +23,9 @@ if (! isAllowed($_SERVER['REMOTE_ADDR'])) {
     <head>
         <title>Tasmota Device Manager PHP</title>
         <script id=\"DK/DK.js\" src=\"DK/DK.js\"></script>
-        <script id=\"myapp.js\" src=\"myapp.js\" onload=\"app.loadFiles()\"></script>
+        <script id=\"myapp.js\" src=\"myapp.js\" onload=\"myapp.loadFiles()\"></script>
     </head>
-    <body onload=\"DKLoadApp()\"></body>
-</html>";
+    <body onload=\"myapp.loadApp()\"></body>
+    </html>";
 }
 ?>
