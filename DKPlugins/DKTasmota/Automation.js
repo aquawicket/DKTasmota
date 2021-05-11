@@ -43,7 +43,7 @@ function Automate() {
     !VegTentWater && (VegTentWater = dk.tasmota.device("Veg Tent Water Walls"));
     !VegTentHeat && (VegTentHeat = dk.tasmota.device("Veg Tent Heater"));
 
-    // Presets
+    // Presets    
     const veg_preset = {
         temperatureTarget: 77,
         temperatureZone: 20,
@@ -69,19 +69,21 @@ function Automate() {
         humidityZone: 40
     }
     const empty_preset = {
-        temperatureTarget: 95,
+        temperatureTarget: 90,
         temperatureZone: 20,
-        humidityTarget: 80,
-        humidityZone: 40
+        humidityTarget: 50,
+        humidityZone: 30
     }
 
     ////////////////////////////////////////////////////////////
     //A Tent
     if (ATentTemp && ATentTemp.user) {
-        if (ATentCo2 && ATentCo2.user.automate)
-            Object.assign(ATentTemp.user, co2_preset);
-        else
-            Object.assign(ATentTemp.user, veg_preset);
+        ATentTemp.user.mode = "VegRoom";
+        (ATentTemp.user.mode === "VegRoom") && Object.assign(ATentTemp.user, veg_preset);
+        (ATentTemp.user.mode === "BloomRoom") &&  Object.assign(ATentTemp.user, bloom_preset);
+        (ATentTemp.user.mode === "Co2Room") && Object.assign(ATentTemp.user, co2_preset);
+        (ATentTemp.user.mode === "DryRoom") && Object.assign(ATentTemp.user, dry_preset);
+        (ATentTemp.user.mode === "EmptyRoom") && Object.assign(ATentTemp.user, empty_preset);
 
         //A Tent Alarms
         if (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone))
@@ -141,11 +143,12 @@ function Automate() {
     ////////////////////////////////////////////////////////////
     //B Tent
     if (BTentTemp && BTentTemp.user) {
-        if (BTentCo2 && BTentCo2.user.automate)
-            Object.assign(BTentTemp.user, co2_preset);
-        else
-            Object.assign(BTentTemp.user, veg_preset);
-        Object.assign(BTentTemp.user, dry_preset)
+        BTentTemp.user.mode = "EmptyRoom";
+        (BTentTemp.user.mode === "VegRoom") && Object.assign(BTentTemp.user, veg_preset);
+        (BTentTemp.user.mode === "BloomRoom") &&  Object.assign(BTentTemp.user, bloom_preset);
+        (BTentTemp.user.mode === "Co2Room") && Object.assign(BTentTemp.user, co2_preset);
+        (BTentTemp.user.mode === "DryRoom") && Object.assign(BTentTemp.user, dry_preset);
+        (BTentTemp.user.mode === "EmptyRoom") && Object.assign(BTentTemp.user, empty_preset);
 
         //B Tent Alarms
         if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone))
@@ -205,7 +208,12 @@ function Automate() {
     ////////////////////////////////////////////////////////////
     //Shed Presets
     if (ShedTemp && ShedTemp.user) {
-        Object.assign(ShedTemp.user, veg_preset);
+        ShedTemp.user.mode = "VegRoom";
+        (ShedTemp.user.mode === "VegRoom") && Object.assign(ShedTemp.user, veg_preset);
+        (ShedTemp.user.mode === "BloomRoom") &&  Object.assign(ShedTemp.user, bloom_preset);
+        (ShedTemp.user.mode === "Co2Room") && Object.assign(ShedTemp.user, co2_preset);
+        (ShedTemp.user.mode === "DryRoom") && Object.assign(ShedTemp.user, dry_preset);
+        (ShedTemp.user.mode === "EmptyRoom") && Object.assign(ShedTemp.user, empty_preset);
 
         //Shed Alarms
         if (ShedTemp.user.temperature < (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureZone))
@@ -221,11 +229,12 @@ function Automate() {
     ////////////////////////////////////////////////////////////
     //Veg Tent Presets
     if (VegTentTemp && VegTentTemp.user) {
-        if (VegTentCo2 && VegTentCo2.user.automate)
-            Object.assign(VegTentTemp.user, co2_preset);
-        else
-            Object.assign(VegTentTemp.user, veg_preset);
-        Object.assign(VegTentTemp.user, empty_preset);
+        VegTentTemp.user.mode = "EmptyRoom";
+        (VegTentTemp.user.mode === "VegRoom") && Object.assign(VegTentTemp.user, veg_preset);
+        (VegTentTemp.user.mode === "BloomRoom") &&  Object.assign(VegTentTemp.user, bloom_preset);
+        (VegTentTemp.user.mode === "Co2Room") && Object.assign(VegTentTemp.user, co2_preset);
+        (VegTentTemp.user.mode === "DryRoom") && Object.assign(VegTentTemp.user, dry_preset);
+        (VegTentTemp.user.mode === "EmptyRoom") && Object.assign(VegTentTemp.user, empty_preset);
 
         //Veg Tent Alarms
         if (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone))

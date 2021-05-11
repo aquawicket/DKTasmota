@@ -285,96 +285,99 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     optionsCell.style.textAlign = "center";
 
     //Device Restart
-    const restart = document.createElement("img");
-    restart.id = device.ip + "restart";
-    restart.setAttribute("title", "Restart Device");
-    restart.src = "DKGui/restart.png";
-    restart.style.width = "12rem";
-    restart.style.height = "12rem";
-    restart.style.cursor = "pointer";
-    restart.style.paddingRight = "3rem";
-    restart.style.paddingBottom = "2rem";
-    restart.onclick = function restart_onclick() {
-        dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
-            if (rval) {
-                restart.src = "DKGui/loading.gif";
-                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", myapp.updateScreen);
-            }
-        });
-        //dk.frame.setTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
-    }
-    optionsCell.appendChild(restart);
+    const restart = dk.gui.createTag("img", optionsCell, {
+        id: device.ip + "restart",
+        title: "Restart Device",
+        src: "DKGui/restart.png",
+        style: {
+            width: "12rem",
+            height: "12rem",
+            cursor: "pointer",
+            paddingRight: "3rem",
+            paddingBottom: "2rem",
+        },
+        onclick: function restart_onclick() {
+            dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
+                if (rval) {
+                    restart.src = "DKGui/loading.gif";
+                    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", function(success, url, data){
+                        myapp.updateScreen(success, device, data);
+                    });
+                }
+            });
+        }
+    });
 
     //Device Info
-    const info = document.createElement("img");
-    info.setAttribute("title", "Device Info");
-    info.src = "DKGui/info.png";
-    info.style.width = "12rem";
-    info.style.height = "12rem";
-    info.style.cursor = "pointer";
-    info.style.paddingRight = "3rem";
-    info.style.paddingBottom = "2rem";
-    info.onclick = function info_onclick() {
-        myapp.infoWindow(device);
-    }
-    optionsCell.appendChild(info);
+    const info = dk.gui.createTag("img", optionsCell, {
+        title: "Device Info",
+        src: "DKGui/info.png",
+        style: {
+            width: "12rem",
+            height: "12rem",
+            cursor: "pointer",
+            paddingRight: "3rem",
+            paddingBottom: "2rem"
+        },
+        onclick: function info_onclick() {
+            myapp.infoWindow(device);
+        }
+    });
 
     //Device Settings
-    const settings = document.createElement("img");
-    settings.setAttribute("title", "Device Settings");
-    settings.src = "DKGui/settings.png";
-    settings.style.width = "15rem";
-    settings.style.height = "15rem";
-    settings.style.cursor = "pointer";
-    settings.onclick = function settings_onclick() {
-        myapp.settingsWindow(device);
-    }
-    optionsCell.appendChild(settings);
-
-    const dConsole = document.createElement("img");
-    dConsole.setAttribute("title", "Device Console");
-    dConsole.src = "DKGui/console.png";
-    dConsole.style.width = "15rem";
-    dConsole.style.height = "15rem";
-    dConsole.style.paddingLeft = "3rem";
-    dConsole.style.cursor = "pointer";
-    dConsole.onclick = function dConsole_onclick() {
-        myapp.consoleWindow(device);
-    }
-    optionsCell.appendChild(dConsole);
-
-    const dChart = document.createElement("img");
-    dChart.id = device.ip + "dChart";
-    dChart.setAttribute("title", "Device Chart");
-    dChart.src = "DKGui/chart.png";
-    dChart.style.width = "15rem";
-    dChart.style.marginLeft = "3rem";
-    dChart.style.cursor = "pointer";
-    optionsCell.appendChild(dChart);
-
-    dChart.onclick = function dChart_onclick() {
-        for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            if (dk.tasmota.devices[n].ip === device.ip) {
-                byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
-            } else {
-                byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
-            }
+    const settings = dk.gui.createTag("img", optionsCell, {
+        title: "Device Settings",
+        src: "DKGui/settings.png",
+        style: {
+            height: "15rem",
+            cursor: "pointer"
+        },
+        onclick: function settings_onclick() {
+            myapp.settingsWindow(device);
         }
-    }
-    dChart.oncontextmenu = function dChart_oncontextmenu(event) {
-        event.preventDefault();
-        const color = chart.toggleChart(device.ip);
-        for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            if (dk.tasmota.devices[n].ip === device.ip) {
-                if (color) {
-                    byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color;
-                } else {
+    });
+
+    const dConsole = dk.gui.createTag("img", optionsCell, {
+        title: "Device Console",
+        src: "DKGui/console.png",
+        style: {
+            height: "15rem",
+            paddingLeft: "3rem",
+            cursor: "pointer"
+        },
+        onclick: function dConsole_onclick() {
+            myapp.consoleWindow(device);
+        }
+    });
+
+    const dChart = dk.gui.createTag("img", optionsCell, {
+        id: device.ip + "dChart",
+        title: "Device Chart",
+        src: "DKGui/chart.png",
+        style: {
+            height: "15rem",
+            marginLeft: "3rem",
+            cursor: "pointer"
+        },
+        onclick: function dChart_onclick() {
+            for (let n = 0; n < dk.tasmota.devices.length; n++) {
+                if (dk.tasmota.devices[n].ip === device.ip)
+                    byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
+                else
                     byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
+            }
+        },
+        oncontextmenu: function dChart_oncontextmenu(event) {
+            event.preventDefault();
+            const color = chart.toggleChart(device.ip);
+            for (let n = 0; n < dk.tasmota.devices.length; n++) {
+                if (dk.tasmota.devices[n].ip === device.ip) {
+                    color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color);
+                    !color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)");
                 }
             }
         }
-    }
-    optionsCell.appendChild(dChart);
+    });
 
     //Do some final processing
     const deviceHeader = dk.table.getCellByName(table, "HEADER", "device");
@@ -388,7 +391,6 @@ myapp.preferencesWindow = function myapp_preferencesWindow() {
     const div = dk.frame.createNewWindow("Preferenes", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.backgroundColor = "rgb(36,36,36)";
 }
 
@@ -396,7 +398,6 @@ myapp.infoWindow = function myapp_infoWindow(device) {
     const div = dk.frame.createNewWindow(device.user.name + " Info", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
@@ -496,7 +497,7 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
 
                 //Limit the number of stored lines
                 if (output.childElementCount > 500)
-                    output.removeChild(output.firstChild);  
+                    output.removeChild(output.firstChild);
                 input.value = "";
             });
         }
