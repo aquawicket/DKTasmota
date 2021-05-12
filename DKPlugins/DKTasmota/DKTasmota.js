@@ -280,7 +280,7 @@ dk.tasmota.sendCommand = function dk_tasmota_sendCommand(ipAddress, command, cal
         if (!device)
             return error("device invalid, didn't find ip in url:" + url);
         if (!success || !data) {
-            console.warn(ip + " did not respond");
+            console.warn(ipAddress + " did not respond");
             return callback & callback(false, device, data);
         }
         try {
