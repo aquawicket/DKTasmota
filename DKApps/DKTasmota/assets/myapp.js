@@ -54,6 +54,7 @@ myapp.loadFiles = function myapp_loadFiles() {
 }
 
 myapp.loadApp = function myapp_loadApp() {
+    //dk.errorCatcher(dk.debug);
     dk.errorhandler.create();
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
