@@ -5,10 +5,9 @@ const myapp = new Object;
 myapp.loadFiles = function myapp_loadFiles() {
     //If you initiate anything here, it may fail.
     //This function should only load files, and make declarations, Not initiate variable values are make assignments.
-    //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
+    //myapp.loadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
     dk.create("DK/DKPlugin.js");
     dk.create("DK/DKErrorHandler.js");
-    dk.create("DK/DK.css");
     dk.create("DK/DKPhp.js");
     dk.create("DK/DKTrace.js");
     dk.create("DK/DKJson.js");
@@ -19,19 +18,15 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DK/DKNotifications.js");
     dk.create("DKFile/DKFile.js");
     dk.create("DKDebug/DKDebug.js");
-    dk.create("DKAudio/DKAudio.js", function dk_create_callback() {//dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
-    });
+    dk.create("DKAudio/DKAudio.js");
     dk.create("DKGui/DKGui.js");
-    dk.create("DKGui/DKFrame.css");
     dk.create("DKGui/DKFrame.js");
     dk.create("DKGui/DKMenu.js");
     dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
     dk.create("DKGui/DKResize.js");
     dk.create("DKGui/DKClipboard.js");
-    dk.create("DKGui/DKTable.css");
     dk.create("DKGui/DKTable.js");
-    dk.create("DKGui/DKConsole.css");
     dk.create("DKGui/DKConsole.js");
     dk.create("DKDevTools/DKDevToolsButton.js");
     dk.create("DKChart/DKChart.js");
@@ -255,7 +250,8 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
-        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", myapp.updateScreen);
+        dk.tasmota.sendCommand(device.ip, "POWER Toggle", myapp.updateScreen);
+        //dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", myapp.updateScreen);
     }
 
     const dataCell = dk.table.getCellByName(table, device.ip, "data");
@@ -557,7 +553,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         return error("table invlid");
     const row = dk.table.getRowByName(table, device.ip);
     if (!row)
-        return warn("row invalid");
+        return error("row invalid");
 
     if (!success) {
         dk.audio.play("DKTasmota/PowerDown.mp3");
