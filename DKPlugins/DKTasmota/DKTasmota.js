@@ -234,15 +234,30 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
         }
         const url = "http://" + ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
         //console.debug(url);
-        myapp.sendSuperRequest(url, function myapp_sendSuperRequest_callback(success, data) {
-            //DK_SendRequest(url, function DK_SendRequestCallback(success, url, data) {
-            console.log("pinged " + ip);
+        //myapp.sendSuperRequest(url, function myapp_sendSuperRequest_callback(success, data) {
+        console.log("pinging " + ip);
+        /*
+        dk.tasmota.sendCommand(ip, cmnd, function(success, device, data){
             let done = false;
             devicesScanned += 1;
             (devicesScanned >= 254) && (done = true);
-            success && (tasmotaDeviceCount += 1) && callback(ip, done);
-            !success && callback(false, done);
+            if (!success || !data)
+                return callback(false, done);
+            tasmotaDeviceCount += 1;
+            return callback(ip, done);
         });
+        */
+        
+        dk.sendRequest(url, function DK_SendRequestCallback(success, url, data) { 
+            let done = false;
+            devicesScanned += 1;
+            (devicesScanned >= 254) && (done = true);
+            if (!success || !data)
+                return callback(false, done);
+            tasmotaDeviceCount += 1;
+            return callback(ip, done);
+        });
+        
     }
 }
 
@@ -288,6 +303,9 @@ dk.tasmota.sendCommand = function dk_tasmota_sendCommand(ipAddress, command, cal
         if (!success || !data)
             return callback(success, device, data);
         let deviceData = JSON.parse(data);
+        deviceData.POWER && Object.assign(device.StatusSTS, deviceData);
+        deviceData.DeviceName && Object.assign(device.Status, deviceData);
+        deviceData.Wifi && Object.assign(device.StatusSTS, deviceData);
         Object.assign(device, deviceData);
         return callback(true, device, data);
     });
