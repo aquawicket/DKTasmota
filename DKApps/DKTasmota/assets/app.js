@@ -1,3 +1,5 @@
+// https://en.wikipedia.org/wiki/ECMAScript#5th_Edition
+
 console.log("loading app.js");
 
 let assets = CPP_DKAssets_LocalAssets();
