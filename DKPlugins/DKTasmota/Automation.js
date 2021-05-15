@@ -46,33 +46,43 @@ function Automate() {
     // Presets    
     const veg_preset = {
         temperatureTarget: 77,
-        temperatureZone: 20,
+        temperatureZone: 1,
+        temperatureAlarm: 20,
         humidityTarget: 50,
-        humidityZone: 20
+        humidityZone: 1,
+        humidityAlarm: 20
     }
     const bloom_preset = {
         temperatureTarget: 77,
-        temperatureZone: 20,
+        temperatureZone: 1,
+        temperatureAlarm: 20,
         humidityTarget: 40,
-        humidityZone: 20
+        humidityZone: 1,
+        humidityAlarm: 20
     }
     const co2_preset = {
         temperatureTarget: 85,
-        temperatureZone: 20,
+        temperatureZone: 1,
+        temperatureAlarm: 20,
         humidityTarget: 50,
-        humidityZone: 20
+        humidityZone: 1,
+        humidityAlarm: 20
     }
     const dry_preset = {
         temperatureTarget: 65,
-        temperatureZone: 20,
+        temperatureZone: 1,
+        temperatureAlarm: 20,
         humidityTarget: 45,
-        humidityZone: 40
+        humidityZone: 1,
+        humidityAlarm: 20
     }
     const empty_preset = {
-        temperatureTarget: 90,
-        temperatureZone: 20,
+        temperatureTarget: 77,
+        temperatureZone: 10,
+        temperatureAlarm: 20,
         humidityTarget: 50,
-        humidityZone: 30
+        humidityZone: 10,
+        humidityAlarm: 20
     }
 
     ////////////////////////////////////////////////////////////
@@ -86,19 +96,19 @@ function Automate() {
         (ATentTemp.user.mode === "EmptyRoom") && Object.assign(ATentTemp.user, empty_preset);
 
         //A Tent Alarms
-        if (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone))
-            console.log("!!! A TENT TEMPERATURE BELOW MINIMUM(" + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "red");
-        if (ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone))
-            console.log("!!! A TENT TEMPERATURE ABOVE MAXIMUM(" + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureZone) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "red");
-        if (ATentTemp.user.humidity < (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone))
-            console.log("!!! A TENT HUMUDITY BELOW MINIMUM(" + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityZone) + "%) @" + ATentTemp.user.humidity + "% !!!", "red");
-        if (ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone))
-            console.log("!!! A TENT HUMUDITY ABOVE MAXIMUM(" + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityZone) + "%) @" + ATentTemp.user.humidity + "% !!!", "red");
+        if (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureAlarm))
+            console.log("!!! A TENT TEMPERATURE BELOW MINIMUM(" + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureAlarm) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "red");
+        if (ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureAlarm))
+            console.log("!!! A TENT TEMPERATURE ABOVE MAXIMUM(" + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureAlarm) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "red");
+        if (ATentTemp.user.humidity < (ATentTemp.user.humidityTarget - ATentTemp.user.humidityAlarm))
+            console.log("!!! A TENT HUMUDITY BELOW MINIMUM(" + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityAlarm) + "%) @" + ATentTemp.user.humidity + "% !!!", "red");
+        if (ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityAlarm))
+            console.log("!!! A TENT HUMUDITY ABOVE MAXIMUM(" + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityAlarm) + "%) @" + ATentTemp.user.humidity + "% !!!", "red");
 
         //A Tent Co2
         if (ATentCo2 && ATentCo2.user.automate) {
             let power = false;
-            (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 1)) && (power = true);
+            (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget) && (power = true);
             power && (ATentCo2.user.power === "OFF") && console.log("A Tent Co2 Fan ON", "green");
             !power && (ATentCo2.user.power === "ON") && console.log("A Tent Co2 Fan OFF", "yellow");
             dk.tasmota.sendCommand(ATentCo2.ip, "POWER "+power, myapp.updateScreen);
@@ -109,7 +119,6 @@ function Automate() {
             let power = false;
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
-            //(ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - 10)) && (power = false);
             (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
             (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
             (ATentTemp.user.humidity > 90) && (power = true);
@@ -151,19 +160,19 @@ function Automate() {
         (BTentTemp.user.mode === "EmptyRoom") && Object.assign(BTentTemp.user, empty_preset);
 
         //B Tent Alarms
-        if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone))
-            console.log("!!! B TENT TEMPERATURE BELOW MINIMUM(" + (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");
-        if (BTentTemp.user.temperature > (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureZone))
-            console.log("!!! B TENT TEMPERATURE ABOVE MAXIMUM(" + (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureZone) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");
-        if (BTentTemp.user.humidity < (BTentTemp.user.humidityTarget - BTentTemp.user.humidityZone))
-            console.log("!!! B TENT HUMUDITY BELOW MINIMUM(" + (BTentTemp.user.humidityTarget - BTentTemp.user.humidityZone) + "%) @" + BTentTemp.user.humidity + "% !!!", "red");
-        if (BTentTemp.user.humidity > (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone))
-            console.log("!!! B TENT HUMUDITY ABOVE MAXIMUM(" + (BTentTemp.user.humidityTarget + BTentTemp.user.humidityZone) + "%) @" + BTentTemp.user.humidity + "% !!!", "red");
+        if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureAlarm))
+            console.log("!!! B TENT TEMPERATURE BELOW MINIMUM(" + (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureAlarm) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");
+        if (BTentTemp.user.temperature > (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureAlarm))
+            console.log("!!! B TENT TEMPERATURE ABOVE MAXIMUM(" + (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureAlarm) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");
+        if (BTentTemp.user.humidity < (BTentTemp.user.humidityTarget - BTentTemp.user.humidityAlarm))
+            console.log("!!! B TENT HUMUDITY BELOW MINIMUM(" + (BTentTemp.user.humidityTarget - BTentTemp.user.humidityAlarm) + "%) @" + BTentTemp.user.humidity + "% !!!", "red");
+        if (BTentTemp.user.humidity > (BTentTemp.user.humidityTarget + BTentTemp.user.humidityAlarm))
+            console.log("!!! B TENT HUMUDITY ABOVE MAXIMUM(" + (BTentTemp.user.humidityTarget + BTentTemp.user.humidityAlarm) + "%) @" + BTentTemp.user.humidity + "% !!!", "red");
 
         //B Tent Co2
         if (BTentCo2 && BTentCo2.user.automate) {
             let power = false;
-            (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 1)) && (power = true);
+            (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = true);
             power && (BTentCo2.user.power === "OFF") && console.log("B Tent Co2 ON", "green");
             !power && (BTentCo2.user.power === "ON") && console.log("B Tent Co2 OFF", "yellow");
             dk.tasmota.sendCommand(BTentCo2.ip, "POWER "+power, myapp.updateScreen);
@@ -174,7 +183,6 @@ function Automate() {
             let power = false;
             (BTentTemp.user.temperature > BTentTemp.user.temperatureTarget) && (power = true);
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
-            //(BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - 10)) && (power = false);
             (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
             (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
             (BTentTemp.user.humidity > 90) && (power = true);
@@ -216,14 +224,14 @@ function Automate() {
         (ShedTemp.user.mode === "EmptyRoom") && Object.assign(ShedTemp.user, empty_preset);
 
         //Shed Alarms
-        if (ShedTemp.user.temperature < (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureZone))
-            console.log("!!! SHED TEMPERATURE BELOW MINIMUM(" + (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureZone) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "red");
-        if (ShedTemp.user.temperature > (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureZone))
-            console.log("!!! SHED TEMPERATURE ABOVE MAXIMUM(" + (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureZone) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "red");
-        //if (ShedTemp.user.humidity < (ShedTemp.user.humidityTarget - ShedTemp.user.humidityZone))
-        //    console.log("!!! SHED HUMUDITY BELOW MINIMUM("+(ShedTemp.user.humidityTarget - ShedTemp.user.humidityZone) + "%) @" + ShedTemp.user.humidity + "% !!!", "red");
-        //if (ShedTemp.user.humidity > (ShedTemp.user.humidityTarget + ShedTemp.user.humidityZone))
-        //    console.log("!!! SHED HUMUDITY ABOVE MAXIMUM("+(ShedTemp.user.humidityTarget + ShedTemp.user.humidityZone)+ "%) @" + ShedTemp.user.humidity + "% !!!", "red");
+        if (ShedTemp.user.temperature < (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureAlarm))
+            console.log("!!! SHED TEMPERATURE BELOW MINIMUM(" + (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureAlarm) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "red");
+        if (ShedTemp.user.temperature > (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureAlarm))
+            console.log("!!! SHED TEMPERATURE ABOVE MAXIMUM(" + (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureAlarm) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "red");
+        //if (ShedTemp.user.humidity < (ShedTemp.user.humidityTarget - ShedTemp.user.humidityAlarm))
+        //    console.log("!!! SHED HUMUDITY BELOW MINIMUM("+(ShedTemp.user.humidityTarget - ShedTemp.user.humidityAlarm) + "%) @" + ShedTemp.user.humidity + "% !!!", "red");
+        //if (ShedTemp.user.humidity > (ShedTemp.user.humidityTarget + ShedTemp.user.humidityAlarm))
+        //    console.log("!!! SHED HUMUDITY ABOVE MAXIMUM("+(ShedTemp.user.humidityTarget + ShedTemp.user.humidityAlarm)+ "%) @" + ShedTemp.user.humidity + "% !!!", "red");
     }
 
     ////////////////////////////////////////////////////////////
@@ -237,14 +245,14 @@ function Automate() {
         (VegTentTemp.user.mode === "EmptyRoom") && Object.assign(VegTentTemp.user, empty_preset);
 
         //Veg Tent Alarms
-        if (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone))
-            console.log("!!! Veg TENT TEMPERATURE BELOW MINIMUM(" + (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "red");
-        if (VegTentTemp.user.temperature > (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureZone))
-            console.log("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM(" + (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureZone) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "red");
-        if (VegTentTemp.user.humidity < (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityZone))
-            console.log("!!! Veg TENT HUMUDITY BELOW MINIMUM(" + (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityZone) + "%) @" + VegTentTemp.user.humidity + "% !!!", "red");
-        if (VegTentTemp.user.humidity > (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone))
-            console.log("!!! Veg TENT HUMUDITY ABOVE MAXIMUM(" + (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityZone) + "%) @" + VegTentTemp.user.humidity + "% !!!", "red");
+        if (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureAlarm))
+            console.log("!!! Veg TENT TEMPERATURE BELOW MINIMUM(" + (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureAlarm) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "red");
+        if (VegTentTemp.user.temperature > (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureAlarm))
+            console.log("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM(" + (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureAlarm) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "red");
+        if (VegTentTemp.user.humidity < (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityAlarm))
+            console.log("!!! Veg TENT HUMUDITY BELOW MINIMUM(" + (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityAlarm) + "%) @" + VegTentTemp.user.humidity + "% !!!", "red");
+        if (VegTentTemp.user.humidity > (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityAlarm))
+            console.log("!!! Veg TENT HUMUDITY ABOVE MAXIMUM(" + (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityAlarm) + "%) @" + VegTentTemp.user.humidity + "% !!!", "red");
 
         //Veg Tent Co2
         if (VegTentCo2 && VegTentCo2.user.automate) {
@@ -260,7 +268,6 @@ function Automate() {
             let power = false;
             (VegTentTemp.user.temperature > VegTentTemp.user.temperatureTarget) && (power = true);
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = true);
-            //(VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 10)) && (power = false);
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
             (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);

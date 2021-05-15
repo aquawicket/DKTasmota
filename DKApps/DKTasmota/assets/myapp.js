@@ -23,7 +23,7 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.js");
     dk.create("DKGui/DKMenu.js");
-    dk.create("DKGui/DKMessageBox.js");
+    //dk.create("DKGui/DKMessageBox.js");
     dk.create("DKGui/DKDrag.js");
     dk.create("DKGui/DKResize.js");
     dk.create("DKGui/DKClipboard.js");
@@ -81,7 +81,7 @@ myapp.loadGui = function myapp_loadGui() {
     chart.create(ctx);
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
-        console.warn("dk.tasmota.devices empty");
+        console.info("dk.tasmota.devices empty");
     else {
         for (let n = 0; n < dk.tasmota.devices.length; n++) {
             myapp.addDeviceToTable(dk.tasmota.devices[n]);
@@ -234,7 +234,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     }
 
     const deviceCell = dk.table.getCellByName(table, device.ip, "device");
-    device.user.name ? deviceCell.innerHTML = "<a>" + device.user.name + "</a>" : deviceCell.innerHTML = "<a>" + device.ip + "</a>";
+    device.Status ? deviceCell.innerHTML = "<a>" + device.Status.DeviceName + "</a>" : deviceCell.innerHTML = "<a>" + device.ip + "</a>";
     deviceCell.style.cursor = "pointer";
     deviceCell.onclick = function deviceCell_onclick() {
         const deviceWindow = window.open("http://" + device.ip, device.ip, "_blank, width=500, height=700");
@@ -251,7 +251,6 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
         dk.tasmota.sendCommand(device.ip, "POWER Toggle", myapp.updateScreen);
-        //dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", myapp.updateScreen);
     }
 
     const dataCell = dk.table.getCellByName(table, device.ip, "data");
@@ -294,14 +293,13 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
             paddingBottom: "2rem",
         },
         onclick: function restart_onclick() {
-            dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
-                if (rval) {
-                    restart.src = "DKGui/loading.gif";
-                    dk.tasmota.sendCommand(device.ip, "Restart 1", myapp.updateScreen);
-                    //dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", function(success, url, data){
-                    //    myapp.updateScreen(success, device, data);
-                    //});
-                }
+            dk.create("DKGui/DKMessageBox.js", function() {
+                dk.messagebox.confirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_confirm_callback(rval) {
+                    if (rval) {
+                        restart.src = "DKGui/loading.gif";
+                        dk.tasmota.sendCommand(device.ip, "Restart 1", myapp.updateScreen);
+                    }
+                });
             });
         }
     });
@@ -393,7 +391,7 @@ myapp.preferencesWindow = function myapp_preferencesWindow() {
 }
 
 myapp.infoWindow = function myapp_infoWindow(device) {
-    const div = dk.frame.createNewWindow(device.user.name + " Info", "500rem", "400rem");
+    const div = dk.frame.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
     if (!div)
         return;
     div.style.fontSize = "12rem";
@@ -416,14 +414,14 @@ myapp.infoWindow = function myapp_infoWindow(device) {
 }
 
 myapp.settingsWindow = function settingsWindow(device) {
-    const div = dk.frame.createNewWindow(device.user.name + " Settings", "500rem", "400rem");
+    const div = dk.frame.createNewWindow(device.Status.DeviceName + " Settings", "500rem", "400rem");
     if (!div)
         return;
     //TODO
 }
 
 myapp.consoleWindow = function myapp_consoleWindow(device) {
-    const div = dk.frame.createNewWindow(device.user.name + " Console", "500rem", "400rem");
+    const div = dk.frame.createNewWindow(device.Status.DeviceName + " Console", "500rem", "400rem");
     if (!div)
         return;
 
@@ -563,7 +561,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         return false;
     }
 
-    if(!device.Status)
+    if (!device.Status)
         return error("device.Status invalid");
     //const jsonString = dk.json.prettyJson(data);
     //const jsonSuper = dk.json.highlightJson(jsonString);
