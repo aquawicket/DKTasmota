@@ -186,7 +186,7 @@ dk.tasmota.initializeDevices = function dk_tasmota_initializeDevices(callback) {
     let deviceCount = 0;
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         const url = "http://" + dk.tasmota.devices[n].ip + "/cm?cmnd=Status%200";
-        dk.sendRequest(url, function dk_sendRequest_callback(success, url, data) {
+        dk.sendRequest("GET", url, function dk_sendRequest_callback(success, url, data) {
             if (success && url && data) {
                 let device = DKJson_FindPartialMatch(dk.tasmota.devices, 'ip', url);
                 if (!device)
@@ -247,8 +247,8 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
             return callback(ip, done);
         });
         */
-        
-        dk.sendRequest(url, function DK_SendRequestCallback(success, url, data) { 
+
+        dk.sendRequest("GET", url, function DK_SendRequestCallback(success, url, data) {
             let done = false;
             devicesScanned += 1;
             (devicesScanned >= 254) && (done = true);
@@ -257,7 +257,7 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
             tasmotaDeviceCount += 1;
             return callback(ip, done);
         });
-        
+
     }
 }
 
@@ -268,7 +268,7 @@ dk.tasmota.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback
             continue;
         dk.tasmota.sendCommand(ip, "Status 0", callback);
         /*    
-        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", function dk_sendRequest_callback(success, url, data) {
+        dk.sendRequest("GET", http://" + ip + "/cm?cmnd=Status%200", function dk_sendRequest_callback(success, url, data) {
             if (!url)
                 return error("url invalid");
             let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
@@ -294,7 +294,7 @@ dk.tasmota.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback
 
 dk.tasmota.sendCommand = function dk_tasmota_sendCommand(ipAddress, command, callback) {
     command = encodeURIComponent(command).replace(";", "%3B");
-    dk.sendRequest("http://" + ipAddress + "/cm?cmnd=" + command, function dk_sendRequest_callback(success, url, data) {
+    dk.sendRequest("GET", "http://" + ipAddress + "/cm?cmnd=" + command, function dk_sendRequest_callback(success, url, data) {
         if (!url)
             return error("url invalid", callback(false, null, data));
         let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
