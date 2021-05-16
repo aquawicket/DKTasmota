@@ -63,14 +63,20 @@ dk.vpdcalc.convertLeafTemp = function dk_vpdcalc_convertLeafTemp(temp, fToC) {
 }
 
 dk.vpdcalc.calculate = function dk_vpdcalc_calculate() {
-    let tempCVal;// = Number(document.getElementById('tempCInput').value);
-    let tempFVal;// = Number(document.getElementById('tempFInput').value);
-    let rhVal;// = Number(document.getElementById('rhInput').value);
-    let leafTempFVal;// = Number(document.getElementById('leafTempFInput').value);
-    let vpdAirVal;// = Number(document.getElementById('vpdAirInput').value);
+    let tempCVal;
+    // = Number(document.getElementById('tempCInput').value);
+    let tempFVal;
+    // = Number(document.getElementById('tempFInput').value);
+    let rhVal;
+    // = Number(document.getElementById('rhInput').value);
+    let leafTempFVal;
+    // = Number(document.getElementById('leafTempFInput').value);
+    let vpdAirVal;
+    // = Number(document.getElementById('vpdAirInput').value);
 
     // console.log("calcstart");
-    var solveFor;// = document.querySelector('input[name = "solve"]:checked').value;
+    var solveFor;
+    // = document.querySelector('input[name = "solve"]:checked').value;
     if (solveFor == "vpd") {
         // console.log("vpd");  
         //let inputs = document.getElementsByTagName('input');
