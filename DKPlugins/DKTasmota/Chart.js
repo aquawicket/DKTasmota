@@ -58,7 +58,7 @@ chart.create = function chart_create(chartCanvas) {
     chart.settings = {};
     //new Object;
     dk.json.loadJsonFromFile("USER/chart_settings.js", function(json) {
-        if (!json){
+        if (!json) {
             console.log("json invalid");
             return false;
         }
@@ -83,7 +83,7 @@ function openChartSettings() {
             chart.settings.logToFile = true;
         else
             chart.settings.logToFile = false;
-        dk.json.saveJsonToFile(chart.settings, "/USER/chart_settings.js");
+        dk.json.saveJsonToFile(chart.settings, "USER/chart_settings.js");
     }
     chartSettings.appendChild(chart.logToFile);
     const logToFileLabel = document.createElement("label")
@@ -302,12 +302,12 @@ chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer(ip) {
             })
             */
             dk.file.fileToString(file, function dk_file_fileToString_callback(str) {
-                str = '['+str+']';
+                str = '[' + str + ']';
                 let json;
                 try {
                     json = JSON.parse(str);
                 } catch (e) {
-                    return error("JSON.parse() failed "+e);
+                    return error("JSON.parse() failed " + e);
                 }
                 chart.lineChart.data.datasets[n].data = json;
                 chart.lineChart.update();
