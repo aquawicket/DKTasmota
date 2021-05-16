@@ -97,19 +97,6 @@ myapp.mainAppLoop = function myapp_mainAppLoop() {
     myapp.automate && Automate();
 }
 
-myapp.sendSuperRequest = function myapp_sendSuperRequest(url, callback) {
-    superagent.get(url).timeout({
-        response: 18000,
-        // Wait 18 seconds for the server to start sending,
-        deadline: 20000,
-        // but allow 20 seconds for the file to finish loading.
-    }).then(function SendSuperRequestSuccessCallback(res) {
-        callback(true, res);
-    }, function SendSuperRequestFailCallback(res) {
-        callback(false, res);
-    });
-}
-
 myapp.createButtons = function myapp_createButtons(parent) {
     dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", myapp.scanDevices).style.position = "";
     dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", myapp.mainAppLoop).style.position = "";
@@ -133,15 +120,12 @@ myapp.createButtons = function myapp_createButtons(parent) {
     const volume = dk.gui.createImageButton(document.body, "", "DKAudio/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.5);
     function volume_onclick() {
-        if (dk.audio.getVolume("DKTasmota/PowerDown.mp3") === 1.0) {
-            dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.0);
+        dk.audio.toggleMute("DKTasmota/PowerDown.mp3");
+        if(dk.audio.muted)
             volume.src = "DKAudio/volume_0.png";
-        } else {
-            dk.audio.setVolume("DKTasmota/PowerDown.mp3", 1.0);
+        else
             volume.src = "DKAudio/volume_100.png";
-        }
     }
-
     const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", myapp.preferencesWindow);
 }
 
@@ -545,8 +529,7 @@ myapp.saveDevices = function myapp_saveDevices() {
 }
 
 myapp.updateScreen = function myapp_updateScreen(success, device, data) {
-    if (!device)
-        return error("device invalid");
+    require({success},{device},{data});
     const table = byId("deviceTable");
     if (!table)
         return error("table invlid");
