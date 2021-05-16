@@ -136,7 +136,6 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     deviceDiv.style.left = "20rem";
     deviceDiv.style.width = "720rem";
     deviceDiv.style.height = "47.0%";
-    //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
 
