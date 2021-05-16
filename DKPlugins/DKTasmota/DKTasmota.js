@@ -139,8 +139,8 @@ dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(cal
     const path = "USER/devices.js";
     dk.json.loadJsonFromFile(path, function dk_json_loadJsonFromFile_callback(json) {
         if (!json) {
-            callback && callback(false);
-            return error("json invalid");
+            console.log("json invalid");
+            return callback(false);
         }
         dk.tasmota.devices = json;
         return callback && callback(dk.tasmota.devices);

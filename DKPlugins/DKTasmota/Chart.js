@@ -58,8 +58,10 @@ chart.create = function chart_create(chartCanvas) {
     chart.settings = {};
     //new Object;
     dk.json.loadJsonFromFile("USER/chart_settings.js", function(json) {
-        if (!json)
-            return error("json invalid");
+        if (!json){
+            console.log("json invalid");
+            return false;
+        }
         chart.settings = json;
     });
 }
