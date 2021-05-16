@@ -57,7 +57,7 @@ chart.create = function chart_create(chartCanvas) {
 
     chart.settings = {};
     //new Object;
-    dk.json.loadJsonFromFile("/USER/chart_settings.js", function(json) {
+    dk.json.loadJsonFromFile("USER/chart_settings.js", function(json) {
         if (!json)
             return error("json invalid");
         chart.settings = json;
@@ -272,7 +272,7 @@ chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, dat
         t: currentdate,
         y: data
     });
-    const path = "/USER/" + label + ".js";
+    const path = "USER/" + label + ".js";
     dk.json.saveJsonToFile(json, path, "FILE_APPEND"/*, console.debug*/
     );
 }
@@ -281,7 +281,7 @@ chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const json = this.lineChart.data.datasets[n].data;
-            const path = "/USER/" + this.lineChart.data.datasets[n].label + ".js";
+            const path = "USER/" + this.lineChart.data.datasets[n].label + ".js";
             const flags = 0;
             dk.json.saveJsonToFile(json, path, flags /*, console.debug*/
             );
@@ -292,7 +292,7 @@ chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
 chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
-            let file = "/USER/" + this.lineChart.data.datasets[n].label + ".js";
+            let file = "USER/" + this.lineChart.data.datasets[n].label + ".js";
             /*
             dk.json.loadJsonFromFile(file, function(json) {
                 chart.lineChart.data.datasets[n].data = json;

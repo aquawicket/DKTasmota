@@ -136,7 +136,7 @@ dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalSto
 }
 
 dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(callback) {
-    const path = "/USER/devices.js";
+    const path = "USER/devices.js";
     dk.json.loadJsonFromFile(path, function dk_json_loadJsonFromFile_callback(json) {
         if (!json) {
             callback && callback(false);
@@ -160,11 +160,11 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
         delete dk.tasmota.devices[n].StatusSTS;
         delete dk.tasmota.devices[n].StatusTIM;
     }
-    dk.file.isDir("/USER", function(result) {
+    dk.file.isDir("USER/", function(result) {
         if (!result)
-            dk.file.makeDir("/USER");
+            dk.file.makeDir("USER/");
     });
-    const path = "/USER/devices.js";
+    const path = "USER/devices.js";
     dk.json.saveJsonToFile(dk.tasmota.devices, path, 0, console.log);
 }
 
