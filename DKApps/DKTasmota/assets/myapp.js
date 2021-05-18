@@ -1,5 +1,9 @@
 "use strict";
 
+//**************************************
+// TODO: start xconsole early and keep a backup of all message to give to dk.console keep a list of console messages.
+// TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
+//**************************************
 const myapp = new Object;
 
 myapp.loadFiles = function myapp_loadFiles() {

@@ -46,43 +46,43 @@ function Automate() {
     // Presets    
     const veg_preset = {
         temperatureTarget: 77,
-        temperatureZone: 1,
-        temperatureAlarm: 20,
+        temperatureZone: 25,
+        temperatureAlarm: 30,
         humidityTarget: 50,
-        humidityZone: 1,
-        humidityAlarm: 20
+        humidityZone: 25,
+        humidityAlarm: 30
     }
     const bloom_preset = {
         temperatureTarget: 77,
-        temperatureZone: 1,
-        temperatureAlarm: 20,
+        temperatureZone: 25,
+        temperatureAlarm: 30,
         humidityTarget: 40,
-        humidityZone: 1,
-        humidityAlarm: 20
+        humidityZone: 25,
+        humidityAlarm: 30
     }
     const co2_preset = {
         temperatureTarget: 85,
-        temperatureZone: 1,
-        temperatureAlarm: 20,
+        temperatureZone: 25,
+        temperatureAlarm: 30,
         humidityTarget: 50,
-        humidityZone: 1,
-        humidityAlarm: 20
+        humidityZone: 25,
+        humidityAlarm: 30
     }
     const dry_preset = {
         temperatureTarget: 65,
-        temperatureZone: 1,
-        temperatureAlarm: 20,
+        temperatureZone: 25,
+        temperatureAlarm: 30,
         humidityTarget: 45,
-        humidityZone: 1,
-        humidityAlarm: 20
+        humidityZone: 25,
+        humidityAlarm: 30
     }
     const empty_preset = {
         temperatureTarget: 77,
-        temperatureZone: 10,
-        temperatureAlarm: 20,
+        temperatureZone: 25,
+        temperatureAlarm: 30,
         humidityTarget: 50,
-        humidityZone: 10,
-        humidityAlarm: 20
+        humidityZone: 25,
+        humidityAlarm: 30
     }
 
     ////////////////////////////////////////////////////////////
@@ -121,6 +121,7 @@ function Automate() {
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
             (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
             (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
+            (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) && (power = false);
             (ATentTemp.user.humidity > 90) && (power = true);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
             !power && (ATentExhaust.user.power === "ON") && console.log("A Tent Exhaust Fan OFF", "yellow");
@@ -185,6 +186,7 @@ function Automate() {
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
             (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
             (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
+            (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone)) && (power = false);
             (BTentTemp.user.humidity > 90) && (power = true);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
             !power && (BTentExhaust.user.power === "ON") && console.log("B Tent Exhaust Fan OFF", "yellow");
@@ -271,7 +273,8 @@ function Automate() {
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
             (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
-            //(VegTentTemp.user.humidity > 91) && (power = true);
+            (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone)) && (power = false);
+            (VegTentTemp.user.humidity > 90) && (power = true);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
             !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
             dk.tasmota.sendCommand(VegTentExhaust.ip, "POWER "+power, myapp.updateScreen);
