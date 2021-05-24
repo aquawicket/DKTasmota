@@ -281,7 +281,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         },
         onclick: function restart_onclick() {
             dk.create("DKGui/DKMessageBox.js", function() {
-                dk.messagebox.confirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_confirm_callback(rval) {
+                dk.messagebox.createConfirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_createConfirm_callback(rval) {
                     if (rval) {
                         restart.src = "DKGui/loading.gif";
                         dk.tasmota.sendCommand(device.ip, "Restart 1", myapp.updateScreen);
