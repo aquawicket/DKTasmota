@@ -257,6 +257,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     auto.onclick = function auto_onclick() {
         device.user.automate ? device.user.automate = false : device.user.automate = true;
         device.user.automate ? auto.src = "DKTasmota/automateON.png" : auto.src = "DKTasmota/automateOFF.png";
+        dk.tasmota.saveDevicesToServer(device.ip);
     }
     automateCell.appendChild(auto);
 

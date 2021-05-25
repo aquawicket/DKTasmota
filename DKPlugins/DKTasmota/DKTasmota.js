@@ -147,8 +147,18 @@ dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(cal
     });
 }
 
-dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
+dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer(ip) {
+    dk.file.isDir("USER/", function(result) {
+        !result && dk.file.makeDir("USER/");
+    });
+    //!ip && (ip = "ALL");
+
+    //Save devices into individual files
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
+        //if(ip === dk.tasmota.devices[n].ip || ip === "ALL"){
+        //    const path = ip +".js";
+        //    dk.json.saveJsonToFile(dk.tasmota.devices[n].user, path, 0, console.log);
+        //}
         delete dk.tasmota.devices[n].Status;
         delete dk.tasmota.devices[n].StatusFWR;
         delete dk.tasmota.devices[n].StatusLOG;
@@ -160,12 +170,12 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer() {
         delete dk.tasmota.devices[n].StatusSTS;
         delete dk.tasmota.devices[n].StatusTIM;
     }
-    dk.file.isDir("USER/", function(result) {
-        if (!result)
-            dk.file.makeDir("USER/");
-    });
+    
+    //Save devices into one file
     const path = "USER/devices.js";
     dk.json.saveJsonToFile(dk.tasmota.devices, path, 0, console.log);
+
+    //TODO - tell all clients to update.
 }
 
 dk.tasmota.createDevice = function dk_tasmota_createDevice(ip) {
