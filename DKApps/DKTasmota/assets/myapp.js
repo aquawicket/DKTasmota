@@ -55,6 +55,7 @@ myapp.loadFiles = function myapp_loadFiles() {
 myapp.loadApp = function myapp_loadApp() {
     dk.errorCatcher(myapp);
     dk.errorhandler.create();
+    //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
         if (location.protocol === "file:" || location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
@@ -97,6 +98,7 @@ myapp.loadGui = function myapp_loadGui() {
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
     navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
+    //dk.tasmota.loadDevicesFromServer();
     dk.tasmota.updateDevices("ALL", myapp.updateScreen);
     myapp.automate && Automate();
 }
