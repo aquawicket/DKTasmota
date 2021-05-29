@@ -7,9 +7,9 @@
 const myapp = new Object;
 
 myapp.loadFiles = function myapp_loadFiles() {
-    //If you initiate anything here, it may fail.
-    //This function should only load files, and make declarations, Not initiate variable values are make assignments.
-    //myapp.loadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
+    //If you initiate any values here, they may fail.
+    //This function should only load files, and make declarations, Not initiate variable values or make assignments.
+    //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
     dk.create("DK/DKPlugin.js");
     dk.create("DK/DKErrorHandler.js");
     dk.create("DK/DKPhp.js");

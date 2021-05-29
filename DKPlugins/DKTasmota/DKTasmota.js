@@ -156,7 +156,7 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer(ip) {
     //Save devices into individual files
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         //if(ip === dk.tasmota.devices[n].ip || ip === "ALL"){
-        //    const path = ip +".js";
+        //    const path = "USER/"+ip +".js";
         //    dk.json.saveJsonToFile(dk.tasmota.devices[n].user, path, 0, console.log);
         //}
         delete dk.tasmota.devices[n].Status;
