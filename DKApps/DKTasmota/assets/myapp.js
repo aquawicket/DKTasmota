@@ -87,12 +87,9 @@ myapp.loadGui = function myapp_loadGui() {
 
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         console.info("dk.tasmota.devices empty");
-    else {
-        for (let n = 0; n < dk.tasmota.devices.length; n++) {
+    else 
+        for (let n = 0; n < dk.tasmota.devices.length; n++)
             myapp.addDeviceToTable(dk.tasmota.devices[n]);
-        }
-    }
-
     dk.devtoolsbutton.create();
 }
 
