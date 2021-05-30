@@ -134,7 +134,7 @@ function Automate() {
             (ATentTemp.user.humidity < ATentTemp.user.humidityTarget) && (power = true);
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
-            (dk.clock.time > (dk.clock.sunset - 1)) && (power = false);
+            (dk.clock.time > dk.clock.sunset) && (power = false);
             power && (ATentWater.user.power === "OFF") && console.log("A Tent Water walls ON", "green");
             !power && (ATentWater.user.power === "ON") && console.log("A Tent Water walls OFF", "yellow");
             dk.tasmota.sendCommand(ATentWater.ip, "POWER "+power, myapp.updateScreen);
@@ -153,7 +153,7 @@ function Automate() {
     ////////////////////////////////////////////////////////////
     //B Tent
     if (BTentTemp && BTentTemp.user) {
-        BTentTemp.user.mode = "EmptyRoom";
+        BTentTemp.user.mode = "VegRoom";
         (BTentTemp.user.mode === "VegRoom") && Object.assign(BTentTemp.user, veg_preset);
         (BTentTemp.user.mode === "BloomRoom") &&  Object.assign(BTentTemp.user, bloom_preset);
         (BTentTemp.user.mode === "Co2Room") && Object.assign(BTentTemp.user, co2_preset);
