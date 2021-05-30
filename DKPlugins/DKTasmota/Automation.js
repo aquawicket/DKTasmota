@@ -119,8 +119,8 @@ function Automate() {
             let power = false;
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
-            (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
-            (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
+            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time > dk.clock.sunset) && (power = false);
             (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) && (power = false);
             (ATentTemp.user.humidity > 90) && (power = true);
             power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
@@ -184,8 +184,8 @@ function Automate() {
             let power = false;
             (BTentTemp.user.temperature > BTentTemp.user.temperatureTarget) && (power = true);
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
-            (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
-            (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
+            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time > dk.clock.sunset) && (power = false);
             (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone)) && (power = false);
             (BTentTemp.user.humidity > 90) && (power = true);
             power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
@@ -271,8 +271,8 @@ function Automate() {
             (VegTentTemp.user.temperature > VegTentTemp.user.temperatureTarget) && (power = true);
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = true);
             //(VegTentTemp.user.humidity < VegTentTemp.user.humidityTarget) && (power = false);
-            (dk.clock.time < dk.clock.sunrise + .30) && (power = false);
-            (dk.clock.time > (dk.clock.sunset + 1)) && (power = false);
+            (dk.clock.time < dk.clock.sunrise) && (power = false);
+            (dk.clock.time > dk.clock.sunset) && (power = false);
             (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone)) && (power = false);
             (VegTentTemp.user.humidity > 90) && (power = true);
             power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");

@@ -73,14 +73,15 @@ myapp.loadApp = function myapp_loadApp() {
 }
 
 myapp.loadGui = function myapp_loadGui() {
-    dk.console.create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
+    dk.console.create(document.body, "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     myapp.createButtons(document.body);
-    dk.clock.create(document.body, "clock", "2rem", "", "25%");
-    dk.clock.getSunrise(33.7312525, -117.3028688);
-    dk.clock.getSunset(33.7312525, -117.3028688);
+    dk.clock.create(document.body, "2rem");
+    dk.clock.setLatitudeLongitude(33.7312525, -117.3028688);
+    //dk.clock.getSunrise(33.7312525, -117.3028688);
+    //dk.clock.getSunset(33.7312525, -117.3028688);
     myapp.createDeviceTable(document.body);
     const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     chart.create(ctx);
