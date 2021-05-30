@@ -77,7 +77,7 @@ function Automate() {
         humidityAlarm: 30
     }
     const empty_preset = {
-        temperatureTarget: 77,
+        temperatureTarget: 95,
         temperatureZone: 25,
         temperatureAlarm: 30,
         humidityTarget: 50,
