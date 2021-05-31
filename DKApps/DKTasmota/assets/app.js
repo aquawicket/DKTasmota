@@ -1,7 +1,15 @@
-// https://en.wikipedia.org/wiki/ECMAScript#5th_Edition
+var USE_CEF = 1;
+var url = "http://www.google.com/";
+//var url = "chrome://gpu";
+//var url = "http://127.0.0.1:2393"
 
-console.log("loading app.js");
+var width = 800;
+var height = 600;
+CPP_DK_Create("DKCef,Cef,0,0,"+width+","+height+","+url);
+CPP_DKCef_NewBrowser("Cef",0,0,width,height,url);
 
+
+/*
 let assets = CPP_DKAssets_LocalAssets();
 CPP_DKFile_ChDir(assets+"DKPhp/");
 let str = assets+"DKPhp/RunPhpServers.bat";
@@ -13,6 +21,8 @@ let short_path = CPP_DKFile_GetShortName("C:/Program Files/BraveSoftware/Brave-B
 CPP_DK_Execute(short_path +" "+assets+"dktasmota.html");
 CPP_DK_Sleep(1000);
 CPP_DK_Exit();
+*/
+
 
 
 //CPP_DK_Create("DKWindow");
