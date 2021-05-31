@@ -97,20 +97,20 @@ function Automate() {
 
         //A Tent Alarms
         if (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureAlarm))
-            console.log("!!! A TENT TEMPERATURE BELOW MINIMUM(" + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureAlarm) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! A TENT TEMPERATURE BELOW MINIMUM(" + (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureAlarm) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (ATentTemp.user.temperature > (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureAlarm))
-            console.log("!!! A TENT TEMPERATURE ABOVE MAXIMUM(" + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureAlarm) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! A TENT TEMPERATURE ABOVE MAXIMUM(" + (ATentTemp.user.temperatureTarget + ATentTemp.user.temperatureAlarm) + "&#176;F) @" + ATentTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (ATentTemp.user.humidity < (ATentTemp.user.humidityTarget - ATentTemp.user.humidityAlarm))
-            console.log("!!! A TENT HUMUDITY BELOW MINIMUM(" + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityAlarm) + "%) @" + ATentTemp.user.humidity + "% !!!", "red");
+            console.log("%c!!! A TENT HUMUDITY BELOW MINIMUM(" + (ATentTemp.user.humidityTarget - ATentTemp.user.humidityAlarm) + "%) @" + ATentTemp.user.humidity + "% !!!", "color: red;");
         if (ATentTemp.user.humidity > (ATentTemp.user.humidityTarget + ATentTemp.user.humidityAlarm))
-            console.log("!!! A TENT HUMUDITY ABOVE MAXIMUM(" + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityAlarm) + "%) @" + ATentTemp.user.humidity + "% !!!", "red");
+            console.log("%c!!! A TENT HUMUDITY ABOVE MAXIMUM(" + (ATentTemp.user.humidityTarget + ATentTemp.user.humidityAlarm) + "%) @" + ATentTemp.user.humidity + "% !!!", "color: red;");
 
         //A Tent Co2
         if (ATentCo2 && ATentCo2.user.automate) {
             let power = false;
             (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget) && (power = true);
-            power && (ATentCo2.user.power === "OFF") && console.log("A Tent Co2 Fan ON", "green");
-            !power && (ATentCo2.user.power === "ON") && console.log("A Tent Co2 Fan OFF", "yellow");
+            power && (ATentCo2.user.power === "OFF") && console.log("%cA Tent Co2 Fan ON", "color: green;");
+            !power && (ATentCo2.user.power === "ON") && console.log("%cA Tent Co2 Fan OFF", "color: yellow;");
             dk.tasmota.sendCommand(ATentCo2.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -123,8 +123,8 @@ function Automate() {
             (dk.clock.time > dk.clock.sunset) && (power = false);
             (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) && (power = false);
             (ATentTemp.user.humidity > 90) && (power = true);
-            power && (ATentExhaust.user.power === "OFF") && console.log("A Tent Exhaust Fan ON", "green");
-            !power && (ATentExhaust.user.power === "ON") && console.log("A Tent Exhaust Fan OFF", "yellow");
+            power && (ATentExhaust.user.power === "OFF") && console.log("%cA Tent Exhaust Fan ON", "color: green;");
+            !power && (ATentExhaust.user.power === "ON") && console.log("%cA Tent Exhaust Fan OFF", "color: yellow;");
             dk.tasmota.sendCommand(ATentExhaust.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -135,8 +135,8 @@ function Automate() {
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
             (dk.clock.time > dk.clock.sunset) && (power = false);
-            power && (ATentWater.user.power === "OFF") && console.log("A Tent Water walls ON", "green");
-            !power && (ATentWater.user.power === "ON") && console.log("A Tent Water walls OFF", "yellow");
+            power && (ATentWater.user.power === "OFF") && console.log("%cA Tent Water walls ON", "color: green;");
+            !power && (ATentWater.user.power === "ON") && console.log("%cA Tent Water walls OFF", "color: yellow;");
             dk.tasmota.sendCommand(ATentWater.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -144,8 +144,8 @@ function Automate() {
         if (ATentHeat && ATentHeat.user.automate) {
             let power = false;
             (ATentTemp.user.temperature < ATentTemp.user.temperatureTarget) && (power = true);
-            power && (ATentHeat.user.power === "OFF") && console.log("A Tent Heater ON", "green");
-            !power && (ATentHeat.user.power === "ON") && console.log("A Tent Heater OFF", "yellow");
+            power && (ATentHeat.user.power === "OFF") && console.log("%cA Tent Heater ON", "color: green;");
+            !power && (ATentHeat.user.power === "ON") && console.log("%cA Tent Heater OFF", "color: yellow;");
             dk.tasmota.sendCommand(ATentHeat.ip, "POWER "+power, myapp.updateScreen);
         }
     }
@@ -162,20 +162,20 @@ function Automate() {
 
         //B Tent Alarms
         if (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureAlarm))
-            console.log("!!! B TENT TEMPERATURE BELOW MINIMUM(" + (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureAlarm) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! B TENT TEMPERATURE BELOW MINIMUM(" + (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureAlarm) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (BTentTemp.user.temperature > (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureAlarm))
-            console.log("!!! B TENT TEMPERATURE ABOVE MAXIMUM(" + (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureAlarm) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! B TENT TEMPERATURE ABOVE MAXIMUM(" + (BTentTemp.user.temperatureTarget + BTentTemp.user.temperatureAlarm) + "&#176;F) @" + BTentTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (BTentTemp.user.humidity < (BTentTemp.user.humidityTarget - BTentTemp.user.humidityAlarm))
-            console.log("!!! B TENT HUMUDITY BELOW MINIMUM(" + (BTentTemp.user.humidityTarget - BTentTemp.user.humidityAlarm) + "%) @" + BTentTemp.user.humidity + "% !!!", "red");
+            console.log("%c!!! B TENT HUMUDITY BELOW MINIMUM(" + (BTentTemp.user.humidityTarget - BTentTemp.user.humidityAlarm) + "%) @" + BTentTemp.user.humidity + "% !!!", "color: red;");
         if (BTentTemp.user.humidity > (BTentTemp.user.humidityTarget + BTentTemp.user.humidityAlarm))
-            console.log("!!! B TENT HUMUDITY ABOVE MAXIMUM(" + (BTentTemp.user.humidityTarget + BTentTemp.user.humidityAlarm) + "%) @" + BTentTemp.user.humidity + "% !!!", "red");
+            console.log("%c!!! B TENT HUMUDITY ABOVE MAXIMUM(" + (BTentTemp.user.humidityTarget + BTentTemp.user.humidityAlarm) + "%) @" + BTentTemp.user.humidity + "% !!!", "color: red;");
 
         //B Tent Co2
         if (BTentCo2 && BTentCo2.user.automate) {
             let power = false;
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = true);
-            power && (BTentCo2.user.power === "OFF") && console.log("B Tent Co2 ON", "green");
-            !power && (BTentCo2.user.power === "ON") && console.log("B Tent Co2 OFF", "yellow");
+            power && (BTentCo2.user.power === "OFF") && console.log("%cB Tent Co2 ON", "color: green;");
+            !power && (BTentCo2.user.power === "ON") && console.log("%cB Tent Co2 OFF", "color: yellow;");
             dk.tasmota.sendCommand(BTentCo2.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -188,8 +188,8 @@ function Automate() {
             (dk.clock.time > dk.clock.sunset) && (power = false);
             (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone)) && (power = false);
             (BTentTemp.user.humidity > 90) && (power = true);
-            power && (BTentExhaust.user.power === "OFF") && console.log("B Tent Exhaust Fan ON", "green");
-            !power && (BTentExhaust.user.power === "ON") && console.log("B Tent Exhaust Fan OFF", "yellow");
+            power && (BTentExhaust.user.power === "OFF") && console.log("%cB Tent Exhaust Fan ON", "color: green;");
+            !power && (BTentExhaust.user.power === "ON") && console.log("%cB Tent Exhaust Fan OFF", "color: yellow;");
             dk.tasmota.sendCommand(BTentExhaust.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -200,8 +200,8 @@ function Automate() {
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
             (dk.clock.time > (dk.clock.sunset - 1)) && (power = false);
-            power && (BTentWater.user.power === "OFF") && console.log("B Tent Water walls ON", "green");
-            !power && (BTentWater.user.power === "ON") && console.log("B Tent Water walls OFF", "yellow");
+            power && (BTentWater.user.power === "OFF") && console.log("%cB Tent Water walls ON", "color: green;");
+            !power && (BTentWater.user.power === "ON") && console.log("%cB Tent Water walls OFF", "color: yellow;");
             dk.tasmota.sendCommand(BTentWater.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -209,8 +209,8 @@ function Automate() {
         if (BTentHeat && BTentHeat.user.automate) {
             let power = false;
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = true);
-            power && (BTentHeat.user.power === "OFF") && console.log("B Tent Heater ON", "green");
-            !power && (BTentHeat.user.power === "ON") && console.log("B Tent Heater OFF", "yellow");
+            power && (BTentHeat.user.power === "OFF") && console.log("%cB Tent Heater ON", "color: green;");
+            !power && (BTentHeat.user.power === "ON") && console.log("%cB Tent Heater OFF", "color: yellow;");
             dk.tasmota.sendCommand(BTentHeat.ip, "POWER "+power, myapp.updateScreen);
         }
     }
@@ -227,13 +227,13 @@ function Automate() {
 
         //Shed Alarms
         if (ShedTemp.user.temperature < (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureAlarm))
-            console.log("!!! SHED TEMPERATURE BELOW MINIMUM(" + (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureAlarm) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! SHED TEMPERATURE BELOW MINIMUM(" + (ShedTemp.user.temperatureTarget - ShedTemp.user.temperatureAlarm) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (ShedTemp.user.temperature > (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureAlarm))
-            console.log("!!! SHED TEMPERATURE ABOVE MAXIMUM(" + (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureAlarm) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! SHED TEMPERATURE ABOVE MAXIMUM(" + (ShedTemp.user.temperatureTarget + ShedTemp.user.temperatureAlarm) + "&#176;F) @" + ShedTemp.user.temperature + "&#176;F !!!", "color: red;");
         //if (ShedTemp.user.humidity < (ShedTemp.user.humidityTarget - ShedTemp.user.humidityAlarm))
-        //    console.log("!!! SHED HUMUDITY BELOW MINIMUM("+(ShedTemp.user.humidityTarget - ShedTemp.user.humidityAlarm) + "%) @" + ShedTemp.user.humidity + "% !!!", "red");
+        //    console.log("%c!!! SHED HUMUDITY BELOW MINIMUM("+(ShedTemp.user.humidityTarget - ShedTemp.user.humidityAlarm) + "%) @" + ShedTemp.user.humidity + "% !!!", "color: red;");
         //if (ShedTemp.user.humidity > (ShedTemp.user.humidityTarget + ShedTemp.user.humidityAlarm))
-        //    console.log("!!! SHED HUMUDITY ABOVE MAXIMUM("+(ShedTemp.user.humidityTarget + ShedTemp.user.humidityAlarm)+ "%) @" + ShedTemp.user.humidity + "% !!!", "red");
+        //    console.log("%c!!! SHED HUMUDITY ABOVE MAXIMUM("+(ShedTemp.user.humidityTarget + ShedTemp.user.humidityAlarm)+ "%) @" + ShedTemp.user.humidity + "% !!!", "color: red;");
     }
 
     ////////////////////////////////////////////////////////////
@@ -248,20 +248,20 @@ function Automate() {
 
         //Veg Tent Alarms
         if (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureAlarm))
-            console.log("!!! Veg TENT TEMPERATURE BELOW MINIMUM(" + (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureAlarm) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! Veg TENT TEMPERATURE BELOW MINIMUM(" + (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureAlarm) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (VegTentTemp.user.temperature > (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureAlarm))
-            console.log("!!! Veg TENT TEMPERATURE ABOVE MAXIMUM(" + (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureAlarm) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "red");
+            console.log("%c!!! Veg TENT TEMPERATURE ABOVE MAXIMUM(" + (VegTentTemp.user.temperatureTarget + VegTentTemp.user.temperatureAlarm) + "&#176;F) @" + VegTentTemp.user.temperature + "&#176;F !!!", "color: red;");
         if (VegTentTemp.user.humidity < (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityAlarm))
-            console.log("!!! Veg TENT HUMUDITY BELOW MINIMUM(" + (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityAlarm) + "%) @" + VegTentTemp.user.humidity + "% !!!", "red");
+            console.log("%c!!! Veg TENT HUMUDITY BELOW MINIMUM(" + (VegTentTemp.user.humidityTarget - VegTentTemp.user.humidityAlarm) + "%) @" + VegTentTemp.user.humidity + "% !!!", "color: red;");
         if (VegTentTemp.user.humidity > (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityAlarm))
-            console.log("!!! Veg TENT HUMUDITY ABOVE MAXIMUM(" + (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityAlarm) + "%) @" + VegTentTemp.user.humidity + "% !!!", "red");
+            console.log("%c!!! Veg TENT HUMUDITY ABOVE MAXIMUM(" + (VegTentTemp.user.humidityTarget + VegTentTemp.user.humidityAlarm) + "%) @" + VegTentTemp.user.humidity + "% !!!", "color: red;");
 
         //Veg Tent Co2
         if (VegTentCo2 && VegTentCo2.user.automate) {
             let power = false;
             (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - 1)) && (power = true);
-            power && (VegTentCo2.user.power === "OFF") && console.log("Veg Tent Co2 ON", "green");
-            !power && (VegTentCo2.user.power === "ON") && console.log("Veg Tent Co2 OFF", "yellow");
+            power && (VegTentCo2.user.power === "OFF") && console.log("%cVeg Tent Co2 ON", "color: green;");
+            !power && (VegTentCo2.user.power === "ON") && console.log("%cVeg Tent Co2 OFF", "color: yellow;");
             dk.tasmota.sendCommand(VegTentCo2.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -275,8 +275,8 @@ function Automate() {
             (dk.clock.time > dk.clock.sunset) && (power = false);
             (VegTentTemp.user.temperature < (VegTentTemp.user.temperatureTarget - VegTentTemp.user.temperatureZone)) && (power = false);
             (VegTentTemp.user.humidity > 90) && (power = true);
-            power && (VegTentExhaust.user.power === "OFF") && console.log("Veg Tent Exhaust Fan ON", "green");
-            !power && (VegTentExhaust.user.power === "ON") && console.log("Veg Tent Exhaust Fan OFF", "yellow");
+            power && (VegTentExhaust.user.power === "OFF") && console.log("%cVeg Tent Exhaust Fan ON", "color: green;");
+            !power && (VegTentExhaust.user.power === "ON") && console.log("%cVeg Tent Exhaust Fan OFF", "color: yellow;");
             dk.tasmota.sendCommand(VegTentExhaust.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -289,8 +289,8 @@ function Automate() {
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = false);
             (dk.clock.time < dk.clock.sunrise) && (power = false);
             (dk.clock.time > (dk.clock.sunset - 1)) && (power = false);
-            power && (VegTentWater.user.power === "OFF") && console.log("Veg Tent Water Walls ON", "green");
-            !power && (VegTentWater.user.power === "ON") && console.log("Veg Tent Water Walls OFF", "yellow");
+            power && (VegTentWater.user.power === "OFF") && console.log("%cVeg Tent Water Walls ON", "color: green;");
+            !power && (VegTentWater.user.power === "ON") && console.log("%cVeg Tent Water Walls OFF", "color: yellow;");
             dk.tasmota.sendCommand(VegTentWater.ip, "POWER "+power, myapp.updateScreen);
         }
 
@@ -298,8 +298,8 @@ function Automate() {
         if (VegTentHeat && VegTentHeat.user.automate) {
             let power = false;
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = true);
-            power && (VegTentHeat.user.power === "OFF") && console.log("Veg Tent Heater ON", "green");
-            !power && (VegTentHeat.user.power === "ON") && console.log("Veg Tent Heater OFF", "yellow");
+            power && (VegTentHeat.user.power === "OFF") && console.log("%cVeg Tent Heater ON", "color: green;");
+            !power && (VegTentHeat.user.power === "ON") && console.log("%cVeg Tent Heater OFF", "color: yellow;");
             dk.tasmota.sendCommand(VegTentHeat.ip, "POWER "+power, myapp.updateScreen);
         }
 
