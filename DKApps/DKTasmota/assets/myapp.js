@@ -513,8 +513,8 @@ myapp.scanDevices = function myapp_scanDevices() {
             dk.tasmota.saveDevicesToServer();
             dk.tasmota.saveDevicesToLocalStorage();
             console.log("\n");
-            console.log("Scan Complete", "green");
-            console.log("(" + dk.tasmota.devices.length + ") Tasmota Devices found", "green");
+            console.log("%c Scan Complete", "color:green;");
+            console.log("%c (" + dk.tasmota.devices.length + ") Tasmota Devices found", "color:green;");
         }
     });
 }
