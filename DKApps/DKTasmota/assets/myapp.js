@@ -4,7 +4,8 @@
 // TODO: start xconsole early and keep a backup of all message to give to dk.console keep a list of console messages.
 // TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
 //**************************************
-const myapp = new Object;
+const MyApp = function(){};
+const myapp = new MyApp;
 
 myapp.loadFiles = function myapp_loadFiles() {
     //If you initiate any values here, they may fail.
@@ -53,7 +54,7 @@ myapp.loadFiles = function myapp_loadFiles() {
 }
 
 myapp.loadApp = function myapp_loadApp() {
-    DKPlugin.errorCatcher(myapp);
+    dk.errorCatcher(myapp, "myapp");
     dk.errorhandler.create();
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
@@ -401,7 +402,7 @@ myapp.infoWindow = function myapp_infoWindow(device) {
     div.innerHTML = jsonSuper;
 }
 
-myapp.settingsWindow = function settingsWindow(device) {
+myapp.settingsWindow = function myapp_settingsWindow(device) {
     const div = dk.frame.createNewWindow(device.Status.DeviceName + " Settings", "500rem", "400rem");
     if (!div)
         return;
