@@ -48,7 +48,7 @@ function Automate() {
         temperatureTarget: 77,
         temperatureZone: 25,
         temperatureAlarm: 30,
-        humidityTarget: 50,
+        humidityTarget: 55,
         humidityZone: 25,
         humidityAlarm: 30
     }
