@@ -53,7 +53,7 @@ myapp.loadFiles = function myapp_loadFiles() {
 }
 
 myapp.loadApp = function myapp_loadApp() {
-    dk.errorCatcher(myapp);
+    DKPlugin.errorCatcher(myapp);
     dk.errorhandler.create();
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
