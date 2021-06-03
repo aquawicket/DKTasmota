@@ -11,9 +11,9 @@ myapp.loadFiles = function myapp_loadFiles() {
     //This function should only load files, and make declarations, Not initiate variable values or make assignments.
     //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
     dk.create("DK/DKPlugin.js");
+    dk.create("DK/DKTrace.js");
     dk.create("DK/DKErrorHandler.js");
     dk.create("DK/DKPhp.js");
-    dk.create("DK/DKTrace.js");
     dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
@@ -533,6 +533,9 @@ myapp.saveDevices = function myapp_saveDevices() {
 }
 
 myapp.updateScreen = function myapp_updateScreen(success, device, data) {
+   //DEBUG - used to test errors
+   //dk.audio.play("DKTasmota/PowerDown.mp3");
+
     require({success},{device},{data});
     const table = byId("deviceTable");
     if (!table)
