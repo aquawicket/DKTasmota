@@ -1,7 +1,11 @@
 "use strict";
 // https://tasmota.github.io/docs/Commands/
 
-dk.tasmota = new DKPlugin("dk_tasmota");
+DKTasmota.prototype = Object.create(DKPlugin.prototype);
+function DKTasmota(identifier) {
+    return DKPlugin.call(this, identifier);
+}
+dk.tasmota = new DKTasmota("DKTasmota");
 dk.tasmota.devices = new Array;
 
 // Device Array

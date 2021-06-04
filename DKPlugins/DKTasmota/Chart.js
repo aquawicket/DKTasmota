@@ -1,7 +1,11 @@
 "use strict";
 //https://www.chartjs.org/
 
-const chart = new DKPlugin("chart");
+Chart.prototype = Object.create(DKPlugin.prototype);
+function Chart(identifier) {
+    return DKPlugin.call(this, identifier);
+}
+const chart = new Chart("Chart");
 
 chart.create = function chart_create(chartCanvas) {
 
