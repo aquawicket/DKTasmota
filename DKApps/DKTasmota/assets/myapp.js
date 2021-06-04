@@ -36,11 +36,12 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKDevTools/DKDevToolsButton.js");
     dk.create("DKChart/DKChart.js");
     //dk.create("DKCodeMirror/DKCodeMirror.js");
-    dk.create("DKTasmota/superagent.js");
+    //dk.create("DKTasmota/superagent.js");
     dk.create("DKTasmota/DKTasmota.js");
     dk.create("DKTasmota/Automation.js");
     dk.create("DKTasmota/VPDCalculator.js");
     dk.create("DKTasmota/Chart.js");
+    
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");
