@@ -1,3 +1,11 @@
+CPP_DK_Create("DKWindow");
+CPP_DK_Create("DKRml");
+//CPP_DK_Create("DKSDLText");
+
+location.href = CPP_DKAssets_LocalAssets()+"index2.html";
+//location.href = CPP_DKAssets_LocalAssets()+"DKWebTest/index.html";
+
+/*
 var USE_CEF = 1;
 //var url = "http://www.google.com/";
 //var url = "chrome://gpu";
@@ -7,7 +15,7 @@ var width = 800;
 var height = 600;
 CPP_DK_Create("DKCef,Cef,0,0,"+width+","+height+","+url);
 CPP_DKCef_NewBrowser("Cef",0,0,width,height,url);
-
+*/
 
 /*
 let assets = CPP_DKAssets_LocalAssets();
