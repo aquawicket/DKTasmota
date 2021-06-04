@@ -6,7 +6,7 @@ function DKVpdCalc(identifier) {
 }
 dk.vpdcalc = new DKVpdCalc("DKVpdCalc");
 
-dk.vpdcalc.create = function dk_vpdcalc_create(parent, top, bottom, left, right, width, height) {
+DKVpdCalc.prototype.create = function DKVpdCalc_create(parent, top, bottom, left, right, width, height) {
     //DKLoadHtmlFile("VPDCalculator.html", function(success, url, data) {
     //if (!success)
     //return error("!success");
@@ -26,7 +26,7 @@ dk.vpdcalc.create = function dk_vpdcalc_create(parent, top, bottom, left, right,
     //});
 }
 
-dk.vpdcalc.calcVpd = function dk_vpdcalc_calcVpd(airTemp, leafTempOffsetF, humidity, tempsInF) {
+DKVpdCalc.prototype.calcVpd = function DKVpdCalc_calcVpd(airTemp, leafTempOffsetF, humidity, tempsInF) {
     let tempF;
     if (tempsInF) {
         tempF = airTemp;
@@ -39,18 +39,18 @@ dk.vpdcalc.calcVpd = function dk_vpdcalc_calcVpd(airTemp, leafTempOffsetF, humid
 }
 
 // returns temp in F
-dk.vpdcalc.calcTemp = function dk_vpdcalc_calcTemp(vpdAir, rh) {
+DKVpdCalc.prototype.calcTemp = function DKVpdCalc_calcTemp(vpdAir, rh) {
     let t = 9621 / (17.863 - Math.log(vpdAir / ((1 - rh / 100) * 3.386))) - 460;
     return t;
 }
 
 // assumes temp in F
-dk.vpdcalc.calcRh = function dk_vpdcalc_calcRh(vpdAir, tempF) {
+DKVpdCalc.prototype.calcRh = function DKVpdCalc_calcRh(vpdAir, tempF) {
     let rh = 100 * (1 - vpdAir / (3.386 * Math.exp(17.863 - 9621 / (tempF + 460))));
     return rh;
 }
 
-dk.vpdcalc.convertAirTemp = function dk_vpdcalc_convertAirTemp(temp, fToC) {
+DKVpdCalc.prototype.convertAirTemp = function DKVpdCalc_convertAirTemp(temp, fToC) {
     if (fToC) {
         return (temp - 32) * 5 / 9;
     } else {
@@ -58,7 +58,7 @@ dk.vpdcalc.convertAirTemp = function dk_vpdcalc_convertAirTemp(temp, fToC) {
     }
 }
 
-dk.vpdcalc.convertLeafTemp = function dk_vpdcalc_convertLeafTemp(temp, fToC) {
+DKVpdCalc.prototype.convertLeafTemp = function DKVpdCalc_convertLeafTemp(temp, fToC) {
     if (fToC) {
         return temp * 5 / 9;
     } else {
@@ -66,7 +66,7 @@ dk.vpdcalc.convertLeafTemp = function dk_vpdcalc_convertLeafTemp(temp, fToC) {
     }
 }
 
-dk.vpdcalc.calculate = function dk_vpdcalc_calculate() {
+DKVpdCalc.prototype.calculate = function DKVpdCalc_calculate() {
     let tempCVal;
     // = Number(document.getElementById('tempCInput').value);
     let tempFVal;

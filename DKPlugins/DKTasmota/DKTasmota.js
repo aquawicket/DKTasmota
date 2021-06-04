@@ -103,12 +103,12 @@ let theDevice = {
 }
 */
 
-dk.tasmota.init = function dk_tasmota_init() {
+DKTasmota.prototype.init = function DKTasmota_init() {
     dk.tasmota.devices = [];
 }
 
 //return a Device by partial matching name
-dk.tasmota.device = function dk_tasmota_device(str) {
+DKTasmota.prototype.device = function DKTasmota_device(str) {
     if (!dk.tasmota.devices || !dk.tasmota.devices.length) {
         //console.warn("dk.tasmota.devices invalid");
         return false;
@@ -125,7 +125,7 @@ dk.tasmota.device = function dk_tasmota_device(str) {
     }
 }
 
-dk.tasmota.device.loadDevicesFromLocalStorage = function dk_tasmota_loadDevicesFromLocalStorage() {
+DKTasmota.prototype.device.loadDevicesFromLocalStorage = function DKTasmota_loadDevicesFromLocalStorage() {
     const data = dk.loadFromLocalStorage("devices");
     if (!data)
         return false;
@@ -134,12 +134,12 @@ dk.tasmota.device.loadDevicesFromLocalStorage = function dk_tasmota_loadDevicesF
 
 }
 
-dk.tasmota.saveDevicesToLocalStorage = function dk_tasmota_saveDevicesToLocalStorage() {
+DKTasmota.prototype.saveDevicesToLocalStorage = function DKTasmota_saveDevicesToLocalStorage() {
     const devicesString = JSON.stringify(dk.tasmota.devices);
     dk.saveToLocalStorage("devices", devicesString);
 }
 
-dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(callback) {
+DKTasmota.prototype.loadDevicesFromServer = function DKTasmota_loadDevicesFromServer(callback) {
     const path = "USER/devices.js";
     dk.json.loadJsonFromFile(path, function dk_json_loadJsonFromFile_callback(json) {
         if (!json) {
@@ -151,7 +151,7 @@ dk.tasmota.loadDevicesFromServer = function dk_tasmota_loadDevicesFromServer(cal
     });
 }
 
-dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer(ip) {
+DKTasmota.prototype.saveDevicesToServer = function DKTasmota_saveDevicesToServer(ip) {
     dk.file.isDir("USER/", function(result) {
         !result && dk.file.makeDir("USER/");
     });
@@ -182,7 +182,7 @@ dk.tasmota.saveDevicesToServer = function dk_tasmota_saveDevicesToServer(ip) {
     //TODO - tell all clients to update.
 }
 
-dk.tasmota.createDevice = function dk_tasmota_createDevice(ip) {
+DKTasmota.prototype.createDevice = function DKTasmota_createDevice(ip) {
     const dev = {
         'ip': ip,
         'user': {}
@@ -191,7 +191,7 @@ dk.tasmota.createDevice = function dk_tasmota_createDevice(ip) {
     return dk.tasmota.devices[dk.tasmota.devices.length - 1];
 }
 
-dk.tasmota.initializeDevices = function dk_tasmota_initializeDevices(callback) {
+DKTasmota.prototype.initializeDevices = function DKTasmota_initializeDevices(callback) {
     if (!callback)
         return error("callback invalid");
     if (!dk.tasmota.devices || !dk.tasmota.devices.length) {
@@ -227,7 +227,7 @@ dk.tasmota.initializeDevices = function dk_tasmota_initializeDevices(callback) {
 }
 
 //return all local network device ip addresses that respond to /cm?cmnd=CORS 
-dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
+DKTasmota.prototype.getDevices = function DKTasmota_getDevices(ipPrefix, callback) {
     let tasmotaDeviceCount = 0;
     let devicesScanned = 0;
     //scan 192.168.1.1 thru 192.168.1.254
@@ -275,7 +275,7 @@ dk.tasmota.getDevices = function dk_tasmota_getDevices(ipPrefix, callback) {
     }
 }
 
-dk.tasmota.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback) {
+DKTasmota.prototype.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback) {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         const ip = dk.tasmota.devices[n].ip;
         if (ip !== ipAddress && ipAddress !== "ALL")
@@ -306,7 +306,7 @@ dk.tasmota.updateDevices = function dk_tasmote_updateDevices(ipAddress, callback
     }
 }
 
-dk.tasmota.sendCommand = function dk_tasmota_sendCommand(ipAddress, command, callback) {
+DKTasmota.prototype.sendCommand = function DKTasmota_sendCommand(ipAddress, command, callback) {
     command = encodeURIComponent(command).replace(";", "%3B");
     dk.sendRequest("GET", "http://" + ipAddress + "/cm?cmnd=" + command, function dk_sendRequest_callback(success, url, data) {
         if (!url)

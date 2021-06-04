@@ -7,7 +7,7 @@ function Chart(identifier) {
 }
 const chart = new Chart("Chart");
 
-chart.create = function chart_create(chartCanvas) {
+Chart.prototype.create = function Chart_create(chartCanvas) {
 
     dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", openChartSettings);
 
@@ -96,7 +96,7 @@ function openChartSettings() {
     chartSettings.appendChild(logToFileLabel);
 }
 
-chart.addDatasets2 = function dk_chart_addDatasets2() {
+Chart.prototype.addDatasets2 = function Chart_addDatasets2() {
     dk.tasmota.device("014") && chart.addDataset("A Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("014").ip, "sensor1", true);
     dk.tasmota.device("014") && chart.addDataset("A Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("014").ip, "sensor2", true);
     dk.tasmota.device("014") && chart.addDataset("A Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("014").ip, "sensor3", true);
@@ -130,7 +130,7 @@ chart.addDatasets2 = function dk_chart_addDatasets2() {
     dk.tasmota.device("004") && chart.addDataset("Veg Tent Lights", "rgb(100,60,10)", dk.tasmota.device("004").ip, "switch1", true);
 }
 
-chart.addDatasets = function dk_chart_addDatasets() {
+Chart.prototype.addDatasets = function Chart_addDatasets() {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         if (!dk.tasmota.devices[n].Status)
             continue;
@@ -149,7 +149,7 @@ chart.addDatasets = function dk_chart_addDatasets() {
     }
 }
 
-chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
+Chart.prototype.updateDevice = function Chart_updateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
     if (!this.lineChart)
@@ -199,7 +199,7 @@ chart.updateDevice = function dk_chart_updateDevice(device, identifier, data) {
     //chart.settings.logToFile && chart.appendDatasetToServer(device.ip);
 }
 
-chart.selectChart = function dk_chart_selectChart(ip) {
+Chart.prototype.selectChart = function Chart_selectChart(ip) {
     let borderColor;
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip) {
@@ -213,7 +213,7 @@ chart.selectChart = function dk_chart_selectChart(ip) {
     return borderColor;
 }
 
-chart.toggleChart = function dk_chart_toggleChart(ip) {
+Chart.prototype.toggleChart = function Chart_toggleChart(ip) {
     let borderColor;
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip) {
@@ -225,7 +225,7 @@ chart.toggleChart = function dk_chart_toggleChart(ip) {
     return borderColor;
 }
 
-chart.addDataset = function dk_chart_addDataset(label, borderColor, ip, identifier, hidden) {
+Chart.prototype.addDataset = function Chart_addDataset(label, borderColor, ip, identifier, hidden) {
     if (!ip)
         return error("ip invalid");
     if (!this.lineChart)
@@ -271,7 +271,7 @@ chart.addDataset = function dk_chart_addDataset(label, borderColor, ip, identifi
     this.lineChart.update();
 }
 
-chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, data) {
+Chart.prototype.appendDatasetToServer = function Chart_appendDatasetToServer(label, data) {
     const currentdate = new Date();
     const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
     const json = ({
@@ -283,7 +283,7 @@ chart.appendDatasetToServer = function dk_chart_appendDatasetToServer(label, dat
     );
 }
 
-chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
+Chart.prototype.saveDatasetsToServer = function Chart_saveDatasetsToServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const json = this.lineChart.data.datasets[n].data;
@@ -295,7 +295,7 @@ chart.saveDatasetsToServer = function dk_chart_saveDatasetsToServer(ip) {
     }
 }
 
-chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer(ip) {
+Chart.prototype.loadDatasetsFromServer = function Chart_loadDatasetsFromServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             let file = "USER/" + this.lineChart.data.datasets[n].label + ".js";
@@ -320,7 +320,7 @@ chart.loadDatasetsFromServer = function dk_chart_loadDatasetsFromServer(ip) {
     }
 }
 
-chart.saveDatasetsToLocalStorage = function chart_saveDatasetsToLoaclStorage(ip) {
+Chart.prototype.saveDatasetsToLocalStorage = function Chart_saveDatasetsToLoaclStorage(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const data = JSON.stringify(this.lineChart.data.datasets[n].data);
@@ -329,7 +329,7 @@ chart.saveDatasetsToLocalStorage = function chart_saveDatasetsToLoaclStorage(ip)
     }
 }
 
-chart.loadDatasetsFromLocalStorage = function chart_loadDatasetsFromLocalStorage(ip) {
+Chart.prototype.loadDatasetsFromLocalStorage = function Chart_loadDatasetsFromLocalStorage(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const label = this.lineChart.data.datasets[n].label;
@@ -341,7 +341,7 @@ chart.loadDatasetsFromLocalStorage = function chart_loadDatasetsFromLocalStorage
     this.lineChart.update();
 }
 
-chart.clearDatasets = function dk_chart_clearDatasets(ip) {
+Chart.prototype.clearDatasets = function Chart_clearDatasets(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             this.lineChart.data.datasets[n].data = [];
