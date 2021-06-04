@@ -30,12 +30,3 @@ CPP_DK_Execute(short_path +" "+assets+"dktasmota.html");
 CPP_DK_Sleep(1000);
 CPP_DK_Exit();
 */
-
-
-
-//CPP_DK_Create("DKWindow");
-//CPP_DK_Create("DKRml");
-//CPP_DK_Create("DKSDLText");
-//location.href = CPP_DKAssets_LocalAssets()+"/index.html";
-
-//location.href = CPP_DKAssets_LocalAssets()+"/DKWebTest/index.html";
