@@ -1,10 +1,10 @@
 "use strict";
 
-DKVpdCalc.prototype = Object.create(DKPlugin.prototype);
-function DKVpdCalc(identifier) {
-    return DKPlugin.call(this, identifier);
+dk.vpdcalc = new DKVpdCalc();
+
+function DKVpdCalc() {
+    return DKPlugin.call(this, arguments);
 }
-dk.vpdcalc = new DKVpdCalc("DKVpdCalc");
 
 DKVpdCalc.prototype.create = function DKVpdCalc_create(parent, top, bottom, left, right, width, height) {
     //DKLoadHtmlFile("VPDCalculator.html", function(success, url, data) {

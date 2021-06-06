@@ -4,7 +4,7 @@
 // TODO: start xconsole early and keep a backup of all message to give to dk.console keep a list of console messages.
 // TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
 //**************************************
-const MyApp = function(){};
+const MyApp = function() {};
 const myapp = new MyApp;
 
 myapp.loadFiles = function myapp_loadFiles() {
@@ -14,14 +14,15 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DK/DKPlugin.js");
     dk.create("DK/DKTrace.js");
     dk.create("DK/DKErrorHandler.js");
+
     dk.create("DK/DKPhp.js");
     dk.create("DK/DKJson.js");
-    dk.create("DK/DKValidate.js");
+    dk.create("DKFile/DKFile.js");
+    //dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
     dk.create("DK/DKClock.js");
-    dk.create("DK/DKMqtt.js");
-    dk.create("DK/DKNotifications.js");
-    dk.create("DKFile/DKFile.js");
+    //dk.create("DK/DKMqtt.js");
+    //dk.create("DK/DKNotifications.js");
     dk.create("DKDebug/DKDebug.js");
     dk.create("DKAudio/DKAudio.js");
     dk.create("DKGui/DKConsole.js");
@@ -41,7 +42,7 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKTasmota/Automation.js");
     dk.create("DKTasmota/VPDCalculator.js");
     dk.create("DKTasmota/Chart.js");
-    
+
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");
@@ -82,18 +83,15 @@ myapp.loadGui = function myapp_loadGui() {
     myapp.createButtons(document.body);
     dk.clock.create(document.body, "2rem");
     dk.clock.setLatitudeLongitude(33.7312525, -117.3028688);
-    //dk.clock.getSunrise(33.7312525, -117.3028688);
-    //dk.clock.getSunset(33.7312525, -117.3028688);
     myapp.createDeviceTable(document.body);
     const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    chart.create(ctx);
-
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         console.info("dk.tasmota.devices empty");
-    else 
+    else
         for (let n = 0; n < dk.tasmota.devices.length; n++)
             myapp.addDeviceToTable(dk.tasmota.devices[n]);
     dk.devtoolsbutton.create();
+    chart.create(ctx);
 }
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
@@ -127,7 +125,7 @@ myapp.createButtons = function myapp_createButtons(parent) {
     dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.5);
     function volume_onclick() {
         dk.audio.toggleMute("DKTasmota/PowerDown.mp3");
-        if(dk.audio.muted)
+        if (dk.audio.muted)
             volume.src = "DKAudio/volume_0.png";
         else
             volume.src = "DKAudio/volume_100.png";
@@ -535,10 +533,15 @@ myapp.saveDevices = function myapp_saveDevices() {
 }
 
 myapp.updateScreen = function myapp_updateScreen(success, device, data) {
-   //DEBUG - used to test errors
-   //dk.audio.play("DKTasmota/PowerDown.mp3");
-
-    require({success},{device},{data});
+    //DEBUG - used to test errors
+    //dk.audio.play("DKTasmota/PowerDown.mp3");
+    required({
+        success
+    }, {
+        device
+    }, {
+        data
+    });
     const table = byId("deviceTable");
     if (!table)
         return error("table invlid");

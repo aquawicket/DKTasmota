@@ -1,11 +1,12 @@
 "use strict";
 // https://tasmota.github.io/docs/Commands/
 
-DKTasmota.prototype = Object.create(DKPlugin.prototype);
-function DKTasmota(identifier) {
-    return DKPlugin.call(this, identifier);
+dk.tasmota = new DKTasmota();
+
+function DKTasmota() {
+    return DKPlugin.call(this, arguments);
 }
-dk.tasmota = new DKTasmota("DKTasmota");
+
 dk.tasmota.devices = new Array;
 
 // Device Array
@@ -174,7 +175,7 @@ DKTasmota.prototype.saveDevicesToServer = function DKTasmota_saveDevicesToServer
         delete dk.tasmota.devices[n].StatusSTS;
         delete dk.tasmota.devices[n].StatusTIM;
     }
-    
+
     //Save devices into one file
     const path = "USER/devices.js";
     dk.json.saveJsonToFile(dk.tasmota.devices, path, 0, console.log);
@@ -317,7 +318,7 @@ DKTasmota.prototype.sendCommand = function DKTasmota_sendCommand(ipAddress, comm
         if (!success || !data)
             return callback(success, device, data);
         let deviceData = JSON.parse(data);
-        if(!deviceData)
+        if (!deviceData)
             return error("deviceData invalid", callback(false, device, data));
         deviceData.POWER && Object.assign(device.StatusSTS, deviceData);
         deviceData.DeviceName && Object.assign(device.Status, deviceData);
