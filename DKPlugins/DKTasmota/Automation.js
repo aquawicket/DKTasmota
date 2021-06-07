@@ -20,7 +20,7 @@ let VegTentExhaust;
 let VegTentWater;
 let VegTentHeat;
 
-function Automate() {
+dk.automate = function dk_automate() {
 
     // Device alias accessors
     !ATentCo2 && (ATentCo2 = dk.tasmota.device("A Tent Co2"));

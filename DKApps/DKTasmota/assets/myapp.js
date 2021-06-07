@@ -53,11 +53,13 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
+
+    //dk.create("AddRemoveListeners.js");
 }
 
 myapp.loadApp = function myapp_loadApp() {
-    dk.errorCatcher(myapp, "myapp");
-    dk.errorhandler.create();
+    //dk.errorCatcher(myapp, "myapp");
+    //dk.errorhandler.create();
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
@@ -98,7 +100,7 @@ myapp.mainAppLoop = function myapp_mainAppLoop() {
     navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
     //dk.tasmota.loadDevicesFromServer();
     dk.tasmota.updateDevices("ALL", myapp.updateScreen);
-    myapp.automate && Automate();
+    dk.automate && dk.automate();
 }
 
 myapp.createButtons = function myapp_createButtons(parent) {
