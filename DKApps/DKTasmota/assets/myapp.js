@@ -11,8 +11,8 @@ myapp.loadFiles = function myapp_loadFiles() {
     //If you initiate any values here, they may fail.
     //This function should only load files, and make declarations, Not initiate variable values or make assignments.
     //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
-    dk.create("DK/DKPlugin.js");
-    dk.create("DK/DKTrace.js");
+    //dk.create("DK/DKPlugin.js");
+    DKPlugin("DK/DKTrace.js");
     dk.create("DK/DKErrorHandler.js");
 
     dk.create("DK/DKPhp.js");
