@@ -48,7 +48,7 @@ dk.automate = function dk_automate() {
         temperatureTarget: 77,
         temperatureZone: 25,
         temperatureAlarm: 30,
-        humidityTarget: 55,
+        humidityTarget: 70,
         humidityZone: 25,
         humidityAlarm: 30
     }

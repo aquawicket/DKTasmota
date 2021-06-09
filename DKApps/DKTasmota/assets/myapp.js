@@ -58,8 +58,8 @@ myapp.loadFiles = function myapp_loadFiles() {
 }
 
 myapp.loadApp = function myapp_loadApp() {
-    //dk.errorCatcher(myapp, "myapp");
-    //dk.errorhandler.create();
+    dk.errorCatcher(myapp, "myapp");
+    dk.errorhandler.create();
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
@@ -145,15 +145,16 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
 
-    const table = dk.table.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
+    dk.table = DKTable.prototype.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
+
 
     //Create Header Row as a normal <tr>
-    //const deviceHeader = dk.table.addColumn(table, "HEADER", "device"); //FIXME
-    const row = dk.table.addRow(table, "HEADER", "device");
+    //const deviceHeader = dk.table.addColumn(dk.table.table, "HEADER", "device"); //FIXME
+    const row = dk.table.addRow(dk.table.table, "HEADER", "device");
     row.style.backgroundColor = "rgb(50,50,50)";
     row.style.fontWeight = "bold";
     row.style.cursor = "pointer";
-    const deviceCell = dk.table.getCellByName(table, "HEADER", "device");
+    const deviceCell = dk.table.getCellByName(dk.table.table, "HEADER", "device");
     deviceCell.innerHTML = "Devices (0)";
     deviceCell.style.width = "230rem";
     deviceCell.onclick = function HEADER_device_onclick() {
@@ -161,8 +162,8 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
         myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "power");
-    const powerCell = dk.table.getCellByName(table, "HEADER", "power");
+    dk.table.addColumn(dk.table.table, "power");
+    const powerCell = dk.table.getCellByName(dk.table.table, "HEADER", "power");
     powerCell.innerHTML = "power";
     powerCell.style.width = "50rem";
     powerCell.style.textAlign = "center";
@@ -171,8 +172,8 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
         myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "data");
-    const dataCell = dk.table.getCellByName(table, "HEADER", "data");
+    dk.table.addColumn(dk.table.table, "data");
+    const dataCell = dk.table.getCellByName(dk.table.table, "HEADER", "data");
     dataCell.innerHTML = "data";
     dataCell.style.width = "150rem";
     dataCell.style.textAlign = "center";
@@ -181,8 +182,8 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
         myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "automate");
-    const automateCell = dk.table.getCellByName(table, "HEADER", "automate");
+    dk.table.addColumn(dk.table.table, "automate");
+    const automateCell = dk.table.getCellByName(dk.table.table, "HEADER", "automate");
     automateCell.innerHTML = "automate";
     automateCell.style.width = "50rem";
     automateCell.style.textAlign = "center";
@@ -191,8 +192,8 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
         myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "wifi");
-    const wifiCell = dk.table.getCellByName(table, "HEADER", "wifi");
+    dk.table.addColumn(dk.table.table, "wifi");
+    const wifiCell = dk.table.getCellByName(dk.table.table, "HEADER", "wifi");
     wifiCell.innerHTML = "wifi signal";
     wifiCell.style.width = "70rem";
     wifiCell.style.textAlign = "center";
@@ -201,8 +202,8 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
         myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "options");
-    const optionsCell = dk.table.getCellByName(table, "HEADER", "options");
+    dk.table.addColumn(dk.table.table, "options");
+    const optionsCell = dk.table.getCellByName(dk.table.table, "HEADER", "options");
     optionsCell.innerHTML = "options";
     optionsCell.style.width = "120rem";
     optionsCell.style.textAlign = "center";
@@ -212,7 +213,7 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
 
 myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     const table = byId("deviceTable");
-    const row = dk.table.addRow(table, device.ip);
+    const row = dk.table.addRow(dk.table.table, device.ip);
     row.setAttribute("ip", device.ip);
     if (row.rowIndex % 2 == 0) {
         //even
@@ -222,14 +223,14 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         row.style.backgroundColor = "rgb(60,60,60)";
     }
 
-    const deviceCell = dk.table.getCellByName(table, device.ip, "device");
+    const deviceCell = dk.table.getCellByName(dk.table.table, device.ip, "device");
     device.Status ? deviceCell.innerHTML = "<a>" + device.Status.DeviceName + "</a>" : deviceCell.innerHTML = "<a>" + device.ip + "</a>";
     deviceCell.style.cursor = "pointer";
     deviceCell.onclick = function deviceCell_onclick() {
         const deviceWindow = window.open("http://" + device.ip, device.ip, "_blank, width=500, height=700");
     }
 
-    const powerCell = dk.table.getCellByName(table, device.ip, "power");
+    const powerCell = dk.table.getCellByName(dk.table.table, device.ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
     powerCell.onclick = function powerCell_onclick() {
@@ -242,10 +243,10 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         dk.tasmota.sendCommand(device.ip, "POWER Toggle", myapp.updateScreen);
     }
 
-    const dataCell = dk.table.getCellByName(table, device.ip, "data");
+    const dataCell = dk.table.getCellByName(dk.table.table, device.ip, "data");
     dataCell.style.textAlign = "center";
 
-    const automateCell = dk.table.getCellByName(table, device.ip, "automate");
+    const automateCell = dk.table.getCellByName(dk.table.table, device.ip, "automate");
     automateCell.style.textAlign = "center";
     const auto = document.createElement("img");
     auto.id = device.ip + "automate";
@@ -263,10 +264,10 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     }
     automateCell.appendChild(auto);
 
-    const wifiCell = dk.table.getCellByName(table, device.ip, "wifi");
+    const wifiCell = dk.table.getCellByName(dk.table.table, device.ip, "wifi");
     wifiCell.style.textAlign = "center";
 
-    const optionsCell = dk.table.getCellByName(table, device.ip, "options");
+    const optionsCell = dk.table.getCellByName(dk.table.table, device.ip, "options");
     optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
@@ -284,7 +285,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         },
         onclick: function restart_onclick() {
             dk.create("DKGui/DKMessageBox.js", function() {
-                dk.messagebox.createConfirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_createConfirm_callback(rval) {
+                DKMessageBox.prototype.createConfirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_createConfirm_callback(rval) {
                     if (rval) {
                         restart.src = "DKGui/loading.gif";
                         dk.tasmota.sendCommand(device.ip, "Restart 1", myapp.updateScreen);
@@ -366,7 +367,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     });
 
     //Do some final processing
-    const deviceHeader = dk.table.getCellByName(table, "HEADER", "device");
+    const deviceHeader = dk.table.getCellByName(dk.table.table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
     dk.tasmota.updateDevices(device.ip, myapp.updateScreen);
     dk.table.sort("deviceTable", "device");
@@ -374,14 +375,14 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
 }
 
 myapp.preferencesWindow = function myapp_preferencesWindow() {
-    const div = dk.frame.createNewWindow("Preferenes", "500rem", "400rem");
+    const div = DKFrame.prototype.createNewWindow("Preferenes", "500rem", "400rem");
     if (!div)
         return;
     div.style.backgroundColor = "rgb(36,36,36)";
 }
 
 myapp.infoWindow = function myapp_infoWindow(device) {
-    const div = dk.frame.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
+    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
     if (!div)
         return;
     div.style.fontSize = "12rem";
@@ -404,17 +405,16 @@ myapp.infoWindow = function myapp_infoWindow(device) {
 }
 
 myapp.settingsWindow = function myapp_settingsWindow(device) {
-    const div = dk.frame.createNewWindow(device.Status.DeviceName + " Settings", "500rem", "400rem");
+    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Settings", "500rem", "400rem");
     if (!div)
         return;
     //TODO
 }
 
 myapp.consoleWindow = function myapp_consoleWindow(device) {
-    const div = dk.frame.createNewWindow(device.Status.DeviceName + " Console", "500rem", "400rem");
+    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Console", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.backgroundColor = "rgb(50,50,50)";
     div.style.overflow = "auto";
 
@@ -547,7 +547,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     const table = byId("deviceTable");
     if (!table)
         return error("table invlid");
-    const row = dk.table.getRowByName(table, device.ip);
+    const row = dk.table.getRowByName(dk.table.table, device.ip);
     if (!row)
         return error("row invalid");
 
@@ -567,7 +567,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     // UPDATE TABLE
     const deviceName = device.Status.DeviceName;
     if (deviceName) {
-        const deviceCell = dk.table.getCellByName(table, device.ip, "device");
+        const deviceCell = dk.table.getCellByName(dk.table.table, device.ip, "device");
         deviceCell.innerHTML = "<a title='" + device.ip + "'>" + deviceName + "</a>";
         dk.table.sort("deviceTable", "device");
         myapp.updateTableStyles();
@@ -575,7 +575,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
 
     const devicePower = device.StatusSTS.POWER;
     if (devicePower) {
-        const powerCell = dk.table.getCellByName(table, device.ip, "power");
+        const powerCell = dk.table.getCellByName(dk.table.table, device.ip, "power");
         powerCell.innerHTML = "<a>" + devicePower + "</a>";
         if (devicePower === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
@@ -586,7 +586,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         }
     }
 
-    const dataCell = dk.table.getCellByName(table, device.ip, "data");
+    const dataCell = dk.table.getCellByName(dk.table.table, device.ip, "data");
     dataCell.innerHTML = "";
     if (device.StatusSNS && device.StatusSNS.DS18B20 && device.StatusSNS.DS18B20.Temperature)
         device.user.temperature = device.StatusSNS.DS18B20.Temperature
@@ -667,7 +667,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         const num = (signal * scale / 100);
         const green = num.clamp(0, 255);
         const red = (510 - num).clamp(0, 255);
-        const wifiCell = dk.table.getCellByName(table, device.ip, "wifi");
+        const wifiCell = dk.table.getCellByName(dk.table.table, device.ip, "wifi");
         wifiCell.innerHTML = signal + "%";
         wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }

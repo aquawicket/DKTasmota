@@ -320,6 +320,7 @@ DKTasmota.prototype.sendCommand = function DKTasmota_sendCommand(ipAddress, comm
         let deviceData = JSON.parse(data);
         if (!deviceData)
             return error("deviceData invalid", callback(false, device, data));
+        !device.StatusSTS && (device.StatusSTS = {})
         deviceData.POWER && Object.assign(device.StatusSTS, deviceData);
         deviceData.DeviceName && Object.assign(device.Status, deviceData);
         deviceData.Wifi && Object.assign(device.StatusSTS, deviceData);
