@@ -17,10 +17,10 @@ myapp.loadFiles = function myapp_loadFiles() {
     DKPlugin("DK/DKPhp.js");
     DKPlugin("DK/DKJson.js");
     DKPlugin("DKFile/DKFile.js");
-    DKPlugin("DK/DKValidate.js");
+    //DKPlugin("DK/DKValidate.js");
     DKPlugin("DK/DKTime.js");
-    DKPlugin("DK/DKMqtt.js");
-    DKPlugin("DK/DKNotifications.js");
+    //DKPlugin("DK/DKMqtt.js");
+    //DKPlugin("DK/DKNotifications.js");
     DKPlugin("DKDebug/DKDebug.js");
     DKPlugin("DKAudio/DKAudio.js");
     DKPlugin("DKGui/DKConsole.js");
@@ -34,10 +34,10 @@ myapp.loadFiles = function myapp_loadFiles() {
     DKPlugin("DKGui/DKTable.js");
     DKPlugin("DKDevTools/DKDevToolsButton.js");
     DKPlugin("DKChart/DKChart.js");
-    DKPlugin("DKCodeMirror/DKCodeMirror.js");
+    //DKPlugin("DKCodeMirror/DKCodeMirror.js");
     DKPlugin("DKTasmota/DKTasmota.js");
     DKPlugin("DKTasmota/Automation.js");
-    DKPlugin("DKTasmota/VPDCalculator.js");
+    //DKPlugin("DKTasmota/VPDCalculator.js");
     DKPlugin("DKTasmota/Chart.js");
 
     dk.preloadImage("DKGui/loading.gif");
@@ -97,7 +97,7 @@ myapp.loadGui = function myapp_loadGui() {
             dk.time.lastHour = dk.time.hour
             console.debug("new hour " + dk.time.hour);
             //alert("!!! CHECK PLANTS !!!");
-            dk.create("DKGui/DKMessageBox.js", function() {
+            DKPlugin("DKGui/DKMessageBox.js", function() {
                 DKMessageBox.prototype.createMessage("CHECK PLANTS!", function(instance, okclicked) {
                     if (instance) {
                         console.log("instance: %c" + instance, "color:orange;")
@@ -300,7 +300,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
             paddingBottom: "2rem",
         },
         onclick: function restart_onclick() {
-            dk.create("DKGui/DKMessageBox.js", function() {
+            DKPlugin("DKGui/DKMessageBox.js", function() {
                 DKMessageBox.prototype.createConfirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_createConfirm_callback(rval) {
                     if (rval) {
                         restart.src = "DKGui/loading.gif";
