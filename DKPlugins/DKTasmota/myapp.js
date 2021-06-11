@@ -15,7 +15,7 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DK/DKJson.js");
     dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
-    dk.create("DK/DKClock.js");
+    dk.create("DK/DKTime.js");
     dk.create("DK/DKMqtt.js");
     dk.create("DK/DKNotifications.js");
     dk.create("DKFile/DKFile.js");
@@ -80,9 +80,9 @@ function LoadGui() {
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     CreateButtons(document.body);
-    dk.clock.create(document.body, "clock", "2rem", "", "25%");
-    dk.clock.getSunrise(33.7312525, -117.3028688);
-    dk.clock.getSunset(33.7312525, -117.3028688);
+    dk.time.create(document.body, "clock", "2rem", "", "25%");
+    dk.time.getSunrise(33.7312525, -117.3028688);
+    dk.time.getSunset(33.7312525, -117.3028688);
     CreateDeviceTable(document.body);
     const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     chart.create(ctx);

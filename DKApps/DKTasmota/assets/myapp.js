@@ -11,7 +11,7 @@ myapp.loadFiles = function myapp_loadFiles() {
     //If you initiate any values here, they may fail.
     //This function should only load files, and make declarations, Not initiate variable values or make assignments.
     //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
-    //dk.create("DK/DKPlugin.js");
+
     DKPlugin("DK/DKTrace.js");
     dk.create("DK/DKErrorHandler.js");
 
@@ -20,11 +20,11 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKFile/DKFile.js");
     //dk.create("DK/DKValidate.js");
     dk.create("DK/sun.js");
-    dk.create("DK/DKClock.js");
+    dk.create("DK/DKTime.js");
     //dk.create("DK/DKMqtt.js");
     //dk.create("DK/DKNotifications.js");
     dk.create("DKDebug/DKDebug.js");
-    dk.create("DKAudio/DKAudio.js");
+    !DUKTAPE && dk.create("DKAudio/DKAudio.js");
     dk.create("DKGui/DKConsole.js");
     dk.create("DKGui/DKGui.js");
     dk.create("DKGui/DKFrame.js");
@@ -34,7 +34,7 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.create("DKGui/DKResize.js");
     dk.create("DKGui/DKClipboard.js");
     dk.create("DKGui/DKTable.js");
-    dk.create("DKDevTools/DKDevToolsButton.js");
+    DKPlugin("DKDevTools/DKDevToolsButton.js");
     dk.create("DKChart/DKChart.js");
     //dk.create("DKCodeMirror/DKCodeMirror.js");
     //dk.create("DKTasmota/superagent.js");
@@ -60,6 +60,7 @@ myapp.loadFiles = function myapp_loadFiles() {
 myapp.loadApp = function myapp_loadApp() {
     dk.errorCatcher(myapp, "myapp");
     dk.errorhandler.create();
+    dk.time.create();
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
@@ -72,7 +73,7 @@ myapp.loadApp = function myapp_loadApp() {
         }
         myapp.loadGui();
 
-        //Run app main loop every 30 seconds
+        //Run app main loop every 60 seconds
         window.setInterval(myapp.mainAppLoop, 60000);
     });
 }
@@ -83,8 +84,8 @@ myapp.loadGui = function myapp_loadGui() {
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     myapp.createButtons(document.body);
-    dk.clock.create(document.body, "2rem");
-    dk.clock.setLatitudeLongitude(33.7312525, -117.3028688);
+    dk.time.createClock(document.body, "2rem");
+    dk.time.setLatitudeLongitude(33.7312525, -117.3028688);
     myapp.createDeviceTable(document.body);
     const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
@@ -94,13 +95,34 @@ myapp.loadGui = function myapp_loadGui() {
             myapp.addDeviceToTable(dk.tasmota.devices[n]);
     dk.devtoolsbutton.create();
     chart.create(ctx);
+
+    dk.time.addUpdater(function() {
+        !dk.time.lastHour && (dk.time.lastHour = dk.time.hour)
+        if (dk.time.lastHour !== dk.time.hour) {
+            dk.time.lastHour = dk.time.hour
+            console.debug("new hour " + dk.time.hour);
+            //alert("!!! CHECK PLANTS !!!");
+            dk.create("DKGui/DKMessageBox.js", function() {
+                DKMessageBox.prototype.createMessage("CHECK PLANTS!", function(instance, okclicked) {
+                    if (instance) {
+                        console.log("instance: %c" + instance, "color:orange;")
+                        instance.html.style.backgroundColor = "red";
+                    }
+                });
+            });
+        }
+    })
 }
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
-    navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
+    navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png"
     //dk.tasmota.loadDevicesFromServer();
-    dk.tasmota.updateDevices("ALL", myapp.updateScreen);
-    dk.automate && dk.automate();
+    dk.tasmota.updateDevices("ALL", myapp.updateScreen)
+    dk.automate && dk.automate()
+
+    if (dk.time.second === 16) {
+        console.log("16 seconds")
+    }
 }
 
 myapp.createButtons = function myapp_createButtons(parent) {
@@ -146,7 +168,6 @@ myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     parent.appendChild(deviceDiv);
 
     dk.table = DKTable.prototype.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
-
 
     //Create Header Row as a normal <tr>
     //const deviceHeader = dk.table.addColumn(dk.table.table, "HEADER", "device"); //FIXME
@@ -675,4 +696,4 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
 
-duktape && myapp.loadFiles();
+DUKTAPE && myapp.loadFiles();
