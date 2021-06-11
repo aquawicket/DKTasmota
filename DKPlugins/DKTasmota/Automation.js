@@ -77,7 +77,7 @@ dk.automate = function dk_automate() {
         humidityAlarm: 30
     }
     const empty_preset = {
-        temperatureTarget: 95,
+        temperatureTarget: 100,
         temperatureZone: 25,
         temperatureAlarm: 30,
         humidityTarget: 50,

@@ -1,49 +1,46 @@
 /*
 "use strict";
 
-const myapp = new Object;
+//**************************************
+// TODO: start xconsole early and keep a backup of all messages to give to dk.console later..
+// TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
+//**************************************
+const MyApp = function() {};
+const myapp = new MyApp;
 
 myapp.loadFiles = function myapp_loadFiles() {
-    //If you initiate anything here, it may fail.
-    //This function should only load files, and make declarations, Not initiate variable values are make assignments.
-    //DKloadApp()) will be called after this loads everything. This gives a chance to grab assets without a million callbacks.
-    dk.create("DK/DKPlugin.js");
-    dk.create("DK/DKErrorHandler.js");
-    dk.create("DK/DK.css");
-    dk.create("DK/DKPhp.js");
-    dk.create("DK/DKTrace.js");
-    dk.create("DK/DKJson.js");
-    dk.create("DK/DKValidate.js");
-    dk.create("DK/sun.js");
-    dk.create("DK/DKTime.js");
-    dk.create("DK/DKMqtt.js");
-    dk.create("DK/DKNotifications.js");
-    dk.create("DKFile/DKFile.js");
-	dk.create("DKDebug/DKDebug.js");
-	dk.create("DKAudio/DKAudio.js", function dk_create_callback() {
-        //dk.audio.preloadAudio("DKTasmota/PowerDown.mp3");
-    });
-	dk.create("DKGui/DKGui.js");
-    dk.create("DKGui/DKFrame.css");
-    dk.create("DKGui/DKFrame.js");
-    dk.create("DKGui/DKMenu.js");
-    dk.create("DKGui/DKMessageBox.js");
-    dk.create("DKGui/DKDrag.js");
-    dk.create("DKGui/DKResize.js");
-    dk.create("DKGui/DKWidget.js");
-    dk.create("DKGui/DKClipboard.js");
-    dk.create("DKGui/DKTable.css");
-    dk.create("DKGui/DKTable.js");
-    dk.create("DKGui/DKConsole.css");
-    dk.create("DKGui/DKConsole.js");
-	dk.create("DKDevTools/DKDevToolsButton.js");
-	dk.create("DKChart/DKChart.js");
-    //dk.create("DKCodeMirror/DKCodeMirror.js");
-    dk.create("DKTasmota/superagent.js");
-    dk.create("DKTasmota/DKTasmota.js");
-    dk.create("DKTasmota/Automation.js");
-    dk.create("DKTasmota/VPDCalculator.js");
-    dk.create("DKTasmota/Chart.js");
+    //If you initiate any values here, they may fail.
+    //This function should only load files, and make declarations, Not initiate variable values or make assignments.
+    //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
+
+    DKPlugin("DK/DKTrace.js");
+    DKPlugin("DK/DKErrorHandler.js");
+    DKPlugin("DK/DKPhp.js");
+    DKPlugin("DK/DKJson.js");
+    DKPlugin("DKFile/DKFile.js");
+    //DKPlugin("DK/DKValidate.js");
+    DKPlugin("DK/DKTime.js");
+    //DKPlugin("DK/DKMqtt.js");
+    //DKPlugin("DK/DKNotifications.js");
+    DKPlugin("DKDebug/DKDebug.js");
+    DKPlugin("DKAudio/DKAudio.js");
+    DKPlugin("DKGui/DKConsole.js");
+    DKPlugin("DKGui/DKGui.js");
+    DKPlugin("DKGui/DKFrame.js");
+    DKPlugin("DKGui/DKMenu.js");
+    DKPlugin("DKGui/DKMessageBox.js");
+    DKPlugin("DKGui/DKDrag.js");
+    DKPlugin("DKGui/DKResize.js");
+    DKPlugin("DKGui/DKClipboard.js");
+    DKPlugin("DKGui/DKTable.js");
+    DKPlugin("DKDevTools/DKDevToolsButton.js");
+    DKPlugin("DKChart/DKChart.js");
+    //DKPlugin("DKCodeMirror/DKCodeMirror.js");
+    DKPlugin("DKTasmota/DKTasmota.js");
+    DKPlugin("DKTasmota/Automation.js");
+    //DKPlugin("DKTasmota/VPDCalculator.js");
+    DKPlugin("DKTasmota/Chart.js");
+
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");
@@ -57,9 +54,12 @@ myapp.loadFiles = function myapp_loadFiles() {
 }
 
 myapp.loadApp = function myapp_loadApp() {
-    dk.errorhandler.create();
+    dk.errorCatcher(myapp, "myapp")
+    dk.errorhandler.create()
+    DKTime.prototype.create()
+    //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
-    dk.tasmota.loadDevicesFromServer(function() {
+    dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
         if (location.protocol === "file:" || location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
             myapp.server = true;
             myapp.automate = true;
@@ -67,61 +67,65 @@ myapp.loadApp = function myapp_loadApp() {
             myapp.client = true;
             myapp.automate = false;
         }
-        LoadGui();
+        myapp.loadGui();
 
-        //Run app main loop every 30 seconds
-        window.setInterval(MainAppLoop, 30000);
+        //Run app main loop every 60 seconds
+        window.setInterval(myapp.mainAppLoop, 60000);
     });
 }
 
-function LoadGui() {
-    dk.console.create(document.body, "dkconsole", "", "0rem", "0rem", "0rem", "100%", "25%");
+myapp.loadGui = function myapp_loadGui() {
+    DKConsole.prototype.create(document.body, "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
-    CreateButtons(document.body);
-    dk.time.create(document.body, "clock", "2rem", "", "25%");
-    dk.time.getSunrise(33.7312525, -117.3028688);
-    dk.time.getSunset(33.7312525, -117.3028688);
-    CreateDeviceTable(document.body);
-    const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
-    chart.create(ctx);
-
+    myapp.createButtons(document.body);
+    dk.time.createClock(document.body, "2rem");
+    dk.time.setLatitudeLongitude(33.7312525, -117.3028688);
+    myapp.createDeviceTable(document.body);
+    const ctx = DKChart.prototype.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
-        console.warn("dk.tasmota.devices empty");
-    else{
-        for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            AddDeviceToTable(dk.tasmota.devices[n]);
+        console.info("dk.tasmota.devices empty");
+    else
+        for (let n = 0; n < dk.tasmota.devices.length; n++)
+            myapp.addDeviceToTable(dk.tasmota.devices[n]);
+    DKDevToolsButton.prototype.create();
+    TasChart.prototype.create(ctx);
+
+    dk.time.addUpdater(function() {
+        !dk.time.lastHour && (dk.time.lastHour = dk.time.hour)
+        if (dk.time.lastHour !== dk.time.hour) {
+            dk.time.lastHour = dk.time.hour
+            console.debug("new hour " + dk.time.hour);
+            //alert("!!! CHECK PLANTS !!!");
+            DKPlugin("DKGui/DKMessageBox.js", function() {
+                DKMessageBox.prototype.createMessage("CHECK PLANTS!", function(instance, okclicked) {
+                    if (instance) {
+                        console.log("instance: %c" + instance, "color:orange;")
+                        instance.html.style.backgroundColor = "red";
+                    }
+                });
+            });
         }
+    })
+}
+
+myapp.mainAppLoop = function myapp_mainAppLoop() {
+    navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png"
+    //dk.tasmota.loadDevicesFromServer();
+    dk.tasmota.updateDevices("ALL", myapp.updateScreen)
+    dk.automate && dk.automate()
+
+    if (dk.time.second === 16) {
+        console.log("16 seconds")
     }
-
-    dk.devtoolsbutton.create();
 }
 
-function MainAppLoop() {
-    navigator.onLine ? byId("internet").src = "DKGui/online.png" : byId("internet").src = "DKGui/offline.png";
-    ProcessDevices();
-    myapp.automate && Automate();
-}
-
-function SendSuperRequest(url, callback) {
-    superagent.get(url).timeout({
-        response: 18000,
-        // Wait 18 seconds for the server to start sending,
-        deadline: 20000,
-        // but allow 20 seconds for the file to finish loading.
-    }).then(function SendSuperRequestSuccessCallback(res) {
-        callback(true, res);
-    }, function SendSuperRequestFailCallback(res) {
-        callback(false, res);
-    });
-}
-
-function CreateButtons(parent) {
-    dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", ScanDevices).style.position = "";
-    dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", MainAppLoop).style.position = "";
-    dk.gui.createButton(document.body, "Clear Devices", "", "", "", "", "", "", ClearDevices).style.position = "";
-    dk.gui.createButton(document.body, "Save Devices", "", "", "", "", "", "", SaveDevices).style.position = "";
+myapp.createButtons = function myapp_createButtons(parent) {
+    dk.gui.createButton(document.body, "Scan Devices", "", "", "", "", "", "", myapp.scanDevices).style.position = "";
+    dk.gui.createButton(document.body, "Update Devices", "", "", "", "", "", "", myapp.mainAppLoop).style.position = "";
+    dk.gui.createButton(document.body, "Clear Devices", "", "", "", "", "", "", myapp.clearDevices).style.position = "";
+    dk.gui.createButton(document.body, "Save Devices", "", "", "", "", "", "", myapp.saveDevices).style.position = "";
 
     const automation = dk.gui.createButton(document.body, "Automation", "", "", "", "", "", "", automation_onclick);
     automation.style.position = "";
@@ -140,87 +144,83 @@ function CreateButtons(parent) {
     const volume = dk.gui.createImageButton(document.body, "", "DKAudio/volume_100.png", "2rem", "", "", "28rem", "", "19rem", volume_onclick);
     dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.5);
     function volume_onclick() {
-        if (dk.audio.getVolume("DKTasmota/PowerDown.mp3") === 1.0) {
-            dk.audio.setVolume("DKTasmota/PowerDown.mp3", 0.0);
+        dk.audio.toggleMute("DKTasmota/PowerDown.mp3");
+        if (dk.audio.muted)
             volume.src = "DKAudio/volume_0.png";
-        } else {
-            dk.audio.setVolume("DKTasmota/PowerDown.mp3", 1.0);
+        else
             volume.src = "DKAudio/volume_100.png";
-        }
     }
-
-    const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", PreferencesWindow);
+    const preferences = dk.gui.createImageButton(document.body, "", "DKGui/options.png", "3rem", "", "", "3rem", "", "17rem", myapp.preferencesWindow);
 }
 
-function CreateDeviceTable(parent) {
+myapp.createDeviceTable = function myapp_createDeviceTable(parent) {
     const deviceDiv = document.createElement("div");
     deviceDiv.style.position = "absolute";
     deviceDiv.style.top = "25rem";
     deviceDiv.style.left = "20rem";
     deviceDiv.style.width = "720rem";
     deviceDiv.style.height = "47.0%";
-    //deviceDiv.style.backgroundColor = "rgb(0,0,0)";
     deviceDiv.style.overflow = "auto";
     parent.appendChild(deviceDiv);
 
-    const table = dk.table.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
+    dk.table = DKTable.prototype.create(deviceDiv, "deviceTable", "0rem", "", "0rem");
 
     //Create Header Row as a normal <tr>
-    //const deviceHeader = dk.table.addColumn(table, "HEADER", "device"); //FIXME
-    const row = dk.table.addRow(table, "HEADER", "device");
+    //const deviceHeader = dk.table.addColumn(dk.table.table, "HEADER", "device"); //FIXME
+    const row = dk.table.addRow(dk.table.table, "HEADER", "device");
     row.style.backgroundColor = "rgb(50,50,50)";
     row.style.fontWeight = "bold";
     row.style.cursor = "pointer";
-    const deviceCell = dk.table.getCellByName(table, "HEADER", "device");
+    const deviceCell = dk.table.getCellByName(dk.table.table, "HEADER", "device");
     deviceCell.innerHTML = "Devices (0)";
     deviceCell.style.width = "230rem";
     deviceCell.onclick = function HEADER_device_onclick() {
         dk.table.sort("deviceTable", "device");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "power");
-    const powerCell = dk.table.getCellByName(table, "HEADER", "power");
+    dk.table.addColumn(dk.table.table, "power");
+    const powerCell = dk.table.getCellByName(dk.table.table, "HEADER", "power");
     powerCell.innerHTML = "power";
     powerCell.style.width = "50rem";
     powerCell.style.textAlign = "center";
     powerCell.onclick = function HEADER_power_onclick() {
         dk.table.sort("deviceTable", "power");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "data");
-    const dataCell = dk.table.getCellByName(table, "HEADER", "data");
+    dk.table.addColumn(dk.table.table, "data");
+    const dataCell = dk.table.getCellByName(dk.table.table, "HEADER", "data");
     dataCell.innerHTML = "data";
     dataCell.style.width = "150rem";
     dataCell.style.textAlign = "center";
     dataCell.onclick = function HEADER_data_onclick() {
         dk.table.sort("deviceTable", "data");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "automate");
-    const automateCell = dk.table.getCellByName(table, "HEADER", "automate");
+    dk.table.addColumn(dk.table.table, "automate");
+    const automateCell = dk.table.getCellByName(dk.table.table, "HEADER", "automate");
     automateCell.innerHTML = "automate";
     automateCell.style.width = "50rem";
     automateCell.style.textAlign = "center";
     automateCell.onclick = function HEADER_automate_onclick() {
         dk.table.sort("deviceTable", "automate");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "wifi");
-    const wifiCell = dk.table.getCellByName(table, "HEADER", "wifi");
+    dk.table.addColumn(dk.table.table, "wifi");
+    const wifiCell = dk.table.getCellByName(dk.table.table, "HEADER", "wifi");
     wifiCell.innerHTML = "wifi signal";
     wifiCell.style.width = "70rem";
     wifiCell.style.textAlign = "center";
     wifiCell.onclick = function HEADER_wifi_onclick() {
         dk.table.sort("deviceTable", "wifi");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
-    dk.table.addColumn(table, "options");
-    const optionsCell = dk.table.getCellByName(table, "HEADER", "options");
+    dk.table.addColumn(dk.table.table, "options");
+    const optionsCell = dk.table.getCellByName(dk.table.table, "HEADER", "options");
     optionsCell.innerHTML = "options";
     optionsCell.style.width = "120rem";
     optionsCell.style.textAlign = "center";
@@ -228,9 +228,9 @@ function CreateDeviceTable(parent) {
     }
 }
 
-function AddDeviceToTable(device) {
+myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     const table = byId("deviceTable");
-    const row = dk.table.addRow(table, device.ip);
+    const row = dk.table.addRow(dk.table.table, device.ip);
     row.setAttribute("ip", device.ip);
     if (row.rowIndex % 2 == 0) {
         //even
@@ -240,14 +240,14 @@ function AddDeviceToTable(device) {
         row.style.backgroundColor = "rgb(60,60,60)";
     }
 
-    const deviceCell = dk.table.getCellByName(table, device.ip, "device");
-    device.user.name ? deviceCell.innerHTML = "<a>" + device.user.name + "</a>" : deviceCell.innerHTML = "<a>" + device.ip + "</a>";
+    const deviceCell = dk.table.getCellByName(dk.table.table, device.ip, "device");
+    device.Status ? deviceCell.innerHTML = "<a>" + device.Status.DeviceName + "</a>" : deviceCell.innerHTML = "<a>" + device.ip + "</a>";
     deviceCell.style.cursor = "pointer";
     deviceCell.onclick = function deviceCell_onclick() {
         const deviceWindow = window.open("http://" + device.ip, device.ip, "_blank, width=500, height=700");
     }
 
-    const powerCell = dk.table.getCellByName(table, device.ip, "power");
+    const powerCell = dk.table.getCellByName(dk.table.table, device.ip, "power");
     powerCell.style.textAlign = "center";
     powerCell.style.cursor = "pointer";
     powerCell.onclick = function powerCell_onclick() {
@@ -257,13 +257,13 @@ function AddDeviceToTable(device) {
         loading.style.width = "15rem";
         loading.style.height = "15rem";
         powerCell.appendChild(loading);
-        dk.sendRequest("http://" + device.ip + "/cm?cmnd=POWER%20Toggle", myapp.updateScreen);
+        dk.tasmota.sendCommand(device.ip, "POWER Toggle", myapp.updateScreen);
     }
 
-    const dataCell = dk.table.getCellByName(table, device.ip, "data");
+    const dataCell = dk.table.getCellByName(dk.table.table, device.ip, "data");
     dataCell.style.textAlign = "center";
 
-    const automateCell = dk.table.getCellByName(table, device.ip, "automate");
+    const automateCell = dk.table.getCellByName(dk.table.table, device.ip, "automate");
     automateCell.style.textAlign = "center";
     const auto = document.createElement("img");
     auto.id = device.ip + "automate";
@@ -277,129 +277,131 @@ function AddDeviceToTable(device) {
     auto.onclick = function auto_onclick() {
         device.user.automate ? device.user.automate = false : device.user.automate = true;
         device.user.automate ? auto.src = "DKTasmota/automateON.png" : auto.src = "DKTasmota/automateOFF.png";
+        dk.tasmota.saveDevicesToServer(device.ip);
     }
     automateCell.appendChild(auto);
 
-    const wifiCell = dk.table.getCellByName(table, device.ip, "wifi");
+    const wifiCell = dk.table.getCellByName(dk.table.table, device.ip, "wifi");
     wifiCell.style.textAlign = "center";
 
-    const optionsCell = dk.table.getCellByName(table, device.ip, "options");
+    const optionsCell = dk.table.getCellByName(dk.table.table, device.ip, "options");
     optionsCell.innerHTML = "";
     optionsCell.style.textAlign = "center";
 
     //Device Restart
-    const restart = document.createElement("img");
-    restart.id = device.ip + "restart";
-    restart.setAttribute("title", "Restart Device");
-    restart.src = "DKGui/restart.png";
-    restart.style.width = "12rem";
-    restart.style.height = "12rem";
-    restart.style.cursor = "pointer";
-    restart.style.paddingRight = "3rem";
-    restart.style.paddingBottom = "2rem";
-    restart.onclick = function restart_onclick() {
-        dk.messagebox.confirm("Restart " + device.user.name + "?", function dk_messagebox_confirm_callback(rval) {
-            if (rval) {
-                restart.src = "DKGui/loading.gif";
-                dk.sendRequest("http://" + device.ip + "/cm?cmnd=Restart%201", myapp.updateScreen);
-            }
-        });
-        //dk.frame.setTitle(byId("DKGui/DKMessageBox.html"), "Restart?");
-    }
-    optionsCell.appendChild(restart);
+    const restart = dk.gui.createTag("img", optionsCell, {
+        id: device.ip + "restart",
+        title: "Restart Device",
+        src: "DKGui/restart.png",
+        style: {
+            width: "12rem",
+            height: "12rem",
+            cursor: "pointer",
+            paddingRight: "3rem",
+            paddingBottom: "2rem",
+        },
+        onclick: function restart_onclick() {
+            DKPlugin("DKGui/DKMessageBox.js", function() {
+                DKMessageBox.prototype.createConfirm("Restart " + device.Status.DeviceName + "?", function dk_messagebox_createConfirm_callback(rval) {
+                    if (rval) {
+                        restart.src = "DKGui/loading.gif";
+                        dk.tasmota.sendCommand(device.ip, "Restart 1", myapp.updateScreen);
+                    }
+                });
+            });
+        }
+    });
 
     //Device Info
-    const info = document.createElement("img");
-    info.setAttribute("title", "Device Info");
-    info.src = "DKGui/info.png";
-    info.style.width = "12rem";
-    info.style.height = "12rem";
-    info.style.cursor = "pointer";
-    info.style.paddingRight = "3rem";
-    info.style.paddingBottom = "2rem";
-    info.onclick = function info_onclick() {
-        InfoWindow(device);
-    }
-    optionsCell.appendChild(info);
+    const info = dk.gui.createTag("img", optionsCell, {
+        title: "Device Info",
+        src: "DKGui/info.png",
+        style: {
+            width: "12rem",
+            height: "12rem",
+            cursor: "pointer",
+            paddingRight: "3rem",
+            paddingBottom: "2rem"
+        },
+        onclick: function info_onclick() {
+            myapp.infoWindow(device);
+        }
+    });
 
     //Device Settings
-    const settings = document.createElement("img");
-    settings.setAttribute("title", "Device Settings");
-    settings.src = "DKGui/settings.png";
-    settings.style.width = "15rem";
-    settings.style.height = "15rem";
-    settings.style.cursor = "pointer";
-    settings.onclick = function settings_onclick() {
-        SettingsWindow(device);
-    }
-    optionsCell.appendChild(settings);
-
-    const dConsole = document.createElement("img");
-    dConsole.setAttribute("title", "Device Console");
-    dConsole.src = "DKGui/console.png";
-    dConsole.style.width = "15rem";
-    dConsole.style.height = "15rem";
-    dConsole.style.paddingLeft = "3rem";
-    dConsole.style.cursor = "pointer";
-    dConsole.onclick = function dConsole_onclick() {
-        DConsoleWindow(device);
-    }
-    optionsCell.appendChild(dConsole);
-
-    const dChart = document.createElement("img");
-    dChart.id = device.ip + "dChart";
-    dChart.setAttribute("title", "Device Chart");
-    dChart.src = "DKGui/chart.png";
-    dChart.style.width = "15rem";
-    dChart.style.marginLeft = "3rem";
-    dChart.style.cursor = "pointer";
-    optionsCell.appendChild(dChart);
-
-    dChart.onclick = function dChart_onclick() {
-        for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            if (dk.tasmota.devices[n].ip === device.ip) {
-                byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
-            } else {
-                byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
-            }
+    const settings = dk.gui.createTag("img", optionsCell, {
+        title: "Device Settings",
+        src: "DKGui/settings.png",
+        style: {
+            height: "15rem",
+            cursor: "pointer"
+        },
+        onclick: function settings_onclick() {
+            myapp.settingsWindow(device);
         }
-    }
-    dChart.oncontextmenu = function dChart_oncontextmenu(event) {
-        event.preventDefault();
-        const color = chart.toggleChart(device.ip);
-        for (let n = 0; n < dk.tasmota.devices.length; n++) {
-            if (dk.tasmota.devices[n].ip === device.ip) {
-                if (color) {
-                    byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color;
-                } else {
+    });
+
+    const dConsole = dk.gui.createTag("img", optionsCell, {
+        title: "Device Console",
+        src: "DKGui/console.png",
+        style: {
+            height: "15rem",
+            paddingLeft: "3rem",
+            cursor: "pointer"
+        },
+        onclick: function dConsole_onclick() {
+            myapp.consoleWindow(device);
+        }
+    });
+
+    const dChart = dk.gui.createTag("img", optionsCell, {
+        id: device.ip + "dChart",
+        title: "Device Chart",
+        src: "DKGui/chart.png",
+        style: {
+            height: "15rem",
+            marginLeft: "3rem",
+            cursor: "pointer"
+        },
+        onclick: function dChart_onclick() {
+            for (let n = 0; n < dk.tasmota.devices.length; n++) {
+                if (dk.tasmota.devices[n].ip === device.ip)
+                    byId(device.ip + "dChart").style.backgroundColor = dk.taschart.selectChart(device.ip);
+                else
                     byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
+            }
+        },
+        oncontextmenu: function dChart_oncontextmenu(event) {
+            event.preventDefault();
+            const color = dk.taschart.toggleChart(device.ip);
+            for (let n = 0; n < dk.tasmota.devices.length; n++) {
+                if (dk.tasmota.devices[n].ip === device.ip) {
+                    color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color);
+                    !color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)");
                 }
             }
         }
-    }
-    optionsCell.appendChild(dChart);
+    });
 
     //Do some final processing
-    const deviceHeader = dk.table.getCellByName(table, "HEADER", "device");
+    const deviceHeader = dk.table.getCellByName(dk.table.table, "HEADER", "device");
     deviceHeader.innerHTML = "Devices (" + (table.rows.length - 1) + ")";
-    dk.sendRequest("http://" + device.ip + "/cm?cmnd=Status%200", myapp.updateScreen);
+    dk.tasmota.updateDevices(device.ip, myapp.updateScreen);
     dk.table.sort("deviceTable", "device");
-    UpdateTableStyles();
+    myapp.updateTableStyles();
 }
 
-function PreferencesWindow() {
-    const div = dk.frame.createNewWindow("Preferenes", "500rem", "400rem");
+myapp.preferencesWindow = function myapp_preferencesWindow() {
+    const div = DKFrame.prototype.createNewWindow("Preferenes", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.backgroundColor = "rgb(36,36,36)";
 }
 
-function InfoWindow(device) {
-    const div = dk.frame.createNewWindow(device.user.name + " Info", "500rem", "400rem");
+myapp.infoWindow = function myapp_infoWindow(device) {
+    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
@@ -415,22 +417,20 @@ function InfoWindow(device) {
     div.style.overflow = "auto";
     const jsonString = dk.json.prettyJson(JSON.stringify(device));
     const jsonSuper = dk.json.highlightJson(jsonString);
-    //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
 }
 
-function SettingsWindow(device) {
-    const div = dk.frame.createNewWindow(device.user.name + " Settings", "500rem", "400rem");
+myapp.settingsWindow = function myapp_settingsWindow(device) {
+    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Settings", "500rem", "400rem");
     if (!div)
         return;
     //TODO
 }
 
-function DConsoleWindow(device) {
-    const div = dk.frame.createNewWindow(device.user.name + " Console", "500rem", "400rem");
+myapp.consoleWindow = function myapp_consoleWindow(device) {
+    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Console", "500rem", "400rem");
     if (!div)
         return;
-
     div.style.backgroundColor = "rgb(50,50,50)";
     div.style.overflow = "auto";
 
@@ -471,41 +471,43 @@ function DConsoleWindow(device) {
         if (key === 13) {
             //enter
             console.debug("Send command -> " + input.value);
-            const cmnd = input.value;
-            const url = "http://" + device.ip + "/cm?cmnd=" + encodeURIComponent(cmnd).replace(";", "%3B");
-            dk.sendRequest(url, function dk_sendRequest_callback(success, url, data) {
-                //console.log("function dk_sendRequest_callback("+success+","+url+","+data+")");
-                if (data) {
-                    const msgDiv = document.createElement("div");
-                    msgDiv.style.width = "100%";
-                    msgDiv.style.fontSize = "12rem";
-                    msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
-                    msgDiv.style.whiteSpace = "pre-wrap";
-                    msgDiv.style.boxSizing = "border-box";
-                    msgDiv.style.padding = "2rem";
-                    msgDiv.style.paddingLeft = "10rem";
+            const command = encodeURIComponent(input.value).replace(";", "%3B");
+            dk.tasmota.sendCommand(device.ip, command, function dk_tasmota_sendCommand_callback(success, device, data) {
+                if (!success)
+                    return error("success invalid");
+                if (!device)
+                    return error("device invalid");
+                if (!data)
+                    return error("data invalid");
 
-                    const msgText = document.createElement("span");
-                    msgText.innerHTML = data;
-                    msgText.style.color = "rgb(250,250,250)";
+                const msgDiv = document.createElement("div");
+                msgDiv.style.width = "100%";
+                msgDiv.style.fontSize = "12rem";
+                msgDiv.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
+                msgDiv.style.whiteSpace = "pre-wrap";
+                msgDiv.style.boxSizing = "border-box";
+                msgDiv.style.padding = "2rem";
+                msgDiv.style.paddingLeft = "10rem";
 
-                    output.appendChild(msgDiv);
-                    msgDiv.appendChild(msgText);
-                    output.scrollTop = output.scrollHeight;
+                const msgText = document.createElement("span");
+                msgText.innerHTML = data;
+                msgText.style.color = "rgb(250,250,250)";
 
-                    //Limit the number of stored lines
-                    if (output.childElementCount > 500) {
-                        output.removeChild(output.firstChild);
-                    }
-                    input.value = "";
-                }
+                output.appendChild(msgDiv);
+                msgDiv.appendChild(msgText);
+                output.scrollTop = output.scrollHeight;
+
+                //Limit the number of stored lines
+                if (output.childElementCount > 500)
+                    output.removeChild(output.firstChild);
+                input.value = "";
             });
         }
     }
     div.appendChild(input);
 }
 
-function UpdateTableStyles() {
+myapp.updateTableStyles = function myapp_updateTableStyles() {
     const table = byId("deviceTable");
     for (let n = 1; n < table.rows.length; n++) {
         const row = table.rows[n];
@@ -519,103 +521,88 @@ function UpdateTableStyles() {
     }
 }
 
-function ScanDevices() {
+myapp.scanDevices = function myapp_scanDevices() {
     dk.tasmota.getDevices("192.168.1.", function dk_tasmota_getDevices_callback(ip, done) {
         if (ip && !dk.json.findPartialMatch(dk.tasmota.devices, 'ip', ip)) {
             const device = dk.tasmota.createDevice(ip);
-            AddDeviceToTable(device);
-            dk.tasmota.saveDevicesToServer();
-            dk.tasmota.saveDevicesToLocalStorage();
+            myapp.addDeviceToTable(device);
         }
         if (done) {
+            dk.tasmota.saveDevicesToServer();
+            dk.tasmota.saveDevicesToLocalStorage();
             console.log("\n");
-            console.log("Scan Complete", "green");
-            console.log("(" + dk.tasmota.devices.length + ") Tasmota Devices found", "green");
+            console.log("%c Scan Complete", "color:green;");
+            console.log("%c (" + dk.tasmota.devices.length + ") Tasmota Devices found", "color:green;");
         }
     });
 }
 
-function ClearDevices() {
+myapp.clearDevices = function myapp_clearDevices() {
     const table = byId("deviceTable");
     table.parentNode.remove(table);
-    CreateDeviceTable(document.body);
-    dk.removeFromLocalStorage("dk.tasmota.devices");
+    myapp.createDeviceTable(document.body);
+    dk.removeFromLocalStorage("devices");
     dk.tasmota.devices = [];
 }
 
-function SaveDevices() {
+myapp.saveDevices = function myapp_saveDevices() {
     dk.tasmota.saveDevicesToServer();
     dk.tasmota.saveDevicesToLocalStorage();
 }
 
-function ProcessDevices() {
-    const table = byId("deviceTable");
-    for (let n = 1; n < table.rows.length; n++) {
-        const ip = table.rows[n].getAttribute("ip");
-        dk.sendRequest("http://" + ip + "/cm?cmnd=Status%200", myapp.updateScreen);
-    }
-}
-
-myapp.updateScreen = function myapp_updateScreen(success, url, data) {
-    if (!url)
-        return error("url invalid");
-    if (!dk.tasmota.devices.length)
-        return warn("dk.tasmota.devices array empty");
-    let device = dk.json.findPartialMatch(dk.tasmota.devices, 'ip', url);
-    if (!device)
-        return error("device invalid, didn't find ip in url:" + url);
+myapp.updateScreen = function myapp_updateScreen(success, device, data) {
+    //DEBUG - used to test errors
+    //dk.audio.play("DKTasmota/PowerDown.mp3");
+    required({
+        success
+    }, {
+        device
+    }, {
+        data
+    });
     const table = byId("deviceTable");
     if (!table)
         return error("table invlid");
-    const row = dk.table.getRowByName(table, device.ip);
+    const row = dk.table.getRowByName(dk.table.table, device.ip);
     if (!row)
-        return warn("row invalid");
+        return error("row invalid");
 
-    if (!success || !data) {
+    if (!success) {
         dk.audio.play("DKTasmota/PowerDown.mp3");
         row.style.backgroundColor = "red";
-        return warn(device.ip + " did not respond");
+        console.log(device.ip + " did not respond");
+        return false;
     }
 
+    if (!device.Status)
+        return error("device.Status invalid");
     //const jsonString = dk.json.prettyJson(data);
     //const jsonSuper = dk.json.highlightJson(jsonString);
     //console.log(jsonSuper);
 
-    try {
-        let deviceData = JSON.parse(data);
-        Object.assign(device, deviceData);
-        //deviceData.ip = device.ip;
-        //deviceData.user = device.user;
-        //dk.tasmota.devices[dk.tasmota.devices.indexOf(device)] = deviceData;
-        //device = deviceData;
-    } catch (e) {
-        return error("data could not be parsed to json");
-    }
-
     // UPDATE TABLE
-    device.DeviceName && (device.user.name = device.DeviceName);
-    device.Status && device.Status.DeviceName && (device.user.name = device.Status.DeviceName);
-    if (device.user.name) {
-        const deviceCell = dk.table.getCellByName(table, device.ip, "device");
-        deviceCell.innerHTML = "<a title='" + device.ip + "'>" + device.user.name + "</a>";
+    const deviceName = device.Status.DeviceName;
+    if (deviceName) {
+        const deviceCell = dk.table.getCellByName(dk.table.table, device.ip, "device");
+        deviceCell.innerHTML = "<a title='" + device.ip + "'>" + deviceName + "</a>";
         dk.table.sort("deviceTable", "device");
-        UpdateTableStyles();
+        myapp.updateTableStyles();
     }
 
-    device.user.power = device.StatusSTS ? device.StatusSTS.POWER : device.POWER;
-    if (device.user.power) {
-        const powerCell = dk.table.getCellByName(table, device.ip, "power");
-        powerCell.innerHTML = "<a>" + device.user.power + "</a>";
-        if (device.user.power === "ON") {
+    const devicePower = device.StatusSTS.POWER;
+    if (devicePower) {
+        const powerCell = dk.table.getCellByName(dk.table.table, device.ip, "power");
+        powerCell.innerHTML = "<a>" + devicePower + "</a>";
+        if (devicePower === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            chart.updateDevice(device, "switch1", 100);
+            dk.taschart.updateDevice(device, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            chart.updateDevice(device, "switch1", 0);
+            dk.taschart.updateDevice(device, "switch1", 0);
         }
     }
 
-    const dataCell = dk.table.getCellByName(table, device.ip, "data");
+    const dataCell = dk.table.getCellByName(dk.table.table, device.ip, "data");
     dataCell.innerHTML = "";
     if (device.StatusSNS && device.StatusSNS.DS18B20 && device.StatusSNS.DS18B20.Temperature)
         device.user.temperature = device.StatusSNS.DS18B20.Temperature
@@ -643,7 +630,7 @@ myapp.updateScreen = function myapp_updateScreen(success, url, data) {
         byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         byId(device.ip + "Temp").style.textAlign = "center";
 
-        chart.updateDevice(device, "sensor1", device.user.temperature);
+        dk.taschart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
     if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Humidity)
@@ -670,7 +657,7 @@ myapp.updateScreen = function myapp_updateScreen(success, url, data) {
         byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         byId(device.ip + "RH").style.textAlilgn = "center";
 
-        chart.updateDevice(device, "sensor2", device.user.humidity);
+        dk.taschart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
     if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.DewPoint)
@@ -680,7 +667,7 @@ myapp.updateScreen = function myapp_updateScreen(success, url, data) {
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
-        chart.updateDevice(device, "sensor3", device.user.dewpoint);
+        dk.taschart.updateDevice(device, "sensor3", device.user.dewpoint);
     }
 
     if (device.user.automate === true) {
@@ -689,14 +676,14 @@ myapp.updateScreen = function myapp_updateScreen(success, url, data) {
         byId(device.ip + "automate").src = "DKTasmota/automateOFF.png";
     }
 
-    device.user.rssi = device.StatusSTS && device.StatusSTS.Wifi ? device.StatusSTS.Wifi.RSSI : device.Wifi && device.Wifi.RSSI;
-    if (device.user.rssi) {
-        const signal = device.user.rssi;
+    const deviceRssi = device.StatusSTS.Wifi.RSSI;
+    if (deviceRssi) {
+        const signal = deviceRssi;
         const scale = 510;
         const num = (signal * scale / 100);
         const green = num.clamp(0, 255);
         const red = (510 - num).clamp(0, 255);
-        const wifiCell = dk.table.getCellByName(table, device.ip, "wifi");
+        const wifiCell = dk.table.getCellByName(dk.table.table, device.ip, "wifi");
         wifiCell.innerHTML = signal + "%";
         wifiCell.style.color = "rgb(" + red + "," + green + ",0)";
     }
@@ -704,6 +691,5 @@ myapp.updateScreen = function myapp_updateScreen(success, url, data) {
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png");
 }
 
-duktape && myapp.loadFiles();
-
+DUKTAPE && myapp.loadFiles();
 */
