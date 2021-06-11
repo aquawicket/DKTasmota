@@ -1,16 +1,13 @@
 "use strict";
 //https://www.chartjs.org/
 
-const chart = new Chart();
+dk.taschart = DKPlugin(TasChart)
 
-function Chart() {
-    return DKPlugin.call(this, arguments);
-}
+function TasChart() {}
 
-Chart.prototype.create = function Chart_create(chartCanvas) {
-
-    dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", openChartSettings);
-
+TasChart.prototype.create = function TasTasChart_create(chartCanvas) {
+    
+    dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", this.openChartSettings);
     const ctx = chartCanvas.getContext('2d');
     this.lineChart = new Chart(ctx,{
         type: "line",
@@ -55,82 +52,82 @@ Chart.prototype.create = function Chart_create(chartCanvas) {
     */
 
     //DKTasmota_InitializeDevices(function() {
-    //    chart.addDatasets();
-    //    chart.loadDatasets();
+    //    dk.taschart.addDatasets();
+    //    dk.taschart.loadDatasets();
     //});
 
     //FIXME
-    chart.settings = {};
+    dk.taschart.settings = {};
     dk.json.loadJsonFromFile("USER/chart_settings.js", function(json) {
         if (!json) {
             //console.log("json invalid");
             return false;
         }
-        chart.settings = json;
+        dk.taschart.settings = json;
     });
 }
 
-function openChartSettings() {
-    const chartSettings = dk.frame.createNewWindow("Chart Settings", "200rem", "150rem");
+TasChart.prototype.openChartSettings = function openChartSettings() {
+    const chartSettings = DKFrame.prototype.createNewWindow("Chart Settings", "200rem", "150rem");
     if (!chartSettings)
         return;
-    chart.logToFile = document.createElement("input");
-    //chart.settings.logToFile = false;
-    chart.logToFile.type = "checkbox";
-    chart.logToFile.id = "logToFile";
-    if (chart.settings.logToFile === true)
-        chart.logToFile.checked = true;
+    dk.taschart.logToFile = document.createElement("input");
+    //dk.taschart.settings.logToFile = false;
+    dk.taschart.logToFile.type = "checkbox";
+    dk.taschart.logToFile.id = "logToFile";
+    if (dk.taschart.settings.logToFile === true)
+        dk.taschart.logToFile.checked = true;
     else
-        chart.logToFile.checked = false;
-    chart.logToFile.onchange = function(event) {
-        if (chart.logToFile.checked)
-            chart.settings.logToFile = true;
+        dk.taschart.logToFile.checked = false;
+    dk.taschart.logToFile.onchange = function(event) {
+        if (dk.taschart.logToFile.checked)
+            dk.taschart.settings.logToFile = true;
         else
-            chart.settings.logToFile = false;
-        dk.json.saveJsonToFile(chart.settings, "USER/chart_settings.js");
+            dk.taschart.settings.logToFile = false;
+        dk.json.saveJsonToFile(dk.taschart.settings, "USER/chart_settings.js");
     }
-    chartSettings.appendChild(chart.logToFile);
+    chartSettings.appendChild(dk.taschart.logToFile);
     const logToFileLabel = document.createElement("label")
-    logToFileLabel.for = chart.logToFile.id;
+    logToFileLabel.for = dk.taschart.logToFile.id;
     logToFileLabel.innerHTML = "Log Devices to file";
     chartSettings.appendChild(logToFileLabel);
 }
 
-Chart.prototype.addDatasets2 = function Chart_addDatasets2() {
-    dk.tasmota.device("014") && chart.addDataset("A Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("014").ip, "sensor1", true);
-    dk.tasmota.device("014") && chart.addDataset("A Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("014").ip, "sensor2", true);
-    dk.tasmota.device("014") && chart.addDataset("A Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("014").ip, "sensor3", true);
-    dk.tasmota.device("011") && chart.addDataset("A Tent Exhaust Fan", "rgb(10,30,90)", dk.tasmota.device("011").ip, "switch1", true);
-    dk.tasmota.device("003") && chart.addDataset("A Tent Water Walls", "rgb(10,30,50)", dk.tasmota.device("003").ip, "switch1", true);
-    //chart.addDataset("A Tent Heater", "rgb(150,0,50)", dk.tasmota.device("???").ip, "switch1", true);
-    //chart.addDataset("A Tent Co2", "rgb(10,60,10)", dk.tasmota.device("???").ip, "switch1", true);
-    //chart.addDataset("A Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
+TasChart.prototype.addDatasets2 = function TasChart_addDatasets2() {
+    dk.tasmota.device("014") && dk.taschart.addDataset("A Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("014").ip, "sensor1", true);
+    dk.tasmota.device("014") && dk.taschart.addDataset("A Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("014").ip, "sensor2", true);
+    dk.tasmota.device("014") && dk.taschart.addDataset("A Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("014").ip, "sensor3", true);
+    dk.tasmota.device("011") && dk.taschart.addDataset("A Tent Exhaust Fan", "rgb(10,30,90)", dk.tasmota.device("011").ip, "switch1", true);
+    dk.tasmota.device("003") && dk.taschart.addDataset("A Tent Water Walls", "rgb(10,30,50)", dk.tasmota.device("003").ip, "switch1", true);
+    //dk.taschart.addDataset("A Tent Heater", "rgb(150,0,50)", dk.tasmota.device("???").ip, "switch1", true);
+    //dk.taschart.addDataset("A Tent Co2", "rgb(10,60,10)", dk.tasmota.device("???").ip, "switch1", true);
+    //dk.taschart.addDataset("A Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
 
-    dk.tasmota.device("013") && chart.addDataset("B Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("013").ip, "sensor1", true);
-    dk.tasmota.device("013") && chart.addDataset("B Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("013").ip, "sensor2", true);
-    dk.tasmota.device("013") && chart.addDataset("B Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("013").ip, "sensor3", true);
-    dk.tasmota.device("005") && chart.addDataset("B Tent Exhaust Fan", "rgb(150,0,150)", dk.tasmota.device("005").ip, "switch1", true);
-    dk.tasmota.device("007") && chart.addDataset("B Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("007").ip, "switch1", true);
-    dk.tasmota.device("006") && chart.addDataset("B Tent Heater", "rgb(150,0,50)", dk.tasmota.device("006").ip, "switch1", true);
-    dk.tasmota.device("008") && chart.addDataset("B Tent Co2", "rgb(10,60,10)", dk.tasmota.device("008").ip, "switch1", true);
-    //dk.tasmota.device("0") && chart.addDataset("B Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
+    dk.tasmota.device("013") && dk.taschart.addDataset("B Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("013").ip, "sensor1", true);
+    dk.tasmota.device("013") && dk.taschart.addDataset("B Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("013").ip, "sensor2", true);
+    dk.tasmota.device("013") && dk.taschart.addDataset("B Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("013").ip, "sensor3", true);
+    dk.tasmota.device("005") && dk.taschart.addDataset("B Tent Exhaust Fan", "rgb(150,0,150)", dk.tasmota.device("005").ip, "switch1", true);
+    dk.tasmota.device("007") && dk.taschart.addDataset("B Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("007").ip, "switch1", true);
+    dk.tasmota.device("006") && dk.taschart.addDataset("B Tent Heater", "rgb(150,0,50)", dk.tasmota.device("006").ip, "switch1", true);
+    dk.tasmota.device("008") && dk.taschart.addDataset("B Tent Co2", "rgb(10,60,10)", dk.tasmota.device("008").ip, "switch1", true);
+    //dk.tasmota.device("0") && dk.taschart.addDataset("B Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
 
-    dk.tasmota.device("002") && chart.addDataset("Shed Water A", "rgb(150,40,40)", dk.tasmota.device("Shed Water A").ip, "switch1", true);
-    dk.tasmota.device("001") && chart.addDataset("Shed Water B", "rgb(30,0,90)", dk.tasmota.device("Shed Water B").ip, "switch1", true);
-    dk.tasmota.device("016") && chart.addDataset("Shed Temperature", "rgb(200,0,0)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
-    dk.tasmota.device("016") && chart.addDataset("Shed Humidity", "rgb(0, 0, 200)", dk.tasmota.device("Shed Temp").ip, "sensor2", true);
-    dk.tasmota.device("016") && chart.addDataset("Shed DewPoint", "rgb(0,150,150)", dk.tasmota.device("Shed Temp").ip, "sensor3", true);
+    dk.tasmota.device("002") && dk.taschart.addDataset("Shed Water A", "rgb(150,40,40)", dk.tasmota.device("Shed Water A").ip, "switch1", true);
+    dk.tasmota.device("001") && dk.taschart.addDataset("Shed Water B", "rgb(30,0,90)", dk.tasmota.device("Shed Water B").ip, "switch1", true);
+    dk.tasmota.device("016") && dk.taschart.addDataset("Shed Temperature", "rgb(200,0,0)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
+    dk.tasmota.device("016") && dk.taschart.addDataset("Shed Humidity", "rgb(0, 0, 200)", dk.tasmota.device("Shed Temp").ip, "sensor2", true);
+    dk.tasmota.device("016") && dk.taschart.addDataset("Shed DewPoint", "rgb(0,150,150)", dk.tasmota.device("Shed Temp").ip, "sensor3", true);
 
-    dk.tasmota.device("015") && chart.addDataset("Veg Tent Temperature", "rgb(200, 20, 20)", dk.tasmota.device("015").ip, "sensor1", true);
-    dk.tasmota.device("015") && chart.addDataset("Veg Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("015").ip, "sensor2", true);
-    dk.tasmota.device("015") && chart.addDataset("Veg Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("015").ip, "sensor3", true);
-    dk.tasmota.device("012") && chart.addDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", dk.tasmota.device("012").ip, "switch1", true);
-    dk.tasmota.device("009") && chart.addDataset("Veg Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("009").ip, "switch1", true);
-    dk.tasmota.device("010") && chart.addDataset("Veg Tent Co2", "rgb(100,60,10)", dk.tasmota.device("Veg Tent Co2").ip, "switch1", true);
-    dk.tasmota.device("004") && chart.addDataset("Veg Tent Lights", "rgb(100,60,10)", dk.tasmota.device("004").ip, "switch1", true);
+    dk.tasmota.device("015") && dk.taschart.addDataset("Veg Tent Temperature", "rgb(200, 20, 20)", dk.tasmota.device("015").ip, "sensor1", true);
+    dk.tasmota.device("015") && dk.taschart.addDataset("Veg Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("015").ip, "sensor2", true);
+    dk.tasmota.device("015") && dk.taschart.addDataset("Veg Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("015").ip, "sensor3", true);
+    dk.tasmota.device("012") && dk.taschart.addDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", dk.tasmota.device("012").ip, "switch1", true);
+    dk.tasmota.device("009") && dk.taschart.addDataset("Veg Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("009").ip, "switch1", true);
+    dk.tasmota.device("010") && dk.taschart.addDataset("Veg Tent Co2", "rgb(100,60,10)", dk.tasmota.device("Veg Tent Co2").ip, "switch1", true);
+    dk.tasmota.device("004") && dk.taschart.addDataset("Veg Tent Lights", "rgb(100,60,10)", dk.tasmota.device("004").ip, "switch1", true);
 }
 
-Chart.prototype.addDatasets = function Chart_addDatasets() {
+TasChart.prototype.addDatasets = function TasChart_addDatasets() {
     for (let n = 0; n < dk.tasmota.devices.length; n++) {
         if (!dk.tasmota.devices[n].Status)
             continue;
@@ -140,24 +137,24 @@ Chart.prototype.addDatasets = function Chart_addDatasets() {
         const ip = dk.tasmota.devices[n].StatusNET.IPAddress;
         const hidden = true;
         if (dk.tasmota.devices[n].StatusSTS.POWER)
-            chart.addDataset(name + " Power", dk.gui.randomRGB(), ip, "switch1", hidden);
+            dk.taschart.addDataset(name + " Power", dk.gui.randomRGB(), ip, "switch1", hidden);
         if (dk.tasmota.devices[n].StatusSNS.SI7021) {
-            chart.addDataset(name + " Temperature", dk.gui.randomRGB(), ip, "sensor1", hidden);
-            chart.addDataset(name + " Humidity", dk.gui.randomRGB(), ip, "sensor2", hidden);
-            chart.addDataset(name + " Dewpoint", dk.gui.randomRGB(), ip, "sensor3", hidden);
+            dk.taschart.addDataset(name + " Temperature", dk.gui.randomRGB(), ip, "sensor1", hidden);
+            dk.taschart.addDataset(name + " Humidity", dk.gui.randomRGB(), ip, "sensor2", hidden);
+            dk.taschart.addDataset(name + " Dewpoint", dk.gui.randomRGB(), ip, "sensor3", hidden);
         }
     }
 }
 
-Chart.prototype.updateDevice = function Chart_updateDevice(device, identifier, data) {
+TasChart.prototype.updateDevice = function TasChart_updateDevice(device, identifier, data) {
     if (!device)
         return error("device invalid");
     if (!this.lineChart)
         return warn("this.lineChart invalid");
 
-    chart.addDatasets();
-    //chart.loadDatasets();
-    //chart.loadDatasetsFromServer(device.ip);
+    dk.taschart.addDatasets();
+    //dk.taschart.loadDatasets();
+    //dk.taschart.loadDatasetsFromServer(device.ip);
 
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (device.ip === this.lineChart.data.datasets[n].ip && identifier === this.lineChart.data.datasets[n].identifier) {
@@ -188,18 +185,18 @@ Chart.prototype.updateDevice = function Chart_updateDevice(device, identifier, d
             }
 
             this.lineChart.update();
-            chart.settings.logToFile && chart.appendDatasetToServer(this.lineChart.data.datasets[n].label, data);
+            dk.taschart.settings.logToFile && dk.taschart.appendDatasetToServer(this.lineChart.data.datasets[n].label, data);
         }
     }
 
     //this.lineChart.update();
-    //chart.saveDatasetsToLocalStorage(device.ip);
-    //chart.saveDatasetsToServer(device.ip);
-    //chart.settings.logToFile && chart.appendDatasetToServer(device.user.name, data);
-    //chart.settings.logToFile && chart.appendDatasetToServer(device.ip);
+    //dk.taschart.saveDatasetsToLocalStorage(device.ip);
+    //dk.taschart.saveDatasetsToServer(device.ip);
+    //dk.taschart.settings.logToFile && dk.taschart.appendDatasetToServer(device.user.name, data);
+    //dk.taschart.settings.logToFile && dk.taschart.appendDatasetToServer(device.ip);
 }
 
-Chart.prototype.selectChart = function Chart_selectChart(ip) {
+TasChart.prototype.selectChart = function TasChart_selectChart(ip) {
     let borderColor;
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip) {
@@ -213,7 +210,7 @@ Chart.prototype.selectChart = function Chart_selectChart(ip) {
     return borderColor;
 }
 
-Chart.prototype.toggleChart = function Chart_toggleChart(ip) {
+TasChart.prototype.toggleChart = function TasChart_toggleChart(ip) {
     let borderColor;
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip) {
@@ -225,7 +222,7 @@ Chart.prototype.toggleChart = function Chart_toggleChart(ip) {
     return borderColor;
 }
 
-Chart.prototype.addDataset = function Chart_addDataset(label, borderColor, ip, identifier, hidden) {
+TasChart.prototype.addDataset = function TasChart_addDataset(label, borderColor, ip, identifier, hidden) {
     if (!ip)
         return error("ip invalid");
     if (!this.lineChart)
@@ -266,12 +263,12 @@ Chart.prototype.addDataset = function Chart_addDataset(label, borderColor, ip, i
     */
 
     this.lineChart.data.datasets.push(dataset);
-    //chart.loadDatasetsFromLocalStorage(ip);
-    //chart.loadDatasetsFromServer(ip);
+    //dk.taschart.loadDatasetsFromLocalStorage(ip);
+    //dk.taschart.loadDatasetsFromServer(ip);
     this.lineChart.update();
 }
 
-Chart.prototype.appendDatasetToServer = function Chart_appendDatasetToServer(label, data) {
+TasChart.prototype.appendDatasetToServer = function TasChart_appendDatasetToServer(label, data) {
     const currentdate = new Date();
     const stamp = (currentdate.getMonth() + 1) + "_" + currentdate.getDate() + "_" + currentdate.getFullYear();
     const json = ({
@@ -283,7 +280,7 @@ Chart.prototype.appendDatasetToServer = function Chart_appendDatasetToServer(lab
     );
 }
 
-Chart.prototype.saveDatasetsToServer = function Chart_saveDatasetsToServer(ip) {
+TasChart.prototype.saveDatasetsToServer = function TasChart_saveDatasetsToServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const json = this.lineChart.data.datasets[n].data;
@@ -295,14 +292,14 @@ Chart.prototype.saveDatasetsToServer = function Chart_saveDatasetsToServer(ip) {
     }
 }
 
-Chart.prototype.loadDatasetsFromServer = function Chart_loadDatasetsFromServer(ip) {
+TasChart.prototype.loadDatasetsFromServer = function TasChart_loadDatasetsFromServer(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             let file = "USER/" + this.lineChart.data.datasets[n].label + ".js";
             /*
             dk.json.loadJsonFromFile(file, function(json) {
-                chart.lineChart.data.datasets[n].data = json;
-                chart.lineChart.update();
+                dk.taschart.lineChart.data.datasets[n].data = json;
+                dk.taschart.lineChart.update();
             })
             */
             dk.file.fileToString(file, function dk_file_fileToString_callback(str) {
@@ -313,14 +310,14 @@ Chart.prototype.loadDatasetsFromServer = function Chart_loadDatasetsFromServer(i
                 } catch (e) {
                     return error("JSON.parse() failed " + e);
                 }
-                chart.lineChart.data.datasets[n].data = json;
-                chart.lineChart.update();
+                dk.taschart.lineChart.data.datasets[n].data = json;
+                dk.taschart.lineChart.update();
             });
         }
     }
 }
 
-Chart.prototype.saveDatasetsToLocalStorage = function Chart_saveDatasetsToLoaclStorage(ip) {
+TasChart.prototype.saveDatasetsToLocalStorage = function TasChart_saveDatasetsToLoaclStorage(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const data = JSON.stringify(this.lineChart.data.datasets[n].data);
@@ -329,7 +326,7 @@ Chart.prototype.saveDatasetsToLocalStorage = function Chart_saveDatasetsToLoaclS
     }
 }
 
-Chart.prototype.loadDatasetsFromLocalStorage = function Chart_loadDatasetsFromLocalStorage(ip) {
+TasChart.prototype.loadDatasetsFromLocalStorage = function TasChart_loadDatasetsFromLocalStorage(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             const label = this.lineChart.data.datasets[n].label;
@@ -341,7 +338,7 @@ Chart.prototype.loadDatasetsFromLocalStorage = function Chart_loadDatasetsFromLo
     this.lineChart.update();
 }
 
-Chart.prototype.clearDatasets = function Chart_clearDatasets(ip) {
+TasChart.prototype.clearDatasets = function TasChart_clearDatasets(ip) {
     for (let n = 0; n < this.lineChart.data.datasets.length; n++) {
         if (this.lineChart.data.datasets[n].ip === ip || ip === "ALL") {
             this.lineChart.data.datasets[n].data = [];

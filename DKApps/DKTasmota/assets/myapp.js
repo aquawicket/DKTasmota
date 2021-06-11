@@ -13,35 +13,32 @@ myapp.loadFiles = function myapp_loadFiles() {
     //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
 
     DKPlugin("DK/DKTrace.js");
-    dk.create("DK/DKErrorHandler.js");
-
-    dk.create("DK/DKPhp.js");
-    dk.create("DK/DKJson.js");
-    dk.create("DKFile/DKFile.js");
-    //dk.create("DK/DKValidate.js");
-    dk.create("DK/sun.js");
-    dk.create("DK/DKTime.js");
-    //dk.create("DK/DKMqtt.js");
-    //dk.create("DK/DKNotifications.js");
-    dk.create("DKDebug/DKDebug.js");
-    !DUKTAPE && dk.create("DKAudio/DKAudio.js");
-    dk.create("DKGui/DKConsole.js");
-    dk.create("DKGui/DKGui.js");
-    dk.create("DKGui/DKFrame.js");
-    dk.create("DKGui/DKMenu.js");
-    //dk.create("DKGui/DKMessageBox.js");
-    dk.create("DKGui/DKDrag.js");
-    dk.create("DKGui/DKResize.js");
-    dk.create("DKGui/DKClipboard.js");
-    dk.create("DKGui/DKTable.js");
+    DKPlugin("DK/DKErrorHandler.js");
+    DKPlugin("DK/DKPhp.js");
+    DKPlugin("DK/DKJson.js");
+    DKPlugin("DKFile/DKFile.js");
+    DKPlugin("DK/DKValidate.js");
+    DKPlugin("DK/DKTime.js");
+    DKPlugin("DK/DKMqtt.js");
+    DKPlugin("DK/DKNotifications.js");
+    DKPlugin("DKDebug/DKDebug.js");
+    DKPlugin("DKAudio/DKAudio.js");
+    DKPlugin("DKGui/DKConsole.js");
+    DKPlugin("DKGui/DKGui.js");
+    DKPlugin("DKGui/DKFrame.js");
+    DKPlugin("DKGui/DKMenu.js");
+    DKPlugin("DKGui/DKMessageBox.js");
+    DKPlugin("DKGui/DKDrag.js");
+    DKPlugin("DKGui/DKResize.js");
+    DKPlugin("DKGui/DKClipboard.js");
+    DKPlugin("DKGui/DKTable.js");
     DKPlugin("DKDevTools/DKDevToolsButton.js");
-    dk.create("DKChart/DKChart.js");
-    //dk.create("DKCodeMirror/DKCodeMirror.js");
-    //dk.create("DKTasmota/superagent.js");
-    dk.create("DKTasmota/DKTasmota.js");
-    dk.create("DKTasmota/Automation.js");
-    dk.create("DKTasmota/VPDCalculator.js");
-    dk.create("DKTasmota/Chart.js");
+    DKPlugin("DKChart/DKChart.js");
+    DKPlugin("DKCodeMirror/DKCodeMirror.js");
+    DKPlugin("DKTasmota/DKTasmota.js");
+    DKPlugin("DKTasmota/Automation.js");
+    DKPlugin("DKTasmota/VPDCalculator.js");
+    DKPlugin("DKTasmota/Chart.js");
 
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
@@ -53,14 +50,12 @@ myapp.loadFiles = function myapp_loadFiles() {
     dk.preloadImage("DKGui/offline.png");
     dk.preloadImage("DKTasmota/automateOFF.png");
     dk.preloadImage("DKTasmota/automateON.png");
-
-    //dk.create("AddRemoveListeners.js");
 }
 
 myapp.loadApp = function myapp_loadApp() {
-    dk.errorCatcher(myapp, "myapp");
-    dk.errorhandler.create();
-    dk.time.create();
+    dk.errorCatcher(myapp, "myapp")
+    dk.errorhandler.create()
+    DKTime.prototype.create()
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
     dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
@@ -79,7 +74,7 @@ myapp.loadApp = function myapp_loadApp() {
 }
 
 myapp.loadGui = function myapp_loadGui() {
-    dk.console.create(document.body, "", "0rem", "0rem", "0rem", "100%", "25%");
+    DKConsole.prototype.create(document.body, "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
@@ -87,14 +82,14 @@ myapp.loadGui = function myapp_loadGui() {
     dk.time.createClock(document.body, "2rem");
     dk.time.setLatitudeLongitude(33.7312525, -117.3028688);
     myapp.createDeviceTable(document.body);
-    const ctx = dk.chart.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
+    const ctx = DKChart.prototype.create(document.body, "chart", "50%", "75%", "0rem", "0rem", "100%", "25%");
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         console.info("dk.tasmota.devices empty");
     else
         for (let n = 0; n < dk.tasmota.devices.length; n++)
             myapp.addDeviceToTable(dk.tasmota.devices[n]);
-    dk.devtoolsbutton.create();
-    chart.create(ctx);
+    DKDevToolsButton.prototype.create();
+    TasChart.prototype.create(ctx);
 
     dk.time.addUpdater(function() {
         !dk.time.lastHour && (dk.time.lastHour = dk.time.hour)
@@ -370,14 +365,14 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         onclick: function dChart_onclick() {
             for (let n = 0; n < dk.tasmota.devices.length; n++) {
                 if (dk.tasmota.devices[n].ip === device.ip)
-                    byId(device.ip + "dChart").style.backgroundColor = chart.selectChart(device.ip);
+                    byId(device.ip + "dChart").style.backgroundColor = dk.taschart.selectChart(device.ip);
                 else
                     byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)";
             }
         },
         oncontextmenu: function dChart_oncontextmenu(event) {
             event.preventDefault();
-            const color = chart.toggleChart(device.ip);
+            const color = dk.taschart.toggleChart(device.ip);
             for (let n = 0; n < dk.tasmota.devices.length; n++) {
                 if (dk.tasmota.devices[n].ip === device.ip) {
                     color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color);
@@ -421,7 +416,6 @@ myapp.infoWindow = function myapp_infoWindow(device) {
     div.style.overflow = "auto";
     const jsonString = dk.json.prettyJson(JSON.stringify(device));
     const jsonSuper = dk.json.highlightJson(jsonString);
-    //console.log(jsonSuper);
     div.innerHTML = jsonSuper;
 }
 
@@ -600,10 +594,10 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         powerCell.innerHTML = "<a>" + devicePower + "</a>";
         if (devicePower === "ON") {
             row.cells[1].style.color = "rgb(0,180,0)";
-            chart.updateDevice(device, "switch1", 100);
+            dk.taschart.updateDevice(device, "switch1", 100);
         } else {
             row.cells[1].style.color = "rgb(40,40,40)";
-            chart.updateDevice(device, "switch1", 0);
+            dk.taschart.updateDevice(device, "switch1", 0);
         }
     }
 
@@ -635,7 +629,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         byId(device.ip + "Temp").style.color = "rgb(" + tempRed + "," + tempGreen + ",0)";
         byId(device.ip + "Temp").style.textAlign = "center";
 
-        chart.updateDevice(device, "sensor1", device.user.temperature);
+        dk.taschart.updateDevice(device, "sensor1", device.user.temperature);
     }
 
     if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Humidity)
@@ -662,7 +656,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         byId(device.ip + "RH").style.color = "rgb(" + humRed + "," + humGreen + ",0)";
         byId(device.ip + "RH").style.textAlilgn = "center";
 
-        chart.updateDevice(device, "sensor2", device.user.humidity);
+        dk.taschart.updateDevice(device, "sensor2", device.user.humidity);
     }
 
     if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.DewPoint)
@@ -672,7 +666,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
         dataCell.innerHTML = dataCell.innerHTML + dewPointText;
         byId(device.ip + "DewP").style.color = "rgb(40,40,40)";
         byId(device.ip + "DewP").style.textAlign = "center";
-        chart.updateDevice(device, "sensor3", device.user.dewpoint);
+        dk.taschart.updateDevice(device, "sensor3", device.user.dewpoint);
     }
 
     if (device.user.automate === true) {
