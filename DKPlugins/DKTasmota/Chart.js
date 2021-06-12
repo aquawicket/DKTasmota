@@ -5,7 +5,7 @@ dk.taschart = DKPlugin(TasChart)
 
 function TasChart() {}
 
-TasChart.prototype.create = function TasTasChart_create(chartCanvas) {
+TasChart.prototype.create = function TasChart_create(chartCanvas) {
     
     dk.gui.createImageButton(chartCanvas.parentNode, "chartSettings", "DKGui/options.png", "2px", "", "", "2px", "15rem", "", this.openChartSettings);
     const ctx = chartCanvas.getContext('2d');

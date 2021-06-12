@@ -1,7 +1,7 @@
 "use strict";
 // https://tasmota.github.io/docs/Commands/
 
-dk.tasmota = DKPlugin(DKTasmota)
+dk.tasmota = DKPlugin(DKTasmota, "singleton")
 
 function DKTasmota() {}
 
