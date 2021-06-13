@@ -48,7 +48,7 @@ dk.automate = function dk_automate() {
         temperatureTarget: 77,
         temperatureZone: 25,
         temperatureAlarm: 30,
-        humidityTarget: 70,
+        humidityTarget: 55,
         humidityZone: 25,
         humidityAlarm: 30
     }
@@ -119,8 +119,8 @@ dk.automate = function dk_automate() {
             let power = false;
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
-            (dk.time.time < dk.time.sunrise) && (power = false);
-            (dk.time.time > dk.time.sunset) && (power = false);
+            (dk.time.time < dk.time.sunrise-3) && (power = false);
+            (dk.time.time > dk.time.sunset+3) && (power = false);
             (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) && (power = false);
             (ATentTemp.user.humidity > 90) && (power = true);
             power && (ATentExhaust.user.power === "OFF") && console.log("%cA Tent Exhaust Fan ON", "color: green;");
@@ -184,8 +184,8 @@ dk.automate = function dk_automate() {
             let power = false;
             (BTentTemp.user.temperature > BTentTemp.user.temperatureTarget) && (power = true);
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
-            (dk.time.time < dk.time.sunrise) && (power = false);
-            (dk.time.time > dk.time.sunset) && (power = false);
+            (dk.time.time < dk.time.sunrise-3) && (power = false);
+            (dk.time.time > dk.time.sunset+3) && (power = false);
             (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone)) && (power = false);
             (BTentTemp.user.humidity > 90) && (power = true);
             power && (BTentExhaust.user.power === "OFF") && console.log("%cB Tent Exhaust Fan ON", "color: green;");

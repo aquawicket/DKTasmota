@@ -12,33 +12,33 @@ myapp.loadFiles = function myapp_loadFiles() {
     //This function should only load files, and make declarations, Not initiate variable values or make assignments.
     //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
 
-    DKPlugin("DK/DKTrace.js", "singleton");
-    DKPlugin("DK/DKErrorHandler.js", "singleton");
-    DKPlugin("DK/DKPhp.js", "singleton");
-    DKPlugin("DK/DKJson.js", "singleton");
-    DKPlugin("DKFile/DKFile.js", "singleton");
-    //DKPlugin("DK/DKValidate.js", "singleton");
-    DKPlugin("DK/DKTime.js", "singleton");
-    //DKPlugin("DK/DKMqtt.js");
+    DKPlugin("DK/DKTrace.js", "singleton")
+    DKPlugin("DK/DKErrorHandler.js", "singleton")
+    DKPlugin("DK/DKPhp.js", "singleton")
+    DKPlugin("DK/DKJson.js", "singleton")
+    DKPlugin("DKFile/DKFile.js", "singleton")
+    //DKPlugin("DK/DKValidate.js", "singleton")
+    DKPlugin("DK/DKTime.js", "singleton")
+    //DKPlugin("DK/DKMqtt.js")
     //DKPlugin("DK/DKNotifications.js");
-    DKPlugin("DKDebug/DKDebug.js", "singleton");
-    DKPlugin("DKAudio/DKAudio.js");
-    DKPlugin("DKGui/DKConsole.js", "singleton");
-    DKPlugin("DKGui/DKGui.js", "singleton");
-    DKPlugin("DKGui/DKFrame.js");
-    DKPlugin("DKGui/DKMenu.js");
-    DKPlugin("DKGui/DKMessageBox.js");
-    DKPlugin("DKGui/DKDrag.js", "singleton");
-    DKPlugin("DKGui/DKResize.js", "singleton");
-    DKPlugin("DKGui/DKClipboard.js", "singleton");
-    DKPlugin("DKGui/DKTable.js");
-    DKPlugin("DKDevTools/DKDevToolsButton.js", "singleton");
-    DKPlugin("DKChart/DKChart.js");
-    //DKPlugin("DKCodeMirror/DKCodeMirror.js");
-    DKPlugin("DKTasmota/DKTasmota.js", "singleton");
-    DKPlugin("DKTasmota/Automation.js");
-    //DKPlugin("DKTasmota/VPDCalculator.js");
-    DKPlugin("DKTasmota/Chart.js");
+    DKPlugin("DKDebug/DKDebug.js", "singleton")
+    DKPlugin("DKAudio/DKAudio.js")
+    DKPlugin("DKGui/DKConsole.js", "singleton")
+    DKPlugin("DKGui/DKGui.js", "singleton")
+    DKPlugin("DKGui/DKFrame.js")
+    DKPlugin("DKGui/DKMenu.js")
+    DKPlugin("DKGui/DKMessageBox.js")
+    DKPlugin("DKGui/DKDrag.js", "singleton")
+    DKPlugin("DKGui/DKResize.js", "singleton")
+    DKPlugin("DKGui/DKClipboard.js", "singleton")
+    DKPlugin("DKGui/DKTable.js")
+    DKPlugin("DKDevTools/DKDevToolsButton.js", "singleton")
+    DKPlugin("DKChart/DKChart.js")
+    //DKPlugin("DKCodeMirror/DKCodeMirror.js")
+    DKPlugin("DKTasmota/DKTasmota.js", "singleton")
+    DKPlugin("DKTasmota/Automation.js")
+    //DKPlugin("DKTasmota/VPDCalculator.js")
+    DKPlugin("DKTasmota/Chart.js")
 
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
