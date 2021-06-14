@@ -73,7 +73,7 @@ myapp.loadApp = function myapp_loadApp() {
         window.setInterval(myapp.mainAppLoop, 60000);
     });
 
-    dk.create("TestPlugin.js", function() {})
+    dk.create("TestCode/TestPlugin.js", function() {})
 }
 
 myapp.loadGui = function myapp_loadGui() {
