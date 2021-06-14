@@ -1,47 +1,48 @@
-"use strict";
+console.log("TestPlugin/js")
 
-//**************************************
-// TODO: start xconsole early and keep a backup of all messages to give to dk.console later..
-// TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
-//**************************************
-const MyApp = function() {};
-const myapp = new MyApp;
+const div = document.createElement("div");
+div.style.position = "absolute";
+div.style.top = "25px";
+div.style.left = "5px";
+div.style.bottom = "5px";
+div.style.right = "5px";
+//div.style.width = "50%";
+//div.style.height = "95%";
+div.style.backgroundColor = "rgb(250,250,250)";
+document.body.appendChild(div);
 
-myapp.loadFiles = function myapp_loadFiles() {
-    //If you initiate any values here, they may fail.
-    //This function should only load files, and make declarations, Not initiate variable values or make assignments.
-    //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
+const textarea = document.createElement("textarea");
+textarea.style.position = "absolute";
+textarea.style.top = "0px";
+textarea.style.left = "0px";
+textarea.style.bottom = "0px";
+textarea.style.right = "000px";
+textarea.style.width = "100%";
+textarea.style.height = "100%";
+textarea.style.fontSize = "12px";
+textarea.style.color = "rgb(200,200,200)";
+textarea.style.backgroundColor = "rgb(30,30,30)";
+div.appendChild(textarea);
 
-    dk.create("DK/DKPlugin.js");
-    DKPlugin("DK/DKTrace.js");
-    dk.create("DK/DKErrorHandler.js");
-    dk.create("DK/DKPhp.js");
-    dk.create("DK/DKJson.js");
-    dk.create("DKFile/DKFile.js");
-    dk.create("DKDebug/DKDebug.js");
-    dk.create("DKGui/DKConsole.js");
-    dk.create("DKGui/DKGui.js");
-    dk.create("DKGui/DKFrame.js");
-    dk.create("DKGui/DKMenu.js");
-    dk.create("DKGui/DKMessageBox.js");
-    dk.create("DKGui/DKDrag.js");
-    dk.create("DKGui/DKResize.js");
-    dk.create("DKGui/DKClipboard.js");
-    dk.create("DKGui/DKTable.js");
-    dk.create("DKDevTools/DKDevToolsButton.js");
-    //dk.create("DKCodeMirror/DKCodeMirror.js");
+const button = document.createElement("buttom");
+button.style.position = "absolute";
+button.style.top = "2px";
+button.style.left = "2px";
+//button.style.bottom = "0px";
+//button.style.right = "000px";
+button.style.width = "100px";
+button.style.height = "20px";
+//button.style.fontSize = "12px";
+//button.style.color = "rgb(200,200,200)";
+//button.style.backgroundColor = "rgb(30,30,30)";
+button.innerHTML = "Run Code";
+button.onclick = function(){
+	console.log("test");
 }
+document.body.appendChild(button);
 
-myapp.loadApp = function myapp_loadApp() {
-    dk.errorCatcher(myapp, "myapp");
-    dk.errorhandler.create();
+button.addEventListener("click", OnRunCodeClick, true);
+
+function OnRunCodeClick(){
+	console.log("click")
 }
-
-myapp.loadGui = function myapp_loadGui() {
-    console.log("dk: "+dk);
-    dk.console.create(document.body, "", "0rem", "0rem", "0rem", "100%", "25%");
-    console.debug("**** Tasmota device manager 0.1b ****");
-}
-
-DUKTAPE && myapp.loadFiles();
-DUKTAPE && myapp.loadGui();

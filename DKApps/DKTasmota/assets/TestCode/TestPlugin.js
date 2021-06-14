@@ -70,7 +70,9 @@ B2.prototype.sharedFunc = function B2_sharedFunc(){
 
 function classExtends(child_class, parent_class){
   	const child_prototype = child_class.prototype;
-  	const funcString = "function "+child_class.name+"(){\n\tconsole.log('"+child_class.name+"() constructor')\n\t"+parent_class.name+".call(this, arguments)\n}";
+  	let funcString = child_class.toString();
+  	var closing_bracket = funcString.lastIndexOf("}");
+  	funcString = dk.insert(funcString, closing_bracket, "\tconst args = Array.prototype.slice.call(arguments);\n\t"+parent_class.name+".call(this, args);\n")
     let child = dk.StringToFunction(child_class.name, funcString)
  	child.prototype = Object.create(parent_class.prototype)
     child.prototype.constructor = child
@@ -84,7 +86,7 @@ classExtends(B2, A2)
 console.log(B2)
 console.log(B2.name)
 console.log(B2.toString())
-const b2 = new B2()
+const b2 = new B2("Test")
 console.log(b2)
 b2.funcB2 ? b2.funcB2() : console.log("%cb2.funcB2()", "color:red;")
 b2.sharedFunc ? b2.sharedFunc() : console.log("%cb2.sharedFunc()", "color:red;")
