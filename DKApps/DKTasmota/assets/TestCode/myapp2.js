@@ -1,13 +1,13 @@
-console.log("TestPlugin/js")
+console.log("TestPlugin.js")
+DKPlugin("DKFile/DKFile.js")
+
 
 const div = document.createElement("div");
 div.style.position = "absolute";
-div.style.top = "25px";
+div.style.top = "35px";
 div.style.left = "5px";
 div.style.bottom = "5px";
 div.style.right = "5px";
-//div.style.width = "50%";
-//div.style.height = "95%";
 div.style.backgroundColor = "rgb(250,250,250)";
 document.body.appendChild(div);
 
@@ -19,30 +19,29 @@ textarea.style.bottom = "0px";
 textarea.style.right = "000px";
 textarea.style.width = "100%";
 textarea.style.height = "100%";
-textarea.style.fontSize = "12px";
+textarea.style.fontSize = "14px";
 textarea.style.color = "rgb(200,200,200)";
 textarea.style.backgroundColor = "rgb(30,30,30)";
 div.appendChild(textarea);
+textarea.onchange = function(){
+    //console.log(textarea.value);
+    //TODO - dave to file
+    //dk.file.stringToFile(codeMirror.getValue(), "USER/devtoolscode.js");
+}
 
-const button = document.createElement("buttom");
+const button = document.createElement("button");
 button.style.position = "absolute";
-button.style.top = "2px";
+button.style.top = "0px";
 button.style.left = "2px";
-//button.style.bottom = "0px";
-//button.style.right = "000px";
 button.style.width = "100px";
 button.style.height = "20px";
-//button.style.fontSize = "12px";
-//button.style.color = "rgb(200,200,200)";
-//button.style.backgroundColor = "rgb(30,30,30)";
+button.style.color = "rgb(20,20,20)";
+button.style.backgroundColor = "rgb(200,200,200)";
 button.innerHTML = "Run Code";
-button.onclick = function(){
-	console.log("test");
+button.onclick = OnRunCodeClick;
+
+function OnRunCodeClick(event) {
+    //console.log("textarea.value = " + textarea.value);
+    CPP_DK_RunDuktape(textarea.value);
 }
 document.body.appendChild(button);
-
-button.addEventListener("click", OnRunCodeClick, true);
-
-function OnRunCodeClick(){
-	console.log("click")
-}

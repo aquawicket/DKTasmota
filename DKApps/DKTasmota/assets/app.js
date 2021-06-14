@@ -3,8 +3,8 @@ CPP_DK_Create("DKRml");
 //CPP_DK_Create("DKSDLText");
 
 location.href = CPP_DKAssets_LocalAssets()+"duktape.html";
-//location.href = CPP_DKAssets_LocalAssets()+"require-polyfill/index.html";
 //location.href = CPP_DKAssets_LocalAssets()+"DKWebTest/index.html";
+//location.href = CPP_DKAssets_LocalAssets()+"require-polyfill/index.html";
 
 /*
 var USE_CEF = 1;
