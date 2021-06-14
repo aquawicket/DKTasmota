@@ -4,6 +4,7 @@
 // TODO: start xconsole early and keep a backup of all messages to give to dk.console later..
 // TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
 //**************************************
+
 const MyApp = function() {};
 const myapp = new MyApp;
 
@@ -26,10 +27,10 @@ myapp.loadFiles = function myapp_loadFiles() {
     DKPlugin("DKGui/DKConsole.js", "singleton")
     DKPlugin("DKGui/DKGui.js", "singleton")
     DKPlugin("DKGui/DKFrame.js")
-    DKPlugin("DKGui/DKMenu.js")
+    //DKPlugin("DKGui/DKMenu.js")
     DKPlugin("DKGui/DKMessageBox.js")
-    DKPlugin("DKGui/DKDrag.js", "singleton")
-    DKPlugin("DKGui/DKResize.js", "singleton")
+    DKPlugin("DKGui/DKDrag.js")
+    //DKPlugin("DKGui/DKResize.js")
     DKPlugin("DKGui/DKClipboard.js", "singleton")
     DKPlugin("DKGui/DKTable.js")
     DKPlugin("DKDevTools/DKDevToolsButton.js", "singleton")
@@ -71,6 +72,8 @@ myapp.loadApp = function myapp_loadApp() {
         //Run app main loop every 60 seconds
         window.setInterval(myapp.mainAppLoop, 60000);
     });
+
+    dk.create("TestPlugin.js", function() {})
 }
 
 myapp.loadGui = function myapp_loadGui() {
@@ -114,10 +117,6 @@ myapp.mainAppLoop = function myapp_mainAppLoop() {
     //dk.tasmota.loadDevicesFromServer();
     dk.tasmota.updateDevices("ALL", myapp.updateScreen)
     dk.automate && dk.automate()
-
-    if (dk.time.second === 16) {
-        console.log("16 seconds")
-    }
 }
 
 myapp.createButtons = function myapp_createButtons(parent) {
@@ -398,9 +397,8 @@ myapp.preferencesWindow = function myapp_preferencesWindow() {
 }
 
 myapp.infoWindow = function myapp_infoWindow(device) {
-    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
-    if (!div)
-        return;
+    //const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
+    const div = document.createElement("div")
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
@@ -417,6 +415,9 @@ myapp.infoWindow = function myapp_infoWindow(device) {
     const jsonString = dk.json.prettyJson(JSON.stringify(device));
     const jsonSuper = dk.json.highlightJson(jsonString);
     div.innerHTML = jsonSuper;
+    const dkframe = DKFrame.prototype.create(div)
+    dkframe.setTitle(device.Status.DeviceName)
+    return dkframe;
 }
 
 myapp.settingsWindow = function myapp_settingsWindow(device) {
