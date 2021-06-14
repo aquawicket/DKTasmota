@@ -398,7 +398,13 @@ myapp.preferencesWindow = function myapp_preferencesWindow() {
 
 myapp.infoWindow = function myapp_infoWindow(device) {
     //const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
-    const div = document.createElement("div")
+    //const dkframe = DKPlugin(DKFrame)
+    const div = document.createElement("div");
+    //document.body.appendChild(div);
+    
+    div.style.width = "500rem";
+    div.style.height = "400rem";
+    
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
