@@ -104,7 +104,7 @@ myapp.loadGui = function myapp_loadGui() {
                 DKMessageBox.prototype.createMessage("CHECK PLANTS!", function(instance, okclicked) {
                     if (instance) {
                         console.log("instance: %c" + instance, "color:orange;")
-                        instance.html.style.backgroundColor = "red";
+                        instance.html && (instance.html.style.backgroundColor = "red")
                     }
                 });
             });
