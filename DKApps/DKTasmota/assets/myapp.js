@@ -73,7 +73,7 @@ myapp.loadApp = function myapp_loadApp() {
         window.setInterval(myapp.mainAppLoop, 60000);
     });
 
-    dk.create("TestCode/TestPlugin.js", function() {})
+    //dk.create("TestCode/TestPlugin.js", function() {})
 }
 
 myapp.loadGui = function myapp_loadGui() {
@@ -103,7 +103,7 @@ myapp.loadGui = function myapp_loadGui() {
             DKPlugin("DKGui/DKMessageBox.js", function() {
                 DKMessageBox.prototype.createMessage("CHECK PLANTS!", function(instance, okclicked) {
                     if (instance) {
-                        console.log("instance: %c" + instance, "color:orange;")
+                        //console.log("instance: %c" + instance, "color:orange;")
                         instance.html && (instance.html.style.backgroundColor = "red")
                     }
                 });
