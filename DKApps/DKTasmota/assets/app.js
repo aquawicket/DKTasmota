@@ -1,23 +1,21 @@
-CPP_DK_Create("DKWindow");
-//CPP_DK_Create("DKRml");
-//CPP_DK_Create("DKSDLText");
-
-//location.href = CPP_DKAssets_LocalAssets()+"duktape.html";
-//location.href = CPP_DKAssets_LocalAssets()+"DKWebTest/index.html";
-//location.href = CPP_DKAssets_LocalAssets()+"require-polyfill/index.html";
-
-
-var USE_CEF = 1;
 //var url = "http://www.google.com/";
 //var url = "chrome://gpu";
-//var url = "http://127.0.0.1:2393/dktasmota.html";
-var url = CPP_DKAssets_LocalAssets()+"DKWebTest/index.html"
+//var url = "http://127.0.0.1:2393"
+var url = CPP_DKAssets_LocalAssets()+"DKTasmota.html"
 
-var width = 800;
-var height = 600;
-CPP_DK_Create("DKCef,Cef,0,0,"+width+","+height+","+url);
-CPP_DKCef_NewBrowser("Cef",0,0,width,height,url);
 
+//CPP_DK_Create("DKWindow")
+//CPP_DK_Create("DKRml")
+//CPP_DK_Create("DKSDLText")
+//location.href = url
+
+
+var USE_CEF = 1
+var width = 800
+var height = 600
+CPP_DK_Create("DKCef,Cef,0,0,"+width+","+height+","+url)
+CPP_DKCef_NewBrowser("Cef",0,0,width,height,url)
+CPP_DKCef_ShowDevTools(0)
 
 /*
 let assets = CPP_DKAssets_LocalAssets();
