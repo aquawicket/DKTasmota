@@ -24,8 +24,8 @@ CPP_DKCef_NewBrowser("Cef",0,0,width,height,url)
 
 
 
-window.addEventListener("keydown", function mykeydown(){
-	console.log("keydown")
+window.addEventListener("keydown", function mykeydown(event){
+	console.log("keydown: "+event.code)
 })
 
 window.addEventListener("mousedown", function mymousedowndown(){
