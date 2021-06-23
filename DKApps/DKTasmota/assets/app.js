@@ -4,12 +4,6 @@ const assets = CPP_DKAssets_LocalAssets();
 //const url = "http://127.0.0.1:2393"
 const url = assets+"DKTasmota.html"
 
-CPP_DKFile_MkDir("DKPhp_running")
-CPP_DKFile_Copy(assets+"DKPhp/php.exe", assets+"DKPhp_running/php_local.exe", false)
-CPP_DKFile_Copy(assets+"DKPhp/php.exe", assets+"DKPhp_running/php_web.exe", false)
-CPP_DKFile_Copy(assets+"DKPhp/php8ts.dll", assets+"DKPhp_running/php8ts.dll", false)
-//CPP_DK_System(assets+"DKPhp_running/php_local.exe -S 127.0.0.1:2393")
-//CPP_DK_System(assets+"DKPhp_running/php_web.exe -S 192.168.1.210:2393")
 
 CPP_DKFile_ChDir(assets+"DKPhp/");
 const batch = assets+"DKPhp/RunPhpServers.bat";
