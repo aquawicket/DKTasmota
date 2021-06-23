@@ -21,3 +21,13 @@ const height = 600
 CPP_DK_Create("DKCef,Cef,0,0,"+width+","+height+","+url)
 CPP_DKCef_NewBrowser("Cef",0,0,width,height,url)
 //CPP_DKCef_ShowDevTools(0)
+
+
+
+window.addEventListener("keydown", function mykeydown(){
+	console.log("keydown")
+})
+
+window.addEventListener("mousedown", function mymousedowndown(){
+	console.log("mousedown")
+})
