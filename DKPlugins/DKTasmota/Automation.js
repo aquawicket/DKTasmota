@@ -119,8 +119,8 @@ dk.automate = function dk_automate() {
             let power = false;
             (ATentTemp.user.temperature > ATentTemp.user.temperatureTarget) && (power = true);
             (ATentTemp.user.humidity > ATentTemp.user.humidityTarget) && (power = true);
-            (dk.time.time < dk.time.sunrise-3) && (power = false);
-            (dk.time.time > dk.time.sunset+3) && (power = false);
+            (dk.time.time < dk.time.sunrise) && (power = false);
+            (dk.time.time > dk.time.sunset) && (power = false);
             (ATentTemp.user.temperature < (ATentTemp.user.temperatureTarget - ATentTemp.user.temperatureZone)) && (power = false);
             (ATentTemp.user.humidity > 90) && (power = true);
             power && (ATentExhaust.user.power === "OFF") && console.log("%cA Tent Exhaust Fan ON", "color: green;");
@@ -184,8 +184,8 @@ dk.automate = function dk_automate() {
             let power = false;
             (BTentTemp.user.temperature > BTentTemp.user.temperatureTarget) && (power = true);
             (BTentTemp.user.humidity > BTentTemp.user.humidityTarget) && (power = true);
-            (dk.time.time < dk.time.sunrise-3) && (power = false);
-            (dk.time.time > dk.time.sunset+3) && (power = false);
+            (dk.time.time < dk.time.sunrise) && (power = false);
+            (dk.time.time > dk.time.sunset) && (power = false);
             (BTentTemp.user.temperature < (BTentTemp.user.temperatureTarget - BTentTemp.user.temperatureZone)) && (power = false);
             (BTentTemp.user.humidity > 90) && (power = true);
             power && (BTentExhaust.user.power === "OFF") && console.log("%cB Tent Exhaust Fan ON", "color: green;");
@@ -199,7 +199,7 @@ dk.automate = function dk_automate() {
             (BTentTemp.user.humidity < BTentTemp.user.humidityTarget) && (power = true);
             (BTentTemp.user.temperature < BTentTemp.user.temperatureTarget) && (power = false);
             (dk.time.time < dk.time.sunrise) && (power = false);
-            (dk.time.time > (dk.time.sunset - 1)) && (power = false);
+            (dk.time.time > dk.time.sunset) && (power = false);
             power && (BTentWater.user.power === "OFF") && console.log("%cB Tent Water walls ON", "color: green;");
             !power && (BTentWater.user.power === "ON") && console.log("%cB Tent Water walls OFF", "color: yellow;");
             dk.tasmota.sendCommand(BTentWater.ip, "POWER "+power, myapp.updateScreen);
@@ -288,7 +288,7 @@ dk.automate = function dk_automate() {
             (VegTentTemp.user.humidity > VegTentTemp.user.humidityTarget) && (power = false);
             (VegTentTemp.user.temperature < VegTentTemp.user.temperatureTarget) && (power = false);
             (dk.time.time < dk.time.sunrise) && (power = false);
-            (dk.time.time > (dk.time.sunset - 1)) && (power = false);
+            (dk.time.time > dk.time.sunset) && (power = false);
             power && (VegTentWater.user.power === "OFF") && console.log("%cVeg Tent Water Walls ON", "color: green;");
             !power && (VegTentWater.user.power === "ON") && console.log("%cVeg Tent Water Walls OFF", "color: yellow;");
             dk.tasmota.sendCommand(VegTentWater.ip, "POWER "+power, myapp.updateScreen);
