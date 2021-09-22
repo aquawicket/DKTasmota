@@ -1,10 +1,10 @@
-/*
 "use strict";
 
 //**************************************
 // TODO: start xconsole early and keep a backup of all messages to give to dk.console later..
 // TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
 //**************************************
+
 const MyApp = function() {};
 const myapp = new MyApp;
 
@@ -13,33 +13,33 @@ myapp.loadFiles = function myapp_loadFiles() {
     //This function should only load files, and make declarations, Not initiate variable values or make assignments.
     //myapp.loadApp()) will be called after this loads everything. This gives a chance to load assets without using a million callbacks.
 
-    DKPlugin("DK/DKTrace.js");
-    DKPlugin("DK/DKErrorHandler.js");
-    DKPlugin("DK/DKPhp.js");
-    DKPlugin("DK/DKJson.js");
-    DKPlugin("DKFile/DKFile.js");
-    //DKPlugin("DK/DKValidate.js");
-    DKPlugin("DK/DKTime.js");
-    //DKPlugin("DK/DKMqtt.js");
+    DKPlugin("DK/DKTrace.js", "singleton")
+    DKPlugin("DK/DKErrorHandler.js", "singleton")
+    DKPlugin("DK/DKPhp.js", "singleton")
+    DKPlugin("DK/DKJson.js", "singleton")
+    DKPlugin("DKFile/DKFile.js", "singleton")
+    //DKPlugin("DK/DKValidate.js", "singleton")
+    DKPlugin("DK/DKTime.js", "singleton")
+    //DKPlugin("DK/DKMqtt.js")
     //DKPlugin("DK/DKNotifications.js");
-    DKPlugin("DKDebug/DKDebug.js");
-    DKPlugin("DKAudio/DKAudio.js");
-    DKPlugin("DKGui/DKConsole.js");
-    DKPlugin("DKGui/DKGui.js");
-    DKPlugin("DKGui/DKFrame.js");
-    DKPlugin("DKGui/DKMenu.js");
-    DKPlugin("DKGui/DKMessageBox.js");
-    DKPlugin("DKGui/DKDrag.js");
-    DKPlugin("DKGui/DKResize.js");
-    DKPlugin("DKGui/DKClipboard.js");
-    DKPlugin("DKGui/DKTable.js");
-    DKPlugin("DKDevTools/DKDevToolsButton.js");
-    DKPlugin("DKChart/DKChart.js");
-    //DKPlugin("DKCodeMirror/DKCodeMirror.js");
-    DKPlugin("DKTasmota/DKTasmota.js");
-    DKPlugin("DKTasmota/Automation.js");
-    //DKPlugin("DKTasmota/VPDCalculator.js");
-    DKPlugin("DKTasmota/Chart.js");
+    DKPlugin("DKDebug/DKDebug.js", "singleton")
+    DKPlugin("DKAudio/DKAudio.js")
+    DKPlugin("DKGui/DKConsole.js", "singleton")
+    DKPlugin("DKGui/DKGui.js", "singleton")
+    DKPlugin("DKGui/DKFrame.js")
+    //DKPlugin("DKGui/DKMenu.js")
+    DKPlugin("DKGui/DKMessageBox.js")
+    DKPlugin("DKGui/DKDrag.js")
+    //DKPlugin("DKGui/DKResize.js")
+    DKPlugin("DKGui/DKClipboard.js", "singleton")
+    DKPlugin("DKGui/DKTable.js")
+    DKPlugin("DKDevTools/DKDevToolsButton.js", "singleton")
+    DKPlugin("DKChart/DKChart.js")
+    //DKPlugin("DKCodeMirror/DKCodeMirror.js")
+    DKPlugin("DKTasmota/DKTasmota.js", "singleton")
+    DKPlugin("DKTasmota/Automation.js")
+    //DKPlugin("DKTasmota/VPDCalculator.js")
+    DKPlugin("DKTasmota/Chart.js")
 
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
@@ -72,6 +72,8 @@ myapp.loadApp = function myapp_loadApp() {
         //Run app main loop every 60 seconds
         window.setInterval(myapp.mainAppLoop, 60000);
     });
+
+    //dk.create("TestCode/TestPlugin.js", function() {})
 }
 
 myapp.loadGui = function myapp_loadGui() {
@@ -101,8 +103,8 @@ myapp.loadGui = function myapp_loadGui() {
             DKPlugin("DKGui/DKMessageBox.js", function() {
                 DKMessageBox.prototype.createMessage("CHECK PLANTS!", function(instance, okclicked) {
                     if (instance) {
-                        console.log("instance: %c" + instance, "color:orange;")
-                        instance.html.style.backgroundColor = "red";
+                        //console.log("instance: %c" + instance, "color:orange;")
+                        instance.html && (instance.html.style.backgroundColor = "red")
                     }
                 });
             });
@@ -115,10 +117,6 @@ myapp.mainAppLoop = function myapp_mainAppLoop() {
     //dk.tasmota.loadDevicesFromServer();
     dk.tasmota.updateDevices("ALL", myapp.updateScreen)
     dk.automate && dk.automate()
-
-    if (dk.time.second === 16) {
-        console.log("16 seconds")
-    }
 }
 
 myapp.createButtons = function myapp_createButtons(parent) {
@@ -399,9 +397,14 @@ myapp.preferencesWindow = function myapp_preferencesWindow() {
 }
 
 myapp.infoWindow = function myapp_infoWindow(device) {
-    const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
-    if (!div)
-        return;
+    //const div = DKFrame.prototype.createNewWindow(device.Status.DeviceName + " Info", "500rem", "400rem");
+    //const dkframe = DKPlugin(DKFrame)
+    const div = document.createElement("div");
+    //document.body.appendChild(div);
+    
+    div.style.width = "500rem";
+    div.style.height = "400rem";
+    
     div.style.fontSize = "12rem";
     div.style.fontFamily = "Consolas, Lucinda, Console, Courier New, monospace";
     div.style.whiteSpace = "pre-wrap";
@@ -418,6 +421,9 @@ myapp.infoWindow = function myapp_infoWindow(device) {
     const jsonString = dk.json.prettyJson(JSON.stringify(device));
     const jsonSuper = dk.json.highlightJson(jsonString);
     div.innerHTML = jsonSuper;
+    const dkframe = DKFrame.prototype.create(div)
+    dkframe.setTitle(device.Status.DeviceName)
+    return dkframe;
 }
 
 myapp.settingsWindow = function myapp_settingsWindow(device) {
@@ -692,4 +698,3 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
 }
 
 DUKTAPE && myapp.loadFiles();
-*/
