@@ -15,7 +15,7 @@ myapp.loadFiles = function myapp_loadFiles() {
 
     DKPlugin("DK/DKTrace.js", "singleton")
     DKPlugin("DK/DKErrorHandler.js", "singleton")
-    //DKPlugin("DK/DKPhp.js", "singleton")
+    DKPlugin("DK/DKPhp.js", "singleton")
     DKPlugin("DK/DKJson.js", "singleton")
     DKPlugin("DKFile/DKFile.js", "singleton")
     //DKPlugin("DK/DKValidate.js", "singleton")
@@ -34,16 +34,13 @@ myapp.loadFiles = function myapp_loadFiles() {
     DKPlugin("DKGui/DKClipboard.js", "singleton")
     DKPlugin("DKGui/DKTable.js")
     DKPlugin("DKDevTools/DKDevToolsButton.js", "singleton")
-	
-	/*
     DKPlugin("DKChart/DKChart.js")
     //DKPlugin("DKCodeMirror/DKCodeMirror.js")
     DKPlugin("DKTasmota/DKTasmota.js", "singleton")
     DKPlugin("DKTasmota/Automation.js")
     //DKPlugin("DKTasmota/VPDCalculator.js")
     DKPlugin("DKTasmota/Chart.js")
-	*/
-	
+
     dk.preloadImage("DKGui/loading.gif");
     dk.preloadImage("DKGui/restart.png");
     dk.preloadImage("DKGui/info.png");
@@ -59,12 +56,9 @@ myapp.loadFiles = function myapp_loadFiles() {
 myapp.loadApp = function myapp_loadApp() {
     dk.errorCatcher(myapp, "myapp")
     dk.errorhandler.create()
-	
-	dk.create("DK/DK.css")
-    //DKTime.prototype.create()
+    DKTime.prototype.create()
     //dk.php.call("GET", "DK/DK.php", "createSocket", console.log);
-    /*
-	dk.audio.createSound("DKTasmota/PowerDown.mp3");
+    dk.audio.createSound("DKTasmota/PowerDown.mp3");
     dk.tasmota.loadDevicesFromServer(function dk_tasmota_loadDevicesFromServer_callback() {
         if (location.protocol === "file:" || location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
             myapp.server = true;
@@ -73,12 +67,11 @@ myapp.loadApp = function myapp_loadApp() {
             myapp.client = true;
             myapp.automate = false;
         }
-	*/	
         myapp.loadGui();
 
         //Run app main loop every 60 seconds
-        //window.setInterval(myapp.mainAppLoop, 60000);
-    //});
+        window.setInterval(myapp.mainAppLoop, 60000);
+    });
 
     //dk.create("TestCode/TestPlugin.js", function() {})
 }
@@ -86,8 +79,6 @@ myapp.loadApp = function myapp_loadApp() {
 myapp.loadGui = function myapp_loadGui() {
     DKConsole.prototype.create(document.body, "", "0rem", "0rem", "0rem", "100%", "25%");
     console.debug("**** Tasmota device manager 0.1b ****");
-	
-	/*
     myapp.server && (document.body.style.backgroundColor = "rgb(100,100,140)");
     myapp.client && (document.body.style.backgroundColor = "rgb(100,100,100)");
     myapp.createButtons(document.body);
@@ -119,7 +110,6 @@ myapp.loadGui = function myapp_loadGui() {
             });
         }
     })
-	*/
 }
 
 myapp.mainAppLoop = function myapp_mainAppLoop() {
