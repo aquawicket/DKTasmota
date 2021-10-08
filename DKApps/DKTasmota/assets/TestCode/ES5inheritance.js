@@ -1,4 +1,3 @@
-/////////////////////
 function A(){
 	console.log("A() constructor"); 
 }
@@ -20,7 +19,7 @@ Object.defineProperty(A, Symbol.hasInstance, {
 });
 
 
-////////////////////////
+
 function B(){
 	console.log("B() constructor");
 }
@@ -42,7 +41,6 @@ Object.defineProperty(B, Symbol.hasInstance, {
 });
 
 
-/////////////////////
 function C(){
 	console.log("C() constructor"); 
 }
