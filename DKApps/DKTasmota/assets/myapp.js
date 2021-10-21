@@ -265,7 +265,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
     automateCell.style.textAlign = "center";
     const auto = document.createElement("img")
     auto.id = device.ip + "automate";
-    auto.setAttribute("title", "Automation")
+    auto.setAttribute("title", "Automation"); //FIXME - WHY DOES THIS NEED A ;
     (device.user.automate === undefined) && (device.user.automate = false)
     device.user.automate ? auto.src = "DKTasmota/automateON.png" : auto.src = "DKTasmota/automateOFF.png";
     auto.style.width = "17rem";
