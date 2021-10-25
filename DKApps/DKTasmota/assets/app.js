@@ -1,14 +1,11 @@
 const assets = CPP_DKAssets_LocalAssets()
-//const url = "http://www.google.com/"
-//const url = "chrome://gpu"
-//const url = "http://127.0.0.1:2393"
 const url = assets+"DKTasmota.html"
 
-
-CPP_DKFile_ChDir(assets+"DKPhp/")
-const batch = assets+"DKPhp/RunPhpServers.bat"
-CPP_DK_System(batch)
-
+if(CPP_DK_GetOS() == "Windows"){
+	CPP_DKFile_ChDir(assets+"DKPhp/")
+	const batch = assets+"DKPhp/RunPhpServers.bat"
+	CPP_DK_System(batch)
+}
 
 //CPP_DK_Create("DKWindow")
 //CPP_DK_Create("DKRml")
