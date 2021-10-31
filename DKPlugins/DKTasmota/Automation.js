@@ -88,7 +88,7 @@ dk.automate = function dk_automate() {
     ////////////////////////////////////////////////////////////
     //A Tent
     if (ATentTemp && ATentTemp.user) {
-        ATentTemp.user.mode = "EmptyRoom";
+        ATentTemp.user.mode = "VegRoom";
         (ATentTemp.user.mode === "VegRoom") && Object.assign(ATentTemp.user, veg_preset);
         (ATentTemp.user.mode === "BloomRoom") &&  Object.assign(ATentTemp.user, bloom_preset);
         (ATentTemp.user.mode === "Co2Room") && Object.assign(ATentTemp.user, co2_preset);
@@ -153,7 +153,7 @@ dk.automate = function dk_automate() {
     ////////////////////////////////////////////////////////////
     //B Tent
     if (BTentTemp && BTentTemp.user) {
-        BTentTemp.user.mode = "BloomRoom";
+        BTentTemp.user.mode = "EmptyRoom";
         (BTentTemp.user.mode === "VegRoom") && Object.assign(BTentTemp.user, veg_preset);
         (BTentTemp.user.mode === "BloomRoom") &&  Object.assign(BTentTemp.user, bloom_preset);
         (BTentTemp.user.mode === "Co2Room") && Object.assign(BTentTemp.user, co2_preset);
@@ -218,7 +218,7 @@ dk.automate = function dk_automate() {
     ////////////////////////////////////////////////////////////
     //Shed Presets
     if (ShedTemp && ShedTemp.user) {
-        ShedTemp.user.mode = "VegRoom";
+        ShedTemp.user.mode = "BloomRoom";
         (ShedTemp.user.mode === "VegRoom") && Object.assign(ShedTemp.user, veg_preset);
         (ShedTemp.user.mode === "BloomRoom") &&  Object.assign(ShedTemp.user, bloom_preset);
         (ShedTemp.user.mode === "Co2Room") && Object.assign(ShedTemp.user, co2_preset);

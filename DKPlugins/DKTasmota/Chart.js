@@ -94,37 +94,37 @@ TasChart.prototype.openChartSettings = function openChartSettings() {
 }
 
 TasChart.prototype.addDatasets2 = function TasChart_addDatasets2() {
-    dk.tasmota.device("014") && dk.taschart.addDataset("A Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("014").ip, "sensor1", true);
-    dk.tasmota.device("014") && dk.taschart.addDataset("A Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("014").ip, "sensor2", true);
-    dk.tasmota.device("014") && dk.taschart.addDataset("A Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("014").ip, "sensor3", true);
-    dk.tasmota.device("011") && dk.taschart.addDataset("A Tent Exhaust Fan", "rgb(10,30,90)", dk.tasmota.device("011").ip, "switch1", true);
-    dk.tasmota.device("003") && dk.taschart.addDataset("A Tent Water Walls", "rgb(10,30,50)", dk.tasmota.device("003").ip, "switch1", true);
-    //dk.taschart.addDataset("A Tent Heater", "rgb(150,0,50)", dk.tasmota.device("???").ip, "switch1", true);
-    //dk.taschart.addDataset("A Tent Co2", "rgb(10,60,10)", dk.tasmota.device("???").ip, "switch1", true);
-    //dk.taschart.addDataset("A Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
+    dk.tasmota.device("A Tent Temp") && dk.taschart.addDataset("A Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("A Tent Temp").ip, "sensor1", true);
+    dk.tasmota.device("A Tent Temp") && dk.taschart.addDataset("A Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("A Tent Temp").ip, "sensor2", true);
+    dk.tasmota.device("A Tent Temp") && dk.taschart.addDataset("A Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("A Tent Temp").ip, "sensor3", true);
+    dk.tasmota.device("A Tent Exhaust") && dk.taschart.addDataset("A Tent Exhaust Fan", "rgb(10,30,90)", dk.tasmota.device("A Tent Exhaust").ip, "switch1", true);
+    dk.tasmota.device("A Tent Water") && dk.taschart.addDataset("A Tent Water Walls", "rgb(10,30,50)", dk.tasmota.device("A Tent Water").ip, "switch1", true);
+    //dk.tasmota.device("A Tent Heater") && dk.taschart.addDataset("A Tent Heater", "rgb(150,0,50)", dk.tasmota.device("A Tent Heat").ip, "switch1", true);
+    //dk.tasmota.device("A Tent Co2") && dk.taschart.addDataset("A Tent Co2", "rgb(10,60,10)", dk.tasmota.device("A Tent Co2").ip, "switch1", true);
+    //dk.tasmota.device("A Tent Lights") && dk.taschart.addDataset("A Tent Lights", "rgb(100,60,10)", dk.tasmota.device("A Tent Lights").ip, "switch1", true);
 
-    dk.tasmota.device("013") && dk.taschart.addDataset("B Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("013").ip, "sensor1", true);
-    dk.tasmota.device("013") && dk.taschart.addDataset("B Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("013").ip, "sensor2", true);
-    dk.tasmota.device("013") && dk.taschart.addDataset("B Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("013").ip, "sensor3", true);
-    dk.tasmota.device("005") && dk.taschart.addDataset("B Tent Exhaust Fan", "rgb(150,0,150)", dk.tasmota.device("005").ip, "switch1", true);
-    dk.tasmota.device("007") && dk.taschart.addDataset("B Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("007").ip, "switch1", true);
-    dk.tasmota.device("006") && dk.taschart.addDataset("B Tent Heater", "rgb(150,0,50)", dk.tasmota.device("006").ip, "switch1", true);
-    dk.tasmota.device("008") && dk.taschart.addDataset("B Tent Co2", "rgb(10,60,10)", dk.tasmota.device("008").ip, "switch1", true);
-    //dk.tasmota.device("0") && dk.taschart.addDataset("B Tent Lights", "rgb(100,60,10)", dk.tasmota.device("???").ip, "switch1", true);
+    dk.tasmota.device("B Tent Temp") && dk.taschart.addDataset("B Tent Temperature", "rgb(200, 0, 0)", dk.tasmota.device("B Tent Temp").ip, "sensor1", true);
+    dk.tasmota.device("B Tent Temp") && dk.taschart.addDataset("B Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("B Tent Temp").ip, "sensor2", true);
+    dk.tasmota.device("B Tent Temp") && dk.taschart.addDataset("B Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("B Tent Temp").ip, "sensor3", true);
+    dk.tasmota.device("B Tent Exhaust") && dk.taschart.addDataset("B Tent Exhaust Fan", "rgb(150,0,150)", dk.tasmota.device("B Tent Exhaust").ip, "switch1", true);
+    dk.tasmota.device("B Tent Water") && dk.taschart.addDataset("B Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("B Tent Water").ip, "switch1", true);
+    dk.tasmota.device("B Tent Heat") && dk.taschart.addDataset("B Tent Heater", "rgb(150,0,50)", dk.tasmota.device("B Tent Heat").ip, "switch1", true);
+    dk.tasmota.device("B Tent Co2") && dk.taschart.addDataset("B Tent Co2", "rgb(10,60,10)", dk.tasmota.device("B Tent Co2").ip, "switch1", true);
+    //dk.tasmota.device("B Tent Lights") && dk.taschart.addDataset("B Tent Lights", "rgb(100,60,10)", dk.tasmota.device("B Tent Lights").ip, "switch1", true);
 
-    dk.tasmota.device("002") && dk.taschart.addDataset("Shed Water A", "rgb(150,40,40)", dk.tasmota.device("Shed Water A").ip, "switch1", true);
-    dk.tasmota.device("001") && dk.taschart.addDataset("Shed Water B", "rgb(30,0,90)", dk.tasmota.device("Shed Water B").ip, "switch1", true);
-    dk.tasmota.device("016") && dk.taschart.addDataset("Shed Temperature", "rgb(200,0,0)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
-    dk.tasmota.device("016") && dk.taschart.addDataset("Shed Humidity", "rgb(0, 0, 200)", dk.tasmota.device("Shed Temp").ip, "sensor2", true);
-    dk.tasmota.device("016") && dk.taschart.addDataset("Shed DewPoint", "rgb(0,150,150)", dk.tasmota.device("Shed Temp").ip, "sensor3", true);
+    dk.tasmota.device("Shed Water A") && dk.taschart.addDataset("Shed Water A", "rgb(150,40,40)", dk.tasmota.device("Shed Water A").ip, "switch1", true);
+    dk.tasmota.device("Shed Water B") && dk.taschart.addDataset("Shed Water B", "rgb(30,0,90)", dk.tasmota.device("Shed Water B").ip, "switch1", true);
+    dk.tasmota.device("Shed Temp") && dk.taschart.addDataset("Shed Temperature", "rgb(200,0,0)", dk.tasmota.device("Shed Temp").ip, "sensor1", true);
+    dk.tasmota.device("Shed Temp") && dk.taschart.addDataset("Shed Humidity", "rgb(0, 0, 200)", dk.tasmota.device("Shed Temp").ip, "sensor2", true);
+    dk.tasmota.device("Shed Temp") && dk.taschart.addDataset("Shed DewPoint", "rgb(0,150,150)", dk.tasmota.device("Shed Temp").ip, "sensor3", true);
 
-    dk.tasmota.device("015") && dk.taschart.addDataset("Veg Tent Temperature", "rgb(200, 20, 20)", dk.tasmota.device("015").ip, "sensor1", true);
-    dk.tasmota.device("015") && dk.taschart.addDataset("Veg Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("015").ip, "sensor2", true);
-    dk.tasmota.device("015") && dk.taschart.addDataset("Veg Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("015").ip, "sensor3", true);
-    dk.tasmota.device("012") && dk.taschart.addDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", dk.tasmota.device("012").ip, "switch1", true);
-    dk.tasmota.device("009") && dk.taschart.addDataset("Veg Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("009").ip, "switch1", true);
-    dk.tasmota.device("010") && dk.taschart.addDataset("Veg Tent Co2", "rgb(100,60,10)", dk.tasmota.device("Veg Tent Co2").ip, "switch1", true);
-    dk.tasmota.device("004") && dk.taschart.addDataset("Veg Tent Lights", "rgb(100,60,10)", dk.tasmota.device("004").ip, "switch1", true);
+    dk.tasmota.device("Veg Tent Temp") && dk.taschart.addDataset("Veg Tent Temperature", "rgb(200, 20, 20)", dk.tasmota.device("Veg Tent Temp").ip, "sensor1", true);
+    dk.tasmota.device("Veg Tent Temp") && dk.taschart.addDataset("Veg Tent Humidity", "rgb(0, 0, 200)", dk.tasmota.device("Veg Tent Temp").ip, "sensor2", true);
+    dk.tasmota.device("Veg Tent Temp") && dk.taschart.addDataset("Veg Tent DewPoint", "rgb(0,150,150)", dk.tasmota.device("Veg Tent Temp").ip, "sensor3", true);
+    dk.tasmota.device("Veg Tent Exhaust") && dk.taschart.addDataset("Veg Tent Exhaust Fan", "rgb(10,60,10)", dk.tasmota.device("Veg Tent Exhaust").ip, "switch1", true);
+    dk.tasmota.device("Veg Tent Water") && dk.taschart.addDataset("Veg Tent Water Walls", "rgb(90,0,150)", dk.tasmota.device("Veg Tent Water").ip, "switch1", true);
+    dk.tasmota.device("Veg Tent Co2") && dk.taschart.addDataset("Veg Tent Co2", "rgb(100,60,10)", dk.tasmota.device("Veg Tent Co2").ip, "switch1", true);
+    dk.tasmota.device("Veg Tent Lights") && dk.taschart.addDataset("Veg Tent Lights", "rgb(100,60,10)", dk.tasmota.device("Veg Tent Lights").ip, "switch1", true);
 }
 
 TasChart.prototype.addDatasets = function TasChart_addDatasets() {
