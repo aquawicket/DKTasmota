@@ -1,5 +1,8 @@
 "use strict";
 
+const ipPrefix = "10.0.0."
+//const ipPrefix = "192.168.1."
+
 //**************************************
 // TODO: start xconsole early and keep a backup of all messages to give to dk.console later..
 // TODO: Create an easy TODO list check off/alarm/reminder type Plugin   check calander?
@@ -528,7 +531,7 @@ myapp.updateTableStyles = function myapp_updateTableStyles() {
 }
 
 myapp.scanDevices = function myapp_scanDevices() {
-    dk.tasmota.getDevices("192.168.1.", function dk_tasmota_getDevices_callback(ip, done) {
+    dk.tasmota.getDevices(ipPrefix, function dk_tasmota_getDevices_callback(ip, done) {
         if (ip && !dk.json.findPartialMatch(dk.tasmota.devices, 'ip', ip)) {
             const device = dk.tasmota.createDevice(ip)
             myapp.addDeviceToTable(device)
