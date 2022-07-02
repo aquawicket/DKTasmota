@@ -1,6 +1,6 @@
-DKDEPEND(chart.js)
-DKCOPY(${CHARTJS}/examples/eventloop/c_eventloop.js ${DKPLUGINS}/DKDuktape/c_eventloop.js FALSE)
+dk_depend(chart.js)
+dk_copy(${CHARTJS}/examples/eventloop/c_eventloop.js ${DKPLUGINS}/DKDuktape/c_eventloop.js)
 
-DKDEPEND(DKCodeMirror)
+dk_depend(DKCodeMirror)
 
-DKASSETS(DKTasmota)
+dk_assets(DKTasmota)
