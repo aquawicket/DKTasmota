@@ -7,7 +7,7 @@ if(CPP_DK_GetOS() == "Windows"){
 	CPP_DK_System(batch)
 }
 
-//CPP_DK_Create("DKWindow")
+//CPP_DK_Create("DKSDLWindow")
 //CPP_DK_Create("DKRml")
 //CPP_DK_Create("DKSDLText")
 //location.href = url
