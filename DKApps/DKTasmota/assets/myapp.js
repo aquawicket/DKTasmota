@@ -1,7 +1,7 @@
 "use strict";
 
-const ipPrefix = "10.0.0."
-//const ipPrefix = "192.168.1."
+//const ipPrefix = "10.0.0."
+const ipPrefix = "192.168.1."
 
 //**************************************
 // TODO: start xconsole early and keep a backup of all messages to give to dk.console later..
@@ -92,7 +92,7 @@ myapp.loadGui = function myapp_loadGui() {
     if (!dk.tasmota.devices || !dk.tasmota.devices.length)
         console.info("dk.tasmota.devices empty")
     else
-        for (let n = 0; n < dk.tasmota.devices.length; n++)
+        for (var n = 0; n < dk.tasmota.devices.length; n++)
             myapp.addDeviceToTable(dk.tasmota.devices[n])
     DKDevToolsButton.prototype.create()
     TasChart.prototype.create(ctx)
@@ -365,7 +365,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
             cursor: "pointer"
         },
         onclick: function dChart_onclick() {
-            for (let n = 0; n < dk.tasmota.devices.length; n++) {
+            for (var n = 0; n < dk.tasmota.devices.length; n++) {
                 if (dk.tasmota.devices[n].ip === device.ip)
                     byId(device.ip + "dChart").style.backgroundColor = dk.taschart.selectChart(device.ip)
                 else
@@ -375,7 +375,7 @@ myapp.addDeviceToTable = function myapp_addDeviceToTable(device) {
         oncontextmenu: function dChart_oncontextmenu(event) {
             event.preventDefault()
             const color = dk.taschart.toggleChart(device.ip)
-            for (let n = 0; n < dk.tasmota.devices.length; n++) {
+            for (var n = 0; n < dk.tasmota.devices.length; n++) {
                 if (dk.tasmota.devices[n].ip === device.ip) {
                     color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = color)
                     !color && (byId(dk.tasmota.devices[n].ip + "dChart").style.backgroundColor = "rgba(0,0,0,0.0)")
@@ -518,7 +518,7 @@ myapp.consoleWindow = function myapp_consoleWindow(device) {
 
 myapp.updateTableStyles = function myapp_updateTableStyles() {
     const table = byId("deviceTable")
-    for (let n = 1; n < table.rows.length; n++) {
+    for (var n = 1; n < table.rows.length; n++) {
         const row = table.rows[n];
         if (row.rowIndex % 2 == 0) {
             //even
@@ -618,7 +618,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Temperature)
         device.user.temperature = device.StatusSNS.SI7021.Temperature;
     if (device.user.temperature) {
-        let tempDirection = " ";
+        var tempDirection = " ";
         !device.user.temperatureTarget && (device.user.temperatureTarget = 77)
         !device.user.temperatureZone && (device.user.temperatureZone = 20)
         if (device.user.temperature > device.user.temperatureTarget) {
@@ -645,7 +645,7 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
     if (device.StatusSNS && device.StatusSNS.SI7021 && device.StatusSNS.SI7021.Humidity)
         device.user.humidity = device.StatusSNS.SI7021.Humidity;
     if (device.user.humidity) {
-        let humDirection = " ";
+        var humDirection = " ";
         !device.user.humidityTarget && (device.user.humidityTarget = 50)
         !device.user.humidityZone && (device.user.humidityZone = 20)
         if (device.user.humidity > device.user.humidityTarget) {
@@ -699,5 +699,3 @@ myapp.updateScreen = function myapp_updateScreen(success, device, data) {
 
     (data !== '{"Restart":"Restarting"}') && (byId(device.ip + "restart").src = "DKGui/restart.png")
 }
-
-DUKTAPE && myapp.loadFiles()
